@@ -1,0 +1,55 @@
+id: airport.customs
+theme: airport
+title:
+  en: "At Customs"
+  uz: "Bojxonada"
+scenario: "You have just landed at Tashkent International Airport and are going through customs. The officer is checking your passport and asking about your visit."
+variants:
+  - id: airport.customs.base
+    description: "Standard customs check — everything goes smoothly"
+    turns:
+      - speaker: npc
+        uzbek: "Salom! Pasportingizni ko'rsating, iltimos."
+        english: "Hello! Please show your passport."
+      - speaker: user
+        uzbek: "Mana pasportim."
+        english: "Here is my passport."
+        tokens: ["Mana", "pasportim."]
+      - speaker: npc
+        uzbek: "Rahmat. Qayerdan kelasiz?"
+        english: "Thank you. Where are you from?"
+      - speaker: user
+        uzbek: "Men Buyuk Britaniyadan kelaman."
+        english: "I am from the United Kingdom."
+        tokens: ["Men", "Buyuk", "Britaniyadan", "kelaman."]
+      - speaker: npc
+        uzbek: "Tashrif maqsadingiz nima?"
+        english: "What is the purpose of your visit?"
+      - speaker: user
+        uzbek: "Men turist sifatida kelganman."
+        english: "I have come as a tourist."
+        tokens: ["Men", "turist", "sifatida", "kelganman."]
+      - speaker: npc
+        uzbek: "Xush kelibsiz O'zbekistonga!"
+        english: "Welcome to Uzbekistan!"
+
+  - id: airport.customs.length-of-stay
+    description: "The officer asks how long you plan to stay"
+    turns:
+      - speaker: npc
+        uzbek: "Salom! Pasportingizni ko'rsating, iltimos."
+        english: "Hello! Please show your passport."
+      - speaker: user
+        uzbek: "Mana pasportim."
+        english: "Here is my passport."
+        tokens: ["Mana", "pasportim."]
+      - speaker: npc
+        uzbek: "Necha kun qolmoqchisiz?"
+        english: "How many days are you planning to stay?"
+      - speaker: user
+        uzbek: "Men o'n kun qolmoqchiman."
+        english: "I plan to stay for ten days."
+        tokens: ["Men", "o'n", "kun", "qolmoqchiman."]
+      - speaker: npc
+        uzbek: "Yaxshi. Xush kelibsiz O'zbekistonga!"
+        english: "Good. Welcome to Uzbekistan!"

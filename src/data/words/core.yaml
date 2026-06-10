@@ -1,0 +1,52 @@
+- id: core.hello
+  uzbek: "Salom"
+  english: "Hello"
+  theme: core
+
+- id: core.thank-you
+  uzbek: "Rahmat"
+  english: "Thank you"
+  theme: core
+
+- id: core.please
+  uzbek: "Iltimos"
+  english: "Please"
+  theme: core
+
+- id: core.yes
+  uzbek: "Ha"
+  english: "Yes"
+  theme: core
+
+- id: core.no
+  uzbek: "Yo'q"
+  english: "No"
+  theme: core
+
+- id: core.excuse-me
+  uzbek: "Kechirasiz"
+  english: "Excuse me"
+  usageNotes: "Polite form used to get attention or apologise."
+  theme: core
+
+- id: core.goodbye
+  uzbek: "Xayr"
+  english: "Goodbye"
+  theme: core
+
+- id: core.i-dont-understand
+  uzbek: "Tushunmayapman"
+  english: "I don't understand"
+  usageNotes: "Say this when you need someone to repeat or rephrase."
+  theme: core
+
+- id: core.do-you-speak-english
+  uzbek: "Siz inglizcha gapirasizmi?"
+  english: "Do you speak English?"
+  theme: core
+
+- id: core.where-is
+  uzbek: "... qayerda?"
+  english: "Where is ...?"
+  usageNotes: "Place the location name before qayerda."
+  theme: core

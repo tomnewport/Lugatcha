@@ -1,0 +1,16 @@
+id: airport.arrival
+theme: airport
+title:
+  en: "Arrival in Tashkent"
+  uz: "Toshkentga kelish"
+sentences:
+  - uzbek: "Men Toshkent aeroportiga keldim."
+    english: "I arrived at Tashkent airport."
+  - uzbek: "Men pasport nazoratiga bordim."
+    english: "I went to passport control."
+  - uzbek: "Xodim mening pasportimni tekshirdi."
+    english: "The officer checked my passport."
+  - uzbek: "Men bagajimni oldim."
+    english: "I collected my luggage."
+  - uzbek: "Tashqarida quyosh charaqlab turardi."
+    english: "Outside, the sun was shining brightly."
