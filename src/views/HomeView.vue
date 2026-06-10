@@ -4,6 +4,7 @@ import { loadLocations } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
 import type { Location, LocationProgress } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
+import SchoolTile from '@/components/SchoolTile.vue'
 
 const locations = ref<Location[]>([])
 
@@ -27,10 +28,11 @@ const sortedLocations = computed(() =>
 )
 
 // First location always unlocked; each subsequent unlocks once the one before
-// it has at least one completed exercise.
+// it has at least one completed exercise. The School is a meta tile: always
+// unlocked and not part of the chain.
 const lockedMap = computed(() => {
   const map = new Map<string, boolean>()
-  const locs = sortedLocations.value
+  const locs = sortedLocations.value.filter((l) => l.id !== 'school')
   for (let i = 0; i < locs.length; i++) {
     if (i === 0) {
       map.set(locs[i].id, false)
@@ -40,6 +42,7 @@ const lockedMap = computed(() => {
       map.set(locs[i].id, !prevDone)
     }
   }
+  map.set('school', false)
   return map
 })
 </script>
@@ -94,20 +97,26 @@ const lockedMap = computed(() => {
     </header>
 
     <div v-if="sortedLocations.length" class="city-grid" role="list">
-      <LocationTile
-        v-for="loc in sortedLocations"
-        :key="loc.id"
-        role="listitem"
-        :location="loc"
-        :progress="progressMap.get(loc.id)"
-        :locked="lockedMap.get(loc.id) ?? true"
-        :style="{
-          gridRow: loc.gridRow,
-          gridColumn: loc.gridCol,
-          ...(loc.colSpan ? { gridColumn: `${loc.gridCol} / span ${loc.colSpan}` } : {}),
-          ...(loc.rowSpan ? { gridRow: `${loc.gridRow} / span ${loc.rowSpan}` } : {}),
-        }"
-      />
+      <template v-for="loc in sortedLocations" :key="loc.id">
+        <SchoolTile
+          v-if="loc.id === 'school'"
+          role="listitem"
+          :style="{ gridRow: loc.gridRow, gridColumn: loc.gridCol }"
+        />
+        <LocationTile
+          v-else
+          role="listitem"
+          :location="loc"
+          :progress="progressMap.get(loc.id)"
+          :locked="lockedMap.get(loc.id) ?? true"
+          :style="{
+            gridRow: loc.gridRow,
+            gridColumn: loc.gridCol,
+            ...(loc.colSpan ? { gridColumn: `${loc.gridCol} / span ${loc.colSpan}` } : {}),
+            ...(loc.rowSpan ? { gridRow: `${loc.gridRow} / span ${loc.rowSpan}` } : {}),
+          }"
+        />
+      </template>
     </div>
 
     <p v-else class="home-loading" aria-live="polite">Loading city…</p>

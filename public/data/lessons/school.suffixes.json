@@ -1,0 +1,169 @@
+{
+  "id": "school.suffixes",
+  "order": 1,
+  "title": {
+    "en": "Stack the Suffixes",
+    "uz": "Qo'shimchalar"
+  },
+  "blurb": "How Uzbek builds big words from little bricks",
+  "estimatedMinutes": 3,
+  "sections": [
+    {
+      "heading": "One word, many bricks",
+      "body": [
+        "English builds meaning with lots of little words: *from my houses* is three of them. Uzbek builds the **same meaning inside one word**, stacking suffixes onto a root like bricks: **uylarimdan**.",
+        "Each brick adds exactly one idea, and the order never changes: **root + plural + owner + case**."
+      ],
+      "examples": [
+        {
+          "uzbek": "uylarimdan",
+          "english": "from my houses",
+          "breakdown": [
+            "uy",
+            "lar",
+            "im",
+            "dan"
+          ],
+          "gloss": [
+            "house",
+            "plural",
+            "my",
+            "from"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Watch a word grow",
+      "body": [
+        "Start with **ish** (work) and grow it one brick at a time. The bricks always click together the same way — Uzbek has far fewer irregular forms than English or French."
+      ],
+      "examples": [
+        {
+          "uzbek": "ishchi",
+          "english": "worker",
+          "breakdown": [
+            "ish",
+            "chi"
+          ],
+          "gloss": [
+            "work",
+            "one who does"
+          ]
+        },
+        {
+          "uzbek": "ishchilar",
+          "english": "workers",
+          "breakdown": [
+            "ish",
+            "chi",
+            "lar"
+          ],
+          "gloss": [
+            "work",
+            "one who does",
+            "plural"
+          ]
+        },
+        {
+          "uzbek": "ishchilarimiz",
+          "english": "our workers",
+          "breakdown": [
+            "ish",
+            "chi",
+            "lar",
+            "imiz"
+          ],
+          "gloss": [
+            "work",
+            "one who does",
+            "plural",
+            "our"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Why this is good news",
+      "body": [
+        "Long words look intimidating, but they are towers of regular bricks. Once you can peel a word into its parts, **uylarimdan** stops being noise and starts being house-s-my-from.",
+        "Time to stack some bricks yourself."
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "build-uylarim",
+      "engine": "build",
+      "instruction": "Stack the bricks to build “my houses”",
+      "tokens": [
+        "uy",
+        "lar",
+        "im"
+      ],
+      "decoys": [
+        "dan",
+        "chi"
+      ],
+      "joiner": "",
+      "audioText": "uylarim",
+      "translation": "uylarim — my houses"
+    },
+    {
+      "id": "build-uylarimdan",
+      "engine": "build",
+      "instruction": "Now build “from my houses”",
+      "tokens": [
+        "uy",
+        "lar",
+        "im",
+        "dan"
+      ],
+      "decoys": [
+        "ga",
+        "ning"
+      ],
+      "joiner": "",
+      "audioText": "uylarimdan",
+      "translation": "uylarimdan — from my houses"
+    },
+    {
+      "id": "choice-order",
+      "engine": "choice",
+      "instruction": "Which order do the bricks always follow?",
+      "options": [
+        {
+          "text": "root + plural + owner + case",
+          "correct": true,
+          "explain": "uy + lar + im + dan: house-s-my-from. Always this order."
+        },
+        {
+          "text": "root + case + plural + owner",
+          "explain": "The case brick always comes last."
+        },
+        {
+          "text": "owner + root + plural + case",
+          "explain": "The root always comes first — suffixes only stack on the right."
+        }
+      ]
+    },
+    {
+      "id": "build-ishchilar",
+      "engine": "build",
+      "instruction": "Build “workers”",
+      "tokens": [
+        "ish",
+        "chi",
+        "lar"
+      ],
+      "decoys": [
+        "im",
+        "da"
+      ],
+      "joiner": "",
+      "audioText": "ishchilar",
+      "translation": "ishchilar — workers"
+    }
+  ],
+  "wrapUp": "Uzbek words are towers of bricks: root first, then plural, then who owns it, then the case. Spot the bricks and even uylarimdan reads itself."
+}

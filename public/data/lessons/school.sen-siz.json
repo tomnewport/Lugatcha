@@ -1,0 +1,87 @@
+{
+  "id": "school.sen-siz",
+  "order": 4,
+  "title": {
+    "en": "sen vs siz",
+    "uz": "Sen va siz"
+  },
+  "blurb": "Politeness is baked into the grammar",
+  "estimatedMinutes": 2,
+  "sections": [
+    {
+      "heading": "Two kinds of “you”",
+      "body": [
+        "Uzbek has two words for *you*: **sen** for close friends, children and intimates, and **siz** for everyone else — strangers, elders, anyone you respect. Like French tu and vous.",
+        "Politeness lives in the **verb ending too**: *Qalaysan?* and *Qalaysiz?* both mean “how are you?” — but only one is polite."
+      ],
+      "examples": [
+        {
+          "uzbek": "Qalaysiz?",
+          "english": "How are you? (polite — siz form)"
+        },
+        {
+          "uzbek": "Qalaysan?",
+          "english": "How are you? (informal — sen form)"
+        }
+      ]
+    },
+    {
+      "heading": "When in doubt: siz",
+      "body": [
+        "As a visitor, **siz is always safe**. Using *sen* with the wrong person is genuinely rude. If a friendship warms up, locals will happily invite you to switch.",
+        "There's even an extra-deferential **sizlar** for groups you respect — but siz covers everything a traveller needs."
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "choice-baker",
+      "engine": "choice",
+      "instruction": "You're buying non from an elderly baker. How do you ask “how are you”?",
+      "options": [
+        {
+          "text": "Qalaysiz?",
+          "correct": true,
+          "explain": "Elders always get siz — respect is grammar here."
+        },
+        {
+          "text": "Qalaysan?",
+          "explain": "sen to an elder is genuinely rude — like a slap on the back at a funeral."
+        }
+      ]
+    },
+    {
+      "id": "choice-child",
+      "engine": "choice",
+      "instruction": "A six-year-old proudly shows you her drawing. “You came!” is…",
+      "options": [
+        {
+          "text": "Sen kelding!",
+          "correct": true,
+          "explain": "Children take sen — siz would sound comically formal."
+        },
+        {
+          "text": "Siz keldingiz!",
+          "explain": "Grammatically fine, but oddly stiff for a small child."
+        }
+      ]
+    },
+    {
+      "id": "choice-default",
+      "engine": "choice",
+      "instruction": "Not sure which to use with your taxi driver?",
+      "options": [
+        {
+          "text": "siz — the safe default",
+          "correct": true,
+          "explain": "When unsure, siz. Nobody was ever offended by too much respect."
+        },
+        {
+          "text": "sen — it's friendlier",
+          "explain": "Friendly to friends; presumptuous to strangers."
+        }
+      ]
+    }
+  ],
+  "wrapUp": "siz for the world, sen for your inner circle. When unsure: siz, siz, siz."
+}

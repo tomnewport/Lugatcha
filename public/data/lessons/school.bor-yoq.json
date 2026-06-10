@@ -1,0 +1,122 @@
+{
+  "id": "school.bor-yoq",
+  "order": 7,
+  "title": {
+    "en": "Do You Have It?",
+    "uz": "Bor va yo'q"
+  },
+  "blurb": "Uzbek has no “to have” — things simply exist",
+  "estimatedMinutes": 2,
+  "prerequisites": [
+    "school.cases"
+  ],
+  "sections": [
+    {
+      "heading": "There is no “to have”",
+      "body": [
+        "Uzbek has no verb “to have”. Instead, you say a thing **exists**: **bor** (“there is”) — or doesn't: **yo'q** (“there is not”).",
+        "**Mening kitobim bor** — “my book exists” — is how you say *I have a book*. **Vaqtim yo'q** — “my time doesn't exist” — *I have no time*."
+      ],
+      "examples": [
+        {
+          "uzbek": "Mening kitobim bor",
+          "english": "I have a book (lit. “my book exists”)",
+          "breakdown": [
+            "Mening",
+            "kitobim",
+            "bor"
+          ],
+          "gloss": [
+            "my",
+            "book-my",
+            "exists"
+          ]
+        },
+        {
+          "uzbek": "Vaqtim yo'q",
+          "english": "I have no time",
+          "breakdown": [
+            "Vaqtim",
+            "yo'q"
+          ],
+          "gloss": [
+            "time-my",
+            "doesn't exist"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "bor and yo'q run the bazaar",
+      "body": [
+        "These two little words are everywhere. Add the question particle **-mi** and you can ask for anything: **Choy bormi?** — is there tea? **Bor!** — there is! **Yo'q** — there isn't.",
+        "Ask it at a choyxona, a shop, a ticket office — bormi? works for everything."
+      ],
+      "examples": [
+        {
+          "uzbek": "Choy bormi?",
+          "english": "Is there tea? / Do you have tea?"
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "build-book",
+      "engine": "build",
+      "instruction": "Say “I have a book”",
+      "tokens": [
+        "Mening",
+        "kitobim",
+        "bor"
+      ],
+      "decoys": [
+        "yo'q",
+        "edi"
+      ],
+      "audioText": "Mening kitobim bor",
+      "translation": "I have a book — literally “my book exists”."
+    },
+    {
+      "id": "choice-notime",
+      "engine": "choice",
+      "instruction": "“I have no time” is…",
+      "options": [
+        {
+          "text": "Vaqtim yo'q",
+          "correct": true,
+          "explain": "My time doesn't exist — yo'q negates existence."
+        },
+        {
+          "text": "Vaqtim bor",
+          "explain": "That means you DO have time — bor asserts existence."
+        },
+        {
+          "text": "Men vaqt emas",
+          "explain": "emas negates descriptions (“is not”), not existence — that says “I am not time”!"
+        }
+      ]
+    },
+    {
+      "id": "choice-bormi",
+      "engine": "choice",
+      "instruction": "You ask “Choy bormi?” and the choyxona owner beams: “Bor!” That means…",
+      "options": [
+        {
+          "text": "Yes — there is tea",
+          "correct": true,
+          "explain": "Bor! — it exists. Sit down, the tea is coming."
+        },
+        {
+          "text": "No — they've run out",
+          "explain": "That would be yo'q."
+        },
+        {
+          "text": "Wait a moment",
+          "explain": "bor only ever means “it exists” — good news for you."
+        }
+      ]
+    }
+  ],
+  "wrapUp": "Things exist (bor) or they don't (yo'q) — that's how Uzbek “has” anything. Choy bormi? Bor!"
+}

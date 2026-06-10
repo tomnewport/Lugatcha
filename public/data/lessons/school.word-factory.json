@@ -1,0 +1,179 @@
+{
+  "id": "school.word-factory",
+  "order": 8,
+  "title": {
+    "en": "The Word Factory",
+    "uz": "So'z fabrikasi"
+  },
+  "blurb": "Four suffixes that multiply every word you learn",
+  "estimatedMinutes": 3,
+  "prerequisites": [
+    "school.suffixes"
+  ],
+  "sections": [
+    {
+      "heading": "Four bricks that multiply your vocabulary",
+      "body": [
+        "A few suffixes build new words so predictably that every word you learn becomes a whole family. **-chi** makes the person who does it. **-li** means having it. **-siz** means without it. **-lik** makes the abstract idea of it."
+      ],
+      "examples": [
+        {
+          "uzbek": "futbolchi",
+          "english": "footballer",
+          "breakdown": [
+            "futbol",
+            "chi"
+          ],
+          "gloss": [
+            "football",
+            "person who does"
+          ]
+        },
+        {
+          "uzbek": "aqlli",
+          "english": "clever — “having mind”",
+          "breakdown": [
+            "aql",
+            "li"
+          ],
+          "gloss": [
+            "mind",
+            "having"
+          ]
+        },
+        {
+          "uzbek": "uysiz",
+          "english": "homeless — “house-less”",
+          "breakdown": [
+            "uy",
+            "siz"
+          ],
+          "gloss": [
+            "house",
+            "without"
+          ]
+        },
+        {
+          "uzbek": "do'stlik",
+          "english": "friendship",
+          "breakdown": [
+            "do'st",
+            "lik"
+          ],
+          "gloss": [
+            "friend",
+            "-ness / -ship"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Bonus brick: -xona",
+      "body": [
+        "Borrowed from Persian: **-xona** means “the place for it”. *kasal* (sick) makes **kasalxona** — hospital. *osh* (plov) makes **oshxona** — kitchen. And *choy* makes **choyxona** — the teahouse waiting for you on the city map.",
+        "Spot these bricks on signs and half the street names of Tashkent decode themselves."
+      ],
+      "examples": [
+        {
+          "uzbek": "choyxona",
+          "english": "teahouse — “tea-place”",
+          "breakdown": [
+            "choy",
+            "xona"
+          ],
+          "gloss": [
+            "tea",
+            "place for"
+          ]
+        },
+        {
+          "uzbek": "kasalxona",
+          "english": "hospital — “sick-place”",
+          "breakdown": [
+            "kasal",
+            "xona"
+          ],
+          "gloss": [
+            "sick",
+            "place for"
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "choice-worker",
+      "engine": "choice",
+      "instruction": "ish means “work”. So a worker is…",
+      "options": [
+        {
+          "text": "ishchi",
+          "correct": true,
+          "explain": "-chi makes the doer: work → worker."
+        },
+        {
+          "text": "ishli",
+          "explain": "-li means “having” — that would be something like “having work”."
+        },
+        {
+          "text": "ishsiz",
+          "explain": "-siz means “without” — ishsiz is jobless, the opposite!"
+        }
+      ]
+    },
+    {
+      "id": "build-friendship",
+      "engine": "build",
+      "instruction": "Build “friendship” from do'st (friend)",
+      "tokens": [
+        "do'st",
+        "lik"
+      ],
+      "decoys": [
+        "chi",
+        "siz"
+      ],
+      "joiner": "",
+      "audioText": "do'stlik",
+      "translation": "do'stlik — friendship"
+    },
+    {
+      "id": "choice-sugarfree",
+      "engine": "choice",
+      "instruction": "shakar means “sugar”. Tea without sugar is choy…",
+      "options": [
+        {
+          "text": "shakarsiz",
+          "correct": true,
+          "explain": "-siz: without sugar. Useful at every choyxona."
+        },
+        {
+          "text": "shakarli",
+          "explain": "-li means WITH sugar — the sweet opposite."
+        },
+        {
+          "text": "shakarchi",
+          "explain": "-chi makes a person — a sugar-seller!"
+        }
+      ]
+    },
+    {
+      "id": "build-teahouse",
+      "engine": "build",
+      "instruction": "Build “teahouse” — the place for tea",
+      "tokens": [
+        "choy",
+        "xona"
+      ],
+      "decoys": [
+        "lik",
+        "chi"
+      ],
+      "joiner": "",
+      "audioText": "choyxona",
+      "translation": "choyxona — teahouse"
+    }
+  ],
+  "wrapUp": "-chi makes the person, -li makes “with”, -siz makes “without”, -lik makes the idea, and -xona makes the place. One root, a whole word family."
+}

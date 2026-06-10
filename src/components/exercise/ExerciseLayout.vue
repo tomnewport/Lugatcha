@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { EXERCISE_SEQUENCE, EXERCISE_LABELS } from '@/exercises/sequence'
+import { EXERCISE_LABELS } from '@/exercises/potluck'
 import type { ExerciseType } from '@/db/types'
 
 defineProps<{
@@ -28,23 +28,6 @@ const emit = defineEmits<{ exit: [] }>()
       <div class="exercise-header__titles">
         <span class="exercise-header__location">{{ locationName }}</span>
         <h1 class="exercise-header__title">{{ EXERCISE_LABELS[exercise] }}</h1>
-      </div>
-
-      <div
-        class="exercise-dots"
-        role="img"
-        :aria-label="`Step ${EXERCISE_SEQUENCE.indexOf(exercise) + 1} of ${EXERCISE_SEQUENCE.length}`"
-      >
-        <span
-          v-for="step in EXERCISE_SEQUENCE"
-          :key="step"
-          class="exercise-dot"
-          :class="{
-            'exercise-dot--done':
-              EXERCISE_SEQUENCE.indexOf(step) < EXERCISE_SEQUENCE.indexOf(exercise),
-            'exercise-dot--current': step === exercise,
-          }"
-        />
       </div>
     </header>
 
@@ -119,28 +102,6 @@ const emit = defineEmits<{ exit: [] }>()
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.exercise-dots {
-  display: flex;
-  gap: 5px;
-  flex-shrink: 0;
-}
-
-.exercise-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-border);
-}
-
-.exercise-dot--done {
-  background: var(--color-gold);
-}
-
-.exercise-dot--current {
-  background: var(--color-primary);
-  transform: scale(1.25);
 }
 
 .exercise-body {
