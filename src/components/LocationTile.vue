@@ -20,7 +20,7 @@ const secondaryName = computed(() =>
   settings.labelLanguage === 'uz' ? props.location.name.en : props.location.name.uz,
 )
 
-const TOTAL_EXERCISES = 5
+const TOTAL_EXERCISES = 6
 const RADIUS = 18
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 

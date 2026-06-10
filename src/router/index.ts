@@ -21,6 +21,16 @@ const router = createRouter({
       // Lazy: settings is rarely visited
       component: () => import('@/views/SettingsView.vue'),
     },
+    {
+      path: '/school',
+      name: 'school',
+      component: () => import('@/views/SchoolView.vue'),
+    },
+    {
+      path: '/school/:id',
+      name: 'lesson',
+      component: () => import('@/views/LessonView.vue'),
+    },
   ],
 })
 

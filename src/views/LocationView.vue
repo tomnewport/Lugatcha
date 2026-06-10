@@ -3,18 +3,20 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getLocation } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
-import type { Location, LocationProgress, ExerciseType } from '@/db/types'
+import type { Location, ExerciseType } from '@/db/types'
 import {
-  EXERCISE_SEQUENCE,
+  ACTIVITY_ORDER,
   EXERCISE_LABELS,
   EXERCISE_DESCRIPTIONS,
-  nextExercise,
-  isExerciseUnlocked,
-} from '@/exercises/sequence'
+  buildPotluck,
+  loadLocationStats,
+  type LocationStats,
+} from '@/exercises/potluck'
 import { useProgressStore } from '@/stores/progress'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
 import FlashcardsExercise from '@/components/exercise/FlashcardsExercise.vue'
+import ListeningExercise from '@/components/exercise/ListeningExercise.vue'
 import PhraseAssemblyExercise from '@/components/exercise/PhraseAssemblyExercise.vue'
 import RoleplayExercise from '@/components/exercise/RoleplayExercise.vue'
 import StorytimeExercise from '@/components/exercise/StorytimeExercise.vue'
@@ -30,12 +32,18 @@ const sessionKey = ref(0)
 
 const locationId = computed(() => route.params.id as string)
 
-const progress = useLiveQuery<LocationProgress | undefined>(
-  () => db.locationProgress.get(route.params.id as string),
-  undefined,
+// Live: refreshes as word/exercise progress changes underneath
+const stats = useLiveQuery<LocationStats | null>(
+  () => loadLocationStats(db, route.params.id as string),
+  null,
 )
 
 onMounted(async () => {
+  // The School is a meta tile with its own view, not the potluck flow
+  if (locationId.value === 'school') {
+    router.replace('/school')
+    return
+  }
   const found = await getLocation(locationId.value)
   if (!found) {
     router.replace('/')
@@ -44,22 +52,23 @@ onMounted(async () => {
   location.value = found
 })
 
-const completed = computed(() => new Set(progress.value?.completedExercises ?? []))
-const upNext = computed(() => nextExercise(progress.value))
-const allDone = computed(() => upNext.value === null)
+const potluck = computed(() => (stats.value ? buildPotluck(stats.value) : []))
+const allDone = computed(() => potluck.value.length > 0 && potluck.value.every((a) => a.done))
 
 const EXERCISE_COMPONENTS = {
   intro: WordIntroExercise,
   flashcards: FlashcardsExercise,
+  listening: ListeningExercise,
   'phrase-assembly': PhraseAssemblyExercise,
   roleplay: RoleplayExercise,
   storytime: StorytimeExercise,
 } as const
 
-function start(exercise: ExerciseType) {
-  if (!isExerciseUnlocked(progress.value, exercise)) return
+function start(type: ExerciseType) {
+  const activity = potluck.value.find((a) => a.type === type)
+  if (!activity || (activity.state === 'locked' && !activity.done)) return
   sessionKey.value++
-  activeExercise.value = exercise
+  activeExercise.value = type
 }
 
 async function onComplete() {
@@ -71,12 +80,6 @@ async function onComplete() {
 
 function exitExercise() {
   activeExercise.value = null
-}
-
-function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
-  if (completed.value.has(exercise)) return 'done'
-  if (upNext.value === exercise) return 'current'
-  return 'locked'
 }
 </script>
 
@@ -96,7 +99,7 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
     />
   </ExerciseLayout>
 
-  <!-- Location overview / exercise path -->
+  <!-- Location overview: today's potluck -->
   <main v-else class="location-view">
     <button class="back-btn" aria-label="Back to city map" type="button" @click="router.push('/')">
       <svg
@@ -115,25 +118,35 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
       <h1 class="location-name">{{ location.name.en }}</h1>
       <p class="location-name-uz" lang="uz">{{ location.name.uz }}</p>
 
+      <p v-if="stats && stats.totalWords > 0" class="word-stats">
+        <strong>{{ stats.seenWords }}</strong> of {{ stats.totalWords }} words met
+        <template v-if="stats.knownWords > 0">
+          · <strong>{{ stats.knownWords }}</strong> known</template
+        >
+      </p>
+
       <div v-if="allDone" class="complete-banner">
         <span class="complete-banner__emoji" aria-hidden="true">🏅</span>
         <p class="complete-banner__text">
-          Barakalla! You've finished every exercise here. Replay any step below.
+          Barakalla! You've tried everything here. Replay any activity below.
         </p>
       </div>
 
-      <ol class="path">
-        <li v-for="(exercise, i) in EXERCISE_SEQUENCE" :key="exercise" class="path-step">
+      <ol class="potluck">
+        <li v-for="activity in potluck" :key="activity.type">
           <button
-            class="step-btn"
-            :class="`step-btn--${stepState(exercise)}`"
+            class="activity-card"
+            :class="{
+              'activity-card--locked': activity.state === 'locked' && !activity.done,
+              'activity-card--done': activity.done,
+            }"
             type="button"
-            :disabled="stepState(exercise) === 'locked'"
-            @click="start(exercise)"
+            :disabled="activity.state === 'locked' && !activity.done"
+            @click="start(activity.type)"
           >
-            <span class="step-btn__marker" aria-hidden="true">
+            <span class="activity-card__marker" aria-hidden="true">
               <svg
-                v-if="stepState(exercise) === 'done'"
+                v-if="activity.done"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -142,7 +155,7 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
                 <path d="M2.5 8l4 4 7-7" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
               <svg
-                v-else-if="stepState(exercise) === 'locked'"
+                v-else-if="activity.state === 'locked'"
                 viewBox="0 0 16 16"
                 fill="none"
                 stroke="currentColor"
@@ -151,18 +164,21 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
                 <rect x="2" y="7" width="12" height="8" rx="2" />
                 <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke-linecap="round" />
               </svg>
-              <span v-else>{{ i + 1 }}</span>
+              <span v-else>{{ ACTIVITY_ORDER.indexOf(activity.type) + 1 }}</span>
             </span>
-            <span class="step-btn__text">
-              <span class="step-btn__label">{{ EXERCISE_LABELS[exercise] }}</span>
-              <span class="step-btn__desc">{{ EXERCISE_DESCRIPTIONS[exercise] }}</span>
+            <span class="activity-card__text">
+              <span class="activity-card__label">{{ EXERCISE_LABELS[activity.type] }}</span>
+              <span class="activity-card__desc">{{ EXERCISE_DESCRIPTIONS[activity.type] }}</span>
+              <span
+                v-if="activity.state === 'locked' && !activity.done && activity.hint"
+                class="activity-card__hint"
+                >{{ activity.hint }}</span
+              >
             </span>
-            <span v-if="stepState(exercise) === 'current'" class="step-btn__cta">Start</span>
-            <span
-              v-else-if="stepState(exercise) === 'done'"
-              class="step-btn__cta step-btn__cta--replay"
+            <span v-if="activity.done" class="activity-card__cta activity-card__cta--replay"
               >Replay</span
             >
+            <span v-else-if="activity.state === 'available'" class="activity-card__cta">Start</span>
           </button>
         </li>
       </ol>
@@ -226,8 +242,19 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
 .location-name-uz {
   font-size: 1.05rem;
   color: var(--color-text-muted);
+  margin: 0;
+  text-align: center;
+}
+
+.word-stats {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
   margin: 0 0 0.75rem;
   text-align: center;
+}
+
+.word-stats strong {
+  color: var(--color-primary);
 }
 
 .complete-banner {
@@ -252,7 +279,7 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
   margin: 0;
 }
 
-.path {
+.potluck {
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -260,7 +287,7 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
   width: 100%;
 }
 
-.step-btn {
+.activity-card {
   display: flex;
   align-items: center;
   gap: 0.85rem;
@@ -276,26 +303,22 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
     box-shadow 0.12s ease;
 }
 
-.step-btn:not(:disabled):hover {
+.activity-card:not(:disabled):hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
-.step-btn--locked {
+.activity-card--locked {
   opacity: 0.55;
   cursor: default;
   background: var(--color-bg);
 }
 
-.step-btn--current {
-  border-color: var(--color-primary);
-}
-
-.step-btn--done {
+.activity-card--done {
   border-color: var(--color-teal);
 }
 
-.step-btn__marker {
+.activity-card__marker {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -310,42 +333,49 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
   color: var(--color-text-muted);
 }
 
-.step-btn--current .step-btn__marker {
+.activity-card:not(:disabled):not(.activity-card--done) .activity-card__marker {
   background: var(--color-primary);
   border-color: var(--color-primary);
   color: #fff;
 }
 
-.step-btn--done .step-btn__marker {
+.activity-card--done .activity-card__marker {
   background: var(--color-teal);
   border-color: var(--color-teal);
   color: #fff;
 }
 
-.step-btn__marker svg {
+.activity-card__marker svg {
   width: 14px;
   height: 14px;
 }
 
-.step-btn__text {
+.activity-card__text {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
 }
 
-.step-btn__label {
+.activity-card__label {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--color-text);
 }
 
-.step-btn__desc {
+.activity-card__desc {
   font-size: 0.78rem;
   color: var(--color-text-muted);
 }
 
-.step-btn__cta {
+.activity-card__hint {
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--color-terracotta);
+  margin-top: 2px;
+}
+
+.activity-card__cta {
   flex-shrink: 0;
   font-size: 0.78rem;
   font-weight: 700;
@@ -357,7 +387,7 @@ function stepState(exercise: ExerciseType): 'done' | 'current' | 'locked' {
   border-radius: 999px;
 }
 
-.step-btn__cta--replay {
+.activity-card__cta--replay {
   background: transparent;
   color: var(--color-teal);
   border: 1px solid var(--color-teal);

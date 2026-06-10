@@ -102,6 +102,20 @@ def collect_texts() -> dict[str, str]:
         for variant in roleplay["variants"]:
             texts.extend(turn["uzbek"] for turn in variant["turns"])
 
+    # Language School lessons: spoken examples and exercise audio
+    lessons_dir = DATA_DIR / "lessons"
+    if lessons_dir.exists():
+        for meta in json.loads((lessons_dir / "index.json").read_text(encoding="utf-8")):
+            lesson = json.loads((lessons_dir / f"{meta['id']}.json").read_text(encoding="utf-8"))
+            for section in lesson["sections"]:
+                texts.extend(ex["uzbek"] for ex in section.get("examples", []))
+            for exercise in lesson["exercises"]:
+                if exercise.get("promptUzbek"):
+                    texts.append(exercise["promptUzbek"])
+                if exercise["engine"] == "build":
+                    joiner = exercise.get("joiner", " ")
+                    texts.append(exercise.get("audioText") or joiner.join(exercise["tokens"]))
+
     collected: dict[str, str] = {}
     for text in texts:
         collected.setdefault(audio_key(text), normalize_spoken_text(text))

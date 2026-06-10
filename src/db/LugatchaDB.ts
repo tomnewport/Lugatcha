@@ -1,5 +1,5 @@
 import Dexie, { type Table } from 'dexie'
-import type { Word, Story, Roleplay, WordProgress, LocationProgress } from './types'
+import type { Word, Story, Roleplay, WordProgress, LocationProgress, LessonProgress } from './types'
 import { seedDatabase } from './seed'
 
 export class LugatchaDB extends Dexie {
@@ -8,6 +8,7 @@ export class LugatchaDB extends Dexie {
   roleplay!: Table<Roleplay, string>
   wordProgress!: Table<WordProgress, string>
   locationProgress!: Table<LocationProgress, string>
+  lessonProgress!: Table<LessonProgress, string>
 
   constructor() {
     super('lugatcha')
@@ -17,6 +18,10 @@ export class LugatchaDB extends Dexie {
       roleplay: 'id, theme',
       wordProgress: 'wordId',
       locationProgress: 'locationId',
+    })
+    // v2: Language School lesson progress
+    this.version(2).stores({
+      lessonProgress: 'lessonId',
     })
     // Fires only on first-ever open of this DB in the browser
     this.on('populate', () => seedDatabase(this))
