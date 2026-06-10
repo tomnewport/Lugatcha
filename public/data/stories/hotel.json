@@ -1,0 +1,13 @@
+{
+  "id": "hotel.samarkand-checkin",
+  "theme": "hotel",
+  "title": { "en": "Arriving in Samarkand", "uz": "Samarqandga kelish" },
+  "sentences": [
+    { "uzbek": "Men Samarqandga uzoq safar qilib keldim.",              "english": "I arrived in Samarkand after a long journey." },
+    { "uzbek": "Men mehmonxona resepsheniga bordim.",                   "english": "I went to the hotel reception." },
+    { "uzbek": "Mening bronim bor edi.",                                "english": "I had a reservation." },
+    { "uzbek": "Resepshenist menga kalit berdi.",                       "english": "The receptionist gave me a key." },
+    { "uzbek": "Mening xonam to'rtinchi qavatda edi.",                  "english": "My room was on the fourth floor." },
+    { "uzbek": "Derazadan buyuk Registon maydoni ko'rinardi.",          "english": "From the window the great Registan square was visible." }
+  ]
+}
