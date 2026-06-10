@@ -36,6 +36,11 @@ const progress = useLiveQuery<LocationProgress | undefined>(
 )
 
 onMounted(async () => {
+  // The School is a meta tile with its own view, not the 5-step flow
+  if (locationId.value === 'school') {
+    router.replace('/school')
+    return
+  }
   const found = await getLocation(locationId.value)
   if (!found) {
     router.replace('/')

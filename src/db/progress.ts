@@ -49,7 +49,41 @@ export async function completeExercise(
   })
 }
 
-/** Wipes all word and location progress. Content tables are untouched. */
+/** Records a passed lesson exercise. Idempotent. */
+export async function recordLessonExercise(
+  db: LugatchaDB,
+  lessonId: string,
+  exerciseId: string,
+): Promise<void> {
+  await db.transaction('rw', db.lessonProgress, async () => {
+    const existing = await db.lessonProgress.get(lessonId)
+    const passed = existing?.exercisesPassed ?? []
+    if (!passed.includes(exerciseId)) passed.push(exerciseId)
+    await db.lessonProgress.put({
+      lessonId,
+      completedAt: existing?.completedAt,
+      exercisesPassed: passed,
+    })
+  })
+}
+
+/** Marks a lesson complete (wrap-up reached). Keeps the first completion time. */
+export async function completeLesson(db: LugatchaDB, lessonId: string): Promise<void> {
+  await db.transaction('rw', db.lessonProgress, async () => {
+    const existing = await db.lessonProgress.get(lessonId)
+    await db.lessonProgress.put({
+      lessonId,
+      completedAt: existing?.completedAt ?? Date.now(),
+      exercisesPassed: existing?.exercisesPassed ?? [],
+    })
+  })
+}
+
+/** Wipes all word, location, and lesson progress. Content tables are untouched. */
 export async function resetAllProgress(db: LugatchaDB): Promise<void> {
-  await Promise.all([db.wordProgress.clear(), db.locationProgress.clear()])
+  await Promise.all([
+    db.wordProgress.clear(),
+    db.locationProgress.clear(),
+    db.lessonProgress.clear(),
+  ])
 }

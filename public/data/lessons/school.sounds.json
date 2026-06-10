@@ -1,0 +1,134 @@
+{
+  "id": "school.sounds",
+  "order": 5,
+  "title": {
+    "en": "The Throaty Sounds",
+    "uz": "Tovushlar"
+  },
+  "blurb": "q, g', x and o' — made further back than English goes",
+  "estimatedMinutes": 3,
+  "sections": [
+    {
+      "heading": "Four sounds English doesn't have",
+      "body": [
+        "Most of Uzbek is friendly to an English mouth — no tones, no clicks, and you say what you see. Four letters need real practice: **q**, **g'**, **x** and the vowel **o'**. All of them live further back in the throat than English ever goes.",
+        "**q** is a deep “k” from where you'd gargle (Samar**q**and). **g'** is a gargled “gh”, like a French r (tog' — mountain). **x** is the ch in Scottish *loch* (ya**x**shi — good). **o'** is a rounded vowel like British *more*, clipped short (o'zbek)."
+      ],
+      "examples": [
+        {
+          "uzbek": "Samarqand",
+          "english": "Samarkand — feel the deep q"
+        },
+        {
+          "uzbek": "tog'",
+          "english": "mountain — the gargled g' at the end"
+        },
+        {
+          "uzbek": "yaxshi",
+          "english": "good — x like Scottish loch"
+        },
+        {
+          "uzbek": "o'zbek",
+          "english": "Uzbek — the o' vowel itself"
+        }
+      ]
+    },
+    {
+      "heading": "They change meaning",
+      "body": [
+        "These aren't accents on familiar sounds — they're **different letters** that change the word. *bor* means “there is”; *bo'r* means “chalk”. Collapse q into k or x into h and you may be saying something else entirely.",
+        "Two habits help most: keep every vowel **full and clear** (no English mumbling), and aim q, g' and x at the very back of your throat."
+      ],
+      "examples": [
+        {
+          "uzbek": "bor",
+          "english": "there is"
+        },
+        {
+          "uzbek": "bo'r",
+          "english": "chalk — a different word!"
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "choice-x",
+      "engine": "choice",
+      "instruction": "The “kh” sound in yaxshi (like Scottish loch) is written with which letter?",
+      "options": [
+        {
+          "text": "x",
+          "correct": true,
+          "explain": "x is always “kh” — never “ks” or “z”."
+        },
+        {
+          "text": "h",
+          "explain": "h is a plain breathy English h — a different letter."
+        },
+        {
+          "text": "k",
+          "explain": "k is a normal front k. The loch sound is x."
+        }
+      ]
+    },
+    {
+      "id": "choice-q",
+      "engine": "choice",
+      "instruction": "Which letter makes the deep, back-of-the-throat “k” in Samarqand?",
+      "options": [
+        {
+          "text": "q",
+          "correct": true,
+          "explain": "q is uvular — as far back as you can manage."
+        },
+        {
+          "text": "k",
+          "explain": "k is the ordinary front k — q sits much deeper."
+        },
+        {
+          "text": "g'",
+          "explain": "g' is the voiced gargle — q's noisy cousin."
+        }
+      ]
+    },
+    {
+      "id": "choice-togh",
+      "engine": "choice",
+      "instruction": "Listen to tog' (mountain). The final g' sound is…",
+      "promptUzbek": "tog'",
+      "options": [
+        {
+          "text": "a gargled “gh”, like a French r",
+          "correct": true,
+          "explain": "Exactly — a continuous guttural sound, not a hard stop."
+        },
+        {
+          "text": "a hard English g",
+          "explain": "A hard g is plain g. g' keeps the air flowing — it gargles."
+        },
+        {
+          "text": "silent",
+          "explain": "Nothing is silent in Uzbek — every letter speaks."
+        }
+      ]
+    },
+    {
+      "id": "choice-bor",
+      "engine": "choice",
+      "instruction": "bor and bo'r…",
+      "options": [
+        {
+          "text": "are two different words — the vowel matters",
+          "correct": true,
+          "explain": "bor = “there is”, bo'r = “chalk”. o and o' are separate letters."
+        },
+        {
+          "text": "are the same word, spelled two ways",
+          "explain": "Tempting, but no — o' is its own vowel, and it changes the meaning."
+        }
+      ]
+    }
+  ],
+  "wrapUp": "q, g', x and o' are real letters with real jobs. Aim for the back of your throat and Samarqand, tog' and yaxshi will come out right."
+}
