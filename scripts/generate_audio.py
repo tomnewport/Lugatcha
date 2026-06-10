@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#   "torch",
+#   "transformers",
+#   "soundfile",
+# ]
+# ///
 """Generate prebuilt Uzbek audio for Lugʻatcha.
 
 Enumerates every spoken string in public/data (word entries, story sentences,
@@ -10,15 +18,13 @@ for anything missing, so partial runs are safe.
 Designed for a Mac with Apple Silicon (uses the MPS backend when available).
 
 Setup (once):
-    brew install ffmpeg
-    python3 -m venv .venv && source .venv/bin/activate
-    pip install torch transformers soundfile
+    brew install uv ffmpeg
 
 Usage:
-    python scripts/generate_audio.py --dry-run     # list what would be made
-    python scripts/generate_audio.py --limit 3     # try a few clips first
-    python scripts/generate_audio.py               # generate everything missing
-    python scripts/generate_audio.py --self-test   # verify hash parity only
+    uv run scripts/generate_audio.py --dry-run     # list what would be made
+    uv run scripts/generate_audio.py --limit 3     # try a few clips first
+    uv run scripts/generate_audio.py               # generate everything missing
+    uv run scripts/generate_audio.py --self-test   # verify hash parity only
 
 Then commit public/audio/ and the app will pick the clips up automatically.
 """
