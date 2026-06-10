@@ -4,7 +4,6 @@ import { speakUzbek, stopSpeaking } from '@/audio/audio'
 
 const props = defineProps<{
   text: string
-  audioId?: string
   label?: string
   large?: boolean
 }>()
@@ -17,7 +16,7 @@ async function play() {
   if (playing.value) return
   playing.value = true
   try {
-    await speakUzbek(props.text, props.audioId)
+    await speakUzbek(props.text)
   } finally {
     playing.value = false
     emit('played')

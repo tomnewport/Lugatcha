@@ -1,11 +1,11 @@
 /**
  * Audio playback for Uzbek words and phrases.
  *
- * Prefers prebuilt MP3s (listed in /audio/manifest.json, produced by the TTS
- * pipeline and cached CacheFirst by Workbox). When no recording exists — which
- * is currently always, until the pipeline ships audio — falls back to the
- * Web Speech API, requesting an Uzbek voice where the device has one.
+ * Prefers prebuilt MP3s, looked up in /audio/manifest.json by a hash of the
+ * spoken text (see key.ts) and cached CacheFirst by Workbox. Falls back to
+ * the Web Speech API, requesting an Uzbek voice where the device has one.
  */
+import { audioKey } from './key'
 
 const base = import.meta.env.BASE_URL
 
@@ -67,12 +67,10 @@ function speakWithSynthesis(text: string): Promise<void> {
  * Speaks Uzbek text aloud. Resolves when playback finishes (or immediately if
  * no audio backend is available), so callers can sequence on it.
  */
-export async function speakUzbek(text: string, audioId?: string): Promise<void> {
+export async function speakUzbek(text: string): Promise<void> {
   stopSpeaking()
-  if (audioId) {
-    const manifest = await getAudioManifest()
-    const file = manifest?.[audioId]
-    if (file && (await playFile(`${base}audio/${file}`))) return
-  }
+  const manifest = await getAudioManifest()
+  const file = manifest?.[audioKey(text)]
+  if (file && (await playFile(`${base}audio/${file}`))) return
   await speakWithSynthesis(text)
 }
