@@ -11,13 +11,11 @@ audio it falls back to the device's speech synthesis; to ship real recordings,
 generate them locally (Apple Silicon Mac recommended) and commit the result:
 
 ```sh
-brew install ffmpeg
-python3 -m venv .venv && source .venv/bin/activate
-pip install torch transformers soundfile
+brew install uv ffmpeg
 
-python scripts/generate_audio.py --dry-run    # list the ~117 strings
-python scripts/generate_audio.py --limit 3    # smoke-test the model first
-python scripts/generate_audio.py              # generate everything missing
+uv run python scripts/generate_audio.py --dry-run    # list the ~117 strings
+uv run python scripts/generate_audio.py --limit 3    # smoke-test the model first
+uv run python scripts/generate_audio.py              # generate everything missing
 ```
 
 Clips are written to `public/audio/<hash>.mp3` plus a `manifest.json`, keyed by

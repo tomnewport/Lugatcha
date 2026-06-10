@@ -10,15 +10,13 @@ for anything missing, so partial runs are safe.
 Designed for a Mac with Apple Silicon (uses the MPS backend when available).
 
 Setup (once):
-    brew install ffmpeg
-    python3 -m venv .venv && source .venv/bin/activate
-    pip install torch transformers soundfile
+    brew install uv ffmpeg
 
 Usage:
-    python scripts/generate_audio.py --dry-run     # list what would be made
-    python scripts/generate_audio.py --limit 3     # try a few clips first
-    python scripts/generate_audio.py               # generate everything missing
-    python scripts/generate_audio.py --self-test   # verify hash parity only
+    uv run python scripts/generate_audio.py --dry-run     # list what would be made
+    uv run python scripts/generate_audio.py --limit 3     # try a few clips first
+    uv run python scripts/generate_audio.py               # generate everything missing
+    uv run python scripts/generate_audio.py --self-test   # verify hash parity only
 
 Then commit public/audio/ and the app will pick the clips up automatically.
 """
