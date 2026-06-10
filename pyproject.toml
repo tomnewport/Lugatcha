@@ -1,0 +1,13 @@
+[project]
+name = "lugatcha-audio"
+version = "0.1.0"
+description = "Local audio generation tooling for Lugatcha."
+requires-python = ">=3.10"
+dependencies = [
+  "soundfile",
+  "torch",
+  "transformers",
+]
+
+[tool.uv]
+package = false

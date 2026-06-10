@@ -1,12 +1,4 @@
 #!/usr/bin/env python3
-# /// script
-# requires-python = ">=3.10"
-# dependencies = [
-#   "torch",
-#   "transformers",
-#   "soundfile",
-# ]
-# ///
 """Generate prebuilt Uzbek audio for Lugʻatcha.
 
 Enumerates every spoken string in public/data (word entries, story sentences,
@@ -21,10 +13,10 @@ Setup (once):
     brew install uv ffmpeg
 
 Usage:
-    uv run scripts/generate_audio.py --dry-run     # list what would be made
-    uv run scripts/generate_audio.py --limit 3     # try a few clips first
-    uv run scripts/generate_audio.py               # generate everything missing
-    uv run scripts/generate_audio.py --self-test   # verify hash parity only
+    uv run python scripts/generate_audio.py --dry-run     # list what would be made
+    uv run python scripts/generate_audio.py --limit 3     # try a few clips first
+    uv run python scripts/generate_audio.py               # generate everything missing
+    uv run python scripts/generate_audio.py --self-test   # verify hash parity only
 
 Then commit public/audio/ and the app will pick the clips up automatically.
 """
