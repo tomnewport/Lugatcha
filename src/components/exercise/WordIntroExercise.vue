@@ -47,7 +47,7 @@ async function finish() {
         class="word-card"
         :class="{ 'word-card--heard': heard.has(word.id) }"
       >
-        <AudioButton :text="word.uzbek" :audio-id="word.id" @played="markHeard(word.id)" />
+        <AudioButton :text="word.uzbek" @played="markHeard(word.id)" />
         <div class="word-card__text">
           <span class="word-card__uzbek" lang="uz">{{ word.uzbek }}</span>
           <span class="word-card__english">{{ word.english }}</span>

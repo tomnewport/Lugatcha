@@ -4,6 +4,28 @@
 
 A progressive web app for learning Uzbek before a trip to Uzbekistan. Works entirely offline once loaded.
 
+### Generating audio
+
+The app speaks every Uzbek word, phrase, and story sentence. Without prebuilt
+audio it falls back to the device's speech synthesis; to ship real recordings,
+generate them locally (Apple Silicon Mac recommended) and commit the result:
+
+```sh
+brew install ffmpeg
+python3 -m venv .venv && source .venv/bin/activate
+pip install torch transformers soundfile
+
+python scripts/generate_audio.py --dry-run    # list the ~117 strings
+python scripts/generate_audio.py --limit 3    # smoke-test the model first
+python scripts/generate_audio.py              # generate everything missing
+```
+
+Clips are written to `public/audio/<hash>.mp3` plus a `manifest.json`, keyed by
+a hash of the spoken text (`src/audio/key.ts` and the script implement the same
+algorithm, pinned by `tests/audio-key-fixtures.json`). The app picks up
+whatever exists and falls back to speech synthesis for the rest, so partial
+runs are safe to commit.
+
 ---
 
 ## Reference guide to the Uzbek language and culture
