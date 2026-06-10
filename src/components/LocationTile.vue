@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Location, LocationProgress } from '@/db/types'
+import { useSettingsStore } from '@/stores/settings'
 
 const props = defineProps<{
   location: Location
@@ -10,6 +11,14 @@ const props = defineProps<{
 }>()
 
 const router = useRouter()
+const settings = useSettingsStore()
+
+const primaryName = computed(() =>
+  settings.labelLanguage === 'uz' ? props.location.name.uz : props.location.name.en,
+)
+const secondaryName = computed(() =>
+  settings.labelLanguage === 'uz' ? props.location.name.en : props.location.name.uz,
+)
 
 const TOTAL_EXERCISES = 5
 const RADIUS = 18
@@ -17,9 +26,7 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 const completedCount = computed(() => props.progress?.completedExercises.length ?? 0)
 const isComplete = computed(() => completedCount.value >= TOTAL_EXERCISES)
-const dashOffset = computed(
-  () => CIRCUMFERENCE * (1 - completedCount.value / TOTAL_EXERCISES),
-)
+const dashOffset = computed(() => CIRCUMFERENCE * (1 - completedCount.value / TOTAL_EXERCISES))
 
 function navigate() {
   if (!props.locked) {
@@ -42,15 +49,12 @@ function navigate() {
   >
     <div class="tile__ring-wrap" aria-hidden="true">
       <svg class="tile__svg" viewBox="0 0 44 44">
-        <circle
-          cx="22" cy="22" :r="RADIUS"
-          class="ring-track"
-          fill="none"
-          stroke-width="3"
-        />
+        <circle cx="22" cy="22" :r="RADIUS" class="ring-track" fill="none" stroke-width="3" />
         <circle
           v-if="completedCount > 0"
-          cx="22" cy="22" :r="RADIUS"
+          cx="22"
+          cy="22"
+          :r="RADIUS"
           class="ring-fill"
           fill="none"
           stroke-width="3"
@@ -94,8 +98,12 @@ function navigate() {
       </span>
     </div>
 
-    <span class="tile__name">{{ location.name.en }}</span>
-    <span class="tile__name-uz" lang="uz">{{ location.name.uz }}</span>
+    <span class="tile__name" :lang="settings.labelLanguage === 'uz' ? 'uz' : undefined">{{
+      primaryName
+    }}</span>
+    <span class="tile__name-uz" :lang="settings.labelLanguage === 'uz' ? undefined : 'uz'">{{
+      secondaryName
+    }}</span>
   </button>
 </template>
 
@@ -110,7 +118,9 @@ function navigate() {
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
   box-shadow: var(--shadow-sm);
   width: 100%;
   min-width: 0;

@@ -1,13 +1,61 @@
 {
   "id": "hotel.samarkand-checkin",
   "theme": "hotel",
-  "title": { "en": "Arriving in Samarkand", "uz": "Samarqandga kelish" },
+  "title": {
+    "en": "Arriving in Samarkand",
+    "uz": "Samarqandga kelish"
+  },
   "sentences": [
-    { "uzbek": "Men Samarqandga uzoq safar qilib keldim.",              "english": "I arrived in Samarkand after a long journey." },
-    { "uzbek": "Men mehmonxona resepsheniga bordim.",                   "english": "I went to the hotel reception." },
-    { "uzbek": "Mening bronim bor edi.",                                "english": "I had a reservation." },
-    { "uzbek": "Resepshenist menga kalit berdi.",                       "english": "The receptionist gave me a key." },
-    { "uzbek": "Mening xonam to'rtinchi qavatda edi.",                  "english": "My room was on the fourth floor." },
-    { "uzbek": "Derazadan buyuk Registon maydoni ko'rinardi.",          "english": "From the window the great Registan square was visible." }
-  ]
+    {
+      "uzbek": "Men Samarqandga uzoq safar qilib keldim.",
+      "english": "I arrived in Samarkand after a long journey."
+    },
+    {
+      "uzbek": "Men mehmonxona resepsheniga bordim.",
+      "english": "I went to the hotel reception."
+    },
+    {
+      "uzbek": "Mening bronim bor edi.",
+      "english": "I had a reservation."
+    },
+    {
+      "uzbek": "Resepshenist menga kalit berdi.",
+      "english": "The receptionist gave me a key."
+    },
+    {
+      "uzbek": "Mening xonam to'rtinchi qavatda edi.",
+      "english": "My room was on the fourth floor."
+    },
+    {
+      "uzbek": "Derazadan buyuk Registon maydoni ko'rinardi.",
+      "english": "From the window the great Registan square was visible."
+    }
+  ],
+  "glossary": {
+    "Men": "I",
+    "Samarqandga": "to Samarkand",
+    "uzoq": "long, far",
+    "safar": "journey",
+    "qilib": "doing, making (safar qilib = after travelling)",
+    "keldim": "I arrived",
+    "mehmonxona": "hotel",
+    "resepsheniga": "to the reception",
+    "bordim": "I went",
+    "Mening": "my",
+    "bronim": "my reservation (bron + -im)",
+    "bor": "there is, have",
+    "edi": "was",
+    "Resepshenist": "the receptionist",
+    "menga": "to me",
+    "kalit": "key",
+    "berdi": "gave",
+    "xonam": "my room (xona + -m)",
+    "to'rtinchi": "fourth",
+    "qavatda": "on the floor (qavat + -da)",
+    "Derazadan": "from the window (deraza + -dan)",
+    "buyuk": "great",
+    "Registon": "Registan",
+    "maydoni": "square",
+    "ko'rinardi": "was visible"
+  }
 }
