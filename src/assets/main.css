@@ -1,29 +1,31 @@
 /* Design tokens — Uzbek cultural palette */
 :root {
-  --color-primary:     #1B4F8A; /* lapis lazuli blue */
-  --color-primary-light: #2E6DB4;
-  --color-gold:        #C9A84C; /* ceramic tile gold */
-  --color-teal:        #1A5E52; /* deep teal accent */
-  --color-terracotta:  #C2522A; /* warm terracotta */
-  --color-bg:          #F5F0E8; /* aged paper */
-  --color-surface:     #FFFFFF;
-  --color-text:        #1A1A1A;
-  --color-text-muted:  #6B6559;
-  --color-border:      #D9D3C7;
+  --color-primary: #1b4f8a; /* lapis lazuli blue */
+  --color-primary-light: #2e6db4;
+  --color-gold: #c9a84c; /* ceramic tile gold */
+  --color-teal: #1a5e52; /* deep teal accent */
+  --color-terracotta: #c2522a; /* warm terracotta */
+  --color-bg: #f5f0e8; /* aged paper */
+  --color-surface: #ffffff;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6559;
+  --color-border: #d9d3c7;
 
-  --radius-sm:  6px;
-  --radius-md:  12px;
-  --radius-lg:  20px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
 
-  --shadow-sm:  0 1px 3px rgb(0 0 0 / 0.08);
-  --shadow-md:  0 4px 12px rgb(0 0 0 / 0.12);
-  --shadow-lg:  0 8px 24px rgb(0 0 0 / 0.16);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.08);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.12);
+  --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.16);
 
   --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 /* Reset */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -42,7 +44,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img, svg {
+img,
+svg {
   display: block;
   max-width: 100%;
 }
@@ -55,4 +58,55 @@ button {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Shared buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  border: 1.5px solid transparent;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    opacity 0.12s ease;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.btn:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--gold {
+  background: var(--color-gold);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+}
+
+.btn--danger {
+  background: var(--color-terracotta);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
 }

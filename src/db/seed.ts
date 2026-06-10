@@ -31,9 +31,26 @@ export async function seedDatabase(db: LugatchaDB): Promise<void> {
   ])
 }
 
-// No-ops once words exist. Increment the DB version in LugatchaDB to force
-// a re-seed after a content update.
+// Bump when shipped data files change: bulkPut overwrites by id, so
+// re-seeding refreshes content without touching progress tables.
+export const CONTENT_VERSION = 2
+const CONTENT_VERSION_KEY = 'lugatcha.contentVersion'
+
+function storedContentVersion(): string | null {
+  try {
+    return localStorage.getItem(CONTENT_VERSION_KEY)
+  } catch {
+    return null
+  }
+}
+
 export async function ensureSeeded(db: LugatchaDB): Promise<void> {
   const count = await db.words.count()
-  if (count === 0) await seedDatabase(db)
+  if (count > 0 && storedContentVersion() === String(CONTENT_VERSION)) return
+  await seedDatabase(db)
+  try {
+    localStorage.setItem(CONTENT_VERSION_KEY, String(CONTENT_VERSION))
+  } catch {
+    // private mode etc. — worst case we re-seed next visit
+  }
 }

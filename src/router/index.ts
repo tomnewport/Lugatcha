@@ -15,6 +15,12 @@ const router = createRouter({
       name: 'location',
       component: LocationView,
     },
+    {
+      path: '/settings',
+      name: 'settings',
+      // Lazy: settings is rarely visited
+      component: () => import('@/views/SettingsView.vue'),
+    },
   ],
 })
 
