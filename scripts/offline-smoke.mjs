@@ -86,8 +86,8 @@ try {
 
   // 4. Open a location and start the intro — requires the offline re-seed to have worked
   await page.evaluate(() => [...document.querySelectorAll('.tile')].find((t) => !t.disabled).click())
-  await page.waitForSelector('.step-btn', { timeout: 15000 }).catch(() => fail('location path did not render offline'))
-  await page.evaluate(() => [...document.querySelectorAll('.step-btn')].find((b) => !b.disabled).click())
+  await page.waitForSelector('.activity-card', { timeout: 15000 }).catch(() => fail('location potluck did not render offline'))
+  await page.evaluate(() => [...document.querySelectorAll('.activity-card')].find((b) => !b.disabled).click())
   await page.waitForSelector('.word-card', { timeout: 15000 }).catch(() => fail('intro words did not load offline (seed failed)'))
   const word = await page.$eval('.word-card__uzbek', (e) => e.textContent.trim())
   console.log(`intro exercise loads offline (first word: ${word})`)

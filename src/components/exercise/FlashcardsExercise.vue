@@ -18,9 +18,9 @@ const rightOrder = ref<Word[]>([])
 const soundMode = ref(false)
 const loading = ref(true)
 
-/** rightWordId keyed by leftWordId. */
+/** rightWordId keyed by leftWordId, in match order. */
 const pairs = ref(new Map<string, string>())
-const selectedLeft = ref<string | null>(null)
+const selected = ref<{ side: 'left' | 'right'; id: string } | null>(null)
 const checked = ref(false)
 /** Per-left-word correctness after checking. */
 const results = ref(new Map<string, boolean>())
@@ -33,45 +33,91 @@ onMounted(async () => {
   loading.value = false
 })
 
+const byId = (id: string) => words.value.find((w) => w.id === id)!
 const pairedRight = computed(() => new Set(pairs.value.values()))
 const allPaired = computed(() => words.value.length > 0 && pairs.value.size === words.value.length)
 const correctCount = computed(() => [...results.value.values()].filter(Boolean).length)
 
-/** 1-based pair number for badge display. */
-function pairNumber(leftId: string): number {
-  return [...pairs.value.keys()].indexOf(leftId) + 1
+interface Row {
+  left: Word
+  right: Word | null
+  matched: boolean
 }
 
-function rightPairNumber(rightId: string): number {
-  const entry = [...pairs.value.entries()].find(([, r]) => r === rightId)
-  return entry ? pairNumber(entry[0]) : 0
+/**
+ * Matched pairs float to the top, side by side; unmatched cards fill the
+ * rows below. TransitionGroup animates every reshuffle.
+ */
+const rows = computed<Row[]>(() => {
+  const matched: Row[] = [...pairs.value.entries()].map(([l, r]) => ({
+    left: byId(l),
+    right: byId(r),
+    matched: true,
+  }))
+  const lefts = leftOrder.value.filter((w) => !pairs.value.has(w.id))
+  const rights = rightOrder.value.filter((w) => !pairedRight.value.has(w.id))
+  const open: Row[] = lefts.map((left, i) => ({ left, right: rights[i] ?? null, matched: false }))
+  return [...matched, ...open]
+})
+
+interface Cell {
+  key: string
+  kind: 'left' | 'connector' | 'right'
+  word: Word | null
+  row: Row
 }
 
-function tapLeft(word: Word) {
+/** One keyed element per grid cell so TransitionGroup can FLIP-animate each. */
+const cells = computed<Cell[]>(() =>
+  rows.value.flatMap((row): Cell[] => [
+    { key: `l-${row.left.id}`, kind: 'left', word: row.left, row },
+    { key: `c-${row.left.id}`, kind: 'connector', word: null, row },
+    {
+      key: row.right ? `r-${row.right.id}` : `r-empty-${row.left.id}`,
+      kind: 'right',
+      word: row.right,
+      row,
+    },
+  ]),
+)
+
+function unmatch(leftId: string) {
+  const next = new Map(pairs.value)
+  next.delete(leftId)
+  pairs.value = next
+}
+
+function tap(side: 'left' | 'right', word: Word) {
   if (checked.value) return
-  if (pairs.value.has(word.id)) {
-    const next = new Map(pairs.value)
-    next.delete(word.id)
-    pairs.value = next
+
+  // Tapping a matched card dissolves that pair
+  if (side === 'left' && pairs.value.has(word.id)) {
+    unmatch(word.id)
     return
   }
-  selectedLeft.value = selectedLeft.value === word.id ? null : word.id
-}
-
-function tapRight(word: Word) {
-  if (checked.value) return
-  if (pairedRight.value.has(word.id)) {
+  if (side === 'right' && pairedRight.value.has(word.id)) {
     const entry = [...pairs.value.entries()].find(([, r]) => r === word.id)
-    if (entry) {
-      const next = new Map(pairs.value)
-      next.delete(entry[0])
-      pairs.value = next
-    }
+    if (entry) unmatch(entry[0])
     return
   }
-  if (!selectedLeft.value) return
-  pairs.value = new Map(pairs.value).set(selectedLeft.value, word.id)
-  selectedLeft.value = null
+
+  if (!selected.value) {
+    selected.value = { side, id: word.id }
+    return
+  }
+  if (selected.value.side === side) {
+    selected.value = selected.value.id === word.id ? null : { side, id: word.id }
+    return
+  }
+  // Opposite sides: form the pair
+  const leftId = side === 'left' ? word.id : selected.value.id
+  const rightId = side === 'right' ? word.id : selected.value.id
+  pairs.value = new Map(pairs.value).set(leftId, rightId)
+  selected.value = null
+}
+
+function isSelected(side: 'left' | 'right', id: string): boolean {
+  return selected.value?.side === side && selected.value.id === id
 }
 
 async function check() {
@@ -86,16 +132,9 @@ async function check() {
   )
 }
 
-function statusClass(leftId: string): string {
-  if (!checked.value) return ''
-  return results.value.get(leftId) ? 'card--correct' : 'card--wrong'
-}
-
-function rightStatusClass(rightId: string): string {
-  if (!checked.value) return ''
-  const entry = [...pairs.value.entries()].find(([, r]) => r === rightId)
-  if (!entry) return ''
-  return results.value.get(entry[0]) ? 'card--correct' : 'card--wrong'
+function gradeClass(row: Row): string {
+  if (!checked.value || !row.matched) return ''
+  return results.value.get(row.left.id) ? 'is-correct' : 'is-wrong'
 }
 </script>
 
@@ -110,44 +149,35 @@ function rightStatusClass(rightId: string): string {
 
     <p v-if="loading" class="flashcards__loading" aria-live="polite">Loading cards…</p>
 
-    <div v-else class="flashcards__columns">
-      <div class="flashcards__column" aria-label="Uzbek words">
+    <TransitionGroup v-else name="match" tag="div" class="flashcards__grid">
+      <div v-for="cell in cells" :key="cell.key" class="cell">
+        <span v-if="cell.kind === 'connector'" class="connector" aria-hidden="true">
+          <span v-if="cell.row.matched" class="connector__line" :class="gradeClass(cell.row)" />
+        </span>
+
         <button
-          v-for="word in leftOrder"
-          :key="word.id"
+          v-else-if="cell.word"
           class="card"
           :class="[
-            statusClass(word.id),
+            gradeClass(cell.row),
             {
-              'card--selected': selectedLeft === word.id,
-              'card--paired': pairs.has(word.id),
+              'card--selected': isSelected(cell.kind, cell.word.id),
+              'card--matched': cell.row.matched,
             },
           ]"
           type="button"
-          @click="tapLeft(word)"
+          @click="tap(cell.kind, cell.word)"
         >
-          <AudioButton v-if="soundMode" :text="word.uzbek" />
-          <span v-else lang="uz">{{ word.uzbek }}</span>
-          <span v-if="pairs.has(word.id)" class="card__badge">{{ pairNumber(word.id) }}</span>
+          <AudioButton v-if="soundMode && cell.kind === 'left'" :text="cell.word.uzbek" />
+          <span v-else-if="cell.kind === 'left'" lang="uz">{{ cell.word.uzbek }}</span>
+          <span v-else>{{ cell.word.english }}</span>
         </button>
       </div>
+    </TransitionGroup>
 
-      <div class="flashcards__column" aria-label="English meanings">
-        <button
-          v-for="word in rightOrder"
-          :key="word.id"
-          class="card"
-          :class="[rightStatusClass(word.id), { 'card--paired': pairedRight.has(word.id) }]"
-          type="button"
-          @click="tapRight(word)"
-        >
-          <span>{{ word.english }}</span>
-          <span v-if="pairedRight.has(word.id)" class="card__badge">{{
-            rightPairNumber(word.id)
-          }}</span>
-        </button>
-      </div>
-    </div>
+    <p v-if="!checked && !loading" class="flashcards__hint">
+      Tap a card on each side to pair it — tap a pair to undo it.
+    </p>
 
     <p v-if="checked" class="flashcards__score" aria-live="polite">
       {{ correctCount }} of {{ words.length }} correct
@@ -192,16 +222,31 @@ function rightStatusClass(rightId: string): string {
   text-align: center;
 }
 
-.flashcards__columns {
+.flashcards__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  grid-template-columns: 1fr 26px 1fr;
+  row-gap: 0.6rem;
+  align-items: stretch;
+  position: relative;
 }
 
-.flashcards__column {
+/* FLIP reordering */
+.match-move {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cell {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.cell > .card {
+  flex: 1;
+}
+
+.cell > .connector {
+  flex: 1;
 }
 
 .card {
@@ -233,22 +278,53 @@ function rightStatusClass(rightId: string): string {
 .card--selected {
   border-color: var(--color-primary);
   background: #f2f7fc;
+  box-shadow: 0 0 0 2px rgb(27 79 138 / 0.18);
 }
 
-.card--paired {
+.card--matched {
   border-color: var(--color-primary-light);
 }
 
-.card--correct {
+.card.is-correct {
   border-color: var(--color-teal);
   background: #f0f7f5;
   animation: pop 0.3s ease;
 }
 
-.card--wrong {
+.card.is-wrong {
   border-color: var(--color-terracotta);
   background: #fbf1ec;
   animation: shake 0.35s ease;
+}
+
+.connector {
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+}
+
+.connector__line {
+  display: block;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--color-primary-light);
+  transform-origin: left center;
+  animation: draw 0.35s ease;
+}
+
+.connector__line.is-correct {
+  background: var(--color-teal);
+}
+
+.connector__line.is-wrong {
+  background: var(--color-terracotta);
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
 }
 
 @keyframes pop {
@@ -276,20 +352,12 @@ function rightStatusClass(rightId: string): string {
   }
 }
 
-.card__badge {
-  position: absolute;
-  top: -7px;
-  right: -7px;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #fff;
-  background: var(--color-primary);
-  border-radius: 50%;
+.flashcards__hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  font-style: italic;
+  margin: 0;
 }
 
 .flashcards__score {

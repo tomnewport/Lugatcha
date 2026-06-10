@@ -54,7 +54,13 @@ export interface LocationProgress {
   completedExercises: ExerciseType[]
 }
 
-export type ExerciseType = 'intro' | 'flashcards' | 'phrase-assembly' | 'roleplay' | 'storytime'
+export type ExerciseType =
+  | 'intro'
+  | 'flashcards'
+  | 'listening'
+  | 'phrase-assembly'
+  | 'roleplay'
+  | 'storytime'
 
 // ---------------------------------------------------------------------------
 // Language School lessons (issue #8). Lesson content is static config fetched
