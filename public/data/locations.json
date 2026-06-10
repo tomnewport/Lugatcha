@@ -1,0 +1,19 @@
+[
+  { "id": "police-station",  "name": { "en": "Police Station",    "uz": "Politsiya"            }, "icon": "police-station",  "gridRow": 1, "gridCol": 1 },
+  { "id": "public-square",   "name": { "en": "Public Square",     "uz": "Shahar maydoni"       }, "icon": "public-square",   "gridRow": 1, "gridCol": 2 },
+  { "id": "hospital",        "name": { "en": "Hospital",          "uz": "Kasalxona"            }, "icon": "hospital",        "gridRow": 1, "gridCol": 3 },
+  { "id": "hotel",           "name": { "en": "Hotel",             "uz": "Mehmonxona"           }, "icon": "hotel",           "gridRow": 1, "gridCol": 4 },
+  { "id": "museum",          "name": { "en": "Museum",            "uz": "Muzey"                }, "icon": "museum",          "gridRow": 2, "gridCol": 1 },
+  { "id": "train-station",   "name": { "en": "Train Station",     "uz": "Vokzal"               }, "icon": "train-station",   "gridRow": 2, "gridCol": 2 },
+  { "id": "metro-station",   "name": { "en": "Metro Station",     "uz": "Metro bekati"         }, "icon": "metro-station",   "gridRow": 2, "gridCol": 3 },
+  { "id": "bus-stop",        "name": { "en": "Bus Stop",          "uz": "Avtobus bekati"       }, "icon": "bus-stop",        "gridRow": 2, "gridCol": 4 },
+  { "id": "gift-shop",       "name": { "en": "Gift Shop",         "uz": "Sovg'a do'koni"       }, "icon": "gift-shop",       "gridRow": 3, "gridCol": 1 },
+  { "id": "grocery-store",   "name": { "en": "Grocery Store",     "uz": "Oziq-ovqat do'koni"   }, "icon": "grocery-store",   "gridRow": 3, "gridCol": 2 },
+  { "id": "library",         "name": { "en": "Library",           "uz": "Kutubxona"            }, "icon": "library",         "gridRow": 3, "gridCol": 3 },
+  { "id": "restaurant",      "name": { "en": "Restaurant",        "uz": "Restoran"             }, "icon": "restaurant",      "gridRow": 3, "gridCol": 4 },
+  { "id": "cafe",            "name": { "en": "Café",              "uz": "Kafe"                 }, "icon": "cafe",            "gridRow": 4, "gridCol": 1 },
+  { "id": "choyxona",        "name": { "en": "Choyxona",          "uz": "Choyxona"             }, "icon": "choyxona",        "gridRow": 4, "gridCol": 2 },
+  { "id": "bank",            "name": { "en": "Bank",              "uz": "Bank"                 }, "icon": "bank",            "gridRow": 4, "gridCol": 3 },
+  { "id": "mountain-park",   "name": { "en": "Mountain Park",     "uz": "Tog' bog'i"           }, "icon": "mountain-park",   "gridRow": 4, "gridCol": 4 },
+  { "id": "airport",         "name": { "en": "Airport",           "uz": "Aeroport"             }, "icon": "airport",         "gridRow": 5, "gridCol": 1 }
+]
