@@ -1,0 +1,13 @@
+{
+  "id": "restaurant.plov-evening",
+  "theme": "restaurant",
+  "title": { "en": "An Evening of Plov", "uz": "Osh kechasi" },
+  "sentences": [
+    { "uzbek": "Biz do'stim bilan restoraniga bordik.",         "english": "My friend and I went to a restaurant." },
+    { "uzbek": "Ofitsiant bizga menyu olib keldi.",             "english": "The waiter brought us a menu." },
+    { "uzbek": "Men osh va ko'k choy buyurtma qildim.",         "english": "I ordered plov and green tea." },
+    { "uzbek": "Osh juda mazali va to'yimli edi.",              "english": "The plov was very delicious and filling." },
+    { "uzbek": "Biz non yedik va suhbatlashdik.",               "english": "We ate bread and talked." },
+    { "uzbek": "Oxirida men hisob so'radim.",                   "english": "At the end I asked for the bill." }
+  ]
+}

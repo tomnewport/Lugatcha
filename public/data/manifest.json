@@ -1,5 +1,5 @@
 {
-  "words": ["core", "airport"],
-  "stories": ["airport"],
-  "roleplay": ["airport"]
+  "words":    ["core", "airport", "restaurant", "hotel"],
+  "stories":  ["airport", "restaurant", "hotel"],
+  "roleplay": ["airport", "restaurant", "hotel"]
 }
