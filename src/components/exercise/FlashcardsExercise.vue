@@ -126,7 +126,7 @@ function rightStatusClass(rightId: string): string {
           type="button"
           @click="tapLeft(word)"
         >
-          <AudioButton v-if="soundMode" :text="word.uzbek" :audio-id="word.id" />
+          <AudioButton v-if="soundMode" :text="word.uzbek" />
           <span v-else lang="uz">{{ word.uzbek }}</span>
           <span v-if="pairs.has(word.id)" class="card__badge">{{ pairNumber(word.id) }}</span>
         </button>
