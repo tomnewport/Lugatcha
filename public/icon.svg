@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Lapis tile background -->
+  <rect width="512" height="512" rx="96" fill="#1B4F8A"/>
+  <rect x="22" y="22" width="468" height="468" rx="80" fill="none" stroke="#C9A84C" stroke-width="6" opacity="0.7"/>
+  <!-- Eight-pointed star (rub el hizb), a motif of Uzbek tilework -->
+  <g transform="translate(256 256)">
+    <rect x="-118" y="-118" width="236" height="236" fill="#C9A84C"/>
+    <rect x="-118" y="-118" width="236" height="236" fill="#C9A84C" transform="rotate(45)"/>
+    <rect x="-86" y="-86" width="172" height="172" fill="#F5F0E8"/>
+    <rect x="-86" y="-86" width="172" height="172" fill="#F5F0E8" transform="rotate(45)"/>
+    <circle r="62" fill="#1A5E52"/>
+    <text x="0" y="27" text-anchor="middle" font-family="Georgia, serif" font-size="78" font-weight="bold" fill="#F5F0E8">L</text>
+  </g>
+</svg>
