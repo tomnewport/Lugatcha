@@ -11,10 +11,7 @@ onMounted(async () => {
   locations.value = await loadLocations()
 })
 
-const allProgress = useLiveQuery(
-  () => db.locationProgress.toArray(),
-  [] as LocationProgress[],
-)
+const allProgress = useLiveQuery(() => db.locationProgress.toArray(), [] as LocationProgress[])
 
 const progressMap = computed(() => {
   const map = new Map<string, LocationProgress>()
@@ -49,6 +46,21 @@ const lockedMap = computed(() => {
 
 <template>
   <main class="home">
+    <RouterLink class="settings-link" to="/settings" aria-label="Settings">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="3" />
+        <path
+          d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+        />
+      </svg>
+    </RouterLink>
+
     <header class="home-header">
       <div class="home-header__ornament" aria-hidden="true">
         <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
@@ -56,24 +68,24 @@ const lockedMap = computed(() => {
           <circle cx="60" cy="60" r="40" fill="none" stroke="currentColor" stroke-width="1.5" />
           <circle cx="60" cy="60" r="8" fill="currentColor" />
           <g stroke="currentColor" stroke-width="1.5" fill="none">
-            <line x1="60" y1="5"   x2="60" y2="20"  />
+            <line x1="60" y1="5" x2="60" y2="20" />
             <line x1="60" y1="100" x2="60" y2="115" />
-            <line x1="5"  y1="60"  x2="20" y2="60"  />
+            <line x1="5" y1="60" x2="20" y2="60" />
             <line x1="100" y1="60" x2="115" y2="60" />
-            <line x1="21" y1="21" x2="31" y2="31"   />
-            <line x1="89" y1="89" x2="99" y2="99"   />
-            <line x1="99" y1="21" x2="89" y2="31"   />
-            <line x1="21" y1="99" x2="31" y2="89"   />
+            <line x1="21" y1="21" x2="31" y2="31" />
+            <line x1="89" y1="89" x2="99" y2="99" />
+            <line x1="99" y1="21" x2="89" y2="31" />
+            <line x1="21" y1="99" x2="31" y2="89" />
           </g>
           <g fill="currentColor">
-            <circle cx="60"  cy="5"   r="3" />
-            <circle cx="60"  cy="115" r="3" />
-            <circle cx="5"   cy="60"  r="3" />
-            <circle cx="115" cy="60"  r="3" />
-            <circle cx="21"  cy="21"  r="3" />
-            <circle cx="99"  cy="99"  r="3" />
-            <circle cx="99"  cy="21"  r="3" />
-            <circle cx="21"  cy="99"  r="3" />
+            <circle cx="60" cy="5" r="3" />
+            <circle cx="60" cy="115" r="3" />
+            <circle cx="5" cy="60" r="3" />
+            <circle cx="115" cy="60" r="3" />
+            <circle cx="21" cy="21" r="3" />
+            <circle cx="99" cy="99" r="3" />
+            <circle cx="99" cy="21" r="3" />
+            <circle cx="21" cy="99" r="3" />
           </g>
         </svg>
       </div>
@@ -111,6 +123,33 @@ const lockedMap = computed(() => {
   gap: 1.25rem;
   padding: 1.25rem 1rem 2rem;
   background: var(--color-bg);
+  position: relative;
+}
+
+.settings-link {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-link svg {
+  width: 19px;
+  height: 19px;
+}
+
+.settings-link:hover {
+  box-shadow: var(--shadow-md);
+  color: var(--color-primary);
 }
 
 /* Header */
