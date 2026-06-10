@@ -1,10 +1,10 @@
 export interface Word {
-  id: string            // stable slug, e.g. "airport.passport"
+  id: string // stable slug, e.g. "airport.passport"
   uzbek: string
   english: string
   usageNotes?: string
   inflections?: string[]
-  theme: string         // location id or 'core'
+  theme: string // location id or 'core'
   cyrillic?: string
 }
 
@@ -18,13 +18,15 @@ export interface Story {
   theme: string
   title: { en: string; uz: string }
   sentences: StorySentence[]
+  /** Per-story word glosses (surface form -> English) for tooltip lookups. */
+  glossary?: Record<string, string>
 }
 
 export interface RoleplayTurn {
   speaker: 'user' | 'npc'
   uzbek: string
   english: string
-  tokens?: string[]     // pre-tokenized Uzbek words for phrase-assembly
+  tokens?: string[] // pre-tokenized Uzbek words for phrase-assembly
 }
 
 export interface RoleplayVariant {
@@ -43,7 +45,7 @@ export interface Roleplay {
 
 export interface WordProgress {
   wordId: string
-  seenAt?: number        // unix timestamp of first exposure
+  seenAt?: number // unix timestamp of first exposure
   lastResults: boolean[] // newest first, capped at 4 entries
 }
 
