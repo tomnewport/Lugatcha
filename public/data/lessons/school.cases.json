@@ -1,0 +1,161 @@
+{
+  "id": "school.cases",
+  "order": 3,
+  "title": {
+    "en": "To, At, From",
+    "uz": "Kelishiklar"
+  },
+  "blurb": "Three endings that replace all your prepositions",
+  "estimatedMinutes": 3,
+  "prerequisites": [
+    "school.suffixes"
+  ],
+  "sections": [
+    {
+      "heading": "Cases do what prepositions do",
+      "body": [
+        "Where English puts little words **before** a noun — to the house, at the house, from the house — Uzbek clips an ending **onto** the noun. These endings are called **cases**, and three of them will carry you through your whole trip."
+      ],
+      "examples": [
+        {
+          "uzbek": "uyga",
+          "english": "to the house",
+          "breakdown": [
+            "uy",
+            "ga"
+          ],
+          "gloss": [
+            "house",
+            "to"
+          ]
+        },
+        {
+          "uzbek": "uyda",
+          "english": "at the house",
+          "breakdown": [
+            "uy",
+            "da"
+          ],
+          "gloss": [
+            "house",
+            "at"
+          ]
+        },
+        {
+          "uzbek": "uydan",
+          "english": "from the house",
+          "breakdown": [
+            "uy",
+            "dan"
+          ],
+          "gloss": [
+            "house",
+            "from"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "The big three for travellers",
+      "body": [
+        "**-ga** goes: Toshkentga — to Tashkent. **-da** stays: mehmonxonada — at the hotel. **-dan** departs: Samarqanddan — from Samarkand.",
+        "There are six cases in all — **-ni** marks a definite object, **-ning** means “of” — but -ga, -da and -dan are the daily workhorses."
+      ],
+      "examples": [
+        {
+          "uzbek": "Toshkentga",
+          "english": "to Tashkent",
+          "breakdown": [
+            "Toshkent",
+            "ga"
+          ],
+          "gloss": [
+            "Tashkent",
+            "to"
+          ]
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "choice-toga",
+      "engine": "choice",
+      "instruction": "Pick the right form of uy (house):",
+      "prompt": "“to the house”",
+      "options": [
+        {
+          "text": "uyga",
+          "correct": true,
+          "explain": "-ga points the way: to, towards."
+        },
+        {
+          "text": "uyda",
+          "explain": "-da means at or in — staying, not going."
+        },
+        {
+          "text": "uydan",
+          "explain": "-dan means from — the opposite direction!"
+        }
+      ]
+    },
+    {
+      "id": "choice-fromtash",
+      "engine": "choice",
+      "instruction": "Complete it: Men Toshkent___ kelaman — “I come FROM Tashkent”",
+      "options": [
+        {
+          "text": "Toshkentdan",
+          "correct": true,
+          "explain": "-dan departs: from Tashkent."
+        },
+        {
+          "text": "Toshkentga",
+          "explain": "-ga would mean you're coming TO Tashkent."
+        },
+        {
+          "text": "Toshkentda",
+          "explain": "-da would leave you sitting IN Tashkent."
+        }
+      ]
+    },
+    {
+      "id": "choice-athotel",
+      "engine": "choice",
+      "instruction": "Pick the right ending:",
+      "prompt": "“at the hotel”",
+      "options": [
+        {
+          "text": "mehmonxonada",
+          "correct": true,
+          "explain": "-da stays: at, in, on."
+        },
+        {
+          "text": "mehmonxonaga",
+          "explain": "That's TO the hotel."
+        },
+        {
+          "text": "mehmonxonadan",
+          "explain": "That's FROM the hotel."
+        }
+      ]
+    },
+    {
+      "id": "build-totash",
+      "engine": "build",
+      "instruction": "Build the sentence: “I am going to Tashkent”",
+      "tokens": [
+        "Men",
+        "Toshkentga",
+        "boraman"
+      ],
+      "decoys": [
+        "Toshkentdan",
+        "uyda"
+      ],
+      "audioText": "Men Toshkentga boraman",
+      "translation": "I am going to Tashkent."
+    }
+  ],
+  "wrapUp": "-ga goes, -da stays, -dan departs. Clip the right ending onto the noun and you never need a preposition."
+}

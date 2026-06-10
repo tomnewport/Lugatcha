@@ -1,0 +1,105 @@
+{
+  "id": "school.verb-last",
+  "order": 2,
+  "title": {
+    "en": "The Verb Is Shy",
+    "uz": "Fe'l oxirida"
+  },
+  "blurb": "Why the action always hides at the end",
+  "estimatedMinutes": 2,
+  "sections": [
+    {
+      "heading": "The verb hides at the end",
+      "body": [
+        "The Uzbek verb is shy: it always hides at the **end of the sentence**. The pattern is Subject – Object – **Verb**.",
+        "**Men non yedim** is literally “I bread ate”. It feels strange for a day or two — then your brain flips, and English starts sounding backwards."
+      ],
+      "examples": [
+        {
+          "uzbek": "Men non yedim",
+          "english": "I ate bread",
+          "breakdown": [
+            "Men",
+            "non",
+            "yedim"
+          ],
+          "gloss": [
+            "I",
+            "bread",
+            "ate"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Everything points the same way",
+      "body": [
+        "Uzbek is consistently **head-final**: describing things come before the thing described. Adjectives before nouns (**katta shahar** — big city), owners before what they own, and the little relation words come **after** the noun: **men bilan** — “me with”.",
+        "One more tip: the word just before the verb carries the spotlight. But verb-last is always the safe default."
+      ],
+      "examples": [
+        {
+          "uzbek": "katta shahar",
+          "english": "a big city"
+        },
+        {
+          "uzbek": "men bilan",
+          "english": "with me (literally: me with)"
+        }
+      ]
+    }
+  ],
+  "exercises": [
+    {
+      "id": "build-bread",
+      "engine": "build",
+      "instruction": "Arrange the words: “I ate bread”",
+      "tokens": [
+        "Men",
+        "non",
+        "yedim"
+      ],
+      "decoys": [
+        "choy"
+      ],
+      "audioText": "Men non yedim",
+      "translation": "I ate bread."
+    },
+    {
+      "id": "build-tea",
+      "engine": "build",
+      "instruction": "Arrange: “I drink tea”",
+      "tokens": [
+        "Men",
+        "choy",
+        "ichaman"
+      ],
+      "decoys": [
+        "non"
+      ],
+      "audioText": "Men choy ichaman",
+      "translation": "I drink tea."
+    },
+    {
+      "id": "choice-natural",
+      "engine": "choice",
+      "instruction": "Which one sounds natural to an Uzbek ear?",
+      "options": [
+        {
+          "text": "Men non yedim",
+          "correct": true,
+          "explain": "Verb at the end — always."
+        },
+        {
+          "text": "Men yedim non",
+          "explain": "The verb has wandered into the middle — it belongs at the end."
+        },
+        {
+          "text": "Yedim men non",
+          "explain": "The verb goes last, not first."
+        }
+      ]
+    }
+  ],
+  "wrapUp": "Subject, then object, then — at the very end — the verb. Park the action at the end of the sentence and you'll sound right."
+}

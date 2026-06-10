@@ -1,0 +1,94 @@
+[
+  {
+    "id": "school.suffixes",
+    "order": 1,
+    "title": {
+      "en": "Stack the Suffixes",
+      "uz": "Qo'shimchalar"
+    },
+    "blurb": "How Uzbek builds big words from little bricks",
+    "estimatedMinutes": 3
+  },
+  {
+    "id": "school.verb-last",
+    "order": 2,
+    "title": {
+      "en": "The Verb Is Shy",
+      "uz": "Fe'l oxirida"
+    },
+    "blurb": "Why the action always hides at the end",
+    "estimatedMinutes": 2
+  },
+  {
+    "id": "school.cases",
+    "order": 3,
+    "title": {
+      "en": "To, At, From",
+      "uz": "Kelishiklar"
+    },
+    "blurb": "Three endings that replace all your prepositions",
+    "estimatedMinutes": 3,
+    "prerequisites": [
+      "school.suffixes"
+    ]
+  },
+  {
+    "id": "school.sen-siz",
+    "order": 4,
+    "title": {
+      "en": "sen vs siz",
+      "uz": "Sen va siz"
+    },
+    "blurb": "Politeness is baked into the grammar",
+    "estimatedMinutes": 2
+  },
+  {
+    "id": "school.sounds",
+    "order": 5,
+    "title": {
+      "en": "The Throaty Sounds",
+      "uz": "Tovushlar"
+    },
+    "blurb": "q, g', x and o' — made further back than English goes",
+    "estimatedMinutes": 3
+  },
+  {
+    "id": "school.alphabets",
+    "order": 6,
+    "title": {
+      "en": "Two Alphabets",
+      "uz": "Ikki alifbo"
+    },
+    "blurb": "Read both sides of the street: Latin and Cyrillic",
+    "estimatedMinutes": 3,
+    "prerequisites": [
+      "school.sounds"
+    ]
+  },
+  {
+    "id": "school.bor-yoq",
+    "order": 7,
+    "title": {
+      "en": "Do You Have It?",
+      "uz": "Bor va yo'q"
+    },
+    "blurb": "Uzbek has no “to have” — things simply exist",
+    "estimatedMinutes": 2,
+    "prerequisites": [
+      "school.cases"
+    ]
+  },
+  {
+    "id": "school.word-factory",
+    "order": 8,
+    "title": {
+      "en": "The Word Factory",
+      "uz": "So'z fabrikasi"
+    },
+    "blurb": "Four suffixes that multiply every word you learn",
+    "estimatedMinutes": 3,
+    "prerequisites": [
+      "school.suffixes"
+    ]
+  }
+]
