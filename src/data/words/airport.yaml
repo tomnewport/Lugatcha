@@ -1,0 +1,50 @@
+- id: airport.passport
+  uzbek: "pasport"
+  english: "passport"
+  theme: airport
+
+- id: airport.ticket
+  uzbek: "chipta"
+  english: "ticket"
+  theme: airport
+
+- id: airport.flight
+  uzbek: "parvoz"
+  english: "flight"
+  theme: airport
+
+- id: airport.luggage
+  uzbek: "bagaj"
+  english: "luggage"
+  theme: airport
+
+- id: airport.customs
+  uzbek: "bojxona"
+  english: "customs"
+  theme: airport
+
+- id: airport.departure
+  uzbek: "jo'nash"
+  english: "departure"
+  theme: airport
+
+- id: airport.arrival
+  uzbek: "kelish"
+  english: "arrival"
+  theme: airport
+
+- id: airport.gate
+  uzbek: "yo'lak"
+  english: "gate"
+  usageNotes: "Used for a boarding gate at an airport."
+  theme: airport
+
+- id: airport.visa
+  uzbek: "viza"
+  english: "visa"
+  theme: airport
+
+- id: airport.tourist
+  uzbek: "turist"
+  english: "tourist"
+  theme: airport
