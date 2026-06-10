@@ -1,4 +1,12 @@
-# Lugatcha — A Guide to the Uzbek Language and Culture
+# Lugʻatcha — A Little Dictionary
+
+**[Open the app →](https://tomnewport.github.io/Lugatcha/)**
+
+A progressive web app for learning Uzbek before a trip to Uzbekistan. Works entirely offline once loaded.
+
+---
+
+## Reference guide to the Uzbek language and culture
 
 *Lugʻatcha* (lug'atcha) means "little dictionary" or "glossary" in Uzbek. This
 repository is a reference guide to the **Uzbek language** and the **culture of
@@ -20,12 +28,12 @@ future reader enough grounding to:
 > spelling), verify it against a primary source before relying on it. Living
 > languages and cultures vary by region, generation, and individual.
 
-## How to read this guide
+### How to read this guide
 
 If you have five minutes, read [Quick Start](#quick-start) below. If you have
 longer, work through the documents in order.
 
-### Language
+#### Language
 
 | Document | What it covers |
 |---|---|
@@ -37,7 +45,7 @@ longer, work through the documents in order.
 | [Challenges for English speakers](docs/language/06-challenges-for-english-speakers.md) | The specific things that trip learners up, ranked |
 | [Phrasebook](docs/language/07-phrasebook.md) | Practical phrases with pronunciation |
 
-### Culture
+#### Culture
 
 | Document | What it covers |
 |---|---|
@@ -48,7 +56,7 @@ longer, work through the documents in order.
 | [Cuisine](docs/culture/05-cuisine.md) | What people eat, how, and the rituals around it |
 | [Customs & etiquette](docs/culture/06-customs-and-etiquette.md) | How to behave, greet, dress, gift, and avoid offence |
 
-## Quick start
+### Quick start
 
 - **Country:** Republic of Uzbekistan (*Oʻzbekiston Respublikasi*), Central Asia.
   Capital: **Tashkent** (*Toshkent*). Doubly landlocked.
@@ -70,7 +78,7 @@ longer, work through the documents in order.
   words by stacking suffixes, has **no grammatical gender**, no articles, and
   puts the **verb at the end** of the sentence.
 
-## A note on spelling in this guide
+### A note on spelling in this guide
 
 Uzbek Latin uses a few characters that look unusual in English:
 
