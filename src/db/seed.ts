@@ -1,39 +1,38 @@
-import { load } from 'js-yaml'
 import type { LugatchaDB } from './LugatchaDB'
 import type { Word, Story, Roleplay } from './types'
 
-const wordFiles = import.meta.glob('../data/words/*.yaml', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>
+interface DataManifest {
+  words: string[]
+  stories: string[]
+  roleplay: string[]
+}
 
-const storyFiles = import.meta.glob('../data/stories/*.yaml', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>
+const base = import.meta.env.BASE_URL
 
-const roleplayFiles = import.meta.glob('../data/roleplay/*.yaml', {
-  eager: true,
-  query: '?raw',
-  import: 'default',
-}) as Record<string, string>
+async function fetchData<T>(path: string): Promise<T> {
+  const res = await fetch(`${base}data/${path}`)
+  if (!res.ok) throw new Error(`Failed to fetch data file: ${path} (${res.status})`)
+  return res.json() as Promise<T>
+}
 
 export async function seedDatabase(db: LugatchaDB): Promise<void> {
-  const words: Word[] = Object.values(wordFiles).flatMap((raw) => load(raw) as Word[])
-  const stories: Story[] = Object.values(storyFiles).map((raw) => load(raw) as Story)
-  const roleplayItems: Roleplay[] = Object.values(roleplayFiles).map((raw) => load(raw) as Roleplay)
+  const manifest = await fetchData<DataManifest>('manifest.json')
+
+  const [wordArrays, stories, roleplayItems] = await Promise.all([
+    Promise.all(manifest.words.map((name) => fetchData<Word[]>(`words/${name}.json`))),
+    Promise.all(manifest.stories.map((name) => fetchData<Story>(`stories/${name}.json`))),
+    Promise.all(manifest.roleplay.map((name) => fetchData<Roleplay>(`roleplay/${name}.json`))),
+  ])
 
   await Promise.all([
-    db.words.bulkPut(words),
+    db.words.bulkPut(wordArrays.flat()),
     db.stories.bulkPut(stories),
     db.roleplay.bulkPut(roleplayItems),
   ])
 }
 
-// Called on app start; no-ops if data is already present.
-// Increment DB version in LugatchaDB to trigger a re-seed after content updates.
+// No-ops once words exist. Increment the DB version in LugatchaDB to force
+// a re-seed after a content update.
 export async function ensureSeeded(db: LugatchaDB): Promise<void> {
   const count = await db.words.count()
   if (count === 0) await seedDatabase(db)

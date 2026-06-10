@@ -37,6 +37,16 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
+            // Data files: serve stale immediately, refresh in background
+            urlPattern: /\/data\/.+\.json$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'data-cache',
+              expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 7 },
+            },
+          },
+          {
+            // Audio: immutable once generated, cache forever
             urlPattern: /\/audio\/.+\.mp3$/,
             handler: 'CacheFirst',
             options: {
