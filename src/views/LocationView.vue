@@ -1,16 +1,26 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getLocation } from '@/db/locations'
-import type { Location } from '@/db/types'
+import { useLocationProgress } from '@/db/useDb'
+import { useProgressStore, EXERCISE_SEQUENCE, nextExercise } from '@/stores/progress'
+import type { Location, ExerciseType } from '@/db/types'
+import ExerciseLayout from '@/components/ExerciseLayout.vue'
+import IntroExercise from '@/exercises/IntroExercise.vue'
+import FlashcardsExercise from '@/exercises/FlashcardsExercise.vue'
+import PhraseAssemblyExercise from '@/exercises/PhraseAssemblyExercise.vue'
+import RoleplayExercise from '@/exercises/RoleplayExercise.vue'
+import StorytimeExercise from '@/exercises/StorytimeExercise.vue'
 
 const route = useRoute()
 const router = useRouter()
+const progressStore = useProgressStore()
+
+const locationId = route.params.id as string
 const location = ref<Location | null>(null)
 
 onMounted(async () => {
-  const id = route.params.id as string
-  const found = await getLocation(id)
+  const found = await getLocation(locationId)
   if (!found) {
     router.replace('/')
     return
@@ -18,95 +28,145 @@ onMounted(async () => {
   location.value = found
 })
 
+const progress = useLocationProgress(locationId)
+
+const currentExercise = computed<ExerciseType | null>(() => nextExercise(progress.value))
+
+const stepIndex = computed(() =>
+  currentExercise.value ? EXERCISE_SEQUENCE.indexOf(currentExercise.value) : EXERCISE_SEQUENCE.length,
+)
+
+const isComplete = computed(() => currentExercise.value === null)
+
+async function onExerciseComplete() {
+  if (currentExercise.value) {
+    await progressStore.completeExercise(locationId, currentExercise.value)
+  }
+}
+
 function goHome() {
   router.push('/')
 }
 </script>
 
 <template>
-  <main class="location-view">
-    <button class="back-btn" aria-label="Back to city map" @click="goHome">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      City
-    </button>
+  <!-- Loading state before location metadata arrives -->
+  <div v-if="!location" class="loading-screen" aria-live="polite">
+    Loading…
+  </div>
 
-    <div v-if="location" class="location-body">
-      <h1 class="location-name">{{ location.name.en }}</h1>
-      <p class="location-name-uz" lang="uz">{{ location.name.uz }}</p>
-      <p class="coming-soon">Exercises coming soon — Step 5 will wire up the full flow.</p>
+  <ExerciseLayout
+    v-else
+    :location-name="location.name.en"
+    :location-name-uz="location.name.uz"
+    :step-index="stepIndex"
+  >
+    <!-- Completion screen -->
+    <div v-if="isComplete" class="completion">
+      <div class="completion__ornament" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="32" cy="32" r="28" />
+          <path d="M18 32l10 10 18-18" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h2 class="completion__title">All done!</h2>
+      <p class="completion__sub">You've completed all exercises for {{ location.name.en }}.</p>
+      <p class="completion__sub-uz" lang="uz">{{ location.name.uz }}</p>
+      <button class="completion__btn" @click="goHome">Back to City</button>
     </div>
 
-    <p v-else class="loading" aria-live="polite">Loading…</p>
-  </main>
+    <!-- Active exercises -->
+    <IntroExercise
+      v-else-if="currentExercise === 'intro'"
+      :location-id="locationId"
+      @complete="onExerciseComplete"
+    />
+    <FlashcardsExercise
+      v-else-if="currentExercise === 'flashcards'"
+      :location-id="locationId"
+      @complete="onExerciseComplete"
+    />
+    <PhraseAssemblyExercise
+      v-else-if="currentExercise === 'phrase-assembly'"
+      :location-id="locationId"
+      @complete="onExerciseComplete"
+    />
+    <RoleplayExercise
+      v-else-if="currentExercise === 'roleplay'"
+      :location-id="locationId"
+      @complete="onExerciseComplete"
+    />
+    <StorytimeExercise
+      v-else-if="currentExercise === 'storytime'"
+      :location-id="locationId"
+      @complete="onExerciseComplete"
+    />
+  </ExerciseLayout>
 </template>
 
 <style scoped>
-.location-view {
+.loading-screen {
   min-height: 100dvh;
   display: flex;
-  flex-direction: column;
-  padding: 1rem 1.25rem 2rem;
-  background: var(--color-bg);
-  gap: 1.5rem;
-}
-
-.back-btn {
-  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.75rem 0.4rem 0.5rem;
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
+  justify-content: center;
   font-size: 0.9rem;
-  box-shadow: var(--shadow-sm);
-  align-self: flex-start;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
 }
 
-.back-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.back-btn:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.location-body {
+/* Completion */
+.completion {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding-top: 2rem;
+  gap: 0.75rem;
+  flex: 1;
   text-align: center;
+  padding-top: 2rem;
 }
 
-.location-name {
-  font-size: clamp(1.8rem, 7vw, 2.8rem);
+.completion__ornament {
+  width: 72px;
+  height: 72px;
+  color: var(--color-gold);
+  margin-bottom: 0.5rem;
+}
+
+.completion__title {
+  font-size: 1.8rem;
   font-weight: 800;
   color: var(--color-primary);
   margin: 0;
 }
 
-.location-name-uz {
-  font-size: 1.1rem;
+.completion__sub {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  max-width: 280px;
+  margin: 0;
+}
+
+.completion__sub-uz {
+  font-size: 0.85rem;
   color: var(--color-text-muted);
   margin: 0;
 }
 
-.coming-soon {
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  font-style: italic;
+.completion__btn {
+  margin-top: 1.5rem;
+  padding: 0.85rem 2rem;
+  background: var(--color-primary);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-md);
+  width: 100%;
+  max-width: 320px;
 }
 
-.loading {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin: auto;
+.completion__btn:hover {
+  opacity: 0.88;
 }
 </style>
