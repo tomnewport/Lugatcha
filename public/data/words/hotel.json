@@ -1,0 +1,18 @@
+[
+  { "id": "hotel.room",          "uzbek": "xona",                "english": "room",              "theme": "hotel" },
+  { "id": "hotel.reservation",   "uzbek": "bron",                "english": "reservation",       "theme": "hotel" },
+  { "id": "hotel.check-in",      "uzbek": "ro'yxatga olish",     "english": "check-in",          "theme": "hotel" },
+  { "id": "hotel.key",           "uzbek": "kalit",               "english": "key",               "theme": "hotel" },
+  { "id": "hotel.floor",         "uzbek": "qavat",               "english": "floor / storey",    "theme": "hotel" },
+  { "id": "hotel.elevator",      "uzbek": "lift",                "english": "elevator / lift",   "theme": "hotel" },
+  { "id": "hotel.breakfast",     "uzbek": "nonushta",            "english": "breakfast",         "theme": "hotel" },
+  { "id": "hotel.towel",         "uzbek": "sochiq",              "english": "towel",             "theme": "hotel" },
+  { "id": "hotel.pillow",        "uzbek": "yostiq",              "english": "pillow",            "theme": "hotel" },
+  { "id": "hotel.price",         "uzbek": "narx",                "english": "price",             "theme": "hotel" },
+  { "id": "hotel.night",         "uzbek": "tun",                 "english": "night",             "theme": "hotel" },
+  { "id": "hotel.bathroom",      "uzbek": "hammom",              "english": "bathroom",          "theme": "hotel" },
+  { "id": "hotel.hot-water",     "uzbek": "issiq suv",           "english": "hot water",         "theme": "hotel" },
+  { "id": "hotel.wifi",          "uzbek": "wifi",                "english": "wi-fi",             "theme": "hotel" },
+  { "id": "hotel.single-room",   "uzbek": "bir kishilik xona",   "english": "single room",       "theme": "hotel" },
+  { "id": "hotel.double-room",   "uzbek": "ikki kishilik xona",  "english": "double room",       "theme": "hotel" }
+]
