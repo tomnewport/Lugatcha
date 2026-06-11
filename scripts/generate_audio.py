@@ -252,8 +252,30 @@ def clean_uzbek_text(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+# A bare word gives autoregressive TTS no cue to stop, so it hallucinates extra
+# words. A trailing full stop is the standard fix; sentences already ending in
+# these are left alone.
+_END_PUNCT = set(".!?…:;")
+
+
+def coerce_gen_value(value: str):
+    """Turn a CLI --gen-kwarg string into bool/int/float/None where it looks like one."""
+    low = value.lower()
+    if low in ("true", "false"):
+        return low == "true"
+    if low in ("none", "null"):
+        return None
+    for cast in (int, float):
+        try:
+            return cast(value)
+        except ValueError:
+            pass
+    return value
+
+
 def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
-                     explicit_device: bool = False):
+                     explicit_device: bool = False, gen_kwargs: dict | None = None,
+                     end_punct: bool = True):
     """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
 
     Backed by the Qwen3-TTS `qwen_tts` runtime that uzlm/sayro-tts-1.7B is built
@@ -315,12 +337,18 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
             "load_synthesizer()."
         )
 
+    extra = gen_kwargs or {}
+
     def synthesize(text: str):
+        model_text = normalize(text)
+        if end_punct and model_text and model_text[-1] not in _END_PUNCT:
+            model_text += "."  # give short inputs a clear stop cue
         with torch.inference_mode():
             wavs, rate = model.generate_custom_voice(
-                text=[normalize(text)],
+                text=[model_text],
                 speaker=[speaker],
                 instruct=[instruct],
+                **extra,
             )
         waveform = wavs[0]
         if hasattr(waveform, "detach"):  # torch tensor -> numpy
@@ -529,6 +557,15 @@ def main() -> None:
                         help="local Qwen3-TTS speaker name (default: sayro)")
     parser.add_argument("--qwen-instruct", default="",
                         help="local Qwen3-TTS style hint, e.g. Happy/Neutral (default: none)")
+    parser.add_argument("--no-end-punct", dest="end_punct", action="store_false",
+                        help="don't append a full stop to unpunctuated inputs "
+                             "(the stop cue curbs hallucinated words on short clips)")
+    parser.add_argument("--max-new-tokens", type=int, default=None,
+                        help="cap generated audio length (also curbs runaway short clips)")
+    parser.add_argument("--gen-kwarg", action="append", metavar="KEY=VALUE", default=[],
+                        help="extra generate kwarg, e.g. --gen-kwarg do_sample=false "
+                             "or --gen-kwarg top_p=0.8 (repeatable)")
+    parser.set_defaults(end_punct=True)
     parser.add_argument("--yandex-host", default="tts.api.yandexcloud.kz",
                         help="SpeechKit host (KZ default; RU is tts.api.cloud.yandex.net)")
     parser.add_argument("--yandex-voice", default="nigora", help="Yandex voice (default: nigora)")
@@ -586,10 +623,19 @@ def main() -> None:
                 args.yandex_host, api_key, folder_id, args.yandex_voice, args.yandex_lang
             )
         else:
+            gen_kwargs = {}
+            for item in args.gen_kwarg:
+                if "=" not in item:
+                    sys.exit(f"--gen-kwarg expects KEY=VALUE, got {item!r}")
+                key, value = item.split("=", 1)
+                gen_kwargs[key.strip()] = coerce_gen_value(value.strip())
+            if args.max_new_tokens is not None:
+                gen_kwargs["max_new_tokens"] = args.max_new_tokens
             device = args.device or pick_device()
             synthesize = load_synthesizer(
                 args.model, device, args.qwen_speaker, args.qwen_instruct,
                 explicit_device=args.device is not None,
+                gen_kwargs=gen_kwargs, end_punct=args.end_punct,
             )
 
         for i, (key, text) in enumerate(pending.items(), 1):
