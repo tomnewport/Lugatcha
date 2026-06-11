@@ -8,9 +8,9 @@
  */
 import { ref } from 'vue'
 import { getAudioManifest, audioFile } from './audio'
+import { useSettingsStore } from '@/stores/settings'
 
 const base = import.meta.env.BASE_URL
-const DONE_KEY = 'lugatcha.audioDownloaded'
 
 export type DownloadStatus = 'idle' | 'running' | 'paused' | 'done' | 'error'
 
@@ -23,9 +23,13 @@ export function useAudioDownload() {
   let files: string[] = []
   let paused = false
 
+  function doneKey(): string {
+    return `lugatcha.audioDownloaded.${useSettingsStore().audioVoice}`
+  }
+
   function loadDone(): Set<string> {
     try {
-      return new Set(JSON.parse(localStorage.getItem(DONE_KEY) ?? '[]') as string[])
+      return new Set(JSON.parse(localStorage.getItem(doneKey()) ?? '[]') as string[])
     } catch {
       return new Set()
     }
@@ -33,7 +37,7 @@ export function useAudioDownload() {
 
   function saveDone(downloaded: Set<string>): void {
     try {
-      localStorage.setItem(DONE_KEY, JSON.stringify([...downloaded]))
+      localStorage.setItem(doneKey(), JSON.stringify([...downloaded]))
     } catch {
       // private mode etc. — progress just won't survive a reload
     }
@@ -41,7 +45,8 @@ export function useAudioDownload() {
 
   /** Load the manifest and reflect how much is already cached. Call on mount. */
   async function prepare(): Promise<void> {
-    const manifest = await getAudioManifest()
+    const voice = useSettingsStore().audioVoice
+    const manifest = await getAudioManifest(voice)
     files = manifest ? Object.values(manifest).map(audioFile) : []
     total.value = files.length
     const downloaded = loadDone()
@@ -54,6 +59,7 @@ export function useAudioDownload() {
     status.value = 'running'
     error.value = ''
     paused = false
+    const voice = useSettingsStore().audioVoice
     const downloaded = loadDone()
     done.value = files.filter((f) => downloaded.has(f)).length
     try {
@@ -63,7 +69,7 @@ export function useAudioDownload() {
           return
         }
         if (downloaded.has(file)) continue
-        const res = await fetch(`${base}audio/${file}`)
+        const res = await fetch(`${base}audio/${voice}/${file}`)
         if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`)
         await res.blob() // drain the body so the service worker caches it
         downloaded.add(file)
