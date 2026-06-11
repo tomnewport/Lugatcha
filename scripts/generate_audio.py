@@ -621,9 +621,29 @@ def write_mp3(samples, rate: int, target: Path, ffmpeg: str) -> None:
 
 
 def write_manifest(out_dir: Path) -> int:
-    files = sorted(p.name for p in out_dir.glob("*.mp3"))
-    manifest = {p.removesuffix(".mp3"): p for p in files}
-    (out_dir / "manifest.json").write_text(
+    """Write audio/manifest.json as key -> {file, reviewed}.
+
+    Preserves the `reviewed` flag of clips already in a prior manifest (so
+    regenerating audio never silently un-reviews it); apply_reviews.py sets it
+    true when it promotes a reviewed candidate. New clips start unreviewed.
+    """
+    manifest_path = out_dir / "manifest.json"
+    prior: dict = {}
+    if manifest_path.exists():
+        try:
+            prior = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            prior = {}
+
+    def was_reviewed(key: str) -> bool:
+        entry = prior.get(key)
+        return bool(entry.get("reviewed")) if isinstance(entry, dict) else False
+
+    manifest = {}
+    for name in sorted(p.name for p in out_dir.glob("*.mp3")):
+        key = name.removesuffix(".mp3")
+        manifest[key] = {"file": name, "reviewed": was_reviewed(key)}
+    manifest_path.write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     return len(manifest)
