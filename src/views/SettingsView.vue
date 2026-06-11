@@ -133,6 +133,16 @@ async function downloadAllAudio() {
     </section>
 
     <section class="settings-card">
+      <h2 class="settings-card__title">Audio review</h2>
+      <p class="settings-card__desc">
+        A/B-test the candidate recordings and rate them, then export the results as a GitHub issue.
+      </p>
+      <button class="btn btn--ghost" type="button" @click="router.push('/review')">
+        Open audio review
+      </button>
+    </section>
+
+    <section class="settings-card">
       <h2 class="settings-card__title">Progress</h2>
       <p class="settings-card__desc">
         Wipes every seen word, flashcard result, and completed exercise on this device.
