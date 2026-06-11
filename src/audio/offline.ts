@@ -6,7 +6,7 @@
  * reloaded session skips what's already done. Too much to auto-download on
  * load, so this is driven from a button in Settings.
  */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { getAudioManifest, audioFile } from './audio'
 import { useSettingsStore } from '@/stores/settings'
 
@@ -14,11 +14,32 @@ const base = import.meta.env.BASE_URL
 
 export type DownloadStatus = 'idle' | 'running' | 'paused' | 'done' | 'error'
 
+function audioDoneKey(voice: string) {
+  return `lugatcha.audioDone.${voice}`
+}
+
+/** True once all clips for a voice have been downloaded and cached. Reactive. */
+export function useAudioReady() {
+  const settings = useSettingsStore()
+  // Re-evaluated whenever audioVoice changes or the flag is written.
+  // Uses a ref so components can react when the download finishes.
+  const _tick = ref(0)
+  function recheck() { _tick.value++ }
+  return {
+    ready: computed(() => {
+      void _tick.value
+      return localStorage.getItem(audioDoneKey(settings.audioVoice)) === 'true'
+    }),
+    recheck,
+  }
+}
+
 export function useAudioDownload() {
   const total = ref(0)
   const done = ref(0)
   const status = ref<DownloadStatus>('idle')
   const error = ref('')
+  const { recheck: recheckReady } = useAudioReady()
 
   let files: string[] = []
   let paused = false
@@ -76,6 +97,8 @@ export function useAudioDownload() {
         saveDone(downloaded)
         done.value++
       }
+      localStorage.setItem(audioDoneKey(useSettingsStore().audioVoice), 'true')
+      recheckReady()
       status.value = 'done'
     } catch (e) {
       error.value = (e as Error).message
