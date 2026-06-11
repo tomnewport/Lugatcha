@@ -262,6 +262,16 @@ def clean_uzbek_text(text: str) -> str:
 _END_PUNCT = set(".!?…:;")
 
 
+def _strip_terminal_punct(text: str) -> str:
+    return text.rstrip("".join(_END_PUNCT)).rstrip()
+
+
+def is_short_word(text: str, max_chars: int) -> bool:
+    """A single short token (no spaces) — the cold-start case the model garbles."""
+    bare = _strip_terminal_punct(text)
+    return bool(bare) and " " not in bare and len(bare) <= max_chars
+
+
 def coerce_gen_value(value: str):
     """Turn a CLI --gen-kwarg string into bool/int/float/None where it looks like one."""
     low = value.lower()
@@ -279,7 +289,9 @@ def coerce_gen_value(value: str):
 
 def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
                      explicit_device: bool = False, gen_kwargs: dict | None = None,
-                     end_punct: bool = True):
+                     end_punct: bool = True, carrier: bool = True,
+                     carrier_word: str = "Mana", carrier_max_chars: int = 4,
+                     carrier_pad_ms: int = 80):
     """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
 
     Backed by the Qwen3-TTS `qwen_tts` runtime that uzlm/sayro-tts-1.7B is built
@@ -343,10 +355,7 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
 
     extra = gen_kwargs or {}
 
-    def synthesize(text: str):
-        model_text = normalize(text)
-        if end_punct and model_text and model_text[-1] not in _END_PUNCT:
-            model_text += "."  # give short inputs a clear stop cue
+    def _generate(model_text: str):
         with torch.inference_mode():
             wavs, rate = model.generate_custom_voice(
                 text=[model_text],
@@ -357,7 +366,24 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
         waveform = wavs[0]
         if hasattr(waveform, "detach"):  # torch tensor -> numpy
             waveform = waveform.detach().cpu().numpy()
-        return np.asarray(waveform, dtype="float32").squeeze(), rate
+        return np.asarray(waveform, dtype="float32").reshape(-1), rate
+
+    def synthesize(text: str):
+        core = normalize(text).strip()
+        # Ultra-short words cold-start badly; speak them after a carrier so the
+        # model has momentum, then crop back to just the word.
+        if carrier and is_short_word(core, carrier_max_chars):
+            bare = _strip_terminal_punct(core)
+            audio, rate = _generate(f"{carrier_word}, {bare}.")
+            cropped = crop_after_carrier(audio, rate, carrier_pad_ms)
+            if cropped is not None and cropped.size:
+                return cropped, rate
+            # couldn't isolate the word — fall through to a plain attempt
+
+        model_text = core
+        if end_punct and model_text and model_text[-1] not in _END_PUNCT:
+            model_text += "."  # give short inputs a clear stop cue
+        return _generate(model_text)
 
     return synthesize
 
@@ -486,6 +512,32 @@ def _energy_trim(samples, rate: int, pad_ms: int):
     return samples[start:end]
 
 
+def _resample_linear(samples, src_rate: int, dst_rate: int):
+    """Cheap linear resample — good enough for VAD framing."""
+    import numpy as np
+
+    if src_rate == dst_rate:
+        return samples.astype("float32")
+    n = max(1, round(samples.size * dst_rate / src_rate))
+    return np.interp(
+        np.linspace(0, 1, n, endpoint=False),
+        np.linspace(0, 1, samples.size, endpoint=False),
+        samples,
+    ).astype("float32")
+
+
+def _speech_spans(samples, rate: int):
+    """Speech segments as (start_sec, end_sec) via Silero VAD (wants 16 kHz mono)."""
+    import torch
+    from silero_vad import get_speech_timestamps
+
+    vad_audio = _resample_linear(samples, rate, 16000)
+    spans = get_speech_timestamps(
+        torch.from_numpy(vad_audio), _get_silero_vad(), sampling_rate=16000
+    )
+    return [(s["start"] / 16000, s["end"] / 16000) for s in spans]
+
+
 def trim_to_speech(samples, rate: int, pad_ms: int = 60):
     """Crop to [first speech .. last speech] (+pad_ms), removing edge artifacts."""
     import numpy as np
@@ -494,35 +546,39 @@ def trim_to_speech(samples, rate: int, pad_ms: int = 60):
     if samples.size == 0:
         return samples
     try:
-        import torch
-        from silero_vad import get_speech_timestamps
-
-        target = 16000  # Silero wants 16 kHz mono
-        if rate != target:
-            n = max(1, round(samples.size * target / rate))
-            vad_audio = np.interp(
-                np.linspace(0, 1, n, endpoint=False),
-                np.linspace(0, 1, samples.size, endpoint=False),
-                samples,
-            ).astype("float32")
-        else:
-            vad_audio = samples
-
-        spans = get_speech_timestamps(
-            torch.from_numpy(vad_audio), _get_silero_vad(), sampling_rate=target
-        )
+        spans = _speech_spans(samples, rate)
         if not spans:
             return _energy_trim(samples, rate, pad_ms)
-
         pad = pad_ms / 1000
-        start = max(0, int((spans[0]["start"] / target - pad) * rate))
-        end = min(samples.size, int((spans[-1]["end"] / target + pad) * rate))
+        start = max(0, int((spans[0][0] - pad) * rate))
+        end = min(samples.size, int((spans[-1][1] + pad) * rate))
         return samples[start:end] if end > start else samples
     except ImportError:
         return _energy_trim(samples, rate, pad_ms)
     except Exception as error:  # noqa: BLE001 — never let trimming kill a run
         print(f"  trim skipped ({type(error).__name__}: {error})")
         return samples
+
+
+def crop_after_carrier(samples, rate: int, pad_ms: int):
+    """From a 'carrier, word.' clip, return just the word (first speech after the
+    carrier), or None if the carrier and word can't be told apart confidently."""
+    import numpy as np
+
+    samples = np.asarray(samples, dtype="float32").reshape(-1)
+    if samples.size == 0:
+        return None
+    try:
+        spans = _speech_spans(samples, rate)
+    except Exception:  # noqa: BLE001 — VAD missing/failed; caller falls back
+        return None
+    if len(spans) < 2:
+        return None  # merged into one segment — not confident enough to crop
+    start_sec, end_sec = spans[1]  # carrier is spans[0]; the word follows
+    pad = pad_ms / 1000
+    start = max(0, int((start_sec - pad) * rate))
+    end = min(samples.size, int((end_sec + pad) * rate))
+    return samples[start:end] if end > start else None
 
 
 def write_mp3(samples, rate: int, target: Path, ffmpeg: str) -> None:
@@ -569,7 +625,13 @@ def main() -> None:
     parser.add_argument("--gen-kwarg", action="append", metavar="KEY=VALUE", default=[],
                         help="extra generate kwarg, e.g. --gen-kwarg do_sample=false "
                              "or --gen-kwarg top_p=0.8 (repeatable)")
-    parser.set_defaults(end_punct=True)
+    parser.add_argument("--no-carrier", dest="carrier", action="store_false",
+                        help="disable the carrier-phrase trick for ultra-short words")
+    parser.add_argument("--carrier-word", default="Mana",
+                        help="lead-in that gives short clips momentum (default: Mana)")
+    parser.add_argument("--carrier-max-chars", type=int, default=4,
+                        help="treat single words up to this length as short (default: 4)")
+    parser.set_defaults(end_punct=True, carrier=True)
     parser.add_argument("--yandex-host", default="tts.api.yandexcloud.kz",
                         help="SpeechKit host (KZ default; RU is tts.api.cloud.yandex.net)")
     parser.add_argument("--yandex-voice", default="nigora", help="Yandex voice (default: nigora)")
@@ -640,6 +702,9 @@ def main() -> None:
                 args.model, device, args.qwen_speaker, args.qwen_instruct,
                 explicit_device=args.device is not None,
                 gen_kwargs=gen_kwargs, end_punct=args.end_punct,
+                carrier=args.carrier, carrier_word=args.carrier_word,
+                carrier_max_chars=args.carrier_max_chars,
+                carrier_pad_ms=args.trim_pad_ms,
             )
 
         for i, (key, text) in enumerate(pending.items(), 1):
