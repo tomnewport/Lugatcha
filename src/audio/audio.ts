@@ -6,6 +6,7 @@
  * the Web Speech API, requesting an Uzbek voice where the device has one.
  */
 import { audioKey } from './key'
+import { useSettingsStore } from '@/stores/settings'
 
 const base = import.meta.env.BASE_URL
 
@@ -27,13 +28,19 @@ export function isReviewed(entry: AudioManifestEntry | string | undefined): bool
   return typeof entry === 'object' && entry !== null ? Boolean(entry.reviewed) : false
 }
 
-let manifestPromise: Promise<AudioManifest | null> | undefined
+const manifestCache = new Map<string, Promise<AudioManifest | null>>()
 
-export function getAudioManifest(): Promise<AudioManifest | null> {
-  manifestPromise ??= fetch(`${base}audio/manifest.json`)
-    .then((res) => (res.ok ? (res.json() as Promise<AudioManifest>) : null))
-    .catch(() => null)
-  return manifestPromise
+export function getAudioManifest(voice?: string): Promise<AudioManifest | null> {
+  const v = voice ?? useSettingsStore().audioVoice
+  if (!manifestCache.has(v)) {
+    manifestCache.set(
+      v,
+      fetch(`${base}audio/${v}/manifest.json`)
+        .then((res) => (res.ok ? (res.json() as Promise<AudioManifest>) : null))
+        .catch(() => null),
+    )
+  }
+  return manifestCache.get(v)!
 }
 
 let currentAudio: HTMLAudioElement | null = null
@@ -117,9 +124,10 @@ export function playChime(): void {
  */
 export async function speakUzbek(text: string): Promise<void> {
   stopSpeaking()
-  const manifest = await getAudioManifest()
+  const voice = useSettingsStore().audioVoice
+  const manifest = await getAudioManifest(voice)
   const entry = manifest?.[audioKey(text)]
   const file = entry ? audioFile(entry) : undefined
-  if (file && (await playFile(`${base}audio/${file}`))) return
+  if (file && (await playFile(`${base}audio/${voice}/${file}`))) return
   await speakWithSynthesis(text)
 }
