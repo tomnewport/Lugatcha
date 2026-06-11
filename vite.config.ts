@@ -1,10 +1,24 @@
 import { fileURLToPath, URL } from 'node:url'
+import { execSync } from 'node:child_process'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// Baked into error reports (issue #31) so a toast-filed issue pins the build
+const commitHash = (() => {
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim()
+  } catch {
+    return 'unknown'
+  }
+})()
+
 export default defineConfig({
   base: '/Lugatcha/',
+  define: {
+    __APP_COMMIT__: JSON.stringify(commitHash),
+    __APP_BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   plugins: [
     vue(),
     VitePWA({
