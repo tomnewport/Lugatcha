@@ -8,7 +8,7 @@ import type { Verdict } from '@/db/types'
 const base = import.meta.env.BASE_URL
 const REPO = 'tomnewport/Lugatcha'
 // GitHub truncates issue bodies passed via URL around 8 KB; stay under it.
-const MAX_ISSUE_BODY = 6500
+const MAX_ISSUE_BODY = 7500
 
 export interface CandidateVariant {
   id: string
@@ -46,11 +46,11 @@ export function problemWords(records: ReviewRecord[]): ReviewRecord[] {
   )
 }
 
-export function buildReviewsJson(records: ReviewRecord[]): string {
+export function buildReviewsJson(records: ReviewRecord[], pretty = true): string {
   return JSON.stringify(
     { generatedAt: new Date().toISOString(), repo: REPO, reviews: records },
     null,
-    2,
+    pretty ? 2 : undefined,
   )
 }
 
@@ -90,9 +90,11 @@ export function buildIssueUrl(records: ReviewRecord[]): string {
   const fenced = (json: string) =>
     `\n<details><summary>reviews.json</summary>\n\n\`\`\`json\n${json}\n\`\`\`\n</details>\n`
 
-  let body = head + fenced(buildReviewsJson(records))
+  // Compact JSON (not pretty-printed) so the full dump fits the URL for a
+  // typical batch; only fall back to the actionable subset when it still won't.
+  let body = head + fenced(buildReviewsJson(records, false))
   if (encodeURIComponent(body).length > MAX_ISSUE_BODY) {
-    const subset = buildReviewsJson(problemWords(records))
+    const subset = buildReviewsJson(problemWords(records), false)
     body =
       head +
       '\n> Full dump too large for the URL — drag the downloaded `reviews.json` into this issue.\n' +
