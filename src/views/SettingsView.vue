@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSettingsStore, type LabelLanguage } from '@/stores/settings'
+import { useSettingsStore, type LabelLanguage, type AudioVoice } from '@/stores/settings'
 import { useProgressStore } from '@/stores/progress'
 import { getAudioManifest, type AudioManifest } from '@/audio/audio'
 import { useAudioDownload } from '@/audio/offline'
@@ -31,13 +31,21 @@ const audioPercent = computed(() =>
 )
 
 onMounted(async () => {
-  audioManifest.value = await getAudioManifest()
+  audioManifest.value = await getAudioManifest(settings.audioVoice)
   audioChecked.value = true
   await prepareAudio()
 })
 
 function setLanguage(lang: LabelLanguage) {
   settings.setLabelLanguage(lang)
+}
+
+async function setVoice(voice: AudioVoice) {
+  settings.setAudioVoice(voice)
+  audioChecked.value = false
+  audioManifest.value = await getAudioManifest(voice)
+  await prepareAudio()
+  audioChecked.value = true
 }
 
 async function resetProgress() {
@@ -88,6 +96,33 @@ async function resetProgress() {
           @click="setLanguage('uz')"
         >
           O'zbekcha birinchi
+        </button>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">Voice</h2>
+      <p class="settings-card__desc">Which Uzbek voice should the app use?</p>
+      <div class="lang-toggle" role="radiogroup" aria-label="Audio voice">
+        <button
+          class="lang-toggle__btn"
+          :class="{ 'lang-toggle__btn--active': settings.audioVoice === 'yandex' }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.audioVoice === 'yandex'"
+          @click="setVoice('yandex')"
+        >
+          Yandex Nigora
+        </button>
+        <button
+          class="lang-toggle__btn"
+          :class="{ 'lang-toggle__btn--active': settings.audioVoice === 'sayro' }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.audioVoice === 'sayro'"
+          @click="setVoice('sayro')"
+        >
+          Sayro TTS
         </button>
       </div>
     </section>
