@@ -8,6 +8,7 @@ dependencies = [
   "torch",
   "transformers",
   "qwen-tts",
+  "silero-vad",
 ]
 
 [tool.uv]

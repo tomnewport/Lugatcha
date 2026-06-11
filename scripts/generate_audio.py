@@ -416,6 +416,83 @@ def load_yandex_synthesizer(
     return synthesize
 
 
+# ---------------------------------------------------------------------------
+# Post-processing: trim leading/trailing non-speech
+#
+# Autoregressive TTS (Qwen3-TTS included) tends to bookend utterances with a
+# click/breath at the start and a tail of garbage/noise at the end. Silero VAD
+# finds the real speech span — robust even when the tail is loud, which a plain
+# volume gate would keep — and we crop to it (+ a little padding). Falls back to
+# an energy gate, then to the untouched clip, so a bad clip never kills a run.
+# ---------------------------------------------------------------------------
+
+_silero_vad = None
+
+
+def _get_silero_vad():
+    global _silero_vad
+    if _silero_vad is None:
+        from silero_vad import load_silero_vad
+        _silero_vad = load_silero_vad()
+    return _silero_vad
+
+
+def _energy_trim(samples, rate: int, pad_ms: int):
+    """Dependency-free fallback: crop edges quieter than -40 dB below the peak."""
+    import numpy as np
+
+    abs_s = np.abs(samples)
+    peak = float(abs_s.max()) if abs_s.size else 0.0
+    if peak <= 0:
+        return samples
+    above = np.where(abs_s >= peak * 0.01)[0]  # 0.01 == -40 dB
+    if above.size == 0:
+        return samples
+    pad = int(rate * pad_ms / 1000)
+    start = max(0, int(above[0]) - pad)
+    end = min(samples.size, int(above[-1]) + 1 + pad)
+    return samples[start:end]
+
+
+def trim_to_speech(samples, rate: int, pad_ms: int = 60):
+    """Crop to [first speech .. last speech] (+pad_ms), removing edge artifacts."""
+    import numpy as np
+
+    samples = np.asarray(samples, dtype="float32").reshape(-1)
+    if samples.size == 0:
+        return samples
+    try:
+        import torch
+        from silero_vad import get_speech_timestamps
+
+        target = 16000  # Silero wants 16 kHz mono
+        if rate != target:
+            n = max(1, round(samples.size * target / rate))
+            vad_audio = np.interp(
+                np.linspace(0, 1, n, endpoint=False),
+                np.linspace(0, 1, samples.size, endpoint=False),
+                samples,
+            ).astype("float32")
+        else:
+            vad_audio = samples
+
+        spans = get_speech_timestamps(
+            torch.from_numpy(vad_audio), _get_silero_vad(), sampling_rate=target
+        )
+        if not spans:
+            return _energy_trim(samples, rate, pad_ms)
+
+        pad = pad_ms / 1000
+        start = max(0, int((spans[0]["start"] / target - pad) * rate))
+        end = min(samples.size, int((spans[-1]["end"] / target + pad) * rate))
+        return samples[start:end] if end > start else samples
+    except ImportError:
+        return _energy_trim(samples, rate, pad_ms)
+    except Exception as error:  # noqa: BLE001 — never let trimming kill a run
+        print(f"  trim skipped ({type(error).__name__}: {error})")
+        return samples
+
+
 def write_mp3(samples, rate: int, target: Path, ffmpeg: str) -> None:
     import soundfile
 
@@ -456,6 +533,10 @@ def main() -> None:
                         help="SpeechKit host (KZ default; RU is tts.api.cloud.yandex.net)")
     parser.add_argument("--yandex-voice", default="nigora", help="Yandex voice (default: nigora)")
     parser.add_argument("--yandex-lang", default="uz-UZ", help="Yandex language tag")
+    parser.add_argument("--no-trim", dest="trim", action="store_false",
+                        help="keep raw output; skip trimming edge non-speech")
+    parser.add_argument("--trim-pad-ms", type=int, default=60,
+                        help="silence kept around the speech span when trimming")
     parser.add_argument("--limit", type=int, default=None, help="generate at most N clips")
     parser.add_argument("--force", action="store_true", help="regenerate existing clips")
     parser.add_argument("--dry-run", action="store_true", help="list texts and exit")
@@ -512,8 +593,13 @@ def main() -> None:
             )
 
         for i, (key, text) in enumerate(pending.items(), 1):
-            print(f"[{i}/{len(pending)}] {text}")
             samples, rate = synthesize(text)
+            note = ""
+            if args.trim:
+                before = len(samples) / rate
+                samples = trim_to_speech(samples, rate, args.trim_pad_ms)
+                note = f"  ({before:.2f}s→{len(samples) / rate:.2f}s)"
+            print(f"[{i}/{len(pending)}] {text}{note}")
             write_mp3(samples, rate, args.out / f"{key}.mp3", ffmpeg)
 
     count = write_manifest(args.out)
