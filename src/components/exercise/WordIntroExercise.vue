@@ -4,6 +4,7 @@ import type { Word } from '@/db/types'
 import { pickIntroWords } from '@/exercises/words'
 import { useProgressStore } from '@/stores/progress'
 import AudioButton from '@/components/AudioButton.vue'
+import UzbekWord from '@/components/UzbekWord.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -49,7 +50,7 @@ async function finish() {
       >
         <AudioButton :text="word.uzbek" @played="markHeard(word.id)" />
         <div class="word-card__text">
-          <span class="word-card__uzbek" lang="uz">{{ word.uzbek }}</span>
+          <UzbekWord class="word-card__uzbek" :word="word.uzbek" :meaning="word.english" />
           <span class="word-card__english">{{ word.english }}</span>
           <span v-if="word.usageNotes" class="word-card__notes">{{ word.usageNotes }}</span>
         </div>

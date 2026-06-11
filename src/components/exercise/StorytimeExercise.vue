@@ -5,6 +5,7 @@ import type { Story } from '@/db/types'
 import { tokenize, buildDecoys, contentWords, normalizeToken, shuffle } from '@/exercises/validate'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
+import UzbekSentence from '@/components/UzbekSentence.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -14,8 +15,6 @@ const index = ref(0)
 const solved = ref(false)
 const replayMode = ref(false)
 const loading = ref(true)
-/** Index of the Uzbek word whose tooltip is open, or null. */
-const tooltipIndex = ref<number | null>(null)
 
 /** normalised Uzbek form -> English meaning, built from the whole dictionary. */
 const glossary = ref(new Map<string, string>())
@@ -44,7 +43,6 @@ onMounted(async () => {
 })
 
 const sentence = computed(() => story.value?.sentences[index.value])
-const uzbekWords = computed(() => (sentence.value ? tokenize(sentence.value.uzbek) : []))
 const englishTokens = computed(() => (sentence.value ? tokenize(sentence.value.english) : []))
 const isLast = computed(() => !!story.value && index.value >= story.value.sentences.length - 1)
 
@@ -57,34 +55,12 @@ const decoys = computed(() => {
   return buildDecoys(englishTokens.value, pool, 3)
 })
 
-function glossFor(word: string): string | null {
-  const norm = normalizeToken(word)
-  const exact = glossary.value.get(norm)
-  if (exact) return exact
-  // Uzbek stacks suffixes (mehmonxonaga = mehmonxona + ga), so fall back to
-  // the longest dictionary entry the tapped word starts with.
-  let bestStem = ''
-  let bestGloss: string | null = null
-  for (const [stem, gloss] of glossary.value) {
-    if (stem.length >= 3 && stem.length > bestStem.length && norm.startsWith(stem)) {
-      bestStem = stem
-      bestGloss = gloss
-    }
-  }
-  return bestGloss ? `${bestGloss} (+ suffix)` : null
-}
-
-function toggleTooltip(i: number) {
-  tooltipIndex.value = tooltipIndex.value === i ? null : i
-}
-
 function onResult(result: AssemblyResult) {
   void result
   solved.value = true
 }
 
 function next() {
-  tooltipIndex.value = null
   if (isLast.value) {
     replayMode.value = true
   } else {
@@ -132,20 +108,8 @@ function next() {
       <p class="story__counter">Sentence {{ index + 1 }} of {{ story.sentences.length }}</p>
 
       <div class="sentence-card">
-        <p class="sentence-card__uzbek" lang="uz">
-          <span
-            v-for="(word, i) in uzbekWords"
-            :key="i"
-            class="uz-word"
-            :class="{ 'uz-word--open': tooltipIndex === i }"
-          >
-            <button class="uz-word__btn" type="button" @click="toggleTooltip(i)">
-              {{ word }}
-            </button>
-            <span v-if="tooltipIndex === i" class="uz-word__tooltip" role="tooltip">
-              {{ glossFor(word) ?? 'No translation yet — try the whole sentence!' }}
-            </span>
-          </span>
+        <p class="sentence-card__uzbek">
+          <UzbekSentence :uzbek="sentence.uzbek" :glossary="glossary" />
         </p>
         <AudioButton :text="sentence.uzbek" label="Play the sentence" />
         <p class="sentence-card__hint">Tap any word you don't know.</p>
@@ -231,50 +195,11 @@ function next() {
 
 .sentence-card__uzbek {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 0.3rem 0.35rem;
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-primary);
   margin: 0;
-}
-
-.uz-word {
-  position: relative;
-  display: inline-block;
-}
-
-.uz-word__btn {
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  border-bottom: 1.5px dotted var(--color-primary-light);
-  padding: 0 1px 1px;
-}
-
-.uz-word--open .uz-word__btn {
-  background: #f2f7fc;
-  border-radius: 4px;
-}
-
-.uz-word__tooltip {
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  max-width: 220px;
-  white-space: normal;
-  width: max-content;
-  padding: 0.35rem 0.6rem;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #fff;
-  background: var(--color-text);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-md);
 }
 
 .sentence-card__hint {
