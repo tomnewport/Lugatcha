@@ -1,0 +1,127 @@
+[
+  {
+    "id": "choyxona.under-the-vine",
+    "theme": "choyxona",
+    "title": {
+      "en": "Under the Grapevine",
+      "uz": "Tok ostida"
+    },
+    "sentences": [
+      {
+        "uzbek": "Choyxona bog'ida tok bor edi.",
+        "english": "In the teahouse garden there was a grapevine."
+      },
+      {
+        "uzbek": "Men so'rida o'tirdim.",
+        "english": "I sat on the platform."
+      },
+      {
+        "uzbek": "Bir keksa odam menga choy quydi.",
+        "english": "An old man poured me tea."
+      },
+      {
+        "uzbek": "Biz uzoq suhbatlashdik.",
+        "english": "We talked for a long time."
+      },
+      {
+        "uzbek": "U menga shahar haqida gapirdi.",
+        "english": "He told me about the city."
+      },
+      {
+        "uzbek": "Bu yerda begona odam yo'q.",
+        "english": "Here there are no strangers."
+      }
+    ],
+    "glossary": {
+      "Choyxona": "teahouse",
+      "bog'ida": "in the garden (of)",
+      "tok": "grapevine",
+      "bor": "there was",
+      "edi": "was",
+      "Men": "I",
+      "so'rida": "on the platform (raised tea-bed)",
+      "o'tirdim": "I sat",
+      "Bir": "one / a",
+      "keksa": "old",
+      "odam": "man / person",
+      "menga": "to me",
+      "choy": "tea",
+      "quydi": "poured",
+      "Biz": "we",
+      "uzoq": "long",
+      "suhbatlashdik": "we talked",
+      "U": "he",
+      "shahar": "city",
+      "haqida": "about",
+      "gapirdi": "spoke / told",
+      "begona": "stranger / foreign",
+      "yo'q": "there is not",
+      "Bu": "this",
+      "yerda": "at (a place)"
+    }
+  },
+  {
+    "id": "choyxona.the-guest",
+    "theme": "choyxona",
+    "title": {
+      "en": "A Guest is a Blessing",
+      "uz": "Mehmon — tabarruk"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men choyxonaga yolg'iz kirdim.",
+        "english": "I went into the teahouse alone."
+      },
+      {
+        "uzbek": "Bir oila meni dasturxonga taklif qildi.",
+        "english": "A family invited me to their table."
+      },
+      {
+        "uzbek": "Ular non va osh berdi.",
+        "english": "They gave me bread and plov."
+      },
+      {
+        "uzbek": "Men pul taklif qildim, lekin ular kulishdi.",
+        "english": "I offered money, but they laughed."
+      },
+      {
+        "uzbek": "\"Mehmon — Xudoning sovg'asi,\" dedilar.",
+        "english": "\"A guest is God's gift,\" they said."
+      },
+      {
+        "uzbek": "Men bu kunni hech qachon unutmayman.",
+        "english": "I will never forget this day."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "choyxonaga": "into the teahouse",
+      "yolg'iz": "alone",
+      "kirdim": "I entered",
+      "Bir": "one / a",
+      "oila": "family",
+      "meni": "me (object)",
+      "dasturxonga": "to the table (spread)",
+      "taklif": "invitation (taklif qildi = invited)",
+      "qildi": "did / made",
+      "Ular": "they",
+      "non": "bread",
+      "va": "and",
+      "osh": "plov",
+      "berdi": "gave",
+      "pul": "money",
+      "qildim": "I did / made (offered)",
+      "lekin": "but",
+      "kulishdi": "they laughed",
+      "Mehmon": "a guest",
+      "Xudoning": "God's",
+      "sovg'asi": "gift (of)",
+      "dedilar": "they said",
+      "bu": "this",
+      "kunni": "day (object)",
+      "qachon": "when",
+      "unutmayman": "I will not forget",
+      "hech": "never (with qachon)"
+    }
+  }
+]

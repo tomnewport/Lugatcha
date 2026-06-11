@@ -1,0 +1,93 @@
+[
+  {
+    "id": "mountain-park.mountain",
+    "uzbek": "tog'",
+    "english": "mountain",
+    "theme": "mountain-park",
+    "level": 1
+  },
+  {
+    "id": "mountain-park.water",
+    "uzbek": "suv",
+    "english": "water",
+    "theme": "mountain-park",
+    "level": 1
+  },
+  {
+    "id": "mountain-park.tired",
+    "uzbek": "charchadim",
+    "english": "I am tired",
+    "theme": "mountain-park",
+    "level": 1
+  },
+  {
+    "id": "mountain-park.beautiful",
+    "uzbek": "go'zal",
+    "english": "beautiful",
+    "theme": "mountain-park",
+    "level": 1
+  },
+  {
+    "id": "mountain-park.sun",
+    "uzbek": "quyosh",
+    "english": "sun",
+    "theme": "mountain-park",
+    "level": 1
+  },
+  {
+    "id": "mountain-park.cold",
+    "uzbek": "sovuq",
+    "english": "cold",
+    "theme": "mountain-park",
+    "level": 1
+  },
+  {
+    "id": "mountain-park.path",
+    "uzbek": "so'qmoq",
+    "english": "path / trail",
+    "theme": "mountain-park",
+    "level": 2
+  },
+  {
+    "id": "mountain-park.river",
+    "uzbek": "daryo",
+    "english": "river",
+    "theme": "mountain-park",
+    "level": 2
+  },
+  {
+    "id": "mountain-park.tree",
+    "uzbek": "daraxt",
+    "english": "tree",
+    "theme": "mountain-park",
+    "level": 2
+  },
+  {
+    "id": "mountain-park.sky",
+    "uzbek": "osmon",
+    "english": "sky",
+    "theme": "mountain-park",
+    "level": 2
+  },
+  {
+    "id": "mountain-park.top",
+    "uzbek": "cho'qqi",
+    "english": "summit / peak",
+    "theme": "mountain-park",
+    "level": 2
+  },
+  {
+    "id": "mountain-park.cable-car",
+    "uzbek": "osma yo'l",
+    "english": "cable car",
+    "theme": "mountain-park",
+    "level": 3
+  },
+  {
+    "id": "mountain-park.fresh-air",
+    "uzbek": "toza havo",
+    "english": "fresh air",
+    "theme": "mountain-park",
+    "level": 3
+  }
+]

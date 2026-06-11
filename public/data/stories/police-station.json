@@ -1,0 +1,117 @@
+[
+  {
+    "id": "police-station.lost-phone",
+    "theme": "police-station",
+    "title": {
+      "en": "The Lost Phone",
+      "uz": "Yo'qolgan telefon"
+    },
+    "sentences": [
+      {
+        "uzbek": "Kecha telefonim yo'qoldi.",
+        "english": "Yesterday my phone got lost."
+      },
+      {
+        "uzbek": "Men politsiyaga bordim.",
+        "english": "I went to the police."
+      },
+      {
+        "uzbek": "Yosh politsiyachi menga yordam berdi.",
+        "english": "A young police officer helped me."
+      },
+      {
+        "uzbek": "Bir kishi telefonimni topdi.",
+        "english": "Someone had found my phone."
+      },
+      {
+        "uzbek": "U uni politsiyaga olib keldi.",
+        "english": "He had brought it to the police."
+      },
+      {
+        "uzbek": "Odamlar bu yerda juda halol!",
+        "english": "People here are very honest!"
+      }
+    ],
+    "glossary": {
+      "Kecha": "yesterday",
+      "telefonim": "my phone",
+      "yo'qoldi": "got lost",
+      "Men": "I",
+      "politsiyaga": "to the police",
+      "bordim": "I went",
+      "Yosh": "young",
+      "politsiyachi": "police officer (politsiya + -chi)",
+      "menga": "to me",
+      "yordam": "help",
+      "berdi": "gave",
+      "Bir": "one / a",
+      "kishi": "person",
+      "telefonimni": "my phone (object)",
+      "topdi": "found",
+      "U": "he / she",
+      "uni": "it (object)",
+      "olib": "taking (olib keldi = brought)",
+      "keldi": "came",
+      "Odamlar": "people",
+      "juda": "very",
+      "halol": "honest",
+      "bu": "this",
+      "yerda": "at (a place)"
+    }
+  },
+  {
+    "id": "police-station.closed-road",
+    "theme": "police-station",
+    "title": {
+      "en": "The Closed Road",
+      "uz": "Yopiq yo'l"
+    },
+    "sentences": [
+      {
+        "uzbek": "Bugun katta ko'cha yopiq edi.",
+        "english": "Today the big street was closed."
+      },
+      {
+        "uzbek": "Bayram bor edi.",
+        "english": "There was a festival."
+      },
+      {
+        "uzbek": "Politsiyachi menga yo'l ko'rsatdi.",
+        "english": "A police officer showed me the way."
+      },
+      {
+        "uzbek": "Men boshqa ko'chadan bordim.",
+        "english": "I went by another street."
+      },
+      {
+        "uzbek": "Yo'lda musiqa eshitdim.",
+        "english": "On the way I heard music."
+      },
+      {
+        "uzbek": "Bayram juda chiroyli edi!",
+        "english": "The festival was very beautiful!"
+      }
+    ],
+    "glossary": {
+      "Bugun": "today",
+      "katta": "big",
+      "yopiq": "closed",
+      "edi": "was",
+      "Bayram": "festival / holiday",
+      "bor": "there is / was",
+      "Politsiyachi": "police officer",
+      "menga": "to me",
+      "yo'l": "way / road",
+      "ko'rsatdi": "showed",
+      "Men": "I",
+      "boshqa": "another",
+      "ko'chadan": "by the street (ko'cha + -dan)",
+      "bordim": "I went",
+      "Yo'lda": "on the way",
+      "musiqa": "music",
+      "eshitdim": "I heard",
+      "juda": "very",
+      "chiroyli": "beautiful"
+    }
+  }
+]

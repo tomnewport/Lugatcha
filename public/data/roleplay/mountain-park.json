@@ -1,0 +1,460 @@
+[
+  {
+    "id": "mountain-park.cable-car",
+    "theme": "mountain-park",
+    "title": {
+      "en": "Up the Mountain",
+      "uz": "Tog'ga chiqish"
+    },
+    "scenario": "At the mountain park, you want to take the cable car up to the top.",
+    "variants": [
+      {
+        "id": "mountain-park.cable-car.base",
+        "description": "A ticket to the top",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Yuqoriga chiptami?",
+            "english": "Hello! A ticket to the top?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, bitta chipta, iltimos.",
+            "english": "Yes, one ticket, please.",
+            "tokens": [
+              "Ha,",
+              "bitta",
+              "chipta,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Borib-kelishmi?",
+            "english": "Return?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, borib-kelish.",
+            "english": "Yes, return.",
+            "tokens": [
+              "Ha,",
+              "borib-kelish."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ellik ming so'm. Mana chiptangiz.",
+            "english": "Fifty thousand som. Here is your ticket."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.cable-car.weather",
+        "description": "The weather is closing in",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Yuqoriga chiqsam bo'ladimi?",
+            "english": "May I go up to the top?",
+            "tokens": [
+              "Yuqoriga",
+              "chiqsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Havo yomonlashyapti. Sovuq va shamol.",
+            "english": "The weather is worsening. Cold and windy."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Xavfsizmi?",
+            "english": "Is it safe?",
+            "tokens": [
+              "Xavfsizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hozir ha, lekin tez tushing.",
+            "english": "For now yes, but come down quickly."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat!",
+            "english": "Fine, thank you!",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.cable-car.closed",
+        "description": "The cable car is closed for wind",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Osma yo'l ishlayaptimi?",
+            "english": "Is the cable car working?",
+            "tokens": [
+              "Osma",
+              "yo'l",
+              "ishlayaptimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yo'q, shamol kuchli. Yopiq.",
+            "english": "No, the wind is strong. It is closed."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Piyoda chiqsam bo'ladimi?",
+            "english": "Can I walk up?",
+            "tokens": [
+              "Piyoda",
+              "chiqsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, so'qmoq bor. Ikki soat.",
+            "english": "Yes, there is a path. Two hours."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, piyoda chiqaman!",
+            "english": "Fine, I will walk up!",
+            "tokens": [
+              "Yaxshi,",
+              "piyoda",
+              "chiqaman!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.cable-car.water",
+        "description": "You buy water for the climb",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Yuqorida suv bormi?",
+            "english": "Is there water at the top?",
+            "tokens": [
+              "Yuqorida",
+              "suv",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yo'q, bu yerdan oling.",
+            "english": "No, buy some here."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita suv, iltimos.",
+            "english": "Two waters, please.",
+            "tokens": [
+              "Ikkita",
+              "suv,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana. Yo'l och bo'lsin!",
+            "english": "Here you are. Have a good climb!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.cable-car.photo",
+        "description": "You ask about the view",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Yuqoridan manzara go'zalmi?",
+            "english": "Is the view beautiful from the top?",
+            "tokens": [
+              "Yuqoridan",
+              "manzara",
+              "go'zalmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Juda go'zal! Butun shahar ko'rinadi.",
+            "english": "Very beautiful! You can see the whole city."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ajoyib! Bitta chipta.",
+            "english": "Wonderful! One ticket.",
+            "tokens": [
+              "Ajoyib!",
+              "Bitta",
+              "chipta."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana. Suratga oling!",
+            "english": "Here you are. Take photos!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Albatta! Rahmat!",
+            "english": "Of course! Thank you!",
+            "tokens": [
+              "Albatta!",
+              "Rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mountain-park.on-the-trail",
+    "theme": "mountain-park",
+    "title": {
+      "en": "On the Trail",
+      "uz": "So'qmoqda"
+    },
+    "scenario": "Walking a mountain path, you meet a local hiker.",
+    "variants": [
+      {
+        "id": "mountain-park.on-the-trail.base",
+        "description": "A friendly hello on the path",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Yaxshi sayohatmi?",
+            "english": "Hello! A good walk?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, juda go'zal!",
+            "english": "Yes, very beautiful!",
+            "tokens": [
+              "Ha,",
+              "juda",
+              "go'zal!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Cho'qqi uzoqmi?",
+            "english": "Is the summit far?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yo'q, yaqin. Bir soat.",
+            "english": "No, near. One hour.",
+            "tokens": [
+              "Yo'q,",
+              "yaqin.",
+              "Bir",
+              "soat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Yo'l och bo'lsin!",
+            "english": "Thank you! Have a good walk!"
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.on-the-trail.tired",
+        "description": "You are tired and ask to rest",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Men charchadim. Bu yerda dam olaman.",
+            "english": "I am tired. I will rest here.",
+            "tokens": [
+              "Men",
+              "charchadim.",
+              "Bu",
+              "yerda",
+              "dam",
+              "olaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi joy. Daryo yonida salqin.",
+            "english": "A good spot. By the river it is cool."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Suv bormi yaqin?",
+            "english": "Is there water nearby?",
+            "tokens": [
+              "Suv",
+              "bormi",
+              "yaqin?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, daryo toza. Iching.",
+            "english": "Yes, the river is clean. Drink."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.on-the-trail.lost",
+        "description": "You have lost the path",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, so'qmoqni yo'qotdim.",
+            "english": "Excuse me, I have lost the path.",
+            "tokens": [
+              "Kechirasiz,",
+              "so'qmoqni",
+              "yo'qotdim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pastga qarang. So'qmoq daryo yonida.",
+            "english": "Look down. The path is by the river."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ko'rdim! Rahmat!",
+            "english": "I see it! Thank you!",
+            "tokens": [
+              "Ko'rdim!",
+              "Rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ehtiyot bo'ling. Toshlar sirpanchiq.",
+            "english": "Be careful. The rocks are slippery."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat!",
+            "english": "Fine, thank you!",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.on-the-trail.weather",
+        "description": "Clouds are coming in",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Bulutlar kelyapti. Tez tushing.",
+            "english": "Clouds are coming. Come down quickly."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yomg'ir yog'adimi?",
+            "english": "Will it rain?",
+            "tokens": [
+              "Yomg'ir",
+              "yog'adimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Balki. Tog'da havo tez o'zgaradi.",
+            "english": "Maybe. In the mountains the weather changes fast."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tushunaman. Hozir tushaman.",
+            "english": "I understand. I will come down now.",
+            "tokens": [
+              "Tushunaman.",
+              "Hozir",
+              "tushaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ehtiyot bo'ling!",
+            "english": "Take care!"
+          }
+        ]
+      },
+      {
+        "id": "mountain-park.on-the-trail.share-food",
+        "description": "They share dried fruit",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Quruq meva olasizmi? Kuch beradi.",
+            "english": "Will you have dried fruit? It gives strength."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Juda mehribonsiz.",
+            "english": "Thank you! You are very kind.",
+            "tokens": [
+              "Rahmat!",
+              "Juda",
+              "mehribonsiz."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tog'da hamma birga.",
+            "english": "In the mountains everyone is together."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Chiroyli so'z! Rahmat.",
+            "english": "A lovely saying! Thank you.",
+            "tokens": [
+              "Chiroyli",
+              "so'z!",
+              "Rahmat."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

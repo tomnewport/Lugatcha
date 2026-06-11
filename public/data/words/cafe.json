@@ -1,0 +1,86 @@
+[
+  {
+    "id": "cafe.coffee",
+    "uzbek": "kofe",
+    "english": "coffee",
+    "theme": "cafe",
+    "level": 1
+  },
+  {
+    "id": "cafe.tea",
+    "uzbek": "choy",
+    "english": "tea",
+    "theme": "cafe",
+    "level": 1
+  },
+  {
+    "id": "cafe.sugar",
+    "uzbek": "shakar",
+    "english": "sugar",
+    "theme": "cafe",
+    "level": 1
+  },
+  {
+    "id": "cafe.cake",
+    "uzbek": "tort",
+    "english": "cake",
+    "theme": "cafe",
+    "level": 1
+  },
+  {
+    "id": "cafe.takeaway",
+    "uzbek": "olib ketish",
+    "english": "takeaway",
+    "theme": "cafe",
+    "level": 1
+  },
+  {
+    "id": "cafe.small",
+    "uzbek": "kichik",
+    "english": "small",
+    "theme": "cafe",
+    "level": 1
+  },
+  {
+    "id": "cafe.big",
+    "uzbek": "katta",
+    "english": "big",
+    "theme": "cafe",
+    "level": 1
+  },
+  {
+    "id": "cafe.milk",
+    "uzbek": "sut",
+    "english": "milk",
+    "theme": "cafe",
+    "level": 2
+  },
+  {
+    "id": "cafe.juice",
+    "uzbek": "sharbat",
+    "english": "juice",
+    "theme": "cafe",
+    "level": 2
+  },
+  {
+    "id": "cafe.sandwich",
+    "uzbek": "buterbrod",
+    "english": "sandwich",
+    "theme": "cafe",
+    "level": 2
+  },
+  {
+    "id": "cafe.cold",
+    "uzbek": "sovuq",
+    "english": "cold",
+    "theme": "cafe",
+    "level": 2
+  },
+  {
+    "id": "cafe.hot",
+    "uzbek": "issiq",
+    "english": "hot",
+    "theme": "cafe",
+    "level": 2
+  }
+]

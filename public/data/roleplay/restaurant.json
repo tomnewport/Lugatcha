@@ -1,49 +1,614 @@
-{
-  "id": "restaurant.ordering",
-  "theme": "restaurant",
-  "title": { "en": "Ordering Dinner", "uz": "Kechki ovqat buyurtma qilish" },
-  "scenario": "You are at a traditional Uzbek restaurant in Tashkent. You would like to order dinner for two people.",
-  "variants": [
-    {
-      "id": "restaurant.ordering.base",
-      "description": "A smooth dinner — your order arrives perfectly",
-      "turns": [
-        { "speaker": "npc",  "uzbek": "Assalomu alaykum! Nechta odam?",                        "english": "Hello! How many people?" },
-        { "speaker": "user", "uzbek": "Ikkita.",                                                "english": "Two.",                              "tokens": ["Ikkita."] },
-        { "speaker": "npc",  "uzbek": "Marhamat, o'ting. Bu menyu.",                            "english": "Please, come in. Here is the menu." },
-        { "speaker": "npc",  "uzbek": "Buyurtmangizni qabul qilsam maylimi?",                  "english": "May I take your order?" },
-        { "speaker": "user", "uzbek": "Iltimos, ikkita osh va bir choy.",                       "english": "Please, two plov and one tea.",      "tokens": ["Iltimos,", "ikkita", "osh", "va", "bir", "choy."] },
-        { "speaker": "npc",  "uzbek": "Albatta. Biroz kuting.",                                 "english": "Of course. Please wait a moment." },
-        { "speaker": "npc",  "uzbek": "Marhamat, buyuring. Xo'sh ishtaha!",                    "english": "Here you go. Bon appétit!" },
-        { "speaker": "user", "uzbek": "Rahmat! Juda mazali ko'rinadi.",                         "english": "Thank you! It looks very delicious.", "tokens": ["Rahmat!", "Juda", "mazali", "ko'rinadi."] }
-      ]
+[
+  {
+    "id": "restaurant.ordering",
+    "theme": "restaurant",
+    "title": {
+      "en": "Ordering Dinner",
+      "uz": "Kechki ovqat buyurtma qilish"
     },
-    {
-      "id": "restaurant.ordering.no-plov",
-      "description": "The plov has run out — you adapt your order",
-      "turns": [
-        { "speaker": "npc",  "uzbek": "Assalomu alaykum! Nechta odam?",                        "english": "Hello! How many people?" },
-        { "speaker": "user", "uzbek": "Ikkita.",                                                "english": "Two.",                              "tokens": ["Ikkita."] },
-        { "speaker": "npc",  "uzbek": "Marhamat, o'ting. Bu menyu.",                            "english": "Please, come in. Here is the menu." },
-        { "speaker": "npc",  "uzbek": "Buyurtmangizni qabul qilsam maylimi?",                  "english": "May I take your order?" },
-        { "speaker": "user", "uzbek": "Iltimos, ikkita osh va bir choy.",                       "english": "Please, two plov and one tea.",      "tokens": ["Iltimos,", "ikkita", "osh", "va", "bir", "choy."] },
-        { "speaker": "npc",  "uzbek": "Kechirasiz, bugun osh tugab qoldi. Kabob bormi?",       "english": "I'm sorry, the plov has run out today. Shall I bring kebab?" },
-        { "speaker": "user", "uzbek": "Yaxshi, ikkita kabob iltimos.",                          "english": "Alright, two kebabs please.",        "tokens": ["Yaxshi,", "ikkita", "kabob", "iltimos."] },
-        { "speaker": "npc",  "uzbek": "Albatta! Biroz kuting.",                                 "english": "Of course! Please wait a moment." }
-      ]
+    "scenario": "You are at a traditional Uzbek restaurant in Tashkent. You would like to order dinner for two people.",
+    "variants": [
+      {
+        "id": "restaurant.ordering.base",
+        "description": "A smooth dinner — your order arrives perfectly",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Assalomu alaykum! Nechta odam?",
+            "english": "Hello! How many people?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita.",
+            "english": "Two.",
+            "tokens": [
+              "Ikkita."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Marhamat, o'ting. Bu menyu.",
+            "english": "Please, come in. Here is the menu."
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Buyurtmangizni qabul qilsam maylimi?",
+            "english": "May I take your order?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Iltimos, ikkita osh va bir choy.",
+            "english": "Please, two plov and one tea.",
+            "tokens": [
+              "Iltimos,",
+              "ikkita",
+              "osh",
+              "va",
+              "bir",
+              "choy."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta. Biroz kuting.",
+            "english": "Of course. Please wait a moment."
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Marhamat, buyuring. Xo'sh ishtaha!",
+            "english": "Here you go. Bon appétit!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Juda mazali ko'rinadi.",
+            "english": "Thank you! It looks very delicious.",
+            "tokens": [
+              "Rahmat!",
+              "Juda",
+              "mazali",
+              "ko'rinadi."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "restaurant.ordering.no-plov",
+        "description": "The plov has run out — you adapt your order",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Assalomu alaykum! Nechta odam?",
+            "english": "Hello! How many people?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita.",
+            "english": "Two.",
+            "tokens": [
+              "Ikkita."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Marhamat, o'ting. Bu menyu.",
+            "english": "Please, come in. Here is the menu."
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Buyurtmangizni qabul qilsam maylimi?",
+            "english": "May I take your order?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Iltimos, ikkita osh va bir choy.",
+            "english": "Please, two plov and one tea.",
+            "tokens": [
+              "Iltimos,",
+              "ikkita",
+              "osh",
+              "va",
+              "bir",
+              "choy."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, bugun osh tugab qoldi. Kabob bormi?",
+            "english": "I'm sorry, the plov has run out today. Shall I bring kebab?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, ikkita kabob iltimos.",
+            "english": "Alright, two kebabs please.",
+            "tokens": [
+              "Yaxshi,",
+              "ikkita",
+              "kabob",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Biroz kuting.",
+            "english": "Of course! Please wait a moment."
+          }
+        ]
+      },
+      {
+        "id": "restaurant.ordering.vegetarian",
+        "description": "You ask about vegetarian options",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Assalomu alaykum! Nechta odam?",
+            "english": "Hello! How many people?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bitta.",
+            "english": "One.",
+            "tokens": [
+              "Bitta."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Marhamat, o'ting. Bu menyu.",
+            "english": "Please, come in. Here is the menu."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Go'shtsiz taomlar bormi?",
+            "english": "Are there any dishes without meat?",
+            "tokens": [
+              "Go'shtsiz",
+              "taomlar",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, sabzavotli osh va somsa bor.",
+            "english": "Yes, we have vegetable plov and samsa."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Iltimos, sabzavotli osh.",
+            "english": "Vegetable plov, please.",
+            "tokens": [
+              "Iltimos,",
+              "sabzavotli",
+              "osh."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xo'p, hozir olib kelaman.",
+            "english": "Sure, I'll bring it right away."
+          }
+        ]
+      },
+      {
+        "id": "restaurant.ordering.busy",
+        "description": "The restaurant is busy — a short wait",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Stol band, biroz kuting.",
+            "english": "Welcome! The tables are full, please wait a little."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qancha kutaman?",
+            "english": "How long do I wait?",
+            "tokens": [
+              "Qancha",
+              "kutaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'n daqiqa. Choy olasizmi?",
+            "english": "Ten minutes. Will you have tea?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, ko'k choy, iltimos.",
+            "english": "Yes, green tea, please.",
+            "tokens": [
+              "Ha,",
+              "ko'k",
+              "choy,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hozir stol tayyorlaymiz.",
+            "english": "We will prepare a table now."
+          }
+        ]
+      },
+      {
+        "id": "restaurant.ordering.recommend",
+        "description": "You ask the waiter to recommend a dish",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Nima tavsiya qilasiz?",
+            "english": "What do you recommend?",
+            "tokens": [
+              "Nima",
+              "tavsiya",
+              "qilasiz?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bizning oshimiz juda mashhur.",
+            "english": "Our plov is very famous."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, bitta osh, iltimos.",
+            "english": "Good, one plov, please.",
+            "tokens": [
+              "Yaxshi,",
+              "bitta",
+              "osh,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Non va salat ham olasizmi?",
+            "english": "Will you have bread and salad too?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, rahmat.",
+            "english": "Yes, thank you.",
+            "tokens": [
+              "Ha,",
+              "rahmat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ajoyib tanlov!",
+            "english": "An excellent choice!"
+          }
+        ]
+      },
+      {
+        "id": "restaurant.ordering.bill",
+        "description": "You finish and ask for the bill",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Taom yoqdimi?",
+            "english": "Did you enjoy the food?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda mazali edi! Hisob, iltimos.",
+            "english": "It was very delicious! The bill, please.",
+            "tokens": [
+              "Juda",
+              "mazali",
+              "edi!",
+              "Hisob,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ellik ming so'm bo'ldi.",
+            "english": "It comes to fifty thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul. Rahmat!",
+            "english": "Here is the money. Thank you!",
+            "tokens": [
+              "Mana",
+              "pul.",
+              "Rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Yana keling!",
+            "english": "Thank you! Come again!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "restaurant.no-meat",
+    "theme": "restaurant",
+    "title": {
+      "en": "Dinner Without Meat",
+      "uz": "Go'shtsiz kechki ovqat"
     },
-    {
-      "id": "restaurant.ordering.vegetarian",
-      "description": "You ask about vegetarian options",
-      "turns": [
-        { "speaker": "npc",  "uzbek": "Assalomu alaykum! Nechta odam?",                        "english": "Hello! How many people?" },
-        { "speaker": "user", "uzbek": "Bitta.",                                                 "english": "One.",                              "tokens": ["Bitta."] },
-        { "speaker": "npc",  "uzbek": "Marhamat, o'ting. Bu menyu.",                            "english": "Please, come in. Here is the menu." },
-        { "speaker": "user", "uzbek": "Gostsiz taomlar bormi?",                                 "english": "Are there any dishes without meat?", "tokens": ["Go'stsiz", "taomlar", "bormi?"] },
-        { "speaker": "npc",  "uzbek": "Ha, sabzavotli osh va somsa bor.",                       "english": "Yes, we have vegetable plov and samsa." },
-        { "speaker": "user", "uzbek": "Iltimos, sabzavotli osh.",                               "english": "Vegetable plov, please.",            "tokens": ["Iltimos,", "sabzavotli", "osh."] },
-        { "speaker": "npc",  "uzbek": "Xo'p, hozir olib kelaman.",                              "english": "Sure, I'll bring it right away." }
-      ]
-    }
-  ]
-}
+    "scenario": "You are ordering dinner, but you do not eat meat. The waiter is happy to help — usually.",
+    "variants": [
+      {
+        "id": "restaurant.no-meat.base",
+        "description": "The kitchen has a delicious vegetable dish",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Nima buyurasiz?",
+            "english": "Welcome! What will you order?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men go'sht yemayman. Sabzavotli taom bormi?",
+            "english": "I do not eat meat. Is there a vegetable dish?",
+            "tokens": [
+              "Men",
+              "go'sht",
+              "yemayman.",
+              "Sabzavotli",
+              "taom",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, bor! Sabzavotli lag'mon juda mazali.",
+            "english": "Yes, there is! The vegetable lagman is very tasty."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, bitta lag'mon va ko'k choy.",
+            "english": "Good, one lagman and green tea.",
+            "tokens": [
+              "Yaxshi,",
+              "bitta",
+              "lag'mon",
+              "va",
+              "ko'k",
+              "choy."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Non ham olasizmi?",
+            "english": "Of course! Will you have bread too?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, iltimos.",
+            "english": "Yes, please.",
+            "tokens": [
+              "Ha,",
+              "iltimos."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "restaurant.no-meat.plov-question",
+        "description": "You ask if the plov can come without meat",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Oshni go'shtsiz qila olasizmi?",
+            "english": "Can you make the plov without meat?",
+            "tokens": [
+              "Oshni",
+              "go'shtsiz",
+              "qila",
+              "olasizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, osh har doim go'sht bilan.",
+            "english": "Sorry, plov always comes with meat."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Unda sabzavotli taom bormi?",
+            "english": "Then is there a vegetable dish?",
+            "tokens": [
+              "Unda",
+              "sabzavotli",
+              "taom",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, sabzavotli somsa bor. Juda mazali!",
+            "english": "Yes, there is vegetable samsa. Very tasty!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita somsa, iltimos.",
+            "english": "Two samsas, please.",
+            "tokens": [
+              "Ikkita",
+              "somsa,",
+              "iltimos."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "restaurant.no-meat.spicy",
+        "description": "The dish is spicy — you ask for mild",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Sabzavotli taom achchiq. Yaxshimi?",
+            "english": "The vegetable dish is spicy. Is that okay?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Achchiq emas, iltimos.",
+            "english": "Not spicy, please.",
+            "tokens": [
+              "Achchiq",
+              "emas,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta, achchiqsiz qilamiz.",
+            "english": "Of course, we will make it without spice."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Arzimaydi. Besh daqiqa kuting.",
+            "english": "You're welcome. Wait five minutes."
+          }
+        ]
+      },
+      {
+        "id": "restaurant.no-meat.sold-out",
+        "description": "The vegetable dish has run out",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Sabzavotli taom bormi?",
+            "english": "Is there a vegetable dish?",
+            "tokens": [
+              "Sabzavotli",
+              "taom",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, bugun tugadi.",
+            "english": "Sorry, it ran out today."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Unda nima bor?",
+            "english": "Then what is there?",
+            "tokens": [
+              "Unda",
+              "nima",
+              "bor?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tuxumli taom bor. Mazali va yangi.",
+            "english": "There is an egg dish. Tasty and fresh."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, bitta olaman.",
+            "english": "Fine, I will take one.",
+            "tokens": [
+              "Yaxshi,",
+              "bitta",
+              "olaman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "restaurant.no-meat.friends",
+        "description": "Your friends order plov; you explain",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Hammaga osh keladimi?",
+            "english": "Plov for everyone?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Menga emas. Men go'sht yemayman.",
+            "english": "Not for me. I do not eat meat.",
+            "tokens": [
+              "Menga",
+              "emas.",
+              "Men",
+              "go'sht",
+              "yemayman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Muammo emas! Sizga sabzavotli taom keltiraman.",
+            "english": "No problem! I will bring you a vegetable dish."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, juda yaxshi.",
+            "english": "Thank you, very good.",
+            "tokens": [
+              "Rahmat,",
+              "juda",
+              "yaxshi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Choy hammaga!",
+            "english": "Tea for everyone!"
+          }
+        ]
+      },
+      {
+        "id": "restaurant.no-meat.bill",
+        "description": "At the end, you ask for the bill",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Taom yoqdimi?",
+            "english": "Did you enjoy the food?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda mazali edi! Hisob, iltimos.",
+            "english": "It was very tasty! The bill, please.",
+            "tokens": [
+              "Juda",
+              "mazali",
+              "edi!",
+              "Hisob,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qirq ming so'm bo'ladi.",
+            "english": "It comes to forty thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana, rahmat.",
+            "english": "Here you are, thank you.",
+            "tokens": [
+              "Mana,",
+              "rahmat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Yana keling!",
+            "english": "Thank you! Come again!"
+          }
+        ]
+      }
+    ]
+  }
+]

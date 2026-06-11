@@ -1,0 +1,515 @@
+[
+  {
+    "id": "hospital.seeing-doctor",
+    "theme": "hospital",
+    "title": {
+      "en": "Seeing the Doctor",
+      "uz": "Shifokor qabulida"
+    },
+    "scenario": "Your head has been aching since the morning. You visit the clinic.",
+    "variants": [
+      {
+        "id": "hospital.seeing-doctor.base",
+        "description": "A simple check and some medicine",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Nima bezovta qilyapti?",
+            "english": "Hello! What is bothering you?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Boshim og'riyapti.",
+            "english": "My head aches.",
+            "tokens": [
+              "Boshim",
+              "og'riyapti."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qachondan beri?",
+            "english": "Since when?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ertalabdan beri.",
+            "english": "Since the morning.",
+            "tokens": [
+              "Ertalabdan",
+              "beri."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Sizga dori yozaman. Suv ko'p iching.",
+            "english": "I will prescribe you medicine. Drink plenty of water."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, shifokor!",
+            "english": "Thank you, doctor!",
+            "tokens": [
+              "Rahmat,",
+              "shifokor!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hospital.seeing-doctor.insurance",
+        "description": "They ask for your insurance and passport",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Sug'urtangiz bormi?",
+            "english": "Do you have insurance?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, mana sug'urta va pasport.",
+            "english": "Yes, here are my insurance and passport.",
+            "tokens": [
+              "Ha,",
+              "mana",
+              "sug'urta",
+              "va",
+              "pasport."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat. Shifokor sizni kutyapti.",
+            "english": "Thank you. The doctor is waiting for you."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qaysi xonaga boraman?",
+            "english": "Which room do I go to?",
+            "tokens": [
+              "Qaysi",
+              "xonaga",
+              "boraman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Beshinchi xona, ikkinchi qavat.",
+            "english": "Room five, second floor."
+          }
+        ]
+      },
+      {
+        "id": "hospital.seeing-doctor.queue",
+        "description": "There is a queue — take a number",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Navbat bor. Raqam oling, iltimos.",
+            "english": "There is a queue. Take a number, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qancha kutaman?",
+            "english": "How long will I wait?",
+            "tokens": [
+              "Qancha",
+              "kutaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yigirma daqiqa, taxminan.",
+            "english": "About twenty minutes."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, kutaman.",
+            "english": "Fine, I will wait.",
+            "tokens": [
+              "Yaxshi,",
+              "kutaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'tiring. Choy bor.",
+            "english": "Sit down. There is tea."
+          }
+        ]
+      },
+      {
+        "id": "hospital.seeing-doctor.fever",
+        "description": "It turns out you have a fever",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "O'zimni yomon his qilyapman.",
+            "english": "I feel unwell.",
+            "tokens": [
+              "O'zimni",
+              "yomon",
+              "his",
+              "qilyapman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Isitmangizni o'lchaymiz... Isitmangiz bor.",
+            "english": "We will take your temperature... You have a fever."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bu jiddiymi?",
+            "english": "Is it serious?",
+            "tokens": [
+              "Bu",
+              "jiddiymi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yo'q, shamollash. Dam oling va issiq choy iching.",
+            "english": "No, a cold. Rest and drink hot tea."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, shifokor.",
+            "english": "Thank you, doctor.",
+            "tokens": [
+              "Rahmat,",
+              "shifokor."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hospital.seeing-doctor.stomach",
+        "description": "It is your stomach, not your head",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Nima bezovta qilyapti?",
+            "english": "What is bothering you?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qornim og'riyapti.",
+            "english": "My stomach aches.",
+            "tokens": [
+              "Qornim",
+              "og'riyapti."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bugun nima yedingiz?",
+            "english": "What did you eat today?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bozorda somsa yedim.",
+            "english": "I ate samsa at the bazaar.",
+            "tokens": [
+              "Bozorda",
+              "somsa",
+              "yedim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tushunaman. Bu dori yordam beradi.",
+            "english": "I see. This medicine will help."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hospital.seeing-doctor.dentist",
+        "description": "Wrong door — you need the dentist",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Tishim og'riyapti.",
+            "english": "My tooth aches.",
+            "tokens": [
+              "Tishim",
+              "og'riyapti."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Sizga tish shifokori kerak.",
+            "english": "You need the dentist."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "U qayerda?",
+            "english": "Where is that?",
+            "tokens": [
+              "U",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Uchinchi qavatda, chap tomonda.",
+            "english": "On the third floor, on the left."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hospital.pharmacy",
+    "theme": "hospital",
+    "title": {
+      "en": "At the Pharmacy",
+      "uz": "Dorixonada"
+    },
+    "scenario": "The doctor has written you a prescription. Now to the pharmacy across the street.",
+    "variants": [
+      {
+        "id": "hospital.pharmacy.base",
+        "description": "They have everything you need",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Nima kerak?",
+            "english": "Hello! What do you need?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana retsept. Bu dori bormi?",
+            "english": "Here is the prescription. Do you have this medicine?",
+            "tokens": [
+              "Mana",
+              "retsept.",
+              "Bu",
+              "dori",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, bor. Kuniga ikki marta iching.",
+            "english": "Yes, we do. Take it twice a day."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qancha turadi?",
+            "english": "How much does it cost?",
+            "tokens": [
+              "Qancha",
+              "turadi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'n besh ming so'm.",
+            "english": "Fifteen thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana, rahmat.",
+            "english": "Here you are, thank you.",
+            "tokens": [
+              "Mana,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hospital.pharmacy.prescription",
+        "description": "This one needs a prescription",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Menga bu dori kerak.",
+            "english": "I need this medicine.",
+            "tokens": [
+              "Menga",
+              "bu",
+              "dori",
+              "kerak."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Buning uchun retsept kerak.",
+            "english": "You need a prescription for this."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Retseptim yo'q. Nima qilaman?",
+            "english": "I have no prescription. What do I do?",
+            "tokens": [
+              "Retseptim",
+              "yo'q.",
+              "Nima",
+              "qilaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Shifokorga boring. U yozib beradi.",
+            "english": "Go to the doctor. They will write one."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat.",
+            "english": "Fine, thank you.",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hospital.pharmacy.sold-out",
+        "description": "The medicine has run out",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu dori bormi?",
+            "english": "Do you have this medicine?",
+            "tokens": [
+              "Bu",
+              "dori",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, tugadi. Ertaga keladi.",
+            "english": "Sorry, it has run out. It arrives tomorrow."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Boshqa dorixona yaqinmi?",
+            "english": "Is there another pharmacy near?",
+            "tokens": [
+              "Boshqa",
+              "dorixona",
+              "yaqinmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, bozor yonida bor.",
+            "english": "Yes, there is one by the bazaar."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, u yerga boraman.",
+            "english": "Thank you, I will go there.",
+            "tokens": [
+              "Rahmat,",
+              "u",
+              "yerga",
+              "boraman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hospital.pharmacy.cheaper",
+        "description": "You ask for a cheaper version",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Bu dori yigirma ming so'm.",
+            "english": "This medicine is twenty thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Arzonroq dori bormi?",
+            "english": "Is there a cheaper medicine?",
+            "tokens": [
+              "Arzonroq",
+              "dori",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, mana bu sakkiz ming. Xuddi shunday.",
+            "english": "Yes, this one is eight thousand. It is the same."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi, shuni olaman.",
+            "english": "Very good, I will take that one.",
+            "tokens": [
+              "Juda",
+              "yaxshi,",
+              "shuni",
+              "olaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Sog' bo'ling!",
+            "english": "Stay healthy!"
+          }
+        ]
+      },
+      {
+        "id": "hospital.pharmacy.lunch",
+        "description": "Closed for lunch — there is a night pharmacy",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, tushlikka yopilamiz.",
+            "english": "Sorry, we are closing for lunch."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Menga dori juda kerak!",
+            "english": "I really need medicine!",
+            "tokens": [
+              "Menga",
+              "dori",
+              "juda",
+              "kerak!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tungi dorixona doim ochiq. Maydon yonida.",
+            "english": "The night pharmacy is always open. By the square."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! U yerga boraman.",
+            "english": "Thank you! I will go there.",
+            "tokens": [
+              "Rahmat!",
+              "U",
+              "yerga",
+              "boraman."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,498 @@
+[
+  {
+    "id": "museum.tickets",
+    "theme": "museum",
+    "title": {
+      "en": "Museum Tickets",
+      "uz": "Muzey chiptalari"
+    },
+    "scenario": "The history museum looks wonderful. You go to the ticket desk.",
+    "variants": [
+      {
+        "id": "museum.tickets.base",
+        "description": "Two tickets, no fuss",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Nechta chipta?",
+            "english": "Hello! How many tickets?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita chipta, iltimos.",
+            "english": "Two tickets, please.",
+            "tokens": [
+              "Ikkita",
+              "chipta,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yigirma ming so'm bo'ladi.",
+            "english": "That will be twenty thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul.",
+            "english": "Here is the money.",
+            "tokens": [
+              "Mana",
+              "pul."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Muzey soat oltigacha ochiq.",
+            "english": "Thank you! The museum is open until six."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat!",
+            "english": "Great, thank you!",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.tickets.student",
+        "description": "A student discount — with ID",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Talabalarga chegirma bormi?",
+            "english": "Is there a student discount?",
+            "tokens": [
+              "Talabalarga",
+              "chegirma",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, talaba guvohnomangiz bormi?",
+            "english": "Yes — do you have your student card?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana guvohnoma.",
+            "english": "Here is the card.",
+            "tokens": [
+              "Mana",
+              "guvohnoma."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi. Chipta besh ming so'm.",
+            "english": "Good. The ticket is five thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.tickets.monday",
+        "description": "Closed on Mondays",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita chipta, iltimos.",
+            "english": "Two tickets, please.",
+            "tokens": [
+              "Ikkita",
+              "chipta,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, bugun dushanba. Muzey yopiq.",
+            "english": "Sorry, today is Monday. The museum is closed."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qachon ochiq?",
+            "english": "When is it open?",
+            "tokens": [
+              "Qachon",
+              "ochiq?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ertaga, soat to'qqizdan.",
+            "english": "Tomorrow, from nine."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, ertaga kelamiz.",
+            "english": "Fine, we will come tomorrow.",
+            "tokens": [
+              "Yaxshi,",
+              "ertaga",
+              "kelamiz."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.tickets.no-photo",
+        "description": "No photos inside",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Mana chiptalar. Suratga olish mumkin emas.",
+            "english": "Here are the tickets. Taking photos is not allowed."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Telefonsiz ham mumkin emasmi?",
+            "english": "Not even without flash, with a phone?",
+            "tokens": [
+              "Telefonsiz",
+              "ham",
+              "mumkin",
+              "emasmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Birinchi zalda mumkin, qolganlarida yo'q.",
+            "english": "In the first hall it is allowed, in the others no."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tushundim, rahmat.",
+            "english": "Understood, thank you.",
+            "tokens": [
+              "Tushundim,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.tickets.tour",
+        "description": "You join a guided tour",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Inglizcha ekskursiya bormi?",
+            "english": "Is there a tour in English?",
+            "tokens": [
+              "Inglizcha",
+              "ekskursiya",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, soat o'n birda boshlanadi.",
+            "english": "Yes, it starts at eleven."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikki kishi uchun, iltimos.",
+            "english": "For two people, please.",
+            "tokens": [
+              "Ikki",
+              "kishi",
+              "uchun,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi. Birinchi zalda kuting.",
+            "english": "Fine. Wait in the first hall."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.tickets.cash",
+        "description": "Card machine is broken — cash only",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, karta ishlamayapti. Faqat naqd pul.",
+            "english": "Sorry, the card machine is not working. Cash only."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Naqd pulim yo'q. Bankomat qayerda?",
+            "english": "I have no cash. Where is an ATM?",
+            "tokens": [
+              "Naqd",
+              "pulim",
+              "yo'q.",
+              "Bankomat",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Muzey yonida, chap tomonda.",
+            "english": "Next to the museum, on the left."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Besh daqiqada kelaman!",
+            "english": "I will be back in five minutes!",
+            "tokens": [
+              "Besh",
+              "daqiqada",
+              "kelaman!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kutamiz!",
+            "english": "We will wait!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "museum.in-gallery",
+    "theme": "museum",
+    "title": {
+      "en": "In the Gallery",
+      "uz": "Zalda"
+    },
+    "scenario": "Inside the museum, a friendly guide notices your interest in a beautiful old painting.",
+    "variants": [
+      {
+        "id": "museum.in-gallery.base",
+        "description": "You ask about the painting",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu rasm juda chiroyli! Bu nima?",
+            "english": "This painting is very beautiful! What is it?",
+            "tokens": [
+              "Bu",
+              "rasm",
+              "juda",
+              "chiroyli!",
+              "Bu",
+              "nima?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu eski Samarqand. Ikki yuz yillik rasm.",
+            "english": "It is old Samarkand. A two-hundred-year-old painting."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rassom kim?",
+            "english": "Who is the artist?",
+            "tokens": [
+              "Rassom",
+              "kim?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mashhur usta. Mana bu zal ham uniki.",
+            "english": "A famous master. This hall is also his."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda qiziq. Rahmat!",
+            "english": "Very interesting. Thank you!",
+            "tokens": [
+              "Juda",
+              "qiziq.",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.in-gallery.silk",
+        "description": "The silk room is the highlight",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Ipak zalini ko'rdingizmi?",
+            "english": "Have you seen the silk hall?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Hali yo'q. U qayerda?",
+            "english": "Not yet. Where is it?",
+            "tokens": [
+              "Hali",
+              "yo'q.",
+              "U",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ikkinchi qavatda. Eng chiroyli zal!",
+            "english": "On the second floor. The most beautiful hall!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Hozir boraman. Rahmat!",
+            "english": "I will go now. Thank you!",
+            "tokens": [
+              "Hozir",
+              "boraman.",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.in-gallery.ceramics",
+        "description": "You ask about the blue ceramics",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu sopol idishlar qayerdan?",
+            "english": "Where are these ceramic dishes from?",
+            "tokens": [
+              "Bu",
+              "sopol",
+              "idishlar",
+              "qayerdan?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rishtondan. Ko'k rang mashhur.",
+            "english": "From Rishtan. The blue colour is famous."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Sotib olsam bo'ladimi?",
+            "english": "Can I buy one somewhere?",
+            "tokens": [
+              "Sotib",
+              "olsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Muzey do'konida bor. Birinchi qavatda.",
+            "english": "The museum shop has them. On the first floor."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ajoyib! Rahmat!",
+            "english": "Wonderful! Thank you!",
+            "tokens": [
+              "Ajoyib!",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.in-gallery.closing",
+        "description": "The museum is closing soon",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, muzey o'n daqiqada yopiladi.",
+            "english": "Excuse me, the museum closes in ten minutes."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Voy! Oxirgi zalni ko'rsam bo'ladimi?",
+            "english": "Oh! May I see the last hall?",
+            "tokens": [
+              "Voy!",
+              "Oxirgi",
+              "zalni",
+              "ko'rsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tez bo'lsangiz, mumkin.",
+            "english": "If you are quick, yes."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Tez ko'raman.",
+            "english": "Thank you! I will look quickly.",
+            "tokens": [
+              "Rahmat!",
+              "Tez",
+              "ko'raman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "museum.in-gallery.question",
+        "description": "The guide quizzes you back",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Siz qayerdan keldingiz?",
+            "english": "Where have you come from?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men Angliyadan keldim.",
+            "english": "I came from England.",
+            "tokens": [
+              "Men",
+              "Angliyadan",
+              "keldim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bizning tariximiz yoqdimi?",
+            "english": "Do you like our history?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yoqdi. Tarix boy va qiziq.",
+            "english": "Very much. The history is rich and interesting.",
+            "tokens": [
+              "Juda",
+              "yoqdi.",
+              "Tarix",
+              "boy",
+              "va",
+              "qiziq."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Yana keling!",
+            "english": "Thank you! Come again!"
+          }
+        ]
+      }
+    ]
+  }
+]

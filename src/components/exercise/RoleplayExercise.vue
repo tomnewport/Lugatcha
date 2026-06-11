@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { db } from '@/db'
 import type { Roleplay, RoleplayVariant, RoleplayTurn } from '@/db/types'
-import { tokenize, buildDecoys } from '@/exercises/validate'
+import { tokenize, buildDecoys, shuffle } from '@/exercises/validate'
 import { speakUzbek, stopSpeaking } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
@@ -22,7 +22,9 @@ const logEl = ref<HTMLElement | null>(null)
 let runId = 0
 
 onMounted(async () => {
-  roleplay.value = (await db.roleplay.where('theme').equals(props.locationId).first()) ?? null
+  // A location can have several scenarios — serve a random one each session
+  const scenarios = await db.roleplay.where('theme').equals(props.locationId).toArray()
+  roleplay.value = shuffle(scenarios)[0] ?? null
   loading.value = false
 })
 

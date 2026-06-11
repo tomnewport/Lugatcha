@@ -1,0 +1,415 @@
+[
+  {
+    "id": "bus-stop.which-bus",
+    "theme": "bus-stop",
+    "title": {
+      "en": "Which Bus to the Bazaar?",
+      "uz": "Bozorga qaysi avtobus?"
+    },
+    "scenario": "You are at a small-town bus stop and need to reach the bazaar.",
+    "variants": [
+      {
+        "id": "bus-stop.which-bus.base",
+        "description": "Bus number five, every ten minutes",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, bozorga qaysi avtobus boradi?",
+            "english": "Excuse me, which bus goes to the bazaar?",
+            "tokens": [
+              "Kechirasiz,",
+              "bozorga",
+              "qaysi",
+              "avtobus",
+              "boradi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Beshinchi avtobus.",
+            "english": "Bus number five."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qachon keladi?",
+            "english": "When does it come?",
+            "tokens": [
+              "Qachon",
+              "keladi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Har o'n daqiqada.",
+            "english": "Every ten minutes."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bus-stop.which-bus.marshrutka",
+        "description": "A minibus is faster",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bozorga avtobus bormi?",
+            "english": "Is there a bus to the bazaar?",
+            "tokens": [
+              "Bozorga",
+              "avtobus",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Avtobus sekin. Marshrutka tez.",
+            "english": "The bus is slow. The minibus is fast."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Marshrutka qayerda turadi?",
+            "english": "Where does the minibus stop?",
+            "tokens": [
+              "Marshrutka",
+              "qayerda",
+              "turadi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Anavi yerda, daraxt yonida.",
+            "english": "Over there, by the tree."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bus-stop.which-bus.fare",
+        "description": "You ask the driver the fare",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bozorga yo'l haqi qancha?",
+            "english": "How much is the fare to the bazaar?",
+            "tokens": [
+              "Bozorga",
+              "yo'l",
+              "haqi",
+              "qancha?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir ming besh yuz so'm.",
+            "english": "One thousand five hundred som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mayda pulim yo'q. Katta pul mayli?",
+            "english": "I have no change. Is a big note okay?",
+            "tokens": [
+              "Mayda",
+              "pulim",
+              "yo'q.",
+              "Katta",
+              "pul",
+              "mayli?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mayli, qaytim beraman.",
+            "english": "Okay, I will give you change."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bus-stop.which-bus.where-off",
+        "description": "You ask where to get off",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bozorda tushaman. Ayta olasizmi?",
+            "english": "I get off at the bazaar. Can you tell me?",
+            "tokens": [
+              "Bozorda",
+              "tushaman.",
+              "Ayta",
+              "olasizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta. Uch bekatdan keyin.",
+            "english": "Of course. After three stops."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat. Aytasizmi?",
+            "english": "Thank you. Will you tell me?",
+            "tokens": [
+              "Rahmat.",
+              "Aytasizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, aytaman. O'tiring.",
+            "english": "Yes, I will tell you. Sit down."
+          }
+        ]
+      },
+      {
+        "id": "bus-stop.which-bus.wrong",
+        "description": "You almost board the wrong bus",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu avtobus bozorga boradimi?",
+            "english": "Does this bus go to the bazaar?",
+            "tokens": [
+              "Bu",
+              "avtobus",
+              "bozorga",
+              "boradimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yo'q, bu vokzalga ketadi.",
+            "english": "No, this goes to the station."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bozorga qaysi avtobus?",
+            "english": "Which bus goes to the bazaar?",
+            "tokens": [
+              "Bozorga",
+              "qaysi",
+              "avtobus?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yettinchi. Tez orada keladi.",
+            "english": "Number seven. It comes soon."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bus-stop.long-wait",
+    "theme": "bus-stop",
+    "title": {
+      "en": "The Long Wait",
+      "uz": "Uzoq kutish"
+    },
+    "scenario": "You have been waiting a while and the bus has not come.",
+    "variants": [
+      {
+        "id": "bus-stop.long-wait.base",
+        "description": "It is coming soon",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, beshinchi avtobus keldimi?",
+            "english": "Excuse me, has bus five come?",
+            "tokens": [
+              "Kechirasiz,",
+              "beshinchi",
+              "avtobus",
+              "keldimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hali yo'q. Tezda keladi.",
+            "english": "Not yet. It comes soon."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qancha kutaman?",
+            "english": "How long do I wait?",
+            "tokens": [
+              "Qancha",
+              "kutaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Besh daqiqa, taxminan.",
+            "english": "About five minutes."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat.",
+            "english": "Fine, thank you.",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bus-stop.long-wait.last-bus",
+        "description": "You just missed the last bus",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Beshinchi avtobus qachon keladi?",
+            "english": "When does bus five come?",
+            "tokens": [
+              "Beshinchi",
+              "avtobus",
+              "qachon",
+              "keladi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Oxirgi avtobus ketdi. Endi yo'q.",
+            "english": "The last bus has gone. Now there are none."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Voy! Endi nima qilaman?",
+            "english": "Oh no! What do I do now?",
+            "tokens": [
+              "Voy!",
+              "Endi",
+              "nima",
+              "qilaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Taksi oling yoki marshrutka.",
+            "english": "Take a taxi or a minibus."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, taksi olaman.",
+            "english": "Thank you, I will take a taxi.",
+            "tokens": [
+              "Rahmat,",
+              "taksi",
+              "olaman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bus-stop.long-wait.chat",
+        "description": "You chat with a friendly local",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Siz turistmisiz? Qayerdan keldingiz?",
+            "english": "Are you a tourist? Where are you from?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, men Angliyadan keldim.",
+            "english": "Yes, I came from England.",
+            "tokens": [
+              "Ha,",
+              "men",
+              "Angliyadan",
+              "keldim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Bizning shahar yoqdimi?",
+            "english": "Welcome! Do you like our city?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yoqdi. Odamlar mehribon.",
+            "english": "I like it very much. The people are kind.",
+            "tokens": [
+              "Juda",
+              "yoqdi.",
+              "Odamlar",
+              "mehribon."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana avtobus keldi! Yaxshi yo'l!",
+            "english": "Here comes the bus! Have a good trip!"
+          }
+        ]
+      },
+      {
+        "id": "bus-stop.long-wait.rain",
+        "description": "It rains while you wait",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Yomg'ir yog'yapti. Avtobus uzoqmi?",
+            "english": "It is raining. Is the bus far?",
+            "tokens": [
+              "Yomg'ir",
+              "yog'yapti.",
+              "Avtobus",
+              "uzoqmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu yerda turing, tom bor.",
+            "english": "Stand here, there is a roof."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Mehribonsiz.",
+            "english": "Thank you! You are kind.",
+            "tokens": [
+              "Rahmat!",
+              "Mehribonsiz."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Avtobus tezda keladi.",
+            "english": "The bus comes soon."
+          }
+        ]
+      }
+    ]
+  }
+]

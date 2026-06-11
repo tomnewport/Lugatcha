@@ -34,8 +34,8 @@ const roleplay: Roleplay = {
 const dataFiles: Record<string, unknown> = {
   'manifest.json': { words: ['core'], stories: ['airport'], roleplay: ['airport'] },
   'words/core.json': words,
-  'stories/airport.json': story,
-  'roleplay/airport.json': roleplay,
+  'stories/airport.json': [story],
+  'roleplay/airport.json': [roleplay],
 }
 
 let db: LugatchaDB

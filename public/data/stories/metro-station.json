@@ -1,0 +1,123 @@
+[
+  {
+    "id": "metro-station.underground-palace",
+    "theme": "metro-station",
+    "title": {
+      "en": "Underground Palaces",
+      "uz": "Yer osti saroylari"
+    },
+    "sentences": [
+      {
+        "uzbek": "Toshkent metrosi juda chiroyli.",
+        "english": "The Tashkent metro is very beautiful."
+      },
+      {
+        "uzbek": "Har bir bekat boshqacha.",
+        "english": "Every station is different."
+      },
+      {
+        "uzbek": "Devorlarda rang-barang sopol bor.",
+        "english": "On the walls there are colourful ceramics."
+      },
+      {
+        "uzbek": "Bir bekat saroy kabi edi.",
+        "english": "One station was like a palace."
+      },
+      {
+        "uzbek": "Men uzoq qarab turdim.",
+        "english": "I stood and looked for a long time."
+      },
+      {
+        "uzbek": "Bu yer osti san'at muzeyi!",
+        "english": "This is an underground art museum!"
+      }
+    ],
+    "glossary": {
+      "Toshkent": "Tashkent",
+      "metrosi": "the metro (of)",
+      "juda": "very",
+      "chiroyli": "beautiful",
+      "bekat": "station",
+      "boshqacha": "different",
+      "Devorlarda": "on the walls",
+      "rang-barang": "colourful",
+      "sopol": "ceramics",
+      "bor": "there is",
+      "Bir": "one",
+      "saroy": "palace",
+      "kabi": "like",
+      "edi": "was",
+      "Men": "I",
+      "uzoq": "long",
+      "qarab": "looking",
+      "turdim": "I stood",
+      "Bu": "this",
+      "san'at": "art",
+      "muzeyi": "museum (of)",
+      "Har": "every",
+      "yer": "ground / place",
+      "osti": "underneath / under"
+    }
+  },
+  {
+    "id": "metro-station.rush-hour",
+    "theme": "metro-station",
+    "title": {
+      "en": "Rush Hour",
+      "uz": "Tig'iz vaqt"
+    },
+    "sentences": [
+      {
+        "uzbek": "Ertalab metro juda gavjum edi.",
+        "english": "In the morning the metro was very crowded."
+      },
+      {
+        "uzbek": "Men poyezdni kutdim.",
+        "english": "I waited for the train."
+      },
+      {
+        "uzbek": "Hamma ishga shoshardi.",
+        "english": "Everyone was hurrying to work."
+      },
+      {
+        "uzbek": "Bir keksa ayolga joy berdim.",
+        "english": "I gave my seat to an old woman."
+      },
+      {
+        "uzbek": "U menga rahmat aytdi.",
+        "english": "She thanked me."
+      },
+      {
+        "uzbek": "Kichik yaxshilik kun boshini yoritadi.",
+        "english": "A small kindness brightens the start of a day."
+      }
+    ],
+    "glossary": {
+      "Ertalab": "in the morning",
+      "metro": "the metro",
+      "juda": "very",
+      "gavjum": "crowded",
+      "edi": "was",
+      "Men": "I",
+      "poyezdni": "the train (object)",
+      "kutdim": "I waited for",
+      "Hamma": "everyone",
+      "ishga": "to work",
+      "shoshardi": "was hurrying",
+      "Bir": "one / a",
+      "keksa": "old",
+      "ayolga": "to the woman",
+      "joy": "seat / place",
+      "berdim": "I gave",
+      "U": "she",
+      "menga": "to me",
+      "rahmat": "thanks",
+      "aytdi": "said",
+      "Kichik": "small",
+      "yaxshilik": "kindness (yaxshi + -lik)",
+      "kun": "day",
+      "boshini": "its beginning (object)",
+      "yoritadi": "brightens"
+    }
+  }
+]

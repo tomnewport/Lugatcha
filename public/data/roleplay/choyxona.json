@@ -1,0 +1,424 @@
+[
+  {
+    "id": "choyxona.making-friends",
+    "theme": "choyxona",
+    "title": {
+      "en": "Making a Friend",
+      "uz": "Do'st orttirish"
+    },
+    "scenario": "At a traditional teahouse, a friendly man at the next table starts a conversation.",
+    "variants": [
+      {
+        "id": "choyxona.making-friends.base",
+        "description": "A warm welcome and shared tea",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Bu yerga o'tiring.",
+            "english": "Welcome! Sit here."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Mehribonsiz.",
+            "english": "Thank you! You are kind.",
+            "tokens": [
+              "Rahmat!",
+              "Mehribonsiz."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qayerdan keldingiz?",
+            "english": "Where are you from?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men Angliyadan keldim.",
+            "english": "I came from England.",
+            "tokens": [
+              "Men",
+              "Angliyadan",
+              "keldim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz O'zbekistonga! Choy iching.",
+            "english": "Welcome to Uzbekistan! Have some tea."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "choyxona.making-friends.name",
+        "description": "You exchange names",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Mening ismim Bobur. Sizniki-chi?",
+            "english": "My name is Bobur. And yours?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mening ismim Tom.",
+            "english": "My name is Tom.",
+            "tokens": [
+              "Mening",
+              "ismim",
+              "Tom."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tanishganimdan xursandman, Tom!",
+            "english": "Pleased to meet you, Tom!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men ham xursandman.",
+            "english": "I am pleased too.",
+            "tokens": [
+              "Men",
+              "ham",
+              "xursandman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Endi biz do'stmiz!",
+            "english": "Now we are friends!"
+          }
+        ]
+      },
+      {
+        "id": "choyxona.making-friends.food",
+        "description": "They insist you try the samsa",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Somsa yedingizmi? Juda mazali!",
+            "english": "Have you eaten samsa? Very tasty!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Hali yo'q. Ko'rsataolasizmi?",
+            "english": "Not yet. Can you show me?",
+            "tokens": [
+              "Hali",
+              "yo'q.",
+              "Ko'rsataolasizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, oling. Mehmon — bu tabarruk.",
+            "english": "Here, take it. A guest is a blessing."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Juda mazali!",
+            "english": "Thank you! Very tasty!",
+            "tokens": [
+              "Rahmat!",
+              "Juda",
+              "mazali!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yana oling! Uyalmang.",
+            "english": "Take more! Do not be shy."
+          }
+        ]
+      },
+      {
+        "id": "choyxona.making-friends.family",
+        "description": "They ask about your family",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Oilangiz bormi?",
+            "english": "Do you have a family?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, oilam Angliyada.",
+            "english": "Yes, my family is in England.",
+            "tokens": [
+              "Ha,",
+              "oilam",
+              "Angliyada."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ularni sog'inasizmi?",
+            "english": "Do you miss them?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, lekin bu yer go'zal.",
+            "english": "Yes, but this place is lovely.",
+            "tokens": [
+              "Ha,",
+              "lekin",
+              "bu",
+              "yer",
+              "go'zal."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'zbekistonda hamma sizga do'st!",
+            "english": "In Uzbekistan everyone is your friend!"
+          }
+        ]
+      },
+      {
+        "id": "choyxona.making-friends.invite",
+        "description": "They invite you home",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Ertaga biznikiga keling! Osh bor.",
+            "english": "Come to our house tomorrow! There is plov."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rostdanmi? Bu katta sharaf.",
+            "english": "Really? This is a great honour.",
+            "tokens": [
+              "Rostdanmi?",
+              "Bu",
+              "katta",
+              "sharaf."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Mehmon — Xudoning sovg'asi.",
+            "english": "Of course! A guest is God's gift."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat! Albatta kelaman.",
+            "english": "Thank you very much! I will certainly come.",
+            "tokens": [
+              "Katta",
+              "rahmat!",
+              "Albatta",
+              "kelaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Juda yaxshi! Kutamiz.",
+            "english": "Very good! We will wait for you."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "choyxona.ordering-tea",
+    "theme": "choyxona",
+    "title": {
+      "en": "A Pot of Tea",
+      "uz": "Bir choynak choy"
+    },
+    "scenario": "You settle in at the choyxona and order tea the traditional way.",
+    "variants": [
+      {
+        "id": "choyxona.ordering-tea.base",
+        "description": "Green tea and a quiet seat",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Nima xohlaysiz?",
+            "english": "Welcome! What would you like?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bir choynak ko'k choy, iltimos.",
+            "english": "A pot of green tea, please.",
+            "tokens": [
+              "Bir",
+              "choynak",
+              "ko'k",
+              "choy,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Somsa ham olasizmi?",
+            "english": "Will you have samsa too?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, ikkita somsa.",
+            "english": "Yes, two samsas.",
+            "tokens": [
+              "Ha,",
+              "ikkita",
+              "somsa."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hozir olib kelaman. O'tiring.",
+            "english": "I will bring it now. Sit down."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "choyxona.ordering-tea.black",
+        "description": "You prefer black tea",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Qora choy bormi?",
+            "english": "Is there black tea?",
+            "tokens": [
+              "Qora",
+              "choy",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta. Shakar bilanmi?",
+            "english": "Of course. With sugar?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yo'q, rahmat. Shakarsiz.",
+            "english": "No, thank you. Without sugar.",
+            "tokens": [
+              "Yo'q,",
+              "rahmat.",
+              "Shakarsiz."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana choyingiz.",
+            "english": "Here is your tea."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "choyxona.ordering-tea.outside",
+        "description": "You ask to sit on the platform",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Tashqarida o'tirsam bo'ladimi?",
+            "english": "May I sit outside?",
+            "tokens": [
+              "Tashqarida",
+              "o'tirsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! So'rida joy bor.",
+            "english": "Of course! There is room on the platform."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi. Bog' chiroyli.",
+            "english": "Very good. The garden is beautiful.",
+            "tokens": [
+              "Juda",
+              "yaxshi.",
+              "Bog'",
+              "chiroyli."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Choyni o'sha yerga olib kelaman.",
+            "english": "I will bring the tea there."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "choyxona.ordering-tea.busy",
+        "description": "You share a table with a stranger",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, hamma stol band. Birga o'tiramizmi?",
+            "english": "Sorry, all tables are full. Shall we sit together?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Albatta, marhamat!",
+            "english": "Of course, please do!",
+            "tokens": [
+              "Albatta,",
+              "marhamat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Siz turistmisiz?",
+            "english": "Thank you! Are you a tourist?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, va bu choyxona juda yoqdi.",
+            "english": "Yes, and I like this teahouse very much.",
+            "tokens": [
+              "Ha,",
+              "va",
+              "bu",
+              "choyxona",
+              "juda",
+              "yoqdi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu yer eng yaxshisi!",
+            "english": "This place is the best!"
+          }
+        ]
+      }
+    ]
+  }
+]
