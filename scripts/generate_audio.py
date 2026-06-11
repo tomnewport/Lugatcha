@@ -163,6 +163,95 @@ def pick_device() -> str:
     return "cpu"
 
 
+# ---------------------------------------------------------------------------
+# Uzbek text normalisation for the local Sayro model
+#
+# uzlm/sayro-tts-1.7B's card pre-processes text with a `clean_uzbek_text`
+# helper that ships only inside the gated repo (not on PyPI). This reproduces
+# it so the backend is self-contained: Cyrillic -> Latin, digits -> spelled-out
+# Uzbek (ordinal when a hyphen trails, e.g. "1984-" -> "...to'rtinchi"), and
+# apostrophe/punctuation folding to the ʻ the model expects. It only shapes
+# what the model hears — clip keys stay based on the original text
+# (normalize_spoken_text), so the app still resolves every file.
+# ---------------------------------------------------------------------------
+
+CYRILLIC_TO_LATIN = {
+    "А": "A", "Б": "B", "В": "V", "Г": "G", "Д": "D", "Е": "E", "Ё": "Yo", "Ж": "J", "З": "Z",
+    "И": "I", "Й": "Y", "К": "K", "Л": "L", "М": "M", "Н": "N", "О": "O", "П": "P", "Р": "R",
+    "С": "S", "Т": "T", "У": "U", "Ф": "F", "Х": "X", "Ц": "Ts", "Ч": "Ch", "Ш": "Sh", "Ъ": "'",
+    "Ь": "", "Э": "E", "Ю": "Yu", "Я": "Ya", "Ў": "O'", "Қ": "Q", "Ғ": "G'", "Ҳ": "H",
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo", "ж": "j", "з": "z",
+    "и": "i", "й": "y", "к": "k", "л": "l", "м": "m", "н": "n", "о": "o", "п": "p", "р": "r",
+    "с": "s", "т": "t", "у": "u", "ф": "f", "х": "x", "ц": "ts", "ч": "ch", "ш": "sh", "ъ": "'",
+    "ь": "", "э": "e", "ю": "yu", "я": "ya", "ў": "o'", "қ": "q", "ғ": "g'", "ҳ": "h",
+}
+
+ONES = {0: "nol", 1: "bir", 2: "ikki", 3: "uch", 4: "to'rt", 5: "besh",
+        6: "olti", 7: "yetti", 8: "sakkiz", 9: "to'qqiz"}
+TENS = {10: "o'n", 20: "yigirma", 30: "o'ttiz", 40: "qirq", 50: "ellik",
+        60: "oltmish", 70: "yetmish", 80: "sakson", 90: "to'qson"}
+
+
+def _transliterate_cyrillic(text: str) -> str:
+    for cyr, lat in CYRILLIC_TO_LATIN.items():
+        text = text.replace(cyr, lat)
+    return text
+
+
+def _spell_hundreds(n: int) -> list[str]:
+    """Spell 0 <= n < 1000 as Uzbek words (empty list for 0)."""
+    parts: list[str] = []
+    if n >= 100:
+        hundreds = n // 100
+        parts.append("yuz" if hundreds == 1 else f"{ONES[hundreds]} yuz")
+        n %= 100
+    if n >= 10:
+        parts.append(TENS[(n // 10) * 10])
+        n %= 10
+    if n > 0:
+        parts.append(ONES[n])
+    return parts
+
+
+def _spell_number(n: int) -> str:
+    """Spell a non-negative integer in Uzbek. Extends the card's helper past
+    9999 (it only handled four digits) so large numbers never crash a run."""
+    if n == 0:
+        return ONES[0]
+    parts: list[str] = []
+    if n >= 1_000_000:
+        parts.append(_spell_number(n // 1_000_000))
+        parts.append("million")
+        n %= 1_000_000
+    if n >= 1000:
+        thousands = n // 1000
+        parts.append("bir ming" if thousands == 1 else f"{_spell_number(thousands)} ming")
+        n %= 1000
+    parts.extend(_spell_hundreds(n))
+    return " ".join(parts)
+
+
+def _normalize_numbers(text: str) -> str:
+    def replace(match: re.Match) -> str:
+        spelled = _spell_number(int(match.group(1)))
+        if match.group(2) == "-":  # trailing hyphen marks an ordinal
+            suffix = "nchi" if spelled[-1] in "aeiou'" else "inchi"
+            return f"{spelled}{suffix} "
+        return spelled
+
+    return re.sub(r"(\d+)(-?)", replace, text)
+
+
+def clean_uzbek_text(text: str) -> str:
+    """Built-in equivalent of the Sayro card's clean_uzbek_text()."""
+    text = _transliterate_cyrillic(text)
+    text = _normalize_numbers(text)
+    for src in ("'", "’", "‘", "ʼ", "`", "»", "«", "”", "“"):
+        text = text.replace(src, "ʻ")
+    text = text.replace("—", "-").replace("• ", "").replace("\n", " ")
+    return re.sub(r"\s+", " ", text).strip()
+
+
 def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
                      explicit_device: bool = False):
     """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
@@ -188,19 +277,15 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
                 "transformers text-to-speech pipeline model."
             )
 
-    # The card normalises Uzbek text (numbers, punctuation) before synthesis.
-    # This only shapes what the model hears — the clip's key/filename stays
-    # based on the original text (normalize_spoken_text), so the app still
-    # finds it. Optional: pass text through unchanged if the package is absent.
+    # Prefer the repo-local uzbek_normalizer if it happens to be importable
+    # (e.g. you put the gated example/ file on PYTHONPATH); otherwise use the
+    # built-in equivalent above.
     try:
-        from uzbek_normalizer import clean_uzbek_text
+        from uzbek_normalizer import clean_uzbek_text as normalize
     except ImportError:
-        print("uzbek_normalizer not found (it isn't on PyPI); feeding raw text. "
-              "Fine for most content — numbers/abbreviations just won't be "
-              "expanded to words.")
-
-        def clean_uzbek_text(text: str) -> str:
-            return text
+        normalize = clean_uzbek_text
+        print("using built-in Uzbek normaliser (Cyrillic→Latin, number "
+              "expansion, apostrophe folding)")
 
     # CUDA gets its own device. The card's only documented CPU-class fallback is
     # plain CPU, and MPS tends to hit unsupported ops in this stack, so an
@@ -233,7 +318,7 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
     def synthesize(text: str):
         with torch.inference_mode():
             wavs, rate = model.generate_custom_voice(
-                text=[clean_uzbek_text(text)],
+                text=[normalize(text)],
                 speaker=[speaker],
                 instruct=[instruct],
             )
