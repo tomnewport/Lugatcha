@@ -8,9 +8,11 @@ by the same text hash (src/audio/key.ts) and falls back to the Web Speech API
 for anything missing, so partial runs are safe.
 
 Two backends:
-  --backend local  (default)  Runs a HuggingFace TTS model on this machine
-                              (Apple Silicon uses the MPS backend). No account,
-                              no per-character billing.
+  --backend local  (default)  Runs the uzlm/sayro-tts-1.7B Uzbek model on this
+                              machine via the Qwen3-TTS `qwen_tts` runtime. The
+                              model is gated — request access on its HuggingFace
+                              page and `huggingface-cli login` first. No account
+                              billing, no network at synth time once downloaded.
   --backend yandex            Calls the Yandex SpeechKit v1 REST API. Needs a
                               Yandex Cloud service-account API key with the
                               ai.speechKit-tts.user role, plus the folder ID.
@@ -159,33 +161,77 @@ def pick_device() -> str:
     return "cpu"
 
 
-def load_synthesizer(model_id: str, device: str):
-    """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
+def _qwen_generate(model, text: str, language: str, speaker: str | None):
+    """Calls the Sayro/Qwen3-TTS generate method, surfacing the right name if wrong.
 
-    Tries the generic transformers text-to-speech pipeline first. If the model
-    needs a bespoke generation recipe, this is the one function to adapt —
-    follow the snippet on https://huggingface.co/uzlm/sayro-tts-1.7B and keep
-    the return contract.
+    uzlm/sayro-tts-1.7B is a Qwen3-TTS fine-tune; the fixed-speaker call is
+    generate_base_voice(text, language, speaker). If the model card's example/
+    folder shows a different method or arguments, change this one line to match.
     """
-    from transformers import pipeline
-
     try:
-        tts = pipeline("text-to-speech", model=model_id, device=device)
-    except Exception as error:  # noqa: BLE001 — surface a actionable hint
+        return model.generate_base_voice(text=text, language=language, speaker=speaker)
+    except (AttributeError, TypeError) as error:
+        methods = sorted(m for m in dir(model) if m.startswith("generate"))
         sys.exit(
-            f"Could not load {model_id} via the text-to-speech pipeline: {error}\n\n"
-            "If the model card shows a custom usage snippet, adapt "
-            "load_synthesizer() in this script to it (keep the "
-            "synthesize(text) -> (samples, rate) contract). Also check you "
-            "are logged in if the model is gated: `huggingface-cli login`."
+            f"generate_base_voice(text, language, speaker) did not fit this model: {error}\n\n"
+            f"Available generate* methods: {methods}\n"
+            "Copy the exact call from the Sayro model card's example/ folder "
+            "into _qwen_generate() (keep it returning (wavs, sampling_rate))."
         )
 
+
+def load_synthesizer(model_id: str, device: str, language: str, speaker: str | None):
+    """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
+
+    Backed by the Qwen3-TTS `qwen_tts` runtime that uzlm/sayro-tts-1.7B is built
+    on. The upstream snippet assumes an NVIDIA GPU (device_map="cuda:0",
+    bfloat16, flash_attention_2); this adapts it for Apple Silicon / CPU. The
+    exact language string and speaker name live in the gated model card —
+    override with --qwen-language / --qwen-speaker if the defaults are wrong.
+    """
+    import numpy as np
+    import torch
+
+    try:
+        from qwen_tts import Qwen3TTSModel
+    except ImportError:
+        sys.exit(
+            "The local backend needs the Qwen3-TTS runtime: `uv pip install qwen-tts`.\n"
+            "uzlm/sayro-tts-1.7B is a Qwen3-TTS fine-tune, not a generic "
+            "transformers text-to-speech pipeline model."
+        )
+
+    # CUDA gets bfloat16 + flash-attention; MPS/CPU need float32 and the
+    # stock attention, or loading falls over.
+    if device == "cuda":
+        load_kwargs = dict(device_map="cuda:0", dtype=torch.bfloat16,
+                           attn_implementation="flash_attention_2")
+    else:
+        load_kwargs = dict(device_map=device, dtype=torch.float32)
+
+    try:
+        model = Qwen3TTSModel.from_pretrained(model_id, **load_kwargs)
+    except Exception as error:  # noqa: BLE001 — surface an actionable hint
+        sys.exit(
+            f"Could not load {model_id}: {error}\n\n"
+            "If the repo is gated, request access on the model page and log in "
+            "with `huggingface-cli login` (or set HF_TOKEN). If from_pretrained's "
+            "signature has changed, follow the model card's example/ snippet and "
+            "adapt load_synthesizer()."
+        )
+
+    if speaker is None:
+        try:
+            available = model.get_supported_speakers()
+            speaker = available[0] if available else None
+            print(f"speaker not set; using {speaker!r} from get_supported_speakers()")
+        except Exception:  # noqa: BLE001 — older builds may not expose this
+            pass
+
     def synthesize(text: str):
-        result = tts(text)
-        samples = result["audio"]
-        if samples.ndim > 1:  # some models return (channels, n) or (1, n)
-            samples = samples.squeeze()
-        return samples, result["sampling_rate"]
+        wavs, rate = _qwen_generate(model, text, language, speaker)
+        samples = np.asarray(wavs[0], dtype="float32")
+        return samples, rate
 
     return synthesize
 
@@ -308,6 +354,10 @@ def main() -> None:
     parser.add_argument("--model", default=DEFAULT_MODEL, help="local backend model id")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--device", default=None, help="mps / cuda / cpu (default: auto)")
+    parser.add_argument("--qwen-language", default="Uzbek",
+                        help="language string for the local Qwen3-TTS model")
+    parser.add_argument("--qwen-speaker", default=None,
+                        help="speaker name (default: first from get_supported_speakers)")
     parser.add_argument("--yandex-host", default="tts.api.yandexcloud.kz",
                         help="SpeechKit host (KZ default; RU is tts.api.cloud.yandex.net)")
     parser.add_argument("--yandex-voice", default="nigora", help="Yandex voice (default: nigora)")
@@ -363,7 +413,7 @@ def main() -> None:
         else:
             device = args.device or pick_device()
             print(f"loading {args.model} on {device}…")
-            synthesize = load_synthesizer(args.model, device)
+            synthesize = load_synthesizer(args.model, device, args.qwen_language, args.qwen_speaker)
 
         for i, (key, text) in enumerate(pending.items(), 1):
             print(f"[{i}/{len(pending)}] {text}")
