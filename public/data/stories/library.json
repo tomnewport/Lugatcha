@@ -1,0 +1,130 @@
+[
+  {
+    "id": "library.quiet-corner",
+    "theme": "library",
+    "title": {
+      "en": "A Quiet Corner",
+      "uz": "Jim burchak"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men kutubxonaga o'qishga bordim.",
+        "english": "I went to the library to read."
+      },
+      {
+        "uzbek": "Ichkarida juda jim edi.",
+        "english": "Inside it was very quiet."
+      },
+      {
+        "uzbek": "Men oson o'zbekcha kitob topdim.",
+        "english": "I found an easy Uzbek book."
+      },
+      {
+        "uzbek": "Har bir sahifada yangi so'zlar bor edi.",
+        "english": "On every page there were new words."
+      },
+      {
+        "uzbek": "Men sekin va diqqat bilan o'qidim.",
+        "english": "I read slowly and carefully."
+      },
+      {
+        "uzbek": "Kitob — bu eng yaxshi do'st.",
+        "english": "A book is the best friend."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "kutubxonaga": "to the library",
+      "o'qishga": "to read",
+      "bordim": "I went",
+      "Ichkarida": "inside",
+      "juda": "very",
+      "jim": "quiet",
+      "edi": "was",
+      "oson": "easy",
+      "kitob": "book",
+      "topdim": "I found",
+      "sahifada": "on the page",
+      "yangi": "new",
+      "so'zlar": "words",
+      "bor": "there were",
+      "sekin": "slowly",
+      "va": "and",
+      "diqqat": "attention (diqqat bilan = carefully)",
+      "bilan": "with",
+      "o'qidim": "I read",
+      "bu": "this / is",
+      "eng": "the most",
+      "yaxshi": "good",
+      "do'st": "friend",
+      "Har": "every",
+      "o'zbekcha": "Uzbek (the language)",
+      "bir": "one / a"
+    }
+  },
+  {
+    "id": "library.old-poet",
+    "theme": "library",
+    "title": {
+      "en": "The Poet Navoiy",
+      "uz": "Shoir Navoiy"
+    },
+    "sentences": [
+      {
+        "uzbek": "Kutubxonada men eski kitob ko'rdim.",
+        "english": "In the library I saw an old book."
+      },
+      {
+        "uzbek": "Bu Alisher Navoiy she'rlari edi.",
+        "english": "It was the poems of Alisher Navoiy."
+      },
+      {
+        "uzbek": "U besh yuz yil oldin yashagan.",
+        "english": "He lived five hundred years ago."
+      },
+      {
+        "uzbek": "Uning so'zlari hali ham chiroyli.",
+        "english": "His words are still beautiful."
+      },
+      {
+        "uzbek": "Men bir misrani o'qidim.",
+        "english": "I read one line."
+      },
+      {
+        "uzbek": "Yaxshi she'r hech qachon qarimaydi.",
+        "english": "Good poetry never grows old."
+      }
+    ],
+    "glossary": {
+      "Kutubxonada": "in the library",
+      "men": "I",
+      "eski": "old",
+      "kitob": "book",
+      "ko'rdim": "I saw",
+      "Bu": "this / it",
+      "Alisher": "Alisher",
+      "Navoiy": "Navoiy (a great poet)",
+      "she'rlari": "poems (of)",
+      "edi": "was",
+      "U": "he",
+      "besh": "five",
+      "yuz": "hundred",
+      "yil": "years",
+      "oldin": "ago",
+      "yashagan": "lived",
+      "Uning": "his",
+      "so'zlari": "words (his)",
+      "chiroyli": "beautiful",
+      "bir": "one",
+      "misrani": "a line of verse (object)",
+      "o'qidim": "I read",
+      "Yaxshi": "good",
+      "she'r": "poetry",
+      "qarimaydi": "does not grow old",
+      "hali": "still",
+      "ham": "also",
+      "hech": "never (with qachon)",
+      "qachon": "when"
+    }
+  }
+]

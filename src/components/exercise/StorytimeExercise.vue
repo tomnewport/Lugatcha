@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { db } from '@/db'
 import type { Story } from '@/db/types'
-import { tokenize, buildDecoys, contentWords, normalizeToken } from '@/exercises/validate'
+import { tokenize, buildDecoys, contentWords, normalizeToken, shuffle } from '@/exercises/validate'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 
@@ -21,10 +21,12 @@ const tooltipIndex = ref<number | null>(null)
 const glossary = ref(new Map<string, string>())
 
 onMounted(async () => {
-  const [found, allWords] = await Promise.all([
-    db.stories.where('theme').equals(props.locationId).first(),
+  const [themeStories, allWords] = await Promise.all([
+    db.stories.where('theme').equals(props.locationId).toArray(),
     db.words.toArray(),
   ])
+  // A location can have several stories — serve a random one each session
+  const found = shuffle(themeStories)[0]
   story.value = found ?? null
   const map = new Map<string, string>()
   for (const word of allWords) {

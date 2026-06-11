@@ -1,0 +1,115 @@
+[
+  {
+    "id": "public-square.evening",
+    "theme": "public-square",
+    "title": {
+      "en": "Evening in the Square",
+      "uz": "Maydonda oqshom"
+    },
+    "sentences": [
+      {
+        "uzbek": "Oqshomda men maydonga bordim.",
+        "english": "In the evening I went to the square."
+      },
+      {
+        "uzbek": "Favvora yonida bolalar o'ynadi.",
+        "english": "Children played by the fountain."
+      },
+      {
+        "uzbek": "Oilalar muzqaymoq yedi.",
+        "english": "Families ate ice cream."
+      },
+      {
+        "uzbek": "Men haykal yonida o'tirdim.",
+        "english": "I sat by the statue."
+      },
+      {
+        "uzbek": "Havo iliq va yoqimli edi.",
+        "english": "The air was warm and pleasant."
+      },
+      {
+        "uzbek": "Bu shahar oqshomda juda chiroyli.",
+        "english": "This city is very beautiful in the evening."
+      }
+    ],
+    "glossary": {
+      "Oqshomda": "in the evening",
+      "men": "I",
+      "maydonga": "to the square",
+      "bordim": "I went",
+      "yonida": "next to / by",
+      "bolalar": "children",
+      "o'ynadi": "played",
+      "Oilalar": "families",
+      "muzqaymoq": "ice cream",
+      "yedi": "ate",
+      "o'tirdim": "I sat",
+      "Havo": "the air / weather",
+      "iliq": "warm",
+      "yoqimli": "pleasant",
+      "edi": "was",
+      "Bu": "this",
+      "shahar": "city",
+      "juda": "very",
+      "chiroyli": "beautiful",
+      "va": "and"
+    }
+  },
+  {
+    "id": "public-square.finding-way",
+    "theme": "public-square",
+    "title": {
+      "en": "Finding the Bazaar",
+      "uz": "Bozorni topish"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men bozorni izladim.",
+        "english": "I was looking for the bazaar."
+      },
+      {
+        "uzbek": "Bir kishidan yo'l so'radim.",
+        "english": "I asked a person the way."
+      },
+      {
+        "uzbek": "U chap tomonni ko'rsatdi.",
+        "english": "He pointed to the left side."
+      },
+      {
+        "uzbek": "Men to'g'riga yurdim, keyin chapga.",
+        "english": "I walked straight, then left."
+      },
+      {
+        "uzbek": "Bozor masjid yonida edi.",
+        "english": "The bazaar was next to the mosque."
+      },
+      {
+        "uzbek": "U katta va rang-barang edi!",
+        "english": "It was big and colourful!"
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "bozorni": "the bazaar (object)",
+      "izladim": "I was looking for",
+      "Bir": "one / a",
+      "kishidan": "from a person",
+      "yo'l": "the way",
+      "so'radim": "I asked",
+      "U": "he / it",
+      "chap": "left",
+      "tomonni": "the side (object)",
+      "ko'rsatdi": "pointed / showed",
+      "to'g'riga": "straight ahead",
+      "yurdim": "I walked",
+      "keyin": "then",
+      "chapga": "to the left",
+      "masjid": "mosque",
+      "yonida": "next to",
+      "edi": "was",
+      "katta": "big",
+      "rang-barang": "colourful",
+      "va": "and"
+    }
+  }
+]

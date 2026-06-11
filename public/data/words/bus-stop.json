@@ -1,0 +1,80 @@
+[
+  {
+    "id": "bus-stop.bus",
+    "uzbek": "avtobus",
+    "english": "bus",
+    "theme": "bus-stop",
+    "level": 1
+  },
+  {
+    "id": "bus-stop.bus-stop",
+    "uzbek": "bekat",
+    "english": "bus stop",
+    "theme": "bus-stop",
+    "level": 1
+  },
+  {
+    "id": "bus-stop.where-to",
+    "uzbek": "qayerga",
+    "english": "where to",
+    "theme": "bus-stop",
+    "level": 1
+  },
+  {
+    "id": "bus-stop.get-off",
+    "uzbek": "tushish",
+    "english": "getting off",
+    "theme": "bus-stop",
+    "level": 1
+  },
+  {
+    "id": "bus-stop.number",
+    "uzbek": "raqam",
+    "english": "number",
+    "theme": "bus-stop",
+    "level": 1
+  },
+  {
+    "id": "bus-stop.driver",
+    "uzbek": "haydovchi",
+    "english": "driver",
+    "theme": "bus-stop",
+    "level": 2
+  },
+  {
+    "id": "bus-stop.fare",
+    "uzbek": "yo'l haqi",
+    "english": "fare",
+    "theme": "bus-stop",
+    "level": 2
+  },
+  {
+    "id": "bus-stop.marshrutka",
+    "uzbek": "marshrutka",
+    "english": "minibus",
+    "theme": "bus-stop",
+    "level": 2,
+    "usageNotes": "A shared minibus that runs a set route — very common."
+  },
+  {
+    "id": "bus-stop.wait",
+    "uzbek": "kutish",
+    "english": "waiting",
+    "theme": "bus-stop",
+    "level": 2
+  },
+  {
+    "id": "bus-stop.far",
+    "uzbek": "uzoq",
+    "english": "far",
+    "theme": "bus-stop",
+    "level": 2
+  },
+  {
+    "id": "bus-stop.soon",
+    "uzbek": "tezda",
+    "english": "soon",
+    "theme": "bus-stop",
+    "level": 3
+  }
+]

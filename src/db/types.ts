@@ -5,6 +5,8 @@ export interface Word {
   usageNotes?: string
   inflections?: string[]
   theme: string // location id or 'core'
+  /** 1 = essential, 2 = useful, 3 = nice-to-have. Intro serves level 1 first. */
+  level?: 1 | 2 | 3
   cyrillic?: string
 }
 

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "bus-stop.village-road",
+    "theme": "bus-stop",
+    "title": {
+      "en": "The Road to the Village",
+      "uz": "Qishloqqa yo'l"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men kichik qishloqqa bordim.",
+        "english": "I went to a small village."
+      },
+      {
+        "uzbek": "Bekatda uzoq kutdim.",
+        "english": "I waited a long time at the stop."
+      },
+      {
+        "uzbek": "Nihoyat eski avtobus keldi.",
+        "english": "At last an old bus came."
+      },
+      {
+        "uzbek": "Haydovchi kulib salom berdi.",
+        "english": "The driver smiled and greeted me."
+      },
+      {
+        "uzbek": "Yo'lda paxta dalalari bor edi.",
+        "english": "On the road there were cotton fields."
+      },
+      {
+        "uzbek": "Qishloq tinch va go'zal edi.",
+        "english": "The village was quiet and lovely."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "kichik": "small",
+      "qishloqqa": "to the village",
+      "bordim": "I went",
+      "Bekatda": "at the stop",
+      "uzoq": "long",
+      "kutdim": "I waited",
+      "Nihoyat": "at last",
+      "eski": "old",
+      "avtobus": "bus",
+      "keldi": "came",
+      "Haydovchi": "the driver",
+      "kulib": "smiling",
+      "salom": "greeting",
+      "berdi": "gave (salom berdi = greeted)",
+      "Yo'lda": "on the road",
+      "paxta": "cotton",
+      "dalalari": "fields (of)",
+      "bor": "there were",
+      "edi": "was",
+      "Qishloq": "the village",
+      "tinch": "quiet",
+      "go'zal": "lovely / beautiful",
+      "va": "and"
+    }
+  },
+  {
+    "id": "bus-stop.helpful-driver",
+    "theme": "bus-stop",
+    "title": {
+      "en": "The Helpful Driver",
+      "uz": "Mehribon haydovchi"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men qaysi bekatda tushishni bilmadim.",
+        "english": "I did not know which stop to get off at."
+      },
+      {
+        "uzbek": "Haydovchiga manzilni aytdim.",
+        "english": "I told the driver the address."
+      },
+      {
+        "uzbek": "U \"men aytaman\" dedi.",
+        "english": "He said, \"I will tell you.\""
+      },
+      {
+        "uzbek": "Bekatga kelganda, u menga aytdi.",
+        "english": "When we reached the stop, he told me."
+      },
+      {
+        "uzbek": "Men tushdim va rahmat aytdim.",
+        "english": "I got off and said thank you."
+      },
+      {
+        "uzbek": "Bu yerda hamma yordam beradi.",
+        "english": "Here everyone helps."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "qaysi": "which",
+      "bekatda": "at the stop",
+      "tushishni": "getting off (object)",
+      "bilmadim": "I did not know",
+      "Haydovchiga": "to the driver",
+      "manzilni": "the address (object)",
+      "aytdim": "I told",
+      "U": "he",
+      "men": "I",
+      "aytaman": "I will tell",
+      "dedi": "said",
+      "Bekatga": "to the stop",
+      "kelganda": "when (we) came",
+      "menga": "to me",
+      "aytdi": "told",
+      "tushdim": "I got off",
+      "va": "and",
+      "rahmat": "thanks",
+      "hamma": "everyone",
+      "yordam": "help",
+      "beradi": "gives",
+      "Bu": "this",
+      "yerda": "at / in (a place)"
+    }
+  }
+]

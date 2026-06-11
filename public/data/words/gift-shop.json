@@ -1,0 +1,94 @@
+[
+  {
+    "id": "gift-shop.gift",
+    "uzbek": "sovg'a",
+    "english": "gift",
+    "theme": "gift-shop",
+    "level": 1
+  },
+  {
+    "id": "gift-shop.how-much",
+    "uzbek": "qancha",
+    "english": "how much",
+    "theme": "gift-shop",
+    "level": 1
+  },
+  {
+    "id": "gift-shop.expensive",
+    "uzbek": "qimmat",
+    "english": "expensive",
+    "theme": "gift-shop",
+    "level": 1
+  },
+  {
+    "id": "gift-shop.cheap",
+    "uzbek": "arzon",
+    "english": "cheap",
+    "theme": "gift-shop",
+    "level": 1
+  },
+  {
+    "id": "gift-shop.buy",
+    "uzbek": "sotib olish",
+    "english": "to buy",
+    "theme": "gift-shop",
+    "level": 1
+  },
+  {
+    "id": "gift-shop.discount",
+    "uzbek": "chegirma",
+    "english": "discount",
+    "theme": "gift-shop",
+    "level": 1,
+    "usageNotes": "Chegirma bormi? — Is there a discount? Polite bargaining is normal."
+  },
+  {
+    "id": "gift-shop.ceramics",
+    "uzbek": "sopol",
+    "english": "ceramics",
+    "theme": "gift-shop",
+    "level": 2
+  },
+  {
+    "id": "gift-shop.scarf",
+    "uzbek": "ro'mol",
+    "english": "scarf / headscarf",
+    "theme": "gift-shop",
+    "level": 2
+  },
+  {
+    "id": "gift-shop.silk",
+    "uzbek": "ipak",
+    "english": "silk",
+    "theme": "gift-shop",
+    "level": 2
+  },
+  {
+    "id": "gift-shop.colour",
+    "uzbek": "rang",
+    "english": "colour",
+    "theme": "gift-shop",
+    "level": 2
+  },
+  {
+    "id": "gift-shop.magnet",
+    "uzbek": "magnit",
+    "english": "fridge magnet",
+    "theme": "gift-shop",
+    "level": 2
+  },
+  {
+    "id": "gift-shop.handmade",
+    "uzbek": "qo'lda ishlangan",
+    "english": "handmade",
+    "theme": "gift-shop",
+    "level": 3
+  },
+  {
+    "id": "gift-shop.change-money",
+    "uzbek": "qaytim",
+    "english": "change (money back)",
+    "theme": "gift-shop",
+    "level": 3
+  }
+]

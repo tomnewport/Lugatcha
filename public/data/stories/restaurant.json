@@ -1,63 +1,121 @@
-{
-  "id": "restaurant.plov-evening",
-  "theme": "restaurant",
-  "title": {
-    "en": "An Evening of Plov",
-    "uz": "Osh kechasi"
-  },
-  "sentences": [
-    {
-      "uzbek": "Biz do'stim bilan restoraniga bordik.",
-      "english": "My friend and I went to a restaurant."
+[
+  {
+    "id": "restaurant.plov-evening",
+    "theme": "restaurant",
+    "title": {
+      "en": "An Evening of Plov",
+      "uz": "Osh kechasi"
     },
-    {
-      "uzbek": "Ofitsiant bizga menyu olib keldi.",
-      "english": "The waiter brought us a menu."
-    },
-    {
-      "uzbek": "Men osh va ko'k choy buyurtma qildim.",
-      "english": "I ordered plov and green tea."
-    },
-    {
-      "uzbek": "Osh juda mazali va to'yimli edi.",
-      "english": "The plov was very delicious and filling."
-    },
-    {
-      "uzbek": "Biz non yedik va suhbatlashdik.",
-      "english": "We ate bread and talked."
-    },
-    {
-      "uzbek": "Oxirida men hisob so'radim.",
-      "english": "At the end I asked for the bill."
+    "sentences": [
+      {
+        "uzbek": "Biz do'stim bilan restoraniga bordik.",
+        "english": "My friend and I went to a restaurant."
+      },
+      {
+        "uzbek": "Ofitsiant bizga menyu olib keldi.",
+        "english": "The waiter brought us a menu."
+      },
+      {
+        "uzbek": "Men osh va ko'k choy buyurtma qildim.",
+        "english": "I ordered plov and green tea."
+      },
+      {
+        "uzbek": "Osh juda mazali va to'yimli edi.",
+        "english": "The plov was very delicious and filling."
+      },
+      {
+        "uzbek": "Biz non yedik va suhbatlashdik.",
+        "english": "We ate bread and talked."
+      },
+      {
+        "uzbek": "Oxirida men hisob so'radim.",
+        "english": "At the end I asked for the bill."
+      }
+    ],
+    "glossary": {
+      "Biz": "we",
+      "do'stim": "my friend (do'st + -im)",
+      "bilan": "with",
+      "restoraniga": "to the restaurant",
+      "bordik": "we went",
+      "Ofitsiant": "the waiter",
+      "bizga": "to us",
+      "menyu": "menu",
+      "olib": "bringing (olib keldi = brought)",
+      "keldi": "came",
+      "Men": "I",
+      "osh": "plov (the national rice dish)",
+      "va": "and",
+      "ko'k": "green",
+      "choy": "tea",
+      "buyurtma": "order",
+      "qildim": "I did, I made (buyurtma qildim = I ordered)",
+      "juda": "very",
+      "mazali": "delicious",
+      "to'yimli": "filling",
+      "edi": "was",
+      "non": "bread",
+      "yedik": "we ate",
+      "suhbatlashdik": "we talked, we chatted",
+      "Oxirida": "at the end",
+      "hisob": "the bill",
+      "so'radim": "I asked (for)"
     }
-  ],
-  "glossary": {
-    "Biz": "we",
-    "do'stim": "my friend (do'st + -im)",
-    "bilan": "with",
-    "restoraniga": "to the restaurant",
-    "bordik": "we went",
-    "Ofitsiant": "the waiter",
-    "bizga": "to us",
-    "menyu": "menu",
-    "olib": "bringing (olib keldi = brought)",
-    "keldi": "came",
-    "Men": "I",
-    "osh": "plov (the national rice dish)",
-    "va": "and",
-    "ko'k": "green",
-    "choy": "tea",
-    "buyurtma": "order",
-    "qildim": "I did, I made (buyurtma qildim = I ordered)",
-    "juda": "very",
-    "mazali": "delicious",
-    "to'yimli": "filling",
-    "edi": "was",
-    "non": "bread",
-    "yedik": "we ate",
-    "suhbatlashdik": "we talked, we chatted",
-    "Oxirida": "at the end",
-    "hisob": "the bill",
-    "so'radim": "I asked (for)"
+  },
+  {
+    "id": "restaurant.best-plov",
+    "theme": "restaurant",
+    "title": {
+      "en": "The Best Plov",
+      "uz": "Eng mazali osh"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men eng mazali oshni izladim.",
+        "english": "I searched for the most delicious plov."
+      },
+      {
+        "uzbek": "Bir kichik restoranga kirdim.",
+        "english": "I went into a small restaurant."
+      },
+      {
+        "uzbek": "Ofitsiant menga katta porsiya keltirdi.",
+        "english": "The waiter brought me a big portion."
+      },
+      {
+        "uzbek": "Osh issiq va juda mazali edi.",
+        "english": "The plov was hot and very delicious."
+      },
+      {
+        "uzbek": "Men non bilan yedim va choy ichdim.",
+        "english": "I ate it with bread and drank tea."
+      },
+      {
+        "uzbek": "Bu eng yaxshi tushlik edi!",
+        "english": "It was the best lunch!"
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "eng": "the most",
+      "oshni": "the plov (object)",
+      "izladim": "I searched for",
+      "Bir": "one / a",
+      "restoranga": "into a restaurant",
+      "kirdim": "I entered",
+      "menga": "to me",
+      "keltirdi": "brought",
+      "issiq": "hot",
+      "edi": "was",
+      "bilan": "with",
+      "yedim": "I ate",
+      "ichdim": "I drank",
+      "Bu": "this",
+      "tushlik": "lunch",
+      "va": "and",
+      "juda": "very",
+      "katta": "big",
+      "kichik": "small"
+    }
   }
-}
+]

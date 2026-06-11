@@ -1,0 +1,87 @@
+[
+  {
+    "id": "choyxona.teahouse",
+    "uzbek": "choyxona",
+    "english": "teahouse",
+    "theme": "choyxona",
+    "level": 1
+  },
+  {
+    "id": "choyxona.tea",
+    "uzbek": "choy",
+    "english": "tea",
+    "theme": "choyxona",
+    "level": 1
+  },
+  {
+    "id": "choyxona.friend",
+    "uzbek": "do'st",
+    "english": "friend",
+    "theme": "choyxona",
+    "level": 1
+  },
+  {
+    "id": "choyxona.name",
+    "uzbek": "ism",
+    "english": "name",
+    "theme": "choyxona",
+    "level": 1
+  },
+  {
+    "id": "choyxona.sit",
+    "uzbek": "o'tirish",
+    "english": "to sit",
+    "theme": "choyxona",
+    "level": 1
+  },
+  {
+    "id": "choyxona.where-from",
+    "uzbek": "qayerdan",
+    "english": "where from",
+    "theme": "choyxona",
+    "level": 1
+  },
+  {
+    "id": "choyxona.green-tea",
+    "uzbek": "ko'k choy",
+    "english": "green tea",
+    "theme": "choyxona",
+    "level": 2
+  },
+  {
+    "id": "choyxona.samsa",
+    "uzbek": "somsa",
+    "english": "samsa (baked pastry)",
+    "theme": "choyxona",
+    "level": 2
+  },
+  {
+    "id": "choyxona.guest",
+    "uzbek": "mehmon",
+    "english": "guest",
+    "theme": "choyxona",
+    "level": 2,
+    "usageNotes": "Hospitality (mehmondo'stlik) is central to Uzbek culture."
+  },
+  {
+    "id": "choyxona.together",
+    "uzbek": "birga",
+    "english": "together",
+    "theme": "choyxona",
+    "level": 2
+  },
+  {
+    "id": "choyxona.conversation",
+    "uzbek": "suhbat",
+    "english": "conversation",
+    "theme": "choyxona",
+    "level": 3
+  },
+  {
+    "id": "choyxona.welcome",
+    "uzbek": "xush kelibsiz",
+    "english": "welcome",
+    "theme": "choyxona",
+    "level": 2
+  }
+]

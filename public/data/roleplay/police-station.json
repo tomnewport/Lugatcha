@@ -1,0 +1,547 @@
+[
+  {
+    "id": "police-station.lost-wallet",
+    "theme": "police-station",
+    "title": {
+      "en": "The Lost Wallet",
+      "uz": "Yo'qolgan hamyon"
+    },
+    "scenario": "Your wallet has disappeared somewhere between the bazaar and your hotel. You go to the police station for help.",
+    "variants": [
+      {
+        "id": "police-station.lost-wallet.base",
+        "description": "Good news — someone handed it in",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Qanday muammo bor?",
+            "english": "Hello! What is the problem?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Hamyonim yo'qoldi.",
+            "english": "My wallet is lost.",
+            "tokens": [
+              "Hamyonim",
+              "yo'qoldi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qanday hamyon? Qanday rangda?",
+            "english": "What kind of wallet? What colour?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Kichik va qora.",
+            "english": "Small and black.",
+            "tokens": [
+              "Kichik",
+              "va",
+              "qora."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir daqiqa... Mana bu hamyonmi?",
+            "english": "One minute... Is it this wallet?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, bu mening hamyonim! Katta rahmat!",
+            "english": "Yes, that is my wallet! Thank you very much!",
+            "tokens": [
+              "Ha,",
+              "bu",
+              "mening",
+              "hamyonim!",
+              "Katta",
+              "rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Arzimaydi. Ehtiyot bo'ling!",
+            "english": "You're welcome. Take care!"
+          }
+        ]
+      },
+      {
+        "id": "police-station.lost-wallet.passport",
+        "description": "You need your passport to file the report",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Hamyonim yo'qoldi.",
+            "english": "My wallet is lost.",
+            "tokens": [
+              "Hamyonim",
+              "yo'qoldi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Formani to'ldiramiz. Pasportingiz bormi?",
+            "english": "We will fill in a form. Do you have your passport?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, mana pasportim.",
+            "english": "Yes, here is my passport.",
+            "tokens": [
+              "Ha,",
+              "mana",
+              "pasportim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat. Qayerda yo'qoldi?",
+            "english": "Thank you. Where was it lost?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bozorda, menimcha.",
+            "english": "At the bazaar, I think.",
+            "tokens": [
+              "Bozorda,",
+              "menimcha."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yozdim. Telefon raqamingizni qoldiring.",
+            "english": "Noted. Leave your phone number."
+          }
+        ]
+      },
+      {
+        "id": "police-station.lost-wallet.lunch",
+        "description": "The office is closed for lunch",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, tushlikka yopiqmiz.",
+            "english": "Sorry, we are closed for lunch."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qachon ochilasiz?",
+            "english": "When do you open?",
+            "tokens": [
+              "Qachon",
+              "ochilasiz?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Soat ikkida ochilamiz.",
+            "english": "We open at two o'clock."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, soat ikkida kelaman.",
+            "english": "Fine, I will come at two o'clock.",
+            "tokens": [
+              "Yaxshi,",
+              "soat",
+              "ikkida",
+              "kelaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat. Keyin yordam beramiz.",
+            "english": "Thank you. We will help you then."
+          }
+        ]
+      },
+      {
+        "id": "police-station.lost-wallet.hotel",
+        "description": "The wallet was at your hotel all along",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Hamyonim yo'qoldi.",
+            "english": "My wallet is lost.",
+            "tokens": [
+              "Hamyonim",
+              "yo'qoldi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Avval mehmonxonangizga telefon qiling.",
+            "english": "First, telephone your hotel."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi fikr. Bir daqiqa.",
+            "english": "Good idea. One minute.",
+            "tokens": [
+              "Yaxshi",
+              "fikr.",
+              "Bir",
+              "daqiqa."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Nima dedilar?",
+            "english": "What did they say?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Hamyonim xonamda! Kechirasiz!",
+            "english": "My wallet is in my room! Sorry!",
+            "tokens": [
+              "Hamyonim",
+              "xonamda!",
+              "Kechirasiz!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hechqisi yo'q! Yaxshi kun!",
+            "english": "No problem! Have a good day!"
+          }
+        ]
+      },
+      {
+        "id": "police-station.lost-wallet.bag",
+        "description": "Actually it is your whole bag that is missing",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Sumkam yo'qoldi.",
+            "english": "My bag is lost.",
+            "tokens": [
+              "Sumkam",
+              "yo'qoldi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Sumkada nima bor edi?",
+            "english": "What was in the bag?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Hamyon, telefon va hujjatlar.",
+            "english": "A wallet, a phone, and documents.",
+            "tokens": [
+              "Hamyon,",
+              "telefon",
+              "va",
+              "hujjatlar."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tushunaman. Formani to'ldiring, iltimos.",
+            "english": "I understand. Fill in the form, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yordamingiz uchun rahmat.",
+            "english": "Thank you for your help.",
+            "tokens": [
+              "Yordamingiz",
+              "uchun",
+              "rahmat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Topsak, telefon qilamiz.",
+            "english": "If we find it, we will telephone you."
+          }
+        ]
+      },
+      {
+        "id": "police-station.lost-wallet.address",
+        "description": "They need your hotel address for the report",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Qayerda turibsiz? Manzilni ayting.",
+            "english": "Where are you staying? Tell me the address."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men mehmonxonada turibman.",
+            "english": "I am staying at a hotel.",
+            "tokens": [
+              "Men",
+              "mehmonxonada",
+              "turibman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qaysi ko'chada?",
+            "english": "On which street?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Navoiy ko'chasida.",
+            "english": "On Navoiy street.",
+            "tokens": [
+              "Navoiy",
+              "ko'chasida."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yozdim. Topsak, xabar beramiz.",
+            "english": "Noted. If we find it, we will let you know."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "police-station.registration",
+    "theme": "police-station",
+    "title": {
+      "en": "Tourist Registration",
+      "uz": "Turistik ro'yxat"
+    },
+    "scenario": "You are staying with friends, so you must register your visit at the local office.",
+    "variants": [
+      {
+        "id": "police-station.registration.base",
+        "description": "Five minutes of paperwork and you are done",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Qanday yordam beray?",
+            "english": "Hello! How can I help?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Menga ro'yxatga olish kerak.",
+            "english": "I need registration.",
+            "tokens": [
+              "Menga",
+              "ro'yxatga",
+              "olish",
+              "kerak."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportingizni bering, iltimos.",
+            "english": "Give me your passport, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim va viza.",
+            "english": "Here is my passport and visa.",
+            "tokens": [
+              "Mana",
+              "pasportim",
+              "va",
+              "viza."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Necha kun turasiz?",
+            "english": "How many days are you staying?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "O'n kun.",
+            "english": "Ten days.",
+            "tokens": [
+              "O'n",
+              "kun."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tayyor! Mana hujjatingiz.",
+            "english": "Done! Here is your document."
+          }
+        ]
+      },
+      {
+        "id": "police-station.registration.address",
+        "description": "You must bring the host address",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Menga ro'yxatga olish kerak.",
+            "english": "I need registration.",
+            "tokens": [
+              "Menga",
+              "ro'yxatga",
+              "olish",
+              "kerak."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qaysi manzilda turasiz?",
+            "english": "At which address are you staying?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Do'stimning uyida.",
+            "english": "At my friend's house.",
+            "tokens": [
+              "Do'stimning",
+              "uyida."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Manzilni yozma ravishda keltiring.",
+            "english": "Bring the address in writing."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, ertaga kelaman.",
+            "english": "Fine, I will come tomorrow.",
+            "tokens": [
+              "Yaxshi,",
+              "ertaga",
+              "kelaman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "police-station.registration.passport-missing",
+        "description": "Your passport is back at the house",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportingizni bering, iltimos.",
+            "english": "Give me your passport, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Voy, pasportim uyda qoldi!",
+            "english": "Oh no, my passport stayed at the house!",
+            "tokens": [
+              "Voy,",
+              "pasportim",
+              "uyda",
+              "qoldi!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportsiz ro'yxatga olmaymiz.",
+            "english": "We cannot register you without a passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tushunaman. Hozir olib kelaman.",
+            "english": "I understand. I will fetch it now.",
+            "tokens": [
+              "Tushunaman.",
+              "Hozir",
+              "olib",
+              "kelaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi, kutamiz.",
+            "english": "Fine, we will wait."
+          }
+        ]
+      },
+      {
+        "id": "police-station.registration.lunch",
+        "description": "Closed for lunch — come back at two",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, tushlikka yopiqmiz.",
+            "english": "Sorry, we are closed for lunch."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Soat nechada ochilasiz?",
+            "english": "At what time do you open?",
+            "tokens": [
+              "Soat",
+              "nechada",
+              "ochilasiz?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Soat ikkida.",
+            "english": "At two o'clock."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, keyin kelaman.",
+            "english": "Thank you, I will come later.",
+            "tokens": [
+              "Rahmat,",
+              "keyin",
+              "kelaman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "police-station.registration.copy",
+        "description": "They need a copy of your visa",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Vizangizning nusxasi kerak.",
+            "english": "We need a copy of your visa."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Nusxa qayerda qilaman?",
+            "english": "Where do I make a copy?",
+            "tokens": [
+              "Nusxa",
+              "qayerda",
+              "qilaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yonimizdagi do'konda.",
+            "english": "At the shop next to us."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, besh daqiqada kelaman.",
+            "english": "Fine, I will be back in five minutes.",
+            "tokens": [
+              "Yaxshi,",
+              "besh",
+              "daqiqada",
+              "kelaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kutamiz.",
+            "english": "We will wait."
+          }
+        ]
+      }
+    ]
+  }
+]

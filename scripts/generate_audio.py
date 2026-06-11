@@ -94,13 +94,15 @@ def collect_texts() -> dict[str, str]:
             texts.append(word["uzbek"])
 
     for name in manifest["stories"]:
-        story = json.loads((DATA_DIR / "stories" / f"{name}.json").read_text(encoding="utf-8"))
-        texts.extend(sentence["uzbek"] for sentence in story["sentences"])
+        stories = json.loads((DATA_DIR / "stories" / f"{name}.json").read_text(encoding="utf-8"))
+        for story in stories:
+            texts.extend(sentence["uzbek"] for sentence in story["sentences"])
 
     for name in manifest["roleplay"]:
-        roleplay = json.loads((DATA_DIR / "roleplay" / f"{name}.json").read_text(encoding="utf-8"))
-        for variant in roleplay["variants"]:
-            texts.extend(turn["uzbek"] for turn in variant["turns"])
+        roleplays = json.loads((DATA_DIR / "roleplay" / f"{name}.json").read_text(encoding="utf-8"))
+        for roleplay in roleplays:
+            for variant in roleplay["variants"]:
+                texts.extend(turn["uzbek"] for turn in variant["turns"])
 
     # Language School lessons: spoken examples and exercise audio
     lessons_dir = DATA_DIR / "lessons"

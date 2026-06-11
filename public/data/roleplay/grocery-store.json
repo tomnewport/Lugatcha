@@ -1,0 +1,417 @@
+[
+  {
+    "id": "grocery-store.shopping",
+    "theme": "grocery-store",
+    "title": {
+      "en": "A Few Groceries",
+      "uz": "Bir oz xarid"
+    },
+    "scenario": "You pop into a small shop for some breakfast things.",
+    "variants": [
+      {
+        "id": "grocery-store.shopping.base",
+        "description": "Bread, milk, and eggs",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Nima kerak?",
+            "english": "Hello! What do you need?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Non, sut va tuxum kerak.",
+            "english": "I need bread, milk, and eggs.",
+            "tokens": [
+              "Non,",
+              "sut",
+              "va",
+              "tuxum",
+              "kerak."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Nechta tuxum?",
+            "english": "How many eggs?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "O'nta, iltimos.",
+            "english": "Ten, please.",
+            "tokens": [
+              "O'nta,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana. Yigirma ming so'm bo'ldi.",
+            "english": "Here you are. That is twenty thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul. Rahmat!",
+            "english": "Here is the money. Thank you!",
+            "tokens": [
+              "Mana",
+              "pul.",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "grocery-store.shopping.no-milk",
+        "description": "The milk has sold out",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Sut bormi?",
+            "english": "Is there milk?",
+            "tokens": [
+              "Sut",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, sut tugadi.",
+            "english": "Sorry, the milk has run out."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qachon keladi?",
+            "english": "When will it come?",
+            "tokens": [
+              "Qachon",
+              "keladi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ertalab keladi. Pishloq bor.",
+            "english": "It comes in the morning. There is cheese."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, pishloq olaman.",
+            "english": "Fine, I will take cheese.",
+            "tokens": [
+              "Yaxshi,",
+              "pishloq",
+              "olaman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "grocery-store.shopping.fruit",
+        "description": "You weigh some fruit",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Olma qancha?",
+            "english": "How much are the apples?",
+            "tokens": [
+              "Olma",
+              "qancha?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kilosi o'n ming so'm.",
+            "english": "Ten thousand som a kilo."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikki kilo, iltimos. Pishganmi?",
+            "english": "Two kilos, please. Are they ripe?",
+            "tokens": [
+              "Ikki",
+              "kilo,",
+              "iltimos.",
+              "Pishganmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, juda pishgan va shirin.",
+            "english": "Yes, very ripe and sweet."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "grocery-store.shopping.bag",
+        "description": "You need a bag",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Paket bormi?",
+            "english": "Is there a bag?",
+            "tokens": [
+              "Paket",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, bor. Bir ming so'm.",
+            "english": "Yes, there is. One thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mayli, bitta paket.",
+            "english": "Okay, one bag.",
+            "tokens": [
+              "Mayli,",
+              "bitta",
+              "paket."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana. Rahmat!",
+            "english": "Here you are. Thank you!"
+          }
+        ]
+      },
+      {
+        "id": "grocery-store.shopping.no-change",
+        "description": "No change for the big note",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Mana yuz ming so'm.",
+            "english": "Here is one hundred thousand som.",
+            "tokens": [
+              "Mana",
+              "yuz",
+              "ming",
+              "so'm."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mayda pul bormi? Qaytim kam.",
+            "english": "Do you have change? I have little."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bir daqiqa... mana o'n ming.",
+            "english": "One minute... here is ten thousand.",
+            "tokens": [
+              "Bir",
+              "daqiqa...",
+              "mana",
+              "o'n",
+              "ming."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Endi yaxshi.",
+            "english": "Thank you! Now it is fine."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, xayr!",
+            "english": "Thank you, goodbye!",
+            "tokens": [
+              "Rahmat,",
+              "xayr!"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "grocery-store.water-snacks",
+    "theme": "grocery-store",
+    "title": {
+      "en": "Water for the Road",
+      "uz": "Yo'lga suv"
+    },
+    "scenario": "Before a long bus ride you grab water and a snack.",
+    "variants": [
+      {
+        "id": "grocery-store.water-snacks.base",
+        "description": "Water and bread, quickly",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita suv va non, iltimos.",
+            "english": "Two waters and bread, please.",
+            "tokens": [
+              "Ikkita",
+              "suv",
+              "va",
+              "non,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Katta suv yoki kichik?",
+            "english": "Big water or small?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta, iltimos.",
+            "english": "Big, please.",
+            "tokens": [
+              "Katta,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana. O'n ming so'm.",
+            "english": "Here you are. Ten thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "grocery-store.water-snacks.cold",
+        "description": "You want it cold",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Sovuq suv bormi?",
+            "english": "Is there cold water?",
+            "tokens": [
+              "Sovuq",
+              "suv",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, muzlatgichda bor.",
+            "english": "Yes, there is some in the fridge."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita sovuq suv, iltimos.",
+            "english": "Two cold waters, please.",
+            "tokens": [
+              "Ikkita",
+              "sovuq",
+              "suv,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, sovuq.",
+            "english": "Here you are, cold."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "grocery-store.water-snacks.fruit",
+        "description": "You add fruit for the road",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Yo'lga meva bormi?",
+            "english": "Is there fruit for the road?",
+            "tokens": [
+              "Yo'lga",
+              "meva",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Olma va banan bor.",
+            "english": "There are apples and bananas."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "To'rtta olma, iltimos.",
+            "english": "Four apples, please.",
+            "tokens": [
+              "To'rtta",
+              "olma,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, yangi olma. Rahmat!",
+            "english": "Here, fresh apples. Thank you!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "grocery-store.water-snacks.closed-soon",
+        "description": "The shop closes in a minute",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Tez bo'ling, biz yopilamiz!",
+            "english": "Be quick, we are closing!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Faqat suv. Tez!",
+            "english": "Just water. Quick!",
+            "tokens": [
+              "Faqat",
+              "suv.",
+              "Tez!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana suv. Besh ming.",
+            "english": "Here is water. Five thousand."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul, rahmat!",
+            "english": "Here is the money, thank you!",
+            "tokens": [
+              "Mana",
+              "pul,",
+              "rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

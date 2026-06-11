@@ -1,0 +1,121 @@
+[
+  {
+    "id": "bank.first-som",
+    "theme": "bank",
+    "title": {
+      "en": "My First Som",
+      "uz": "Birinchi so'mim"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men bankka pul almashtirishga bordim.",
+        "english": "I went to the bank to change money."
+      },
+      {
+        "uzbek": "Men yuz dollar berdim.",
+        "english": "I gave one hundred dollars."
+      },
+      {
+        "uzbek": "Ayol menga ko'p so'm berdi.",
+        "english": "The woman gave me a lot of som."
+      },
+      {
+        "uzbek": "Pul katta dasta edi!",
+        "english": "The money was a big bundle!"
+      },
+      {
+        "uzbek": "Men pulni sanadim va xursand bo'ldim.",
+        "english": "I counted the money and was happy."
+      },
+      {
+        "uzbek": "Endi men osh va sovg'a sotib olaman.",
+        "english": "Now I will buy plov and gifts."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "bankka": "to the bank",
+      "pul": "money",
+      "almashtirishga": "to exchange",
+      "bordim": "I went",
+      "yuz": "hundred",
+      "dollar": "dollars",
+      "berdim": "I gave",
+      "Ayol": "the woman",
+      "menga": "to me",
+      "ko'p": "a lot of",
+      "so'm": "som",
+      "katta": "big",
+      "dasta": "bundle",
+      "edi": "was",
+      "pulni": "the money (object)",
+      "sanadim": "I counted",
+      "va": "and",
+      "xursand": "happy",
+      "bo'ldim": "I became",
+      "Endi": "now",
+      "osh": "plov",
+      "sovg'a": "gift(s)",
+      "sotib": "buying",
+      "olaman": "I will buy / take",
+      "berdi": "gave"
+    }
+  },
+  {
+    "id": "bank.counting-lesson",
+    "theme": "bank",
+    "title": {
+      "en": "Learning the Numbers",
+      "uz": "Raqamlarni o'rganish"
+    },
+    "sentences": [
+      {
+        "uzbek": "O'zbek puli katta raqamlar bilan.",
+        "english": "Uzbek money comes in big numbers."
+      },
+      {
+        "uzbek": "Bir choy ming so'm turadi.",
+        "english": "One tea costs a thousand som."
+      },
+      {
+        "uzbek": "Bir osh o'ttiz ming so'm.",
+        "english": "One plov is thirty thousand som."
+      },
+      {
+        "uzbek": "Avval men adashdim.",
+        "english": "At first I got confused."
+      },
+      {
+        "uzbek": "Lekin sekin-sekin o'rgandim.",
+        "english": "But slowly I learned."
+      },
+      {
+        "uzbek": "Endi men tez sanayman!",
+        "english": "Now I count quickly!"
+      }
+    ],
+    "glossary": {
+      "O'zbek": "Uzbek",
+      "puli": "money (of)",
+      "katta": "big",
+      "raqamlar": "numbers",
+      "bilan": "with",
+      "Bir": "one",
+      "choy": "tea",
+      "ming": "thousand",
+      "so'm": "som",
+      "turadi": "costs / stands",
+      "osh": "plov",
+      "o'ttiz": "thirty",
+      "Avval": "at first",
+      "men": "I",
+      "adashdim": "I got confused / lost",
+      "Lekin": "but",
+      "sekin-sekin": "slowly, little by little",
+      "o'rgandim": "I learned",
+      "Endi": "now",
+      "tez": "quickly / fast",
+      "sanayman": "I count"
+    }
+  }
+]

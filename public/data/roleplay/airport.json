@@ -1,32 +1,582 @@
-{
-  "id": "airport.customs",
-  "theme": "airport",
-  "title": { "en": "At Customs", "uz": "Bojxonada" },
-  "scenario": "You have just landed at Tashkent International Airport and are going through customs. The officer is checking your passport and asking about your visit.",
-  "variants": [
-    {
-      "id": "airport.customs.base",
-      "description": "Standard customs check — everything goes smoothly",
-      "turns": [
-        { "speaker": "npc",  "uzbek": "Salom! Pasportingizni ko'rsating, iltimos.", "english": "Hello! Please show your passport." },
-        { "speaker": "user", "uzbek": "Mana pasportim.",                             "english": "Here is my passport.",              "tokens": ["Mana", "pasportim."] },
-        { "speaker": "npc",  "uzbek": "Rahmat. Qayerdan kelasiz?",                  "english": "Thank you. Where are you from?" },
-        { "speaker": "user", "uzbek": "Men Buyuk Britaniyadan kelaman.",             "english": "I am from the United Kingdom.",     "tokens": ["Men", "Buyuk", "Britaniyadan", "kelaman."] },
-        { "speaker": "npc",  "uzbek": "Tashrif maqsadingiz nima?",                  "english": "What is the purpose of your visit?" },
-        { "speaker": "user", "uzbek": "Men turist sifatida kelganman.",              "english": "I have come as a tourist.",         "tokens": ["Men", "turist", "sifatida", "kelganman."] },
-        { "speaker": "npc",  "uzbek": "Xush kelibsiz O'zbekistonga!",               "english": "Welcome to Uzbekistan!" }
-      ]
+[
+  {
+    "id": "airport.customs",
+    "theme": "airport",
+    "title": {
+      "en": "At Customs",
+      "uz": "Bojxonada"
     },
-    {
-      "id": "airport.customs.length-of-stay",
-      "description": "The officer asks how long you plan to stay",
-      "turns": [
-        { "speaker": "npc",  "uzbek": "Salom! Pasportingizni ko'rsating, iltimos.", "english": "Hello! Please show your passport." },
-        { "speaker": "user", "uzbek": "Mana pasportim.",                             "english": "Here is my passport.",              "tokens": ["Mana", "pasportim."] },
-        { "speaker": "npc",  "uzbek": "Necha kun qolmoqchisiz?",                    "english": "How many days are you planning to stay?" },
-        { "speaker": "user", "uzbek": "Men o'n kun qolmoqchiman.",                  "english": "I plan to stay for ten days.",       "tokens": ["Men", "o'n", "kun", "qolmoqchiman."] },
-        { "speaker": "npc",  "uzbek": "Yaxshi. Xush kelibsiz O'zbekistonga!",       "english": "Good. Welcome to Uzbekistan!" }
-      ]
-    }
-  ]
-}
+    "scenario": "You have just landed at Tashkent International Airport and are going through customs. The officer is checking your passport and asking about your visit.",
+    "variants": [
+      {
+        "id": "airport.customs.base",
+        "description": "Standard customs check — everything goes smoothly",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Pasportingizni ko'rsating, iltimos.",
+            "english": "Hello! Please show your passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim.",
+            "english": "Here is my passport.",
+            "tokens": [
+              "Mana",
+              "pasportim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat. Qayerdan kelasiz?",
+            "english": "Thank you. Where are you from?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men Buyuk Britaniyadan kelaman.",
+            "english": "I am from the United Kingdom.",
+            "tokens": [
+              "Men",
+              "Buyuk",
+              "Britaniyadan",
+              "kelaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tashrif maqsadingiz nima?",
+            "english": "What is the purpose of your visit?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men turist sifatida kelganman.",
+            "english": "I have come as a tourist.",
+            "tokens": [
+              "Men",
+              "turist",
+              "sifatida",
+              "kelganman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz O'zbekistonga!",
+            "english": "Welcome to Uzbekistan!"
+          }
+        ]
+      },
+      {
+        "id": "airport.customs.length-of-stay",
+        "description": "The officer asks how long you plan to stay",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Pasportingizni ko'rsating, iltimos.",
+            "english": "Hello! Please show your passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim.",
+            "english": "Here is my passport.",
+            "tokens": [
+              "Mana",
+              "pasportim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Necha kun qolmoqchisiz?",
+            "english": "How many days are you planning to stay?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men o'n kun qolmoqchiman.",
+            "english": "I plan to stay for ten days.",
+            "tokens": [
+              "Men",
+              "o'n",
+              "kun",
+              "qolmoqchiman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi. Xush kelibsiz O'zbekistonga!",
+            "english": "Good. Welcome to Uzbekistan!"
+          }
+        ]
+      },
+      {
+        "id": "airport.customs.purpose",
+        "description": "The officer asks the purpose of your visit",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Pasportingizni ko'rsating.",
+            "english": "Hello! Show your passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim.",
+            "english": "Here is my passport.",
+            "tokens": [
+              "Mana",
+              "pasportim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tashrif maqsadingiz nima?",
+            "english": "What is the purpose of your visit?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men turist sifatida keldim.",
+            "english": "I came as a tourist.",
+            "tokens": [
+              "Men",
+              "turist",
+              "sifatida",
+              "keldim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qancha vaqt qolasiz?",
+            "english": "How long are you staying?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikki hafta qolaman.",
+            "english": "I am staying two weeks.",
+            "tokens": [
+              "Ikki",
+              "hafta",
+              "qolaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz O'zbekistonga!",
+            "english": "Welcome to Uzbekistan!"
+          }
+        ]
+      },
+      {
+        "id": "airport.customs.declare",
+        "description": "You are asked if you have anything to declare",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Deklaratsiya qiladigan narsangiz bormi?",
+            "english": "Do you have anything to declare?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yo'q, faqat shaxsiy narsalar.",
+            "english": "No, only personal things.",
+            "tokens": [
+              "Yo'q,",
+              "faqat",
+              "shaxsiy",
+              "narsalar."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Naqd pul qancha?",
+            "english": "How much cash do you have?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ikki yuz dollar.",
+            "english": "Two hundred dollars.",
+            "tokens": [
+              "Ikki",
+              "yuz",
+              "dollar."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi. Xush kelibsiz!",
+            "english": "Fine. Welcome!"
+          }
+        ]
+      },
+      {
+        "id": "airport.customs.hotel",
+        "description": "The officer asks where you will stay",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Qayerda turasiz?",
+            "english": "Where are you staying?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men mehmonxonada turaman.",
+            "english": "I am staying at a hotel.",
+            "tokens": [
+              "Men",
+              "mehmonxonada",
+              "turaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qaysi shaharda?",
+            "english": "In which city?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Toshkentda va Samarqandda.",
+            "english": "In Tashkent and Samarkand.",
+            "tokens": [
+              "Toshkentda",
+              "va",
+              "Samarqandda."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ajoyib shaharlar! Yaxshi sayohat!",
+            "english": "Wonderful cities! Have a good trip!"
+          }
+        ]
+      },
+      {
+        "id": "airport.customs.bag-check",
+        "description": "They want to check your bag",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Sumkangizni ochib bering, iltimos.",
+            "english": "Please open your bag."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Albatta, mana.",
+            "english": "Of course, here.",
+            "tokens": [
+              "Albatta,",
+              "mana."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu nima?",
+            "english": "What is this?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bu sovg'a, choy.",
+            "english": "This is a gift, tea.",
+            "tokens": [
+              "Bu",
+              "sovg'a,",
+              "choy."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi, rahmat. O'tishingiz mumkin.",
+            "english": "Fine, thank you. You may go through."
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "airport.lost-luggage",
+    "theme": "airport",
+    "title": {
+      "en": "The Missing Suitcase",
+      "uz": "Yo'qolgan jomadon"
+    },
+    "scenario": "Your flight has landed, but your suitcase has not appeared on the belt. You go to the lost luggage desk.",
+    "variants": [
+      {
+        "id": "airport.lost-luggage.base",
+        "description": "The suitcase turns up on the next trolley",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Sizga qanday yordam beray?",
+            "english": "Hello! How can I help you?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bagajim kelmadi.",
+            "english": "My luggage did not arrive.",
+            "tokens": [
+              "Bagajim",
+              "kelmadi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qaysi parvoz bilan keldingiz?",
+            "english": "Which flight did you arrive on?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men Istanbuldan keldim.",
+            "english": "I came from Istanbul.",
+            "tokens": [
+              "Men",
+              "Istanbuldan",
+              "keldim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir daqiqa kuting, iltimos... Mana, jomadoningiz keldi!",
+            "english": "Wait one minute, please... Here, your suitcase has arrived!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Arzimaydi. Yaxshi sayohat!",
+            "english": "You're welcome. Have a good trip!"
+          }
+        ]
+      },
+      {
+        "id": "airport.lost-luggage.form",
+        "description": "You must fill in a form — and they need your passport",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Sizga qanday yordam beray?",
+            "english": "Hello! How can I help you?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bagajim kelmadi.",
+            "english": "My luggage did not arrive.",
+            "tokens": [
+              "Bagajim",
+              "kelmadi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Formani to'ldiring, iltimos. Pasportingiz bormi?",
+            "english": "Fill in the form, please. Do you have your passport?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim.",
+            "english": "Here is my passport.",
+            "tokens": [
+              "Mana",
+              "pasportim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat. Jomadoningiz qanday rangda?",
+            "english": "Thank you. What colour is your suitcase?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta va qora.",
+            "english": "Big and black.",
+            "tokens": [
+              "Katta",
+              "va",
+              "qora."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Topamiz. Telefon raqamingizni yozing.",
+            "english": "We will find it. Write down your phone number."
+          }
+        ]
+      },
+      {
+        "id": "airport.lost-luggage.wrong-city",
+        "description": "The suitcase flew to the wrong city",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, jomadoningiz Samarqandga ketdi.",
+            "english": "Sorry, your suitcase went to Samarkand."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Samarqandga? Qachon keladi?",
+            "english": "To Samarkand? When will it arrive?",
+            "tokens": [
+              "Samarqandga?",
+              "Qachon",
+              "keladi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ertaga keladi. Mehmonxonangizga olib boramiz.",
+            "english": "It arrives tomorrow. We will bring it to your hotel."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat.",
+            "english": "Good, thank you.",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz va xush kelibsiz!",
+            "english": "Our apologies — and welcome!"
+          }
+        ]
+      },
+      {
+        "id": "airport.lost-luggage.tomorrow",
+        "description": "It arrives on tomorrow’s flight",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Jomadoningiz ertagagi parvozda keladi.",
+            "english": "Your suitcase arrives on tomorrow's flight."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mehmonxonaga olib kelasizmi?",
+            "english": "Will you bring it to the hotel?",
+            "tokens": [
+              "Mehmonxonaga",
+              "olib",
+              "kelasizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, albatta. Manzilni yozing, iltimos.",
+            "english": "Yes, of course. Write the address, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana manzil. Rahmat.",
+            "english": "Here is the address. Thank you.",
+            "tokens": [
+              "Mana",
+              "manzil.",
+              "Rahmat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Arzimaydi. Kechirasiz!",
+            "english": "You're welcome. Our apologies!"
+          }
+        ]
+      },
+      {
+        "id": "airport.lost-luggage.describe",
+        "description": "They ask you to describe the bag",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Jomadoningiz qanday?",
+            "english": "What is your suitcase like?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Kichik va ko'k.",
+            "english": "Small and blue.",
+            "tokens": [
+              "Kichik",
+              "va",
+              "ko'k."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ichida nima bor?",
+            "english": "What is inside it?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Kiyimlar va kitoblar.",
+            "english": "Clothes and books.",
+            "tokens": [
+              "Kiyimlar",
+              "va",
+              "kitoblar."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Topdik! Mana jomadoningiz.",
+            "english": "We found it! Here is your suitcase."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi! Rahmat!",
+            "english": "Very good! Thank you!",
+            "tokens": [
+              "Juda",
+              "yaxshi!",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "airport.lost-luggage.lunch",
+        "description": "The desk is closing for lunch",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, biz tushlikka yopilamiz.",
+            "english": "Sorry, we are closing for lunch."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qachon ochilasiz?",
+            "english": "When do you open?",
+            "tokens": [
+              "Qachon",
+              "ochilasiz?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Soat ikkida. Kechirasiz.",
+            "english": "At two o'clock. Sorry."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, soat ikkida kelaman.",
+            "english": "Fine, I will come at two o'clock.",
+            "tokens": [
+              "Yaxshi,",
+              "soat",
+              "ikkida",
+              "kelaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat. Tez orada yordam beramiz.",
+            "english": "Thank you. We will help you soon."
+          }
+        ]
+      }
+    ]
+  }
+]
