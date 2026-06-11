@@ -246,6 +246,10 @@ def clean_uzbek_text(text: str) -> str:
     """Built-in equivalent of the Sayro card's clean_uzbek_text()."""
     text = _transliterate_cyrillic(text)
     text = _normalize_numbers(text)
+    # Ellipses make the model pause oddly or wander — collapse "…"/"..."/". . ."
+    # to a single period.
+    text = text.replace("…", ".")
+    text = re.sub(r"(?:\s*\.){2,}", ".", text)
     for src in ("'", "’", "‘", "ʼ", "`", "»", "«", "”", "“"):
         text = text.replace(src, "ʻ")
     text = text.replace("—", "-").replace("• ", "").replace("\n", " ")
