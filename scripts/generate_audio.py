@@ -2,21 +2,38 @@
 """Generate prebuilt Uzbek audio for Lugʻatcha.
 
 Enumerates every spoken string in public/data (word entries, story sentences,
-roleplay turns), synthesises each one with an Uzbek TTS model, and writes
+roleplay turns), synthesises each one with an Uzbek TTS backend, and writes
 content-addressed MP3s plus public/audio/manifest.json. The app looks clips up
 by the same text hash (src/audio/key.ts) and falls back to the Web Speech API
 for anything missing, so partial runs are safe.
 
-Designed for a Mac with Apple Silicon (uses the MPS backend when available).
+Two backends:
+  --backend local  (default)  Runs a HuggingFace TTS model on this machine
+                              (Apple Silicon uses the MPS backend). No account,
+                              no per-character billing.
+  --backend yandex            Calls the Yandex SpeechKit v1 REST API. Needs a
+                              Yandex Cloud service-account API key with the
+                              ai.speechKit-tts.user role, plus the folder ID.
+                              The host is parameterised so it works against the
+                              Kazakhstan cloud (tts.api.yandexcloud.kz, default)
+                              or the Russia cloud (tts.api.cloud.yandex.net).
 
 Setup (once):
     brew install uv ffmpeg
 
-Usage:
+Usage (local backend):
     uv run python scripts/generate_audio.py --dry-run     # list what would be made
     uv run python scripts/generate_audio.py --limit 3     # try a few clips first
     uv run python scripts/generate_audio.py               # generate everything missing
     uv run python scripts/generate_audio.py --self-test   # verify hash parity only
+
+Usage (Yandex backend):
+    export YANDEX_API_KEY=AQVN...          # service-account API key (keep secret)
+    export YANDEX_FOLDER_ID=b1g...         # folder the service account lives in
+    uv run python scripts/generate_audio.py --backend yandex --limit 1   # smoke test
+    uv run python scripts/generate_audio.py --backend yandex             # everything
+    # Russia cloud instead of Kazakhstan:
+    #   --backend yandex --yandex-host tts.api.cloud.yandex.net
 
 Then commit public/audio/ and the app will pick the clips up automatically.
 """
@@ -25,6 +42,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -170,6 +188,92 @@ def load_synthesizer(model_id: str, device: str):
     return synthesize
 
 
+# Yandex SpeechKit v1 caps each request at 250 characters. Stay safely under it
+# and split longer strings on word boundaries; the chunks are concatenated.
+YANDEX_CHAR_LIMIT = 240
+
+
+def chunk_text(text: str, limit: int = YANDEX_CHAR_LIMIT) -> list[str]:
+    """Split text into <=limit-char pieces, breaking on whitespace."""
+    if len(text) <= limit:
+        return [text]
+    chunks: list[str] = []
+    current = ""
+    for word in text.split():
+        candidate = f"{current} {word}".strip()
+        if current and len(candidate) > limit:
+            chunks.append(current)
+            current = word
+        else:
+            current = candidate
+    if current:
+        chunks.append(current)
+    return chunks or [text]
+
+
+def load_yandex_synthesizer(
+    host: str,
+    api_key: str,
+    folder_id: str,
+    voice: str,
+    lang: str,
+    sample_rate: int = 48000,
+):
+    """Returns synthesize(text) -> (samples, rate) backed by Yandex SpeechKit.
+
+    Requests raw little-endian 16-bit PCM (format=lpcm) so the bytes drop
+    straight into the existing soundfile/ffmpeg pipeline with no extra decode.
+    """
+    import urllib.error
+    import urllib.parse
+    import urllib.request
+
+    import numpy as np
+
+    url = f"https://{host}/speech/v1/tts:synthesize"
+    headers = {"Authorization": f"Api-Key {api_key}"}
+
+    def synth_chunk(text: str):
+        body = urllib.parse.urlencode(
+            {
+                "text": text,
+                "lang": lang,
+                "voice": voice,
+                "format": "lpcm",
+                "sampleRateHertz": str(sample_rate),
+                "folderId": folder_id,
+            }
+        ).encode("utf-8")
+        request = urllib.request.Request(url, data=body, headers=headers)
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                raw = response.read()
+        except urllib.error.HTTPError as error:
+            detail = error.read().decode("utf-8", "replace")
+            sys.exit(
+                f"Yandex TTS request failed: HTTP {error.code}\n{detail}\n\n"
+                "Common causes: wrong --yandex-host for your cloud (KZ vs RU), "
+                "an API key from the other installation, a missing "
+                "ai.speechKit-tts.user role, or 'uz-UZ'/'nigora' not being "
+                "available in this region."
+            )
+        except urllib.error.URLError as error:
+            sys.exit(
+                f"Could not reach {host}: {error.reason}\n\n"
+                "If the host does not resolve, this cloud likely has no TTS "
+                "endpoint — try --yandex-host tts.api.cloud.yandex.net (Russia) "
+                "or fall back to --backend local."
+            )
+        return np.frombuffer(raw, dtype="<i2")
+
+    def synthesize(text: str):
+        pieces = [synth_chunk(chunk) for chunk in chunk_text(text)]
+        samples = pieces[0] if len(pieces) == 1 else np.concatenate(pieces)
+        return samples, sample_rate
+
+    return synthesize
+
+
 def write_mp3(samples, rate: int, target: Path, ffmpeg: str) -> None:
     import soundfile
 
@@ -197,9 +301,15 @@ def write_manifest(out_dir: Path) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument("--backend", choices=("local", "yandex"), default="local",
+                        help="local HuggingFace model (default) or Yandex SpeechKit")
+    parser.add_argument("--model", default=DEFAULT_MODEL, help="local backend model id")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--device", default=None, help="mps / cuda / cpu (default: auto)")
+    parser.add_argument("--yandex-host", default="tts.api.yandexcloud.kz",
+                        help="SpeechKit host (KZ default; RU is tts.api.cloud.yandex.net)")
+    parser.add_argument("--yandex-voice", default="nigora", help="Yandex voice (default: nigora)")
+    parser.add_argument("--yandex-lang", default="uz-UZ", help="Yandex language tag")
     parser.add_argument("--limit", type=int, default=None, help="generate at most N clips")
     parser.add_argument("--force", action="store_true", help="regenerate existing clips")
     parser.add_argument("--dry-run", action="store_true", help="list texts and exit")
@@ -234,9 +344,24 @@ def main() -> None:
     print(f"{len(pending)} clips to generate, {len(texts) - len(pending)} already present")
 
     if pending:
-        device = args.device or pick_device()
-        print(f"loading {args.model} on {device}…")
-        synthesize = load_synthesizer(args.model, device)
+        if args.backend == "yandex":
+            api_key = os.environ.get("YANDEX_API_KEY")
+            folder_id = os.environ.get("YANDEX_FOLDER_ID")
+            if not api_key or not folder_id:
+                sys.exit(
+                    "Set YANDEX_API_KEY and YANDEX_FOLDER_ID for --backend yandex.\n"
+                    "Create a service-account API key (role ai.speechKit-tts.user) "
+                    "in your Yandex Cloud console and export both as env vars."
+                )
+            print(f"using Yandex SpeechKit at {args.yandex_host} "
+                  f"(voice={args.yandex_voice}, lang={args.yandex_lang})…")
+            synthesize = load_yandex_synthesizer(
+                args.yandex_host, api_key, folder_id, args.yandex_voice, args.yandex_lang
+            )
+        else:
+            device = args.device or pick_device()
+            print(f"loading {args.model} on {device}…")
+            synthesize = load_synthesizer(args.model, device)
 
         for i, (key, text) in enumerate(pending.items(), 1):
             print(f"[{i}/{len(pending)}] {text}")
