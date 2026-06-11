@@ -29,18 +29,18 @@ Setup (once):
     cd Lugatcha
     brew install uv ffmpeg sox      # sox is required by the local qwen_tts backend
 
-Usage (local backend):
+Usage (local / Sayro TTS backend → public/audio/sayro/):
     huggingface-cli login                                 # gated Sayro access
     uv run python scripts/generate_audio.py --dry-run     # list what would be made
     uv run python scripts/generate_audio.py --limit 3     # try a few clips first
     uv run python scripts/generate_audio.py --device mps  # try the GPU (CPU is slow)
-    uv run python scripts/generate_audio.py --candidates   # 3 variants/word for in-app review
     uv run python scripts/generate_audio.py               # generate everything missing
+    uv run python scripts/generate_audio.py --candidates  # 3 variants/word → public/audio/candidates/
     uv run python scripts/generate_audio.py --self-test   # verify hash parity only
 
-Usage (Yandex backend):
-    export YANDEX_API_KEY=AQVN...          # service-account API key (keep secret)
-    export YANDEX_FOLDER_ID=b1g...         # folder the service account lives in
+Usage (Yandex backend → public/audio/yandex/):
+    # Credentials are read from .env (SecretKey / Folder) or environment vars
+    # (YANDEX_API_KEY / YANDEX_FOLDER_ID).
     uv run python scripts/generate_audio.py --backend yandex --limit 1   # smoke test
     uv run python scripts/generate_audio.py --backend yandex             # everything
     # Russia cloud instead of Kazakhstan:
@@ -64,7 +64,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "public" / "data"
-DEFAULT_OUT = REPO_ROOT / "public" / "audio"
+AUDIO_ROOT = REPO_ROOT / "public" / "audio"
 FIXTURES = REPO_ROOT / "tests" / "audio-key-fixtures.json"
 
 DEFAULT_MODEL = "uzlm/sayro-tts-1.7B"
@@ -156,6 +156,20 @@ def collect_texts() -> dict[str, str]:
 # ---------------------------------------------------------------------------
 # Synthesis
 # ---------------------------------------------------------------------------
+
+
+def _load_dotenv(path: Path = REPO_ROOT / ".env") -> None:
+    """Load KEY=VALUE pairs from .env without overriding existing env vars."""
+    if not path.exists():
+        return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip().removeprefix("export ").strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key, value = key.strip(), value.strip().strip("'\"")
+        if key and key not in os.environ:
+            os.environ[key] = value
 
 
 def pick_device() -> str:
@@ -446,57 +460,52 @@ def load_yandex_synthesizer(
     lang: str,
     sample_rate: int = 48000,
 ):
-    """Returns synthesize(text) -> (samples, rate) backed by Yandex SpeechKit.
+    """Returns synthesize(text) -> (mp3_bytes, 0) backed by Yandex SpeechKit gRPC v3.
 
-    Requests raw little-endian 16-bit PCM (format=lpcm) so the bytes drop
-    straight into the existing soundfile/ffmpeg pipeline with no extra decode.
+    Uses the gRPC v3 API which returns MP3 directly — no ffmpeg decode/re-encode.
+    The sentinel return value (bytes, 0) signals to the caller to write bytes
+    straight to disk rather than going through the soundfile/ffmpeg pipeline.
+
+    The KZ installation exposes gRPC at tts.api.yandexcloud.kz:443 even though
+    the REST v1 endpoint (speech/v1/tts:synthesize) returns 405 for KZ accounts.
     """
-    import urllib.error
-    import urllib.parse
-    import urllib.request
+    try:
+        import grpc
+        from yandex.cloud.ai.tts.v3 import tts_pb2
+        from yandex.cloud.ai.tts.v3.tts_service_pb2_grpc import SynthesizerStub
+    except ImportError:
+        sys.exit(
+            "yandexcloud and grpcio are required for --backend yandex:\n"
+            "  uv add yandexcloud grpcio"
+        )
 
-    import numpy as np
+    grpc_host = host if ":" in host else f"{host}:443"
 
-    url = f"https://{host}/speech/v1/tts:synthesize"
-    headers = {"Authorization": f"Api-Key {api_key}"}
+    def _metadata_callback(context, callback):
+        callback([("authorization", f"Api-Key {api_key}")], None)
 
-    def synth_chunk(text: str):
-        body = urllib.parse.urlencode(
-            {
-                "text": text,
-                "lang": lang,
-                "voice": voice,
-                "format": "lpcm",
-                "sampleRateHertz": str(sample_rate),
-                "folderId": folder_id,
-            }
-        ).encode("utf-8")
-        request = urllib.request.Request(url, data=body, headers=headers)
-        try:
-            with urllib.request.urlopen(request, timeout=30) as response:
-                raw = response.read()
-        except urllib.error.HTTPError as error:
-            detail = error.read().decode("utf-8", "replace")
-            sys.exit(
-                f"Yandex TTS request failed: HTTP {error.code}\n{detail}\n\n"
-                "Common causes: wrong --yandex-host for your cloud (KZ vs RU), "
-                "an API key from the other installation, a missing "
-                "ai.speechKit-tts.user role, or 'uz-UZ'/'nigora' not being "
-                "available in this region."
-            )
-        except urllib.error.URLError as error:
-            sys.exit(
-                f"Could not reach {host}: {error.reason}\n\n"
-                "If the host does not resolve, this cloud likely has no TTS "
-                "endpoint — try --yandex-host tts.api.cloud.yandex.net (Russia) "
-                "or fall back to --backend local."
-            )
-        return np.frombuffer(raw, dtype="<i2")
+    creds = grpc.composite_channel_credentials(
+        grpc.ssl_channel_credentials(),
+        grpc.metadata_call_credentials(_metadata_callback),
+    )
+    channel = grpc.secure_channel(grpc_host, creds)
+    client = SynthesizerStub(channel)
 
     def synthesize(text: str):
-        pieces = [synth_chunk(chunk) for chunk in chunk_text(text)]
-        samples = pieces[0] if len(pieces) == 1 else np.concatenate(pieces)
-        return samples, sample_rate
+        req = tts_pb2.UtteranceSynthesisRequest(
+            text=text,
+            hints=[tts_pb2.Hints(voice=voice)],
+            output_audio_spec=tts_pb2.AudioFormatOptions(
+                container_audio=tts_pb2.ContainerAudio(
+                    container_audio_type=tts_pb2.ContainerAudio.MP3
+                )
+            ),
+        )
+        try:
+            chunks = list(client.UtteranceSynthesis(req, timeout=60))
+        except Exception as error:
+            sys.exit(f"Yandex SpeechKit gRPC request failed: {error}")
+        return b"".join(c.audio_chunk.data for c in chunks), 0
 
     return synthesize
 
@@ -788,7 +797,9 @@ def main() -> None:
     parser.add_argument("--backend", choices=("local", "yandex"), default="local",
                         help="local HuggingFace model (default) or Yandex SpeechKit")
     parser.add_argument("--model", default=DEFAULT_MODEL, help="local backend model id")
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--out", type=Path, default=None,
+                        help="output directory; defaults to public/audio/yandex (yandex backend), "
+                             "public/audio/sayro (local), or public/audio (candidates)")
     parser.add_argument("--device", default=None, help="mps / cuda / cpu (default: auto)")
     parser.add_argument("--qwen-speaker", default="sayro",
                         help="local Qwen3-TTS speaker name (default: sayro)")
@@ -830,6 +841,14 @@ def main() -> None:
         self_test()
         return
 
+    if args.out is None:
+        if args.candidates:
+            args.out = AUDIO_ROOT          # candidates/ subdir appended by run_candidates
+        elif args.backend == "yandex":
+            args.out = AUDIO_ROOT / "yandex"
+        else:
+            args.out = AUDIO_ROOT / "sayro"
+
     self_test()  # always guard a real run against key drift
     texts = collect_texts()
     print(f"{len(texts)} unique spoken strings in public/data")
@@ -864,13 +883,15 @@ def main() -> None:
 
     if pending:
         if args.backend == "yandex":
-            api_key = os.environ.get("YANDEX_API_KEY")
-            folder_id = os.environ.get("YANDEX_FOLDER_ID")
+            _load_dotenv()
+            api_key = (os.environ.get("YANDEX_API_KEY") or os.environ.get("SecretKey"))
+            folder_id = (os.environ.get("YANDEX_FOLDER_ID") or os.environ.get("Folder"))
             if not api_key or not folder_id:
                 sys.exit(
-                    "Set YANDEX_API_KEY and YANDEX_FOLDER_ID for --backend yandex.\n"
-                    "Create a service-account API key (role ai.speechKit-tts.user) "
-                    "in your Yandex Cloud console and export both as env vars."
+                    "Set YANDEX_API_KEY and YANDEX_FOLDER_ID for --backend yandex\n"
+                    "(or SecretKey and Folder in a .env file).\n"
+                    "Create a service-account API key (scope yc.ai.speechkitTts.execute) "
+                    "in your Yandex Cloud console."
                 )
             print(f"using Yandex SpeechKit at {args.yandex_host} "
                   f"(voice={args.yandex_voice}, lang={args.yandex_lang})…")
@@ -899,12 +920,17 @@ def main() -> None:
         for i, (key, text) in enumerate(pending.items(), 1):
             samples, rate = synthesize(text)
             note = ""
-            if args.trim:
-                before = len(samples) / rate
-                samples = trim_to_speech(samples, rate, args.trim_pad_ms)
-                note = f"  ({before:.2f}s→{len(samples) / rate:.2f}s)"
-            print(f"[{i}/{len(pending)}] {text}{note}")
-            write_mp3(samples, rate, args.out / f"{key}.mp3", ffmpeg)
+            if isinstance(samples, bytes):
+                # gRPC backend returns pre-encoded MP3 — write directly.
+                print(f"[{i}/{len(pending)}] {text}")
+                (args.out / f"{key}.mp3").write_bytes(samples)
+            else:
+                if args.trim:
+                    before = len(samples) / rate
+                    samples = trim_to_speech(samples, rate, args.trim_pad_ms)
+                    note = f"  ({before:.2f}s→{len(samples) / rate:.2f}s)"
+                print(f"[{i}/{len(pending)}] {text}{note}")
+                write_mp3(samples, rate, args.out / f"{key}.mp3", ffmpeg)
             # Save after each clip so the run is safe to quit anytime.
             write_manifest(args.out)
 
