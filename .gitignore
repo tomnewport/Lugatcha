@@ -1,11 +1,12 @@
 # Build output
 dist/
 
+# Python
+__pycache__/
+*.pyc
+
 # Dependencies
 node_modules/
-
-# Generated audio (built by CI pipeline)
-public/audio/
 
 # Editor
 .vscode/*

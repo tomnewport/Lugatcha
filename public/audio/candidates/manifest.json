@@ -1,0 +1,342 @@
+{
+  "89f3203858f3d191": {
+    "text": "... qayerda?",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "89f3203858f3d191-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "89f3203858f3d191-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "89f3203858f3d191-expressive.mp3"
+      }
+    ]
+  },
+  "09275707b5bb8822": {
+    "text": "Ha",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "09275707b5bb8822-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "09275707b5bb8822-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "09275707b5bb8822-expressive.mp3"
+      }
+    ]
+  },
+  "fee0bdfd662f4ce0": {
+    "text": "Iltimos",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "fee0bdfd662f4ce0-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "fee0bdfd662f4ce0-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "fee0bdfd662f4ce0-expressive.mp3"
+      }
+    ]
+  },
+  "6c5635a7634c49aa": {
+    "text": "Kechirasiz",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "6c5635a7634c49aa-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "6c5635a7634c49aa-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "6c5635a7634c49aa-expressive.mp3"
+      }
+    ]
+  },
+  "bf0f55380a182fd6": {
+    "text": "Rahmat",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "bf0f55380a182fd6-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "bf0f55380a182fd6-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "bf0f55380a182fd6-expressive.mp3"
+      }
+    ]
+  },
+  "771e0673fdc91ab7": {
+    "text": "Salom",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "771e0673fdc91ab7-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "771e0673fdc91ab7-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "771e0673fdc91ab7-expressive.mp3"
+      }
+    ]
+  },
+  "44fec87188da0565": {
+    "text": "Siz inglizcha gapirasizmi?",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "44fec87188da0565-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "44fec87188da0565-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "44fec87188da0565-expressive.mp3"
+      }
+    ]
+  },
+  "b7d90977849bc446": {
+    "text": "Tushunmayapman",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "b7d90977849bc446-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "b7d90977849bc446-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "b7d90977849bc446-expressive.mp3"
+      }
+    ]
+  },
+  "036d865b64a6db19": {
+    "text": "Xayr",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "036d865b64a6db19-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "036d865b64a6db19-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "036d865b64a6db19-expressive.mp3"
+      }
+    ]
+  },
+  "fccbf955a91b1cd9": {
+    "text": "Yo'q",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "fccbf955a91b1cd9-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "fccbf955a91b1cd9-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "fccbf955a91b1cd9-expressive.mp3"
+      }
+    ]
+  },
+  "00542419134ff2a2": {
+    "text": "bir",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "00542419134ff2a2-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "00542419134ff2a2-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "00542419134ff2a2-expressive.mp3"
+      }
+    ]
+  },
+  "004d34191349ef24": {
+    "text": "bor",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "004d34191349ef24-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "004d34191349ef24-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "004d34191349ef24-expressive.mp3"
+      }
+    ]
+  },
+  "212273c5933e0971": {
+    "text": "ikki",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "212273c5933e0971-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "212273c5933e0971-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "212273c5933e0971-expressive.mp3"
+      }
+    ]
+  },
+  "d230fbf2cd79806d": {
+    "text": "kerak",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "d230fbf2cd79806d-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "d230fbf2cd79806d-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "d230fbf2cd79806d-expressive.mp3"
+      }
+    ]
+  },
+  "da4e13a2a78edb30": {
+    "text": "ming",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "da4e13a2a78edb30-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "da4e13a2a78edb30-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "da4e13a2a78edb30-expressive.mp3"
+      }
+    ]
+  },
+  "9f5fed01b1635137": {
+    "text": "ochiq",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "9f5fed01b1635137-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "9f5fed01b1635137-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "9f5fed01b1635137-expressive.mp3"
+      }
+    ]
+  },
+  "77f358195699a526": {
+    "text": "pul",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "77f358195699a526-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "77f358195699a526-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "77f358195699a526-expressive.mp3"
+      }
+    ]
+  },
+  "dfa2e5fd1c162143": {
+    "text": "qancha",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "dfa2e5fd1c162143-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "dfa2e5fd1c162143-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "dfa2e5fd1c162143-expressive.mp3"
+      }
+    ]
+  },
+  "60ecf018f1570127": {
+    "text": "so'm",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "60ecf018f1570127-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "60ecf018f1570127-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "60ecf018f1570127-expressive.mp3"
+      }
+    ]
+  },
+  "4c8885193dfa2c93": {
+    "text": "uch",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "4c8885193dfa2c93-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "4c8885193dfa2c93-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "4c8885193dfa2c93-expressive.mp3"
+      }
+    ]
+  }
+}

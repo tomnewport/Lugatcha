@@ -27,6 +27,12 @@ const router = createRouter({
       component: () => import('@/views/SchoolView.vue'),
     },
     {
+      path: '/review',
+      name: 'review',
+      // Owner tool: A/B review of candidate audio
+      component: () => import('@/views/ReviewView.vue'),
+    },
+    {
       path: '/school/:id',
       name: 'lesson',
       component: () => import('@/views/LessonView.vue'),
