@@ -1,6 +1,10 @@
 # Build output
 dist/
 
+# Python
+__pycache__/
+*.pyc
+
 # Dependencies
 node_modules/
 
