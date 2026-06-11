@@ -1,0 +1,124 @@
+[
+  {
+    "id": "train-station.to-samarkand",
+    "theme": "train-station",
+    "title": {
+      "en": "The Train to Samarkand",
+      "uz": "Samarqand poyezdi"
+    },
+    "sentences": [
+      {
+        "uzbek": "Ertalab men vokzalga bordim.",
+        "english": "In the morning I went to the station."
+      },
+      {
+        "uzbek": "Tezyurar poyezd perronda turardi.",
+        "english": "The fast train was standing at the platform."
+      },
+      {
+        "uzbek": "Men deraza yonida o'tirdim.",
+        "english": "I sat by the window."
+      },
+      {
+        "uzbek": "Poyezd tez va qulay edi.",
+        "english": "The train was fast and comfortable."
+      },
+      {
+        "uzbek": "Tashqarida cho'l va tog'lar edi.",
+        "english": "Outside were desert and mountains."
+      },
+      {
+        "uzbek": "Ikki soatda Samarqandga keldim.",
+        "english": "In two hours I arrived in Samarkand."
+      }
+    ],
+    "glossary": {
+      "Ertalab": "in the morning",
+      "men": "I",
+      "vokzalga": "to the station",
+      "bordim": "I went",
+      "Tezyurar": "high-speed",
+      "poyezd": "train",
+      "perronda": "on the platform",
+      "turardi": "was standing",
+      "deraza": "window",
+      "yonida": "next to / by",
+      "o'tirdim": "I sat",
+      "tez": "fast",
+      "qulay": "comfortable",
+      "edi": "was",
+      "Tashqarida": "outside",
+      "cho'l": "desert",
+      "tog'lar": "mountains",
+      "Ikki": "two",
+      "soatda": "in (so many) hours",
+      "Samarqandga": "to Samarkand",
+      "keldim": "I arrived",
+      "va": "and"
+    }
+  },
+  {
+    "id": "train-station.kind-stranger",
+    "theme": "train-station",
+    "title": {
+      "en": "A Seat by the Window",
+      "uz": "Deraza yonidagi joy"
+    },
+    "sentences": [
+      {
+        "uzbek": "Poyezdda mening joyim band edi.",
+        "english": "On the train my seat was taken."
+      },
+      {
+        "uzbek": "Bir keksa odam u yerda o'tirardi.",
+        "english": "An old man was sitting there."
+      },
+      {
+        "uzbek": "Men unga chiptamni ko'rsatdim.",
+        "english": "I showed him my ticket."
+      },
+      {
+        "uzbek": "U kuldi va kechirim so'radi.",
+        "english": "He smiled and apologised."
+      },
+      {
+        "uzbek": "Biz birga choy ichdik va gaplashdik.",
+        "english": "We drank tea together and talked."
+      },
+      {
+        "uzbek": "Yo'l qisqa va yoqimli bo'ldi.",
+        "english": "The journey became short and pleasant."
+      }
+    ],
+    "glossary": {
+      "Poyezdda": "on the train",
+      "mening": "my",
+      "joyim": "my seat",
+      "band": "occupied / busy",
+      "edi": "was",
+      "Bir": "one / a",
+      "keksa": "old (of a person)",
+      "odam": "person / man",
+      "o'tirardi": "was sitting",
+      "Men": "I",
+      "unga": "to him",
+      "chiptamni": "my ticket (object)",
+      "ko'rsatdim": "I showed",
+      "U": "he",
+      "kuldi": "smiled",
+      "kechirim": "apology (kechirim so'radi = apologised)",
+      "so'radi": "asked",
+      "Biz": "we",
+      "birga": "together",
+      "choy": "tea",
+      "ichdik": "we drank",
+      "gaplashdik": "we talked",
+      "Yo'l": "the journey / road",
+      "qisqa": "short",
+      "yoqimli": "pleasant",
+      "bo'ldi": "became",
+      "va": "and",
+      "yerda": "at / in (a place)"
+    }
+  }
+]

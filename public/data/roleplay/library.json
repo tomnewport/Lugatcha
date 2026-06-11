@@ -1,0 +1,428 @@
+[
+  {
+    "id": "library.find-book",
+    "theme": "library",
+    "title": {
+      "en": "A Book to Learn From",
+      "uz": "O'rganish uchun kitob"
+    },
+    "scenario": "You want a simple book to practise your Uzbek. The librarian is happy to help.",
+    "variants": [
+      {
+        "id": "library.find-book.base",
+        "description": "A children's book is perfect",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Yordam bera olamanmi?",
+            "english": "Hello! Can I help you?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men o'zbek tilini o'rganyapman.",
+            "english": "I am learning Uzbek.",
+            "tokens": [
+              "Men",
+              "o'zbek",
+              "tilini",
+              "o'rganyapman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ajoyib! Oson kitob kerakmi?",
+            "english": "Wonderful! Do you need an easy book?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, oson kitob, iltimos.",
+            "english": "Yes, an easy book, please.",
+            "tokens": [
+              "Ha,",
+              "oson",
+              "kitob,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana bolalar kitobi. Rasmlari bor.",
+            "english": "Here is a children's book. It has pictures."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi! Rahmat!",
+            "english": "Very good! Thank you!",
+            "tokens": [
+              "Juda",
+              "yaxshi!",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "library.find-book.card",
+        "description": "You need a library card",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu kitobni olsam bo'ladimi?",
+            "english": "May I borrow this book?",
+            "tokens": [
+              "Bu",
+              "kitobni",
+              "olsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kutubxona kartangiz bormi?",
+            "english": "Do you have a library card?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yo'q. Qanday olaman?",
+            "english": "No. How do I get one?",
+            "tokens": [
+              "Yo'q.",
+              "Qanday",
+              "olaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportingiz bilan ro'yxatdan o'ting.",
+            "english": "Register with your passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat.",
+            "english": "Fine, thank you.",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "library.find-book.quiet",
+        "description": "You are asked to be quiet",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, lug'at qayerda?",
+            "english": "Excuse me, where is the dictionary?",
+            "tokens": [
+              "Kechirasiz,",
+              "lug'at",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Sekinroq, iltimos. Bu yer jim.",
+            "english": "More quietly, please. This place is quiet."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz!",
+            "english": "Sorry!",
+            "tokens": [
+              "Kechirasiz!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Lug'at anavi tokchada.",
+            "english": "The dictionary is on that shelf."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat.",
+            "english": "Thank you.",
+            "tokens": [
+              "Rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "library.find-book.english",
+        "description": "You ask for an English book",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Inglizcha kitob bormi?",
+            "english": "Is there an English book?",
+            "tokens": [
+              "Inglizcha",
+              "kitob",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, ikkinchi qavatda.",
+            "english": "Yes, on the second floor."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "O'zbekcha-inglizcha lug'at ham bormi?",
+            "english": "Is there an Uzbek-English dictionary too?",
+            "tokens": [
+              "O'zbekcha-inglizcha",
+              "lug'at",
+              "ham",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta. Men ko'rsataman.",
+            "english": "Of course. I will show you."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "library.find-book.newspaper",
+        "description": "You want to read a newspaper",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bugungi gazeta bormi?",
+            "english": "Is there today's newspaper?",
+            "tokens": [
+              "Bugungi",
+              "gazeta",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, mana. O'qish zali u yerda.",
+            "english": "Yes, here. The reading hall is there."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat. Jim joymi?",
+            "english": "Thank you. Is it a quiet place?",
+            "tokens": [
+              "Rahmat.",
+              "Jim",
+              "joymi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, juda jim. Yaxshi o'qing!",
+            "english": "Yes, very quiet. Read well!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "library.learning-words",
+    "theme": "library",
+    "title": {
+      "en": "Learning New Words",
+      "uz": "Yangi so'zlar"
+    },
+    "scenario": "You strike up a quiet conversation with a student about learning Uzbek.",
+    "variants": [
+      {
+        "id": "library.learning-words.base",
+        "description": "A friendly word swap",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Siz o'zbekcha o'rganyapsizmi?",
+            "english": "Are you learning Uzbek?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, lekin qiyin.",
+            "english": "Yes, but it is difficult.",
+            "tokens": [
+              "Ha,",
+              "lekin",
+              "qiyin."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qaysi so'z qiyin?",
+            "english": "Which word is difficult?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "\"Kutubxona\" qiyin so'z!",
+            "english": "\"Library\" is a difficult word!",
+            "tokens": [
+              "\"Kutubxona\"",
+              "qiyin",
+              "so'z!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha-ha! Kitob + xona. Oson!",
+            "english": "Ha-ha! Book + place. Easy!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Endi tushundim! Rahmat!",
+            "english": "Now I understand! Thank you!",
+            "tokens": [
+              "Endi",
+              "tushundim!",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "library.learning-words.help",
+        "description": "They offer to help you practise",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Men o'zbekcha gapirishni xohlayman.",
+            "english": "I want to speak Uzbek.",
+            "tokens": [
+              "Men",
+              "o'zbekcha",
+              "gapirishni",
+              "xohlayman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Men yordam beraman. Har kuni keling.",
+            "english": "I will help you. Come every day."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rostdanmi? Katta rahmat!",
+            "english": "Really? Thank you very much!",
+            "tokens": [
+              "Rostdanmi?",
+              "Katta",
+              "rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Birga o'qiymiz. Til — bu ko'prik.",
+            "english": "We will study together. Language is a bridge."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda chiroyli so'z!",
+            "english": "A very beautiful saying!",
+            "tokens": [
+              "Juda",
+              "chiroyli",
+              "so'z!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "library.learning-words.name",
+        "description": "You exchange names",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Ismingiz nima?",
+            "english": "What is your name?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mening ismim Tom. Sizniki-chi?",
+            "english": "My name is Tom. And yours?",
+            "tokens": [
+              "Mening",
+              "ismim",
+              "Tom.",
+              "Sizniki-chi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mening ismim Dilnoza. Tanishganimdan xursandman.",
+            "english": "My name is Dilnoza. Pleased to meet you."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men ham! Tanishganimdan xursandman.",
+            "english": "Me too! Pleased to meet you.",
+            "tokens": [
+              "Men",
+              "ham!",
+              "Tanishganimdan",
+              "xursandman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz, Tom!",
+            "english": "Welcome, Tom!"
+          }
+        ]
+      },
+      {
+        "id": "library.learning-words.book-gift",
+        "description": "They lend you their favourite book",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Bu mening sevimli hikoyam.",
+            "english": "This is my favourite story."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "O'qiy olamanmi?",
+            "english": "May I read it?",
+            "tokens": [
+              "O'qiy",
+              "olamanmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Oling. Oson va chiroyli.",
+            "english": "Of course! Take it. Easy and beautiful."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda mehribonsiz. Rahmat!",
+            "english": "You are very kind. Thank you!",
+            "tokens": [
+              "Juda",
+              "mehribonsiz.",
+              "Rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yoqsa, menga ayting!",
+            "english": "If you like it, tell me!"
+          }
+        ]
+      }
+    ]
+  }
+]

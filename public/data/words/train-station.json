@@ -1,0 +1,94 @@
+[
+  {
+    "id": "train-station.train",
+    "uzbek": "poyezd",
+    "english": "train",
+    "theme": "train-station",
+    "level": 1
+  },
+  {
+    "id": "train-station.station",
+    "uzbek": "vokzal",
+    "english": "train station",
+    "theme": "train-station",
+    "level": 1
+  },
+  {
+    "id": "train-station.ticket",
+    "uzbek": "chipta",
+    "english": "ticket",
+    "theme": "train-station",
+    "level": 1
+  },
+  {
+    "id": "train-station.platform",
+    "uzbek": "perron",
+    "english": "platform",
+    "theme": "train-station",
+    "level": 1
+  },
+  {
+    "id": "train-station.when",
+    "uzbek": "qachon",
+    "english": "when",
+    "theme": "train-station",
+    "level": 1
+  },
+  {
+    "id": "train-station.late",
+    "uzbek": "kech",
+    "english": "late",
+    "theme": "train-station",
+    "level": 1
+  },
+  {
+    "id": "train-station.seat",
+    "uzbek": "joy",
+    "english": "seat / place",
+    "theme": "train-station",
+    "level": 2
+  },
+  {
+    "id": "train-station.fast-train",
+    "uzbek": "tezyurar",
+    "english": "high-speed train",
+    "theme": "train-station",
+    "level": 2,
+    "usageNotes": "The Afrosiyob is the famous fast train to Samarkand."
+  },
+  {
+    "id": "train-station.return",
+    "uzbek": "borib-kelish",
+    "english": "return (round trip)",
+    "theme": "train-station",
+    "level": 2
+  },
+  {
+    "id": "train-station.timetable",
+    "uzbek": "jadval",
+    "english": "timetable",
+    "theme": "train-station",
+    "level": 2
+  },
+  {
+    "id": "train-station.carriage",
+    "uzbek": "vagon",
+    "english": "carriage",
+    "theme": "train-station",
+    "level": 2
+  },
+  {
+    "id": "train-station.delay",
+    "uzbek": "kechikish",
+    "english": "delay",
+    "theme": "train-station",
+    "level": 3
+  },
+  {
+    "id": "train-station.window-seat",
+    "uzbek": "deraza yoni",
+    "english": "window seat",
+    "theme": "train-station",
+    "level": 3
+  }
+]

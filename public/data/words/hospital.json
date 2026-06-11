@@ -1,0 +1,96 @@
+[
+  {
+    "id": "hospital.doctor",
+    "uzbek": "shifokor",
+    "english": "doctor",
+    "theme": "hospital",
+    "level": 1
+  },
+  {
+    "id": "hospital.medicine",
+    "uzbek": "dori",
+    "english": "medicine",
+    "theme": "hospital",
+    "level": 1
+  },
+  {
+    "id": "hospital.pharmacy",
+    "uzbek": "dorixona",
+    "english": "pharmacy",
+    "theme": "hospital",
+    "level": 1,
+    "usageNotes": "dori + -xona: the place for medicine."
+  },
+  {
+    "id": "hospital.pain",
+    "uzbek": "og'riq",
+    "english": "pain",
+    "theme": "hospital",
+    "level": 1,
+    "usageNotes": "Boshim og'riyapti — my head hurts."
+  },
+  {
+    "id": "hospital.head",
+    "uzbek": "bosh",
+    "english": "head",
+    "theme": "hospital",
+    "level": 1
+  },
+  {
+    "id": "hospital.stomach",
+    "uzbek": "qorin",
+    "english": "stomach",
+    "theme": "hospital",
+    "level": 1
+  },
+  {
+    "id": "hospital.sick",
+    "uzbek": "kasal",
+    "english": "sick / ill",
+    "theme": "hospital",
+    "level": 1
+  },
+  {
+    "id": "hospital.fever",
+    "uzbek": "isitma",
+    "english": "fever",
+    "theme": "hospital",
+    "level": 2
+  },
+  {
+    "id": "hospital.tooth",
+    "uzbek": "tish",
+    "english": "tooth",
+    "theme": "hospital",
+    "level": 2
+  },
+  {
+    "id": "hospital.queue",
+    "uzbek": "navbat",
+    "english": "queue / turn",
+    "theme": "hospital",
+    "level": 2
+  },
+  {
+    "id": "hospital.prescription",
+    "uzbek": "retsept",
+    "english": "prescription",
+    "theme": "hospital",
+    "level": 2
+  },
+  {
+    "id": "hospital.cold-illness",
+    "uzbek": "shamollash",
+    "english": "a cold (illness)",
+    "theme": "hospital",
+    "level": 2,
+    "usageNotes": "Shamolladim — I caught a cold."
+  },
+  {
+    "id": "hospital.insurance",
+    "uzbek": "sug'urta",
+    "english": "insurance",
+    "theme": "hospital",
+    "level": 3
+  }
+]

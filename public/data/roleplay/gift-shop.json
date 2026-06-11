@@ -1,0 +1,518 @@
+[
+  {
+    "id": "gift-shop.bargain",
+    "theme": "gift-shop",
+    "title": {
+      "en": "A Silk Scarf",
+      "uz": "Ipak ro'mol"
+    },
+    "scenario": "You love a silk scarf in the bazaar. A little friendly bargaining is expected.",
+    "variants": [
+      {
+        "id": "gift-shop.bargain.base",
+        "description": "A small, friendly discount",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Bu ipak ro'mol juda chiroyli.",
+            "english": "Welcome! This silk scarf is very beautiful."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bu qancha turadi?",
+            "english": "How much does this cost?",
+            "tokens": [
+              "Bu",
+              "qancha",
+              "turadi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yuz ming so'm.",
+            "english": "One hundred thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Biroz qimmat. Chegirma bormi?",
+            "english": "A little expensive. Is there a discount?",
+            "tokens": [
+              "Biroz",
+              "qimmat.",
+              "Chegirma",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Sizga to'qson ming.",
+            "english": "For you, ninety thousand."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, olaman. Rahmat!",
+            "english": "Good, I will take it. Thank you!",
+            "tokens": [
+              "Yaxshi,",
+              "olaman.",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.bargain.colour",
+        "description": "You want a different colour",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu ro'mol chiroyli. Ko'k rang bormi?",
+            "english": "This scarf is beautiful. Is there a blue one?",
+            "tokens": [
+              "Bu",
+              "ro'mol",
+              "chiroyli.",
+              "Ko'k",
+              "rang",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, mana ko'k ro'mol.",
+            "english": "Yes, here is a blue scarf."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bu qancha?",
+            "english": "How much is this?",
+            "tokens": [
+              "Bu",
+              "qancha?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir xil narx. Yetmish ming.",
+            "english": "The same price. Seventy thousand."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Olaman, rahmat!",
+            "english": "I will take it, thank you!",
+            "tokens": [
+              "Olaman,",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.bargain.no-discount",
+        "description": "It is a fixed price",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Chegirma bormi?",
+            "english": "Is there a discount?",
+            "tokens": [
+              "Chegirma",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, bu qo'lda ishlangan. Narx qat'iy.",
+            "english": "Sorry, this is handmade. The price is fixed."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tushunaman. Sifati yaxshi.",
+            "english": "I understand. The quality is good.",
+            "tokens": [
+              "Tushunaman.",
+              "Sifati",
+              "yaxshi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Qog'ozga o'rayman.",
+            "english": "Thank you! I will wrap it in paper."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi, rahmat.",
+            "english": "Very good, thank you.",
+            "tokens": [
+              "Juda",
+              "yaxshi,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.bargain.no-change",
+        "description": "They have no change for your big note",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Mana ikki yuz ming so'm.",
+            "english": "Here is two hundred thousand som.",
+            "tokens": [
+              "Mana",
+              "ikki",
+              "yuz",
+              "ming",
+              "so'm."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, qaytim yo'q. Mayda pul bormi?",
+            "english": "Sorry, I have no change. Do you have a smaller note?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bir daqiqa... mana yuz ming.",
+            "english": "One minute... here is one hundred thousand.",
+            "tokens": [
+              "Bir",
+              "daqiqa...",
+              "mana",
+              "yuz",
+              "ming."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Mana sovg'angiz.",
+            "english": "Thank you! Here is your gift."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.bargain.two-items",
+        "description": "A better price for two",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Ikkita ro'mol olsam, chegirma bormi?",
+            "english": "If I buy two scarves, is there a discount?",
+            "tokens": [
+              "Ikkita",
+              "ro'mol",
+              "olsam,",
+              "chegirma",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Ikkitasi yuz ellik ming.",
+            "english": "Of course! Two for one hundred and fifty thousand."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi! Ikkitasini olaman.",
+            "english": "Good! I will take both.",
+            "tokens": [
+              "Yaxshi!",
+              "Ikkitasini",
+              "olaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Yaxshi tanlov.",
+            "english": "Thank you! A good choice."
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.bargain.closing",
+        "description": "The shop is about to close",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, biz yopilamiz.",
+            "english": "Sorry, we are closing."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tez bo'laman. Bu magnit qancha?",
+            "english": "I will be quick. How much is this magnet?",
+            "tokens": [
+              "Tez",
+              "bo'laman.",
+              "Bu",
+              "magnit",
+              "qancha?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'n ming so'm.",
+            "english": "Ten thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul. Rahmat!",
+            "english": "Here is the money. Thank you!",
+            "tokens": [
+              "Mana",
+              "pul.",
+              "Rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat! Yana keling!",
+            "english": "Thank you! Come again!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gift-shop.choosing",
+    "theme": "gift-shop",
+    "title": {
+      "en": "A Gift for Mother",
+      "uz": "Onaga sovg'a"
+    },
+    "scenario": "You want to buy a special gift to take home for your mother.",
+    "variants": [
+      {
+        "id": "gift-shop.choosing.base",
+        "description": "The shopkeeper helps you choose",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Onam uchun sovg'a izlayapman.",
+            "english": "I am looking for a gift for my mother.",
+            "tokens": [
+              "Onam",
+              "uchun",
+              "sovg'a",
+              "izlayapman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu ipak ro'mol juda mashhur.",
+            "english": "This silk scarf is very popular."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Chiroyli! Qancha turadi?",
+            "english": "Beautiful! How much does it cost?",
+            "tokens": [
+              "Chiroyli!",
+              "Qancha",
+              "turadi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Sakson ming so'm.",
+            "english": "Eighty thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Olaman. U xursand bo'ladi!",
+            "english": "I will take it. She will be happy!",
+            "tokens": [
+              "Olaman.",
+              "U",
+              "xursand",
+              "bo'ladi!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.choosing.ceramics",
+        "description": "You pick a ceramic bowl instead",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Sopol idish bormi?",
+            "english": "Do you have ceramic dishes?",
+            "tokens": [
+              "Sopol",
+              "idish",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, mana Rishton sopoli. Ko'k va oq.",
+            "english": "Yes, here is Rishtan pottery. Blue and white."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda chiroyli! Sinmaydimi?",
+            "english": "Very beautiful! Will it not break?",
+            "tokens": [
+              "Juda",
+              "chiroyli!",
+              "Sinmaydimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi o'rayman. Xavfsiz boradi.",
+            "english": "I will wrap it well. It will travel safely."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Shuni olaman.",
+            "english": "Thank you! I will take that.",
+            "tokens": [
+              "Rahmat!",
+              "Shuni",
+              "olaman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.choosing.budget",
+        "description": "You have a small budget",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Arzonroq sovg'a bormi?",
+            "english": "Is there a cheaper gift?",
+            "tokens": [
+              "Arzonroq",
+              "sovg'a",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu magnitlar arzon. Besh ming.",
+            "english": "These magnets are cheap. Five thousand."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Uchta olaman.",
+            "english": "I will take three.",
+            "tokens": [
+              "Uchta",
+              "olaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'n besh ming bo'ldi. Rahmat!",
+            "english": "That is fifteen thousand. Thank you!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.choosing.wrap",
+        "description": "You ask for gift wrapping",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu sovg'ani o'rab bera olasizmi?",
+            "english": "Can you wrap this gift?",
+            "tokens": [
+              "Bu",
+              "sovg'ani",
+              "o'rab",
+              "bera",
+              "olasizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Chiroyli qog'oz bor.",
+            "english": "Of course! There is beautiful paper."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi, rahmat!",
+            "english": "Very good, thank you!",
+            "tokens": [
+              "Juda",
+              "yaxshi,",
+              "rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, tayyor. Onangizga yoqadi!",
+            "english": "Here, it is ready. Your mother will like it!"
+          }
+        ]
+      },
+      {
+        "id": "gift-shop.choosing.recommend",
+        "description": "You ask what is typical",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu yerda nima mashhur?",
+            "english": "What is famous here?",
+            "tokens": [
+              "Bu",
+              "yerda",
+              "nima",
+              "mashhur?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ipak, sopol va do'ppi.",
+            "english": "Silk, ceramics, and the doppi cap."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Do'ppi nima?",
+            "english": "What is a doppi?",
+            "tokens": [
+              "Do'ppi",
+              "nima?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "An'anaviy o'zbek bosh kiyimi.",
+            "english": "A traditional Uzbek hat."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qiziq! Bittasini olaman.",
+            "english": "Interesting! I will take one.",
+            "tokens": [
+              "Qiziq!",
+              "Bittasini",
+              "olaman."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

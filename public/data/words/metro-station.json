@@ -1,0 +1,86 @@
+[
+  {
+    "id": "metro-station.metro",
+    "uzbek": "metro",
+    "english": "metro / underground",
+    "theme": "metro-station",
+    "level": 1
+  },
+  {
+    "id": "metro-station.station-stop",
+    "uzbek": "bekat",
+    "english": "station / stop",
+    "theme": "metro-station",
+    "level": 1
+  },
+  {
+    "id": "metro-station.card",
+    "uzbek": "karta",
+    "english": "travel card",
+    "theme": "metro-station",
+    "level": 1
+  },
+  {
+    "id": "metro-station.entrance",
+    "uzbek": "kirish",
+    "english": "entrance",
+    "theme": "metro-station",
+    "level": 1
+  },
+  {
+    "id": "metro-station.exit",
+    "uzbek": "chiqish",
+    "english": "exit",
+    "theme": "metro-station",
+    "level": 1
+  },
+  {
+    "id": "metro-station.line",
+    "uzbek": "yo'nalish",
+    "english": "line / route",
+    "theme": "metro-station",
+    "level": 2
+  },
+  {
+    "id": "metro-station.transfer",
+    "uzbek": "o'tish",
+    "english": "transfer / change",
+    "theme": "metro-station",
+    "level": 2
+  },
+  {
+    "id": "metro-station.next",
+    "uzbek": "keyingi",
+    "english": "next",
+    "theme": "metro-station",
+    "level": 2
+  },
+  {
+    "id": "metro-station.how-many-stops",
+    "uzbek": "necha bekat",
+    "english": "how many stops",
+    "theme": "metro-station",
+    "level": 2
+  },
+  {
+    "id": "metro-station.centre",
+    "uzbek": "markaz",
+    "english": "centre",
+    "theme": "metro-station",
+    "level": 2
+  },
+  {
+    "id": "metro-station.underground",
+    "uzbek": "yer osti",
+    "english": "underground",
+    "theme": "metro-station",
+    "level": 3
+  },
+  {
+    "id": "metro-station.crowded",
+    "uzbek": "gavjum",
+    "english": "crowded",
+    "theme": "metro-station",
+    "level": 3
+  }
+]

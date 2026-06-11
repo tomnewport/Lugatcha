@@ -1,0 +1,96 @@
+[
+  {
+    "id": "police-station.police",
+    "uzbek": "politsiya",
+    "english": "police",
+    "theme": "police-station",
+    "level": 1
+  },
+  {
+    "id": "police-station.help",
+    "uzbek": "yordam",
+    "english": "help",
+    "theme": "police-station",
+    "level": 1,
+    "usageNotes": "Yordam bering! — Help me!"
+  },
+  {
+    "id": "police-station.document",
+    "uzbek": "hujjat",
+    "english": "document",
+    "theme": "police-station",
+    "level": 1
+  },
+  {
+    "id": "police-station.wallet",
+    "uzbek": "hamyon",
+    "english": "wallet",
+    "theme": "police-station",
+    "level": 1
+  },
+  {
+    "id": "police-station.bag",
+    "uzbek": "sumka",
+    "english": "bag",
+    "theme": "police-station",
+    "level": 1
+  },
+  {
+    "id": "police-station.phone",
+    "uzbek": "telefon",
+    "english": "telephone",
+    "theme": "police-station",
+    "level": 1
+  },
+  {
+    "id": "police-station.lost",
+    "uzbek": "yo'qoldi",
+    "english": "got lost / went missing",
+    "theme": "police-station",
+    "level": 1,
+    "usageNotes": "Hamyonim yo'qoldi — my wallet is lost."
+  },
+  {
+    "id": "police-station.problem",
+    "uzbek": "muammo",
+    "english": "problem",
+    "theme": "police-station",
+    "level": 2
+  },
+  {
+    "id": "police-station.address",
+    "uzbek": "manzil",
+    "english": "address",
+    "theme": "police-station",
+    "level": 2
+  },
+  {
+    "id": "police-station.street",
+    "uzbek": "ko'cha",
+    "english": "street",
+    "theme": "police-station",
+    "level": 2
+  },
+  {
+    "id": "police-station.registration",
+    "uzbek": "ro'yxatga olish",
+    "english": "registration",
+    "theme": "police-station",
+    "level": 2,
+    "usageNotes": "Tourists staying privately may need to register their stay."
+  },
+  {
+    "id": "police-station.form",
+    "uzbek": "forma",
+    "english": "form (paper)",
+    "theme": "police-station",
+    "level": 3
+  },
+  {
+    "id": "police-station.safe",
+    "uzbek": "xavfsiz",
+    "english": "safe (adjective)",
+    "theme": "police-station",
+    "level": 3
+  }
+]

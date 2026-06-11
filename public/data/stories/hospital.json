@@ -1,0 +1,116 @@
+[
+  {
+    "id": "hospital.tea-and-rest",
+    "theme": "hospital",
+    "title": {
+      "en": "Tea and Rest",
+      "uz": "Choy va dam"
+    },
+    "sentences": [
+      {
+        "uzbek": "Kecha men shamolladim.",
+        "english": "Yesterday I caught a cold."
+      },
+      {
+        "uzbek": "Boshim og'ridi va isitmam bor edi.",
+        "english": "My head ached and I had a fever."
+      },
+      {
+        "uzbek": "Mehmonxona menga issiq choy berdi.",
+        "english": "The hotel gave me hot tea."
+      },
+      {
+        "uzbek": "Men dorixonadan dori oldim.",
+        "english": "I got medicine from the pharmacy."
+      },
+      {
+        "uzbek": "Bir kun dam oldim.",
+        "english": "I rested for one day."
+      },
+      {
+        "uzbek": "Bugun o'zimni yaxshi his qilyapman!",
+        "english": "Today I feel good!"
+      }
+    ],
+    "glossary": {
+      "Kecha": "yesterday",
+      "men": "I",
+      "shamolladim": "I caught a cold",
+      "Boshim": "my head",
+      "og'ridi": "ached",
+      "isitmam": "my fever",
+      "bor": "there was",
+      "edi": "was",
+      "menga": "to me",
+      "issiq": "hot",
+      "berdi": "gave",
+      "dorixonadan": "from the pharmacy",
+      "oldim": "I took / got",
+      "kun": "day",
+      "dam": "rest",
+      "Bugun": "today",
+      "o'zimni": "myself",
+      "his": "feeling (his qilmoq = to feel)",
+      "qilyapman": "I am doing",
+      "yaxshi": "good",
+      "va": "and",
+      "Bir": "one",
+      "Mehmonxona": "the hotel"
+    }
+  },
+  {
+    "id": "hospital.kind-doctor",
+    "theme": "hospital",
+    "title": {
+      "en": "The Kind Doctor",
+      "uz": "Mehribon shifokor"
+    },
+    "sentences": [
+      {
+        "uzbek": "Do'stim kasal bo'ldi.",
+        "english": "My friend became ill."
+      },
+      {
+        "uzbek": "Biz kasalxonaga bordik.",
+        "english": "We went to the hospital."
+      },
+      {
+        "uzbek": "Navbat uzun emas edi.",
+        "english": "The queue was not long."
+      },
+      {
+        "uzbek": "Shifokor juda mehribon edi.",
+        "english": "The doctor was very kind."
+      },
+      {
+        "uzbek": "U dori yozdi va kuldi.",
+        "english": "She prescribed medicine and smiled."
+      },
+      {
+        "uzbek": "Ertasi kuni do'stim sog' edi!",
+        "english": "The next day my friend was well!"
+      }
+    ],
+    "glossary": {
+      "Do'stim": "my friend",
+      "kasal": "ill",
+      "bo'ldi": "became",
+      "Biz": "we",
+      "kasalxonaga": "to the hospital",
+      "bordik": "we went",
+      "Navbat": "the queue",
+      "uzun": "long",
+      "emas": "not",
+      "edi": "was",
+      "juda": "very",
+      "mehribon": "kind",
+      "U": "she / he",
+      "yozdi": "wrote / prescribed",
+      "kuldi": "smiled / laughed",
+      "Ertasi": "the next",
+      "kuni": "day",
+      "sog'": "healthy / well",
+      "va": "and"
+    }
+  }
+]

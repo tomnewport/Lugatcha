@@ -1,0 +1,96 @@
+[
+  {
+    "id": "public-square.square",
+    "uzbek": "maydon",
+    "english": "square (in a city)",
+    "theme": "public-square",
+    "level": 1
+  },
+  {
+    "id": "public-square.left",
+    "uzbek": "chap",
+    "english": "left",
+    "theme": "public-square",
+    "level": 1,
+    "usageNotes": "Chap tomonda — on the left side."
+  },
+  {
+    "id": "public-square.right",
+    "uzbek": "o'ng",
+    "english": "right",
+    "theme": "public-square",
+    "level": 1,
+    "usageNotes": "O'ng tomonda — on the right side."
+  },
+  {
+    "id": "public-square.straight",
+    "uzbek": "to'g'ri",
+    "english": "straight / correct",
+    "theme": "public-square",
+    "level": 1,
+    "usageNotes": "To'g'riga yuring — go straight ahead."
+  },
+  {
+    "id": "public-square.near",
+    "uzbek": "yaqin",
+    "english": "near",
+    "theme": "public-square",
+    "level": 1
+  },
+  {
+    "id": "public-square.far",
+    "uzbek": "uzoq",
+    "english": "far",
+    "theme": "public-square",
+    "level": 1
+  },
+  {
+    "id": "public-square.bazaar",
+    "uzbek": "bozor",
+    "english": "bazaar / market",
+    "theme": "public-square",
+    "level": 1
+  },
+  {
+    "id": "public-square.map",
+    "uzbek": "xarita",
+    "english": "map",
+    "theme": "public-square",
+    "level": 2
+  },
+  {
+    "id": "public-square.fountain",
+    "uzbek": "favvora",
+    "english": "fountain",
+    "theme": "public-square",
+    "level": 2
+  },
+  {
+    "id": "public-square.statue",
+    "uzbek": "haykal",
+    "english": "statue",
+    "theme": "public-square",
+    "level": 2
+  },
+  {
+    "id": "public-square.mosque",
+    "uzbek": "masjid",
+    "english": "mosque",
+    "theme": "public-square",
+    "level": 2
+  },
+  {
+    "id": "public-square.side",
+    "uzbek": "tomon",
+    "english": "side / direction",
+    "theme": "public-square",
+    "level": 2
+  },
+  {
+    "id": "public-square.corner",
+    "uzbek": "burchak",
+    "english": "corner",
+    "theme": "public-square",
+    "level": 3
+  }
+]

@@ -1,0 +1,488 @@
+[
+  {
+    "id": "bank.exchange-money",
+    "theme": "bank",
+    "title": {
+      "en": "Changing Money",
+      "uz": "Pul almashtirish"
+    },
+    "scenario": "You need to change some dollars into som. You go to the bank counter.",
+    "variants": [
+      {
+        "id": "bank.exchange-money.base",
+        "description": "A simple exchange",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Sizga qanday yordam beray?",
+            "english": "Hello! How can I help you?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men dollar almashtirmoqchiman.",
+            "english": "I want to change dollars.",
+            "tokens": [
+              "Men",
+              "dollar",
+              "almashtirmoqchiman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qancha?",
+            "english": "How much?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yuz dollar, iltimos.",
+            "english": "One hundred dollars, please.",
+            "tokens": [
+              "Yuz",
+              "dollar,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportingizni bering.",
+            "english": "Give me your passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim.",
+            "english": "Here is my passport.",
+            "tokens": [
+              "Mana",
+              "pasportim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana so'mingiz. Sanab oling.",
+            "english": "Here is your som. Count it."
+          }
+        ]
+      },
+      {
+        "id": "bank.exchange-money.rate",
+        "description": "You ask about the rate",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bugungi kurs qancha?",
+            "english": "What is today's rate?",
+            "tokens": [
+              "Bugungi",
+              "kurs",
+              "qancha?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir dollar o'n ikki ming so'm.",
+            "english": "One dollar is twelve thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi. Ellik dollar almashtiraman.",
+            "english": "Good. I will change fifty dollars.",
+            "tokens": [
+              "Yaxshi.",
+              "Ellik",
+              "dollar",
+              "almashtiraman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasport bilan, iltimos.",
+            "english": "With your passport, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana. Rahmat.",
+            "english": "Here you are. Thank you.",
+            "tokens": [
+              "Mana.",
+              "Rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bank.exchange-money.passport",
+        "description": "You forgot your passport",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Dollar almashtirmoqchiman.",
+            "english": "I want to change dollars.",
+            "tokens": [
+              "Dollar",
+              "almashtirmoqchiman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportingiz kerak.",
+            "english": "You need your passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Voy, pasportim mehmonxonada.",
+            "english": "Oh no, my passport is at the hotel.",
+            "tokens": [
+              "Voy,",
+              "pasportim",
+              "mehmonxonada."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportsiz almashtira olmaymiz.",
+            "english": "We cannot exchange without a passport."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tushunaman. Olib kelaman.",
+            "english": "I understand. I will bring it.",
+            "tokens": [
+              "Tushunaman.",
+              "Olib",
+              "kelaman."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bank.exchange-money.atm",
+        "description": "The ATM is a better option",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Men naqd pul olmoqchiman.",
+            "english": "I want to withdraw cash.",
+            "tokens": [
+              "Men",
+              "naqd",
+              "pul",
+              "olmoqchiman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Karta bilanmi? Bankomatdan oling.",
+            "english": "With a card? Use the ATM."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bankomat qayerda?",
+            "english": "Where is the ATM?",
+            "tokens": [
+              "Bankomat",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kirishda, o'ng tomonda.",
+            "english": "At the entrance, on the right."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bank.exchange-money.small-notes",
+        "description": "You ask for small notes",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Mayda pul bera olasizmi?",
+            "english": "Can you give me small notes?",
+            "tokens": [
+              "Mayda",
+              "pul",
+              "bera",
+              "olasizmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta. Yigirma minglik mayli?",
+            "english": "Of course. Are twenty-thousand notes okay?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, juda yaxshi.",
+            "english": "Yes, very good.",
+            "tokens": [
+              "Ha,",
+              "juda",
+              "yaxshi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana. Imzo qo'ying, iltimos.",
+            "english": "Here you are. Sign here, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bank.exchange-money.closed",
+        "description": "The exchange desk is closing",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, almashtirish bo'limi yopilyapti.",
+            "english": "Sorry, the exchange desk is closing."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Faqat ellik dollar. Iltimos!",
+            "english": "Just fifty dollars. Please!",
+            "tokens": [
+              "Faqat",
+              "ellik",
+              "dollar.",
+              "Iltimos!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mayli, tez bo'lamiz. Pasport?",
+            "english": "Okay, we will be quick. Passport?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim. Rahmat!",
+            "english": "Here is my passport. Thank you!",
+            "tokens": [
+              "Mana",
+              "pasportim.",
+              "Rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana so'mingiz. Yaxshi kun!",
+            "english": "Here is your som. Have a good day!"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bank.atm-help",
+    "theme": "bank",
+    "title": {
+      "en": "The ATM",
+      "uz": "Bankomat"
+    },
+    "scenario": "You try to withdraw cash from the ATM, but something is not working.",
+    "variants": [
+      {
+        "id": "bank.atm-help.base",
+        "description": "A worker helps you",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, bankomat ishlamayapti.",
+            "english": "Excuse me, the ATM is not working.",
+            "tokens": [
+              "Kechirasiz,",
+              "bankomat",
+              "ishlamayapti."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qaysi karta? Chet el kartasimi?",
+            "english": "Which card? A foreign card?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, chet el kartasi.",
+            "english": "Yes, a foreign card.",
+            "tokens": [
+              "Ha,",
+              "chet",
+              "el",
+              "kartasi."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Inglizcha tilni tanlang.",
+            "english": "Choose the English language."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, endi ishlayapti! Rahmat!",
+            "english": "Yes, now it works! Thank you!",
+            "tokens": [
+              "Ha,",
+              "endi",
+              "ishlayapti!",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bank.atm-help.no-money",
+        "description": "The ATM is out of cash",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bankomatda pul yo'q.",
+            "english": "There is no money in the ATM.",
+            "tokens": [
+              "Bankomatda",
+              "pul",
+              "yo'q."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, pul tugagan.",
+            "english": "Sorry, the cash has run out."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Boshqa bankomat qayerda?",
+            "english": "Where is another ATM?",
+            "tokens": [
+              "Boshqa",
+              "bankomat",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Maydon yonida bor.",
+            "english": "There is one by the square."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bank.atm-help.card-stuck",
+        "description": "Your card gets stuck",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Yordam bering! Kartam ichida qoldi!",
+            "english": "Help! My card is stuck inside!",
+            "tokens": [
+              "Yordam",
+              "bering!",
+              "Kartam",
+              "ichida",
+              "qoldi!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xavotir olmang. Men chaqiraman.",
+            "english": "Do not worry. I will call someone."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat. Tez kerak.",
+            "english": "Thank you. I need it quickly.",
+            "tokens": [
+              "Rahmat.",
+              "Tez",
+              "kerak."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir daqiqa. Hozir olamiz.",
+            "english": "One minute. We will get it now."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "bank.atm-help.limit",
+        "description": "There is a withdrawal limit",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Men ko'p pul olmoqchiman.",
+            "english": "I want to withdraw a lot of money.",
+            "tokens": [
+              "Men",
+              "ko'p",
+              "pul",
+              "olmoqchiman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bankomatда limit bor. Bir milliongacha.",
+            "english": "There is a limit on the ATM. Up to one million."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, bir million olaman.",
+            "english": "Fine, I will withdraw one million.",
+            "tokens": [
+              "Yaxshi,",
+              "bir",
+              "million",
+              "olaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ichkarida ko'proq olsangiz bo'ladi.",
+            "english": "Inside you can withdraw more."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, ichkariga kiraman.",
+            "english": "Thank you, I will go inside.",
+            "tokens": [
+              "Rahmat,",
+              "ichkariga",
+              "kiraman."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

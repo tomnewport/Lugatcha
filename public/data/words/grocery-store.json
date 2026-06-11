@@ -1,0 +1,93 @@
+[
+  {
+    "id": "grocery-store.shop",
+    "uzbek": "do'kon",
+    "english": "shop",
+    "theme": "grocery-store",
+    "level": 1
+  },
+  {
+    "id": "grocery-store.bread",
+    "uzbek": "non",
+    "english": "bread",
+    "theme": "grocery-store",
+    "level": 1
+  },
+  {
+    "id": "grocery-store.milk",
+    "uzbek": "sut",
+    "english": "milk",
+    "theme": "grocery-store",
+    "level": 1
+  },
+  {
+    "id": "grocery-store.egg",
+    "uzbek": "tuxum",
+    "english": "egg",
+    "theme": "grocery-store",
+    "level": 1
+  },
+  {
+    "id": "grocery-store.fruit",
+    "uzbek": "meva",
+    "english": "fruit",
+    "theme": "grocery-store",
+    "level": 1
+  },
+  {
+    "id": "grocery-store.kilo",
+    "uzbek": "kilo",
+    "english": "kilogram",
+    "theme": "grocery-store",
+    "level": 1
+  },
+  {
+    "id": "grocery-store.apple",
+    "uzbek": "olma",
+    "english": "apple",
+    "theme": "grocery-store",
+    "level": 2
+  },
+  {
+    "id": "grocery-store.tomato",
+    "uzbek": "pomidor",
+    "english": "tomato",
+    "theme": "grocery-store",
+    "level": 2
+  },
+  {
+    "id": "grocery-store.cheese",
+    "uzbek": "pishloq",
+    "english": "cheese",
+    "theme": "grocery-store",
+    "level": 2
+  },
+  {
+    "id": "grocery-store.water-bottle",
+    "uzbek": "suv",
+    "english": "water",
+    "theme": "grocery-store",
+    "level": 2
+  },
+  {
+    "id": "grocery-store.bag",
+    "uzbek": "paket",
+    "english": "plastic bag",
+    "theme": "grocery-store",
+    "level": 2
+  },
+  {
+    "id": "grocery-store.fresh",
+    "uzbek": "yangi",
+    "english": "fresh / new",
+    "theme": "grocery-store",
+    "level": 2
+  },
+  {
+    "id": "grocery-store.ripe",
+    "uzbek": "pishgan",
+    "english": "ripe",
+    "theme": "grocery-store",
+    "level": 3
+  }
+]

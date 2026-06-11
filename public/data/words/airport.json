@@ -1,17 +1,108 @@
 [
-  { "id": "airport.passport",        "uzbek": "pasport",                 "english": "passport",          "theme": "airport" },
-  { "id": "airport.ticket",          "uzbek": "chipta",                  "english": "ticket",            "theme": "airport" },
-  { "id": "airport.flight",          "uzbek": "parvoz",                  "english": "flight",            "theme": "airport" },
-  { "id": "airport.luggage",         "uzbek": "bagaj",                   "english": "luggage",           "theme": "airport" },
-  { "id": "airport.customs",         "uzbek": "bojxona",                 "english": "customs",           "theme": "airport" },
-  { "id": "airport.departure",       "uzbek": "jo'nash",                 "english": "departure",         "theme": "airport" },
-  { "id": "airport.arrival",         "uzbek": "kelish",                  "english": "arrival",           "theme": "airport" },
-  { "id": "airport.gate",            "uzbek": "yo'lak",                  "english": "gate",              "theme": "airport", "usageNotes": "Used for a boarding gate at an airport." },
-  { "id": "airport.visa",            "uzbek": "viza",                    "english": "visa",              "theme": "airport" },
-  { "id": "airport.tourist",         "uzbek": "turist",                  "english": "tourist",           "theme": "airport" },
-  { "id": "airport.boarding-pass",   "uzbek": "posadka taloni",          "english": "boarding pass",     "theme": "airport" },
-  { "id": "airport.security",        "uzbek": "xavfsizlik tekshiruvi",   "english": "security check",    "theme": "airport" },
-  { "id": "airport.duty-free",       "uzbek": "bojsiz do'kon",           "english": "duty-free shop",    "theme": "airport" },
-  { "id": "airport.taxi",            "uzbek": "taksi",                   "english": "taxi",              "theme": "airport" },
-  { "id": "airport.exchange",        "uzbek": "valyuta almashtirish",    "english": "currency exchange", "theme": "airport" }
+  {
+    "id": "airport.passport",
+    "uzbek": "pasport",
+    "english": "passport",
+    "theme": "airport",
+    "level": 1
+  },
+  {
+    "id": "airport.ticket",
+    "uzbek": "chipta",
+    "english": "ticket",
+    "theme": "airport",
+    "level": 1
+  },
+  {
+    "id": "airport.flight",
+    "uzbek": "parvoz",
+    "english": "flight",
+    "theme": "airport",
+    "level": 2
+  },
+  {
+    "id": "airport.luggage",
+    "uzbek": "bagaj",
+    "english": "luggage",
+    "theme": "airport",
+    "level": 1
+  },
+  {
+    "id": "airport.customs",
+    "uzbek": "bojxona",
+    "english": "customs",
+    "theme": "airport",
+    "level": 2
+  },
+  {
+    "id": "airport.departure",
+    "uzbek": "jo'nash",
+    "english": "departure",
+    "theme": "airport",
+    "level": 2
+  },
+  {
+    "id": "airport.arrival",
+    "uzbek": "kelish",
+    "english": "arrival",
+    "theme": "airport",
+    "level": 2
+  },
+  {
+    "id": "airport.gate",
+    "uzbek": "yo'lak",
+    "english": "gate",
+    "theme": "airport",
+    "usageNotes": "Used for a boarding gate at an airport.",
+    "level": 2
+  },
+  {
+    "id": "airport.visa",
+    "uzbek": "viza",
+    "english": "visa",
+    "theme": "airport",
+    "level": 2
+  },
+  {
+    "id": "airport.tourist",
+    "uzbek": "turist",
+    "english": "tourist",
+    "theme": "airport",
+    "level": 1
+  },
+  {
+    "id": "airport.boarding-pass",
+    "uzbek": "posadka taloni",
+    "english": "boarding pass",
+    "theme": "airport",
+    "level": 2
+  },
+  {
+    "id": "airport.security",
+    "uzbek": "xavfsizlik tekshiruvi",
+    "english": "security check",
+    "theme": "airport",
+    "level": 3
+  },
+  {
+    "id": "airport.duty-free",
+    "uzbek": "bojsiz do'kon",
+    "english": "duty-free shop",
+    "theme": "airport",
+    "level": 3
+  },
+  {
+    "id": "airport.taxi",
+    "uzbek": "taksi",
+    "english": "taxi",
+    "theme": "airport",
+    "level": 1
+  },
+  {
+    "id": "airport.exchange",
+    "uzbek": "valyuta almashtirish",
+    "english": "currency exchange",
+    "theme": "airport",
+    "level": 2
+  }
 ]
