@@ -30,6 +30,7 @@ Usage (local backend):
     uv run python scripts/generate_audio.py --dry-run     # list what would be made
     uv run python scripts/generate_audio.py --limit 3     # try a few clips first
     uv run python scripts/generate_audio.py --device mps  # try the GPU (CPU is slow)
+    uv run python scripts/generate_audio.py --candidates   # 3 variants/word for in-app review
     uv run python scripts/generate_audio.py               # generate everything missing
     uv run python scripts/generate_audio.py --self-test   # verify hash parity only
 
@@ -287,20 +288,14 @@ def coerce_gen_value(value: str):
     return value
 
 
-def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
-                     explicit_device: bool = False, gen_kwargs: dict | None = None,
-                     end_punct: bool = True, carrier: bool = True,
-                     carrier_word: str = "Mana", carrier_max_chars: int = 4,
-                     carrier_pad_ms: int = 80):
-    """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
+def load_model(model_id: str, device: str, explicit_device: bool = False):
+    """Load the Qwen3-TTS model and Uzbek normaliser. Returns (model, normalize).
 
-    Backed by the Qwen3-TTS `qwen_tts` runtime that uzlm/sayro-tts-1.7B is built
-    on, following the model card's Quickstart. The upstream example assumes an
-    NVIDIA GPU (device_map="cuda:0", bfloat16); this falls back to CPU
-    elsewhere. The `speaker` ("sayro") and `instruct` (a style hint like
-    "Happy"/"Neutral"/"") are the card's generate_custom_voice arguments.
+    uzlm/sayro-tts-1.7B runs on the `qwen_tts` runtime. The upstream example
+    assumes an NVIDIA GPU (device_map="cuda:0", bfloat16); this falls back to
+    CPU elsewhere. One load serves any number of synthesizers (see
+    make_synthesize), which is what candidates mode relies on.
     """
-    import numpy as np
     import torch
 
     try:
@@ -340,18 +335,32 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
     else:
         target, dtype = "cpu", torch.bfloat16
     print(f"loading {model_id} on {target} (CPU synthesis is slow, ~minutes/clip)…")
-    load_kwargs = dict(device_map=target, dtype=dtype)
 
     try:
-        model = Qwen3TTSModel.from_pretrained(model_id, **load_kwargs)
+        model = Qwen3TTSModel.from_pretrained(model_id, device_map=target, dtype=dtype)
     except Exception as error:  # noqa: BLE001 — surface an actionable hint
         sys.exit(
             f"Could not load {model_id}: {error}\n\n"
             "If the repo is gated, request access on the model page and log in "
             "with `huggingface-cli login` (or set HF_TOKEN). If from_pretrained's "
             "signature has changed, follow the model card's Quickstart and adapt "
-            "load_synthesizer()."
+            "load_model()."
         )
+
+    return model, normalize
+
+
+def make_synthesize(model, normalize, speaker: str, instruct: str, *,
+                    gen_kwargs: dict | None = None, end_punct: bool = True,
+                    carrier: bool = True, carrier_word: str = "Mana",
+                    carrier_max_chars: int = 4, carrier_pad_ms: int = 80):
+    """Return synthesize(text) -> (samples: float32 1-D array, rate) for a model.
+
+    Decoupled from loading so a single loaded model can drive several
+    synthesizers with different generation settings (candidates mode).
+    """
+    import numpy as np
+    import torch
 
     extra = gen_kwargs or {}
 
@@ -386,6 +395,20 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
         return _generate(model_text)
 
     return synthesize
+
+
+def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
+                     explicit_device: bool = False, gen_kwargs: dict | None = None,
+                     end_punct: bool = True, carrier: bool = True,
+                     carrier_word: str = "Mana", carrier_max_chars: int = 4,
+                     carrier_pad_ms: int = 80):
+    """Convenience wrapper: load a model and bind one synthesizer to it."""
+    model, normalize = load_model(model_id, device, explicit_device)
+    return make_synthesize(
+        model, normalize, speaker, instruct, gen_kwargs=gen_kwargs,
+        end_punct=end_punct, carrier=carrier, carrier_word=carrier_word,
+        carrier_max_chars=carrier_max_chars, carrier_pad_ms=carrier_pad_ms,
+    )
 
 
 # Yandex SpeechKit v1 caps each request at 250 characters. Stay safely under it
@@ -606,6 +629,82 @@ def write_manifest(out_dir: Path) -> int:
     return len(manifest)
 
 
+# Candidate review: three settings profiles per word so you can A/B them in the
+# app and keep the best. Each profile's gen_kwargs feed make_synthesize.
+CANDIDATE_PROFILES = [
+    {"id": "greedy", "gen_kwargs": {"do_sample": False}},
+    {"id": "balanced", "gen_kwargs": {"do_sample": True, "top_p": 0.8, "temperature": 0.7}},
+    {"id": "expressive", "gen_kwargs": {"do_sample": True, "top_p": 0.95, "temperature": 1.0}},
+]
+
+
+def write_candidates_manifest(out_dir: Path, texts: dict[str, str]) -> int:
+    """Write candidates/manifest.json: key -> {text, variants:[{id, file}]}."""
+    manifest: dict[str, dict] = {}
+    for key, text in sorted(texts.items(), key=lambda kv: kv[1]):
+        variants = [
+            {"id": p["id"], "file": f"{key}-{p['id']}.mp3"}
+            for p in CANDIDATE_PROFILES
+            if (out_dir / f"{key}-{p['id']}.mp3").exists()
+        ]
+        if variants:
+            manifest[key] = {"text": text, "variants": variants}
+    (out_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    return len(manifest)
+
+
+def run_candidates(args, texts: dict[str, str], ffmpeg: str) -> None:
+    """Generate CANDIDATE_PROFILES variants per word for in-app A/B review."""
+    out_dir = args.out / "candidates"
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    def variant_path(key: str, profile_id: str) -> Path:
+        return out_dir / f"{key}-{profile_id}.mp3"
+
+    pending = {
+        key: text
+        for key, text in texts.items()
+        if args.force or any(not variant_path(key, p["id"]).exists() for p in CANDIDATE_PROFILES)
+    }
+    if args.limit is not None:
+        pending = dict(list(pending.items())[: args.limit])
+    profile_ids = ", ".join(p["id"] for p in CANDIDATE_PROFILES)
+    print(f"candidates mode: {len(CANDIDATE_PROFILES)} profiles ({profile_ids})")
+    print(f"{len(pending)} words to (re)generate, {len(texts) - len(pending)} already complete")
+
+    if pending:
+        device = args.device or pick_device()
+        model, normalize = load_model(
+            args.model, device, explicit_device=args.device is not None
+        )
+        synths = {
+            p["id"]: make_synthesize(
+                model, normalize, args.qwen_speaker, args.qwen_instruct,
+                gen_kwargs=p["gen_kwargs"], end_punct=args.end_punct,
+                carrier=args.carrier, carrier_word=args.carrier_word,
+                carrier_max_chars=args.carrier_max_chars, carrier_pad_ms=args.trim_pad_ms,
+            )
+            for p in CANDIDATE_PROFILES
+        }
+        for i, (key, text) in enumerate(pending.items(), 1):
+            print(f"[{i}/{len(pending)}] {text}")
+            for p in CANDIDATE_PROFILES:
+                target = variant_path(key, p["id"])
+                if target.exists() and not args.force:
+                    continue
+                samples, rate = synths[p["id"]](text)
+                if args.trim:
+                    samples = trim_to_speech(samples, rate, args.trim_pad_ms)
+                write_mp3(samples, rate, target, ffmpeg)
+                print(f"    {p['id']}")
+
+    count = write_candidates_manifest(out_dir, texts)
+    total_kb = sum(p.stat().st_size for p in out_dir.glob("*.mp3")) // 1024
+    print(f"candidates/manifest.json lists {count} words ({total_kb} KiB) in {out_dir}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--backend", choices=("local", "yandex"), default="local",
@@ -640,6 +739,9 @@ def main() -> None:
                         help="keep raw output; skip trimming edge non-speech")
     parser.add_argument("--trim-pad-ms", type=int, default=60,
                         help="silence kept around the speech span when trimming")
+    parser.add_argument("--candidates", action="store_true",
+                        help="generate 3 settings variants per word into "
+                             "public/audio/candidates/ for in-app A/B review")
     parser.add_argument("--limit", type=int, default=None, help="generate at most N clips")
     parser.add_argument("--force", action="store_true", help="regenerate existing clips")
     parser.add_argument("--dry-run", action="store_true", help="list texts and exit")
@@ -662,6 +764,12 @@ def main() -> None:
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         sys.exit("ffmpeg not found — install it with `brew install ffmpeg`")
+
+    if args.candidates:
+        if args.backend != "local":
+            sys.exit("--candidates only applies to the local backend")
+        run_candidates(args, texts, ffmpeg)
+        return
 
     args.out.mkdir(parents=True, exist_ok=True)
     pending = {
