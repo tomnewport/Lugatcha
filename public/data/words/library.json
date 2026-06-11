@@ -1,0 +1,87 @@
+[
+  {
+    "id": "library.book",
+    "uzbek": "kitob",
+    "english": "book",
+    "theme": "library",
+    "level": 1
+  },
+  {
+    "id": "library.library",
+    "uzbek": "kutubxona",
+    "english": "library",
+    "theme": "library",
+    "level": 1,
+    "usageNotes": "kitob + xona idea: the place for books."
+  },
+  {
+    "id": "library.read",
+    "uzbek": "o'qish",
+    "english": "reading",
+    "theme": "library",
+    "level": 1
+  },
+  {
+    "id": "library.quiet",
+    "uzbek": "jim",
+    "english": "quiet",
+    "theme": "library",
+    "level": 1
+  },
+  {
+    "id": "library.word",
+    "uzbek": "so'z",
+    "english": "word",
+    "theme": "library",
+    "level": 1
+  },
+  {
+    "id": "library.newspaper",
+    "uzbek": "gazeta",
+    "english": "newspaper",
+    "theme": "library",
+    "level": 2
+  },
+  {
+    "id": "library.language",
+    "uzbek": "til",
+    "english": "language",
+    "theme": "library",
+    "level": 2
+  },
+  {
+    "id": "library.write",
+    "uzbek": "yozish",
+    "english": "writing",
+    "theme": "library",
+    "level": 2
+  },
+  {
+    "id": "library.page",
+    "uzbek": "sahifa",
+    "english": "page",
+    "theme": "library",
+    "level": 2
+  },
+  {
+    "id": "library.help",
+    "uzbek": "yordam",
+    "english": "help",
+    "theme": "library",
+    "level": 2
+  },
+  {
+    "id": "library.name",
+    "uzbek": "ism",
+    "english": "name",
+    "theme": "library",
+    "level": 2
+  },
+  {
+    "id": "library.story",
+    "uzbek": "hikoya",
+    "english": "story",
+    "theme": "library",
+    "level": 3
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "id": "bank.bank",
+    "uzbek": "bank",
+    "english": "bank",
+    "theme": "bank",
+    "level": 1
+  },
+  {
+    "id": "bank.money",
+    "uzbek": "pul",
+    "english": "money",
+    "theme": "bank",
+    "level": 1
+  },
+  {
+    "id": "bank.exchange",
+    "uzbek": "almashtirish",
+    "english": "to exchange",
+    "theme": "bank",
+    "level": 1
+  },
+  {
+    "id": "bank.dollar",
+    "uzbek": "dollar",
+    "english": "dollar",
+    "theme": "bank",
+    "level": 1
+  },
+  {
+    "id": "bank.som",
+    "uzbek": "so'm",
+    "english": "som (Uzbek currency)",
+    "theme": "bank",
+    "level": 1
+  },
+  {
+    "id": "bank.how-much",
+    "uzbek": "qancha",
+    "english": "how much",
+    "theme": "bank",
+    "level": 1
+  },
+  {
+    "id": "bank.card-bank",
+    "uzbek": "karta",
+    "english": "bank card",
+    "theme": "bank",
+    "level": 2
+  },
+  {
+    "id": "bank.cash",
+    "uzbek": "naqd pul",
+    "english": "cash",
+    "theme": "bank",
+    "level": 2
+  },
+  {
+    "id": "bank.atm",
+    "uzbek": "bankomat",
+    "english": "ATM",
+    "theme": "bank",
+    "level": 2
+  },
+  {
+    "id": "bank.rate",
+    "uzbek": "kurs",
+    "english": "exchange rate",
+    "theme": "bank",
+    "level": 2
+  },
+  {
+    "id": "bank.passport",
+    "uzbek": "pasport",
+    "english": "passport",
+    "theme": "bank",
+    "level": 1
+  },
+  {
+    "id": "bank.sign",
+    "uzbek": "imzo",
+    "english": "signature",
+    "theme": "bank",
+    "level": 3
+  }
+]

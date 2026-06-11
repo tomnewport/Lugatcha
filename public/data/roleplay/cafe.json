@@ -1,0 +1,484 @@
+[
+  {
+    "id": "cafe.order-coffee",
+    "theme": "cafe",
+    "title": {
+      "en": "Coffee to Go",
+      "uz": "Olib ketishga kofe"
+    },
+    "scenario": "You want a quick coffee to take with you on a busy morning.",
+    "variants": [
+      {
+        "id": "cafe.order-coffee.base",
+        "description": "A simple coffee, no fuss",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Nima beraman?",
+            "english": "Hello! What can I get you?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bitta kofe, iltimos.",
+            "english": "One coffee, please.",
+            "tokens": [
+              "Bitta",
+              "kofe,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Katta yoki kichik?",
+            "english": "Big or small?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta, olib ketishga.",
+            "english": "Big, to take away.",
+            "tokens": [
+              "Katta,",
+              "olib",
+              "ketishga."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'n besh ming so'm.",
+            "english": "Fifteen thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul. Rahmat!",
+            "english": "Here is the money. Thank you!",
+            "tokens": [
+              "Mana",
+              "pul.",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.order-coffee.milk",
+        "description": "You ask for milk",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bitta kofe, sut bilan.",
+            "english": "One coffee, with milk.",
+            "tokens": [
+              "Bitta",
+              "kofe,",
+              "sut",
+              "bilan."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta. Shakar kerakmi?",
+            "english": "Of course. Do you need sugar?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yo'q, rahmat. Shakarsiz.",
+            "english": "No, thank you. Without sugar.",
+            "tokens": [
+              "Yo'q,",
+              "rahmat.",
+              "Shakarsiz."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana kofengiz.",
+            "english": "Here is your coffee."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.order-coffee.no-coffee",
+        "description": "The coffee machine is broken",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bitta kofe, iltimos.",
+            "english": "One coffee, please.",
+            "tokens": [
+              "Bitta",
+              "kofe,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, kofe mashinasi buzuq.",
+            "english": "Sorry, the coffee machine is broken."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Unda choy bormi?",
+            "english": "Then is there tea?",
+            "tokens": [
+              "Unda",
+              "choy",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, ko'k yoki qora choy.",
+            "english": "Yes, green or black tea."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ko'k choy, iltimos.",
+            "english": "Green tea, please.",
+            "tokens": [
+              "Ko'k",
+              "choy,",
+              "iltimos."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.order-coffee.cake",
+        "description": "You add a slice of cake",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kofe va bir bo'lak tort.",
+            "english": "Coffee and a slice of cake.",
+            "tokens": [
+              "Kofe",
+              "va",
+              "bir",
+              "bo'lak",
+              "tort."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qaysi tort? Shokoladli bor.",
+            "english": "Which cake? There is a chocolate one."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Shokoladli, iltimos.",
+            "english": "Chocolate, please.",
+            "tokens": [
+              "Shokoladli,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi tanlov! Yigirma besh ming.",
+            "english": "Good choice! Twenty-five thousand."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.order-coffee.cold",
+        "description": "You want it iced",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Sovuq kofe bormi?",
+            "english": "Is there iced coffee?",
+            "tokens": [
+              "Sovuq",
+              "kofe",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, muzli kofe bor.",
+            "english": "Yes, there is iced coffee."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bitta katta, iltimos.",
+            "english": "One big, please.",
+            "tokens": [
+              "Bitta",
+              "katta,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, sovuq va mazali!",
+            "english": "Here, cold and delicious!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.order-coffee.busy",
+        "description": "It is busy — they ask your name",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bitta kofe va sharbat.",
+            "english": "One coffee and a juice.",
+            "tokens": [
+              "Bitta",
+              "kofe",
+              "va",
+              "sharbat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Gavjum. Ismingiz nima?",
+            "english": "It is busy. What is your name?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mening ismim Tom.",
+            "english": "My name is Tom.",
+            "tokens": [
+              "Mening",
+              "ismim",
+              "Tom."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi, Tom. Bir daqiqa kuting.",
+            "english": "Fine, Tom. Wait one minute."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cafe.breakfast-stop",
+    "theme": "cafe",
+    "title": {
+      "en": "A Quick Breakfast",
+      "uz": "Tez nonushta"
+    },
+    "scenario": "You stop for something small to eat before sightseeing.",
+    "variants": [
+      {
+        "id": "cafe.breakfast-stop.base",
+        "description": "A sandwich and juice",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Buterbrod va sharbat bormi?",
+            "english": "Is there a sandwich and juice?",
+            "tokens": [
+              "Buterbrod",
+              "va",
+              "sharbat",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, pishloqli buterbrod bor.",
+            "english": "Yes, there is a cheese sandwich."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bitta, iltimos. Va olma sharbati.",
+            "english": "One, please. And apple juice.",
+            "tokens": [
+              "Bitta,",
+              "iltimos.",
+              "Va",
+              "olma",
+              "sharbati."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi. O'n sakkiz ming so'm.",
+            "english": "Fine. Eighteen thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul. Rahmat!",
+            "english": "Here is the money. Thank you!",
+            "tokens": [
+              "Mana",
+              "pul.",
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.breakfast-stop.sit",
+        "description": "You decide to sit in",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu yerda o'tirsam bo'ladimi?",
+            "english": "May I sit here?",
+            "tokens": [
+              "Bu",
+              "yerda",
+              "o'tirsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Stol bo'sh.",
+            "english": "Of course! The table is free."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat. Kofe va tort, iltimos.",
+            "english": "Thank you. Coffee and cake, please.",
+            "tokens": [
+              "Rahmat.",
+              "Kofe",
+              "va",
+              "tort,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hozir olib kelaman.",
+            "english": "I will bring it now."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.breakfast-stop.vegetarian",
+        "description": "You ask what is meat-free",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Go'shtsiz nima bor?",
+            "english": "What is there without meat?",
+            "tokens": [
+              "Go'shtsiz",
+              "nima",
+              "bor?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pishloqli yoki tuxumli buterbrod.",
+            "english": "Cheese or egg sandwich."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tuxumli, iltimos.",
+            "english": "Egg, please.",
+            "tokens": [
+              "Tuxumli,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana. Yana biror narsa?",
+            "english": "Here you are. Anything else?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yo'q, rahmat.",
+            "english": "No, thank you.",
+            "tokens": [
+              "Yo'q,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "cafe.breakfast-stop.wifi",
+        "description": "You ask for the wi-fi",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Wifi bormi?",
+            "english": "Is there wi-fi?",
+            "tokens": [
+              "Wifi",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, parol stol ustida.",
+            "english": "Yes, the password is on the table."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat. Kofe ham, iltimos.",
+            "english": "Thank you. Coffee too, please.",
+            "tokens": [
+              "Rahmat.",
+              "Kofe",
+              "ham,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hoziroq tayyorlayman.",
+            "english": "I will make it right away."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

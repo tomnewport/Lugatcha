@@ -1,0 +1,94 @@
+[
+  {
+    "id": "museum.museum",
+    "uzbek": "muzey",
+    "english": "museum",
+    "theme": "museum",
+    "level": 1
+  },
+  {
+    "id": "museum.history",
+    "uzbek": "tarix",
+    "english": "history",
+    "theme": "museum",
+    "level": 1
+  },
+  {
+    "id": "museum.old",
+    "uzbek": "eski",
+    "english": "old",
+    "theme": "museum",
+    "level": 1
+  },
+  {
+    "id": "museum.picture",
+    "uzbek": "rasm",
+    "english": "picture / painting",
+    "theme": "museum",
+    "level": 1
+  },
+  {
+    "id": "museum.beautiful",
+    "uzbek": "chiroyli",
+    "english": "beautiful",
+    "theme": "museum",
+    "level": 1
+  },
+  {
+    "id": "museum.hall",
+    "uzbek": "zal",
+    "english": "hall",
+    "theme": "museum",
+    "level": 2
+  },
+  {
+    "id": "museum.tour",
+    "uzbek": "ekskursiya",
+    "english": "tour / excursion",
+    "theme": "museum",
+    "level": 2
+  },
+  {
+    "id": "museum.student",
+    "uzbek": "talaba",
+    "english": "student",
+    "theme": "museum",
+    "level": 2
+  },
+  {
+    "id": "museum.discount",
+    "uzbek": "chegirma",
+    "english": "discount",
+    "theme": "museum",
+    "level": 2
+  },
+  {
+    "id": "museum.opening-hours",
+    "uzbek": "ish vaqti",
+    "english": "opening hours",
+    "theme": "museum",
+    "level": 2
+  },
+  {
+    "id": "museum.art",
+    "uzbek": "san'at",
+    "english": "art",
+    "theme": "museum",
+    "level": 2
+  },
+  {
+    "id": "museum.ceramics",
+    "uzbek": "sopol",
+    "english": "ceramics / pottery",
+    "theme": "museum",
+    "level": 3
+  },
+  {
+    "id": "museum.silk",
+    "uzbek": "ipak",
+    "english": "silk",
+    "theme": "museum",
+    "level": 3,
+    "usageNotes": "The Silk Road — Buyuk ipak yo'li."
+  }
+]

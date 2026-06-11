@@ -1,49 +1,613 @@
-{
-  "id": "hotel.checkin",
-  "theme": "hotel",
-  "title": { "en": "Checking In", "uz": "Ro'yxatdan o'tish" },
-  "scenario": "You have arrived at your hotel in Samarkand after a long journey and need to check in at reception.",
-  "variants": [
-    {
-      "id": "hotel.checkin.base",
-      "description": "Smooth check-in — room is ready and everything is in order",
-      "turns": [
-        { "speaker": "user", "uzbek": "Salom, mening bronim bor.",                             "english": "Hello, I have a reservation.",                "tokens": ["Salom,", "mening", "bronim", "bor."] },
-        { "speaker": "npc",  "uzbek": "Xush kelibsiz! Ismingiz?",                              "english": "Welcome! Your name?" },
-        { "speaker": "user", "uzbek": "Men Smit.",                                              "english": "I am Smith.",                                 "tokens": ["Men", "Smit."] },
-        { "speaker": "npc",  "uzbek": "Ha, topildi. Siz uch tun qolasiz. Xonangiz uchinchi qavatda.", "english": "Yes, found it. You are staying three nights. Your room is on the third floor." },
-        { "speaker": "user", "uzbek": "Nonushta kirganmi?",                                    "english": "Is breakfast included?",                      "tokens": ["Nonushta", "kirganmi?"] },
-        { "speaker": "npc",  "uzbek": "Ha, nonushta ertalab soat yettidan o'ngacha.",          "english": "Yes, breakfast is from seven to ten in the morning." },
-        { "speaker": "user", "uzbek": "Rahmat! Wifi paroli nima?",                             "english": "Thank you! What is the wi-fi password?",      "tokens": ["Rahmat!", "Wifi", "paroli", "nima?"] },
-        { "speaker": "npc",  "uzbek": "Parol: Samarqand2024. Xayrli qolish!",                 "english": "Password: Samarqand2024. Enjoy your stay!" }
-      ]
+[
+  {
+    "id": "hotel.checkin",
+    "theme": "hotel",
+    "title": {
+      "en": "Checking In",
+      "uz": "Ro'yxatdan o'tish"
     },
-    {
-      "id": "hotel.checkin.room-not-ready",
-      "description": "Your room isn't ready yet — you wait in the lobby",
-      "turns": [
-        { "speaker": "user", "uzbek": "Salom, mening bronim bor.",                             "english": "Hello, I have a reservation.",                "tokens": ["Salom,", "mening", "bronim", "bor."] },
-        { "speaker": "npc",  "uzbek": "Xush kelibsiz! Ismingiz?",                              "english": "Welcome! Your name?" },
-        { "speaker": "user", "uzbek": "Men Smit.",                                              "english": "I am Smith.",                                 "tokens": ["Men", "Smit."] },
-        { "speaker": "npc",  "uzbek": "Kechirasiz, xonangiz hali tayyor emas. Otuz daqiqa kuting.", "english": "Sorry, your room is not ready yet. Please wait thirty minutes." },
-        { "speaker": "user", "uzbek": "Yaxshi, kutaman. Bagajimni qo'yib ketsam maylimi?",    "english": "Alright, I'll wait. May I leave my luggage here?", "tokens": ["Yaxshi,", "kutaman.", "Bagajimni", "qo'yib", "ketsam", "maylimi?"] },
-        { "speaker": "npc",  "uzbek": "Albatta! Mana qabul xonasi. Choy ichasizmi?",          "english": "Of course! Here is the lobby. Would you like some tea?" },
-        { "speaker": "user", "uzbek": "Ha, rahmat!",                                           "english": "Yes, thank you!",                             "tokens": ["Ha,", "rahmat!"] }
-      ]
+    "scenario": "You have arrived at your hotel in Samarkand after a long journey and need to check in at reception.",
+    "variants": [
+      {
+        "id": "hotel.checkin.base",
+        "description": "Smooth check-in — room is ready and everything is in order",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Salom, mening bronim bor.",
+            "english": "Hello, I have a reservation.",
+            "tokens": [
+              "Salom,",
+              "mening",
+              "bronim",
+              "bor."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Ismingiz?",
+            "english": "Welcome! Your name?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men Smit.",
+            "english": "I am Smith.",
+            "tokens": [
+              "Men",
+              "Smit."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, topildi. Siz uch tun qolasiz. Xonangiz uchinchi qavatda.",
+            "english": "Yes, found it. You are staying three nights. Your room is on the third floor."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Nonushta kirganmi?",
+            "english": "Is breakfast included?",
+            "tokens": [
+              "Nonushta",
+              "kirganmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, nonushta ertalab soat yettidan o'ngacha.",
+            "english": "Yes, breakfast is from seven to ten in the morning."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat! Wifi paroli nima?",
+            "english": "Thank you! What is the wi-fi password?",
+            "tokens": [
+              "Rahmat!",
+              "Wifi",
+              "paroli",
+              "nima?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Parol: Samarqand2024. Xayrli qolish!",
+            "english": "Password: Samarqand2024. Enjoy your stay!"
+          }
+        ]
+      },
+      {
+        "id": "hotel.checkin.room-not-ready",
+        "description": "Your room isn't ready yet — you wait in the lobby",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Salom, mening bronim bor.",
+            "english": "Hello, I have a reservation.",
+            "tokens": [
+              "Salom,",
+              "mening",
+              "bronim",
+              "bor."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Ismingiz?",
+            "english": "Welcome! Your name?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men Smit.",
+            "english": "I am Smith.",
+            "tokens": [
+              "Men",
+              "Smit."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz, xonangiz hali tayyor emas. Otuz daqiqa kuting.",
+            "english": "Sorry, your room is not ready yet. Please wait thirty minutes."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, kutaman. Bagajimni qo'yib ketsam maylimi?",
+            "english": "Alright, I'll wait. May I leave my luggage here?",
+            "tokens": [
+              "Yaxshi,",
+              "kutaman.",
+              "Bagajimni",
+              "qo'yib",
+              "ketsam",
+              "maylimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Mana qabul xonasi. Choy ichasizmi?",
+            "english": "Of course! Here is the lobby. Would you like some tea?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, rahmat!",
+            "english": "Yes, thank you!",
+            "tokens": [
+              "Ha,",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hotel.checkin.wrong-room-type",
+        "description": "The room type is different from what you booked",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Salom, mening bronim bor.",
+            "english": "Hello, I have a reservation.",
+            "tokens": [
+              "Salom,",
+              "mening",
+              "bronim",
+              "bor."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Ismingiz?",
+            "english": "Welcome! Your name?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Men Smit.",
+            "english": "I am Smith.",
+            "tokens": [
+              "Men",
+              "Smit."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Topildi. Sizga ikki kishilik xona tayyor.",
+            "english": "Found it. A double room is ready for you."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, men bir kishilik xona bron qilganman.",
+            "english": "Excuse me, I booked a single room.",
+            "tokens": [
+              "Kechirasiz,",
+              "men",
+              "bir",
+              "kishilik",
+              "xona",
+              "bron",
+              "qilganman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Uzr, xato bo'libdi. Bir kishilik xona ham bor, narxi bir oz yuqori.",
+            "english": "Sorry, there has been a mistake. A single room is also available, the price is a little higher."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, bir kishilik xonani olaman.",
+            "english": "Alright, I'll take the single room.",
+            "tokens": [
+              "Yaxshi,",
+              "bir",
+              "kishilik",
+              "xonani",
+              "olaman."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Zo'r! Mana sizning kalitingiz.",
+            "english": "Great! Here is your key."
+          }
+        ]
+      },
+      {
+        "id": "hotel.checkin.passport",
+        "description": "They need your passport to register you",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Bron bormi?",
+            "english": "Welcome! Do you have a reservation?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ha, mening bronim bor.",
+            "english": "Yes, I have a reservation.",
+            "tokens": [
+              "Ha,",
+              "mening",
+              "bronim",
+              "bor."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pasportingizni bering, iltimos.",
+            "english": "Give me your passport, please."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pasportim.",
+            "english": "Here is my passport.",
+            "tokens": [
+              "Mana",
+              "pasportim."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Rahmat. Mana kalitingiz, uchinchi qavat.",
+            "english": "Thank you. Here is your key, third floor."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hotel.checkin.breakfast",
+        "description": "You ask about breakfast times",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Nonushta soat nechada?",
+            "english": "What time is breakfast?",
+            "tokens": [
+              "Nonushta",
+              "soat",
+              "nechada?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Soat yettidan to'qqizgacha.",
+            "english": "From seven to nine."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qayerda?",
+            "english": "Where?",
+            "tokens": [
+              "Qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Birinchi qavatda, restoranda.",
+            "english": "On the first floor, in the restaurant."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hotel.checkin.early",
+        "description": "You arrive early and ask to leave bags",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Erta keldim. Xona tayyormi?",
+            "english": "I arrived early. Is the room ready?",
+            "tokens": [
+              "Erta",
+              "keldim.",
+              "Xona",
+              "tayyormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hali yo'q. Soat ikkida tayyor.",
+            "english": "Not yet. It is ready at two o'clock."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Sumkamni qoldira olamanmi?",
+            "english": "May I leave my bag?",
+            "tokens": [
+              "Sumkamni",
+              "qoldira",
+              "olamanmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta! Bu yerda xavfsiz.",
+            "english": "Of course! It is safe here."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, keyin kelaman.",
+            "english": "Thank you, I will come back later.",
+            "tokens": [
+              "Rahmat,",
+              "keyin",
+              "kelaman."
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hotel.room-problem",
+    "theme": "hotel",
+    "title": {
+      "en": "A Problem with the Room",
+      "uz": "Xonada muammo"
     },
-    {
-      "id": "hotel.checkin.wrong-room-type",
-      "description": "The room type is different from what you booked",
-      "turns": [
-        { "speaker": "user", "uzbek": "Salom, mening bronim bor.",                             "english": "Hello, I have a reservation.",                "tokens": ["Salom,", "mening", "bronim", "bor."] },
-        { "speaker": "npc",  "uzbek": "Xush kelibsiz! Ismingiz?",                              "english": "Welcome! Your name?" },
-        { "speaker": "user", "uzbek": "Men Smit.",                                              "english": "I am Smith.",                                 "tokens": ["Men", "Smit."] },
-        { "speaker": "npc",  "uzbek": "Topildi. Sizga ikki kishilik xona tayyor.",             "english": "Found it. A double room is ready for you." },
-        { "speaker": "user", "uzbek": "Kechirasiz, men bir kishilik xona bron qilganman.",     "english": "Excuse me, I booked a single room.",          "tokens": ["Kechirasiz,", "men", "bir", "kishilik", "xona", "bron", "qilganman."] },
-        { "speaker": "npc",  "uzbek": "Uzr, xato bo'libdi. Bir kishilik xona ham bor, narxi bir oz yuqori.", "english": "Sorry, there has been a mistake. A single room is also available, the price is a little higher." },
-        { "speaker": "user", "uzbek": "Yaxshi, bir kishilik xonani olaman.",                   "english": "Alright, I'll take the single room.",          "tokens": ["Yaxshi,", "bir", "kishilik", "xonani", "olaman."] },
-        { "speaker": "npc",  "uzbek": "Zo'r! Mana sizning kalitingiz.",                        "english": "Great! Here is your key." }
-      ]
-    }
-  ]
-}
+    "scenario": "Something in your room is not right. You call down to reception.",
+    "variants": [
+      {
+        "id": "hotel.room-problem.base",
+        "description": "No hot water — fixed in ten minutes",
+        "turns": [
+          {
+            "speaker": "npc",
+            "uzbek": "Resepshen, eshitaman.",
+            "english": "Reception, how can I help?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Xonamda issiq suv yo'q.",
+            "english": "There is no hot water in my room.",
+            "tokens": [
+              "Xonamda",
+              "issiq",
+              "suv",
+              "yo'q."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz! O'n daqiqada tuzatamiz.",
+            "english": "Sorry! We will fix it in ten minutes."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat.",
+            "english": "Thank you.",
+            "tokens": [
+              "Rahmat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Arzimaydi. Yana muammo bormi?",
+            "english": "You're welcome. Any other problem?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yo'q, hammasi yaxshi.",
+            "english": "No, everything is fine.",
+            "tokens": [
+              "Yo'q,",
+              "hammasi",
+              "yaxshi."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hotel.room-problem.change-room",
+        "description": "They move you to a better room",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Xonamda issiq suv yo'q.",
+            "english": "There is no hot water in my room.",
+            "tokens": [
+              "Xonamda",
+              "issiq",
+              "suv",
+              "yo'q."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz. Sizga boshqa xona beramiz.",
+            "english": "Sorry. We will give you another room."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi. Qaysi qavatda?",
+            "english": "Good. On which floor?",
+            "tokens": [
+              "Yaxshi.",
+              "Qaysi",
+              "qavatda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Uchinchi qavatda. Mana yangi kalit.",
+            "english": "On the third floor. Here is the new key."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "hotel.room-problem.towels",
+        "description": "The towels are missing",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Xonamda sochiq yo'q.",
+            "english": "There are no towels in my room.",
+            "tokens": [
+              "Xonamda",
+              "sochiq",
+              "yo'q."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kechirasiz! Hozir olib boramiz.",
+            "english": "Sorry! We will bring some now."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat. Ikkita, iltimos.",
+            "english": "Thank you. Two, please.",
+            "tokens": [
+              "Rahmat.",
+              "Ikkita,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta. Besh daqiqa kuting.",
+            "english": "Of course. Wait five minutes."
+          }
+        ]
+      },
+      {
+        "id": "hotel.room-problem.wifi",
+        "description": "The wi-fi will not connect",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Wifi ishlamayapti.",
+            "english": "The wi-fi is not working.",
+            "tokens": [
+              "Wifi",
+              "ishlamayapti."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Parolni qayta yozing: mehmon2024.",
+            "english": "Type the password again: mehmon2024."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yozdim. Endi ishlayapti!",
+            "english": "I typed it. Now it works!",
+            "tokens": [
+              "Yozdim.",
+              "Endi",
+              "ishlayapti!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Juda yaxshi!",
+            "english": "Very good!"
+          }
+        ]
+      },
+      {
+        "id": "hotel.room-problem.noisy",
+        "description": "The room is too noisy",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Xonam juda shovqinli. Ko'cha tomonda.",
+            "english": "My room is very noisy. It faces the street.",
+            "tokens": [
+              "Xonam",
+              "juda",
+              "shovqinli.",
+              "Ko'cha",
+              "tomonda."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Tushunaman. Hovli tomonda xona bor.",
+            "english": "I understand. There is a room facing the courtyard."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi! Rahmat.",
+            "english": "Very good! Thank you.",
+            "tokens": [
+              "Juda",
+              "yaxshi!",
+              "Rahmat."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kalitni almashtiramiz. Bir daqiqa.",
+            "english": "We will change the key. One minute."
+          }
+        ]
+      },
+      {
+        "id": "hotel.room-problem.late-checkout",
+        "description": "You ask for a late checkout instead",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechroq chiqsam bo'ladimi?",
+            "english": "May I check out later?",
+            "tokens": [
+              "Kechroq",
+              "chiqsam",
+              "bo'ladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Soat nechada chiqasiz?",
+            "english": "At what time will you leave?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Soat ikkida.",
+            "english": "At two o'clock.",
+            "tokens": [
+              "Soat",
+              "ikkida."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi, muammo emas. O'n ming so'm bo'ladi.",
+            "english": "Fine, no problem. It will be ten thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, rahmat.",
+            "english": "Fine, thank you.",
+            "tokens": [
+              "Yaxshi,",
+              "rahmat."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

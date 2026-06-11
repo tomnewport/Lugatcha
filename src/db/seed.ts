@@ -18,22 +18,23 @@ async function fetchData<T>(path: string): Promise<T> {
 export async function seedDatabase(db: LugatchaDB): Promise<void> {
   const manifest = await fetchData<DataManifest>('manifest.json')
 
-  const [wordArrays, stories, roleplayItems] = await Promise.all([
+  // Each stories/roleplay file holds every item for one theme
+  const [wordArrays, storyArrays, roleplayArrays] = await Promise.all([
     Promise.all(manifest.words.map((name) => fetchData<Word[]>(`words/${name}.json`))),
-    Promise.all(manifest.stories.map((name) => fetchData<Story>(`stories/${name}.json`))),
-    Promise.all(manifest.roleplay.map((name) => fetchData<Roleplay>(`roleplay/${name}.json`))),
+    Promise.all(manifest.stories.map((name) => fetchData<Story[]>(`stories/${name}.json`))),
+    Promise.all(manifest.roleplay.map((name) => fetchData<Roleplay[]>(`roleplay/${name}.json`))),
   ])
 
   await Promise.all([
     db.words.bulkPut(wordArrays.flat()),
-    db.stories.bulkPut(stories),
-    db.roleplay.bulkPut(roleplayItems),
+    db.stories.bulkPut(storyArrays.flat()),
+    db.roleplay.bulkPut(roleplayArrays.flat()),
   ])
 }
 
 // Bump when shipped data files change: bulkPut overwrites by id, so
 // re-seeding refreshes content without touching progress tables.
-export const CONTENT_VERSION = 2
+export const CONTENT_VERSION = 3
 const CONTENT_VERSION_KEY = 'lugatcha.contentVersion'
 
 function storedContentVersion(): string | null {

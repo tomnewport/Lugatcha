@@ -1,0 +1,415 @@
+[
+  {
+    "id": "metro-station.which-way",
+    "theme": "metro-station",
+    "title": {
+      "en": "Which Line to the Centre?",
+      "uz": "Markazga qaysi yo'nalish?"
+    },
+    "scenario": "You are in the Tashkent metro and want to reach the city centre, but the lines are confusing.",
+    "variants": [
+      {
+        "id": "metro-station.which-way.base",
+        "description": "Two stops, no change",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, markazga qanday boraman?",
+            "english": "Excuse me, how do I get to the centre?",
+            "tokens": [
+              "Kechirasiz,",
+              "markazga",
+              "qanday",
+              "boraman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu yo'nalishda boring. Ikki bekat.",
+            "english": "Take this line. Two stops."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "O'tish kerakmi?",
+            "english": "Do I need to change?",
+            "tokens": [
+              "O'tish",
+              "kerakmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yo'q, to'g'ri boradi.",
+            "english": "No, it goes direct."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "metro-station.which-way.transfer",
+        "description": "You must change lines once",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Markazga qanday boraman?",
+            "english": "How do I get to the centre?",
+            "tokens": [
+              "Markazga",
+              "qanday",
+              "boraman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir marta o'tish kerak. Keyingi bekatda.",
+            "english": "You need to change once. At the next stop."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qaysi yo'nalishga o'taman?",
+            "english": "Which line do I change to?",
+            "tokens": [
+              "Qaysi",
+              "yo'nalishga",
+              "o'taman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ko'k yo'nalishga.",
+            "english": "To the blue line."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tushundim, rahmat!",
+            "english": "I understand, thank you!",
+            "tokens": [
+              "Tushundim,",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "metro-station.which-way.card",
+        "description": "You need a travel card first",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Markazga chipta qayerdan olaman?",
+            "english": "Where do I buy a ticket to the centre?",
+            "tokens": [
+              "Markazga",
+              "chipta",
+              "qayerdan",
+              "olaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Karta kerak. Anavi oynadan oling.",
+            "english": "You need a card. Buy it from that window."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qancha turadi?",
+            "english": "How much does it cost?",
+            "tokens": [
+              "Qancha",
+              "turadi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bir safar ikki ming so'm.",
+            "english": "One trip is two thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "metro-station.which-way.wrong-way",
+        "description": "You are about to go the wrong way",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Bu poyezd markazga boradimi?",
+            "english": "Does this train go to the centre?",
+            "tokens": [
+              "Bu",
+              "poyezd",
+              "markazga",
+              "boradimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yo'q, bu teskari tomonga ketadi!",
+            "english": "No, this goes the opposite way!"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Voy! Markaz qaysi tomonda?",
+            "english": "Oh! Which way is the centre?",
+            "tokens": [
+              "Voy!",
+              "Markaz",
+              "qaysi",
+              "tomonda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Narigi tomonda. Chiqishdan o'ting.",
+            "english": "On the other side. Go through the exit."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "metro-station.which-way.count",
+        "description": "You ask how many stops",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Markazgacha necha bekat?",
+            "english": "How many stops to the centre?",
+            "tokens": [
+              "Markazgacha",
+              "necha",
+              "bekat?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "To'rt bekat.",
+            "english": "Four stops."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qaysi bekatda tushaman?",
+            "english": "At which stop do I get off?",
+            "tokens": [
+              "Qaysi",
+              "bekatda",
+              "tushaman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mustaqillik bekatida.",
+            "english": "At Mustaqillik station."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, esladim!",
+            "english": "Thank you, I remember!",
+            "tokens": [
+              "Rahmat,",
+              "esladim!"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "metro-station.lost-card",
+    "theme": "metro-station",
+    "title": {
+      "en": "The Card Will Not Work",
+      "uz": "Karta ishlamayapti"
+    },
+    "scenario": "Your travel card is not opening the gate.",
+    "variants": [
+      {
+        "id": "metro-station.lost-card.base",
+        "description": "Just needs topping up",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kechirasiz, kartam ishlamayapti.",
+            "english": "Excuse me, my card is not working.",
+            "tokens": [
+              "Kechirasiz,",
+              "kartam",
+              "ishlamayapti."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Pul tugagan. Qayta to'ldiring.",
+            "english": "The money has run out. Top it up again."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Qayerda to'ldiraman?",
+            "english": "Where do I top it up?",
+            "tokens": [
+              "Qayerda",
+              "to'ldiraman?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Kirishda, chap tomonda.",
+            "english": "At the entrance, on the left."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "metro-station.lost-card.broken",
+        "description": "The card is broken — buy a token",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kartam ochmayapti.",
+            "english": "My card will not open the gate.",
+            "tokens": [
+              "Kartam",
+              "ochmayapti."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Karta buzilgan. Jeton oling.",
+            "english": "The card is broken. Buy a token."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Jeton qancha?",
+            "english": "How much is a token?",
+            "tokens": [
+              "Jeton",
+              "qancha?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ikki ming so'm.",
+            "english": "Two thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Mana pul, rahmat.",
+            "english": "Here is the money, thank you.",
+            "tokens": [
+              "Mana",
+              "pul,",
+              "rahmat."
+            ]
+          }
+        ]
+      },
+      {
+        "id": "metro-station.lost-card.help",
+        "description": "A worker lets you through",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Kartam ishlamayapti. Yordam bering.",
+            "english": "My card is not working. Please help.",
+            "tokens": [
+              "Kartam",
+              "ishlamayapti.",
+              "Yordam",
+              "bering."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Hechqisi yo'q. Men ochaman. O'ting.",
+            "english": "No problem. I will open it. Go through."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yaxshi yo'l!",
+            "english": "Have a good trip!"
+          }
+        ]
+      },
+      {
+        "id": "metro-station.lost-card.queue",
+        "description": "Long queue — use the machine",
+        "turns": [
+          {
+            "speaker": "user",
+            "uzbek": "Karta to'ldirish qayerda?",
+            "english": "Where can I top up my card?",
+            "tokens": [
+              "Karta",
+              "to'ldirish",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Oynada navbat uzun. Avtomatdan to'ldiring.",
+            "english": "The window queue is long. Use the machine."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Avtomat qayerda?",
+            "english": "Where is the machine?",
+            "tokens": [
+              "Avtomat",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "O'ng tomonda, devor yonida.",
+            "english": "On the right, by the wall."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

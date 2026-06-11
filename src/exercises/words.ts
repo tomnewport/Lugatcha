@@ -7,9 +7,15 @@ async function seenWordIds(): Promise<Set<string>> {
   return new Set(progress.filter((p) => p.seenAt).map((p) => p.wordId))
 }
 
+/** Essential words first; random within the same level (stable sort after shuffle). */
+function byLevel(words: Word[]): Word[] {
+  return shuffle(words).sort((a, b) => (a.level ?? 2) - (b.level ?? 2))
+}
+
 /**
- * Words for the intro exercise: unseen theme words first, padded with unseen
- * core vocabulary, then (when nearly everything is seen) already-seen words.
+ * Words for the intro exercise: unseen theme words first (essential levels
+ * before nice-to-have), padded with unseen core vocabulary, then (when nearly
+ * everything is seen) already-seen words.
  */
 export async function pickIntroWords(theme: string, count = 5): Promise<Word[]> {
   const [themeWords, coreWords, seen] = await Promise.all([
@@ -17,8 +23,8 @@ export async function pickIntroWords(theme: string, count = 5): Promise<Word[]> 
     db.words.where('theme').equals('core').toArray(),
     seenWordIds(),
   ])
-  const unseenTheme = shuffle(themeWords.filter((w) => !seen.has(w.id)))
-  const unseenCore = shuffle(coreWords.filter((w) => !seen.has(w.id)))
+  const unseenTheme = byLevel(themeWords.filter((w) => !seen.has(w.id)))
+  const unseenCore = byLevel(coreWords.filter((w) => !seen.has(w.id)))
   const seenAny = shuffle([...themeWords, ...coreWords].filter((w) => seen.has(w.id)))
   return [...unseenTheme, ...unseenCore, ...seenAny].slice(0, count)
 }

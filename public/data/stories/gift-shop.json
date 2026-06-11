@@ -1,0 +1,127 @@
+[
+  {
+    "id": "gift-shop.perfect-gift",
+    "theme": "gift-shop",
+    "title": {
+      "en": "The Perfect Gift",
+      "uz": "Eng yaxshi sovg'a"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men oilam uchun sovg'a izladim.",
+        "english": "I looked for a gift for my family."
+      },
+      {
+        "uzbek": "Do'konda chiroyli ipak ro'mollar bor edi.",
+        "english": "In the shop there were beautiful silk scarves."
+      },
+      {
+        "uzbek": "Sotuvchi menga ko'k ro'mol ko'rsatdi.",
+        "english": "The seller showed me a blue scarf."
+      },
+      {
+        "uzbek": "Men narxini so'radim va chegirma oldim.",
+        "english": "I asked the price and got a discount."
+      },
+      {
+        "uzbek": "Sotuvchi sovg'ani chiroyli o'radi.",
+        "english": "The seller wrapped the gift beautifully."
+      },
+      {
+        "uzbek": "Onam bu ro'molni juda yaxshi ko'rdi!",
+        "english": "My mother loved this scarf!"
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "oilam": "my family",
+      "uchun": "for",
+      "sovg'a": "gift",
+      "izladim": "I looked for",
+      "Do'konda": "in the shop",
+      "chiroyli": "beautiful",
+      "ipak": "silk",
+      "ro'mollar": "scarves",
+      "bor": "there were",
+      "edi": "was",
+      "Sotuvchi": "the seller",
+      "menga": "to me",
+      "ko'k": "blue",
+      "ro'mol": "scarf",
+      "ko'rsatdi": "showed",
+      "narxini": "its price (object)",
+      "so'radim": "I asked",
+      "va": "and",
+      "chegirma": "discount",
+      "oldim": "I got / took",
+      "sovg'ani": "the gift (object)",
+      "o'radi": "wrapped",
+      "Onam": "my mother",
+      "bu": "this",
+      "ro'molni": "the scarf (object)",
+      "ko'rdi": "saw (yaxshi ko'rdi = loved)",
+      "juda": "very",
+      "yaxshi": "good"
+    }
+  },
+  {
+    "id": "gift-shop.little-magnet",
+    "theme": "gift-shop",
+    "title": {
+      "en": "A Little Magnet",
+      "uz": "Kichik magnit"
+    },
+    "sentences": [
+      {
+        "uzbek": "Pulim kam edi, lekin sovg'a kerak edi.",
+        "english": "I had little money, but I needed a gift."
+      },
+      {
+        "uzbek": "Men kichik magnit topdim.",
+        "english": "I found a small magnet."
+      },
+      {
+        "uzbek": "Unda Registon rasmi bor edi.",
+        "english": "It had a picture of the Registan."
+      },
+      {
+        "uzbek": "Magnit arzon va chiroyli edi.",
+        "english": "The magnet was cheap and beautiful."
+      },
+      {
+        "uzbek": "Men uchta sotib oldim.",
+        "english": "I bought three."
+      },
+      {
+        "uzbek": "Eng yaxshi sovg'a — bu xotira.",
+        "english": "The best gift is a memory."
+      }
+    ],
+    "glossary": {
+      "Pulim": "my money",
+      "kam": "little / few",
+      "edi": "was",
+      "lekin": "but",
+      "sovg'a": "gift",
+      "kerak": "necessary",
+      "Men": "I",
+      "kichik": "small",
+      "magnit": "magnet",
+      "topdim": "I found",
+      "Unda": "on it",
+      "Registon": "the Registan",
+      "rasmi": "picture (of)",
+      "bor": "there was",
+      "arzon": "cheap",
+      "va": "and",
+      "chiroyli": "beautiful",
+      "uchta": "three (of them)",
+      "sotib": "buying (sotib oldim = I bought)",
+      "oldim": "I took",
+      "Eng": "the most",
+      "yaxshi": "good",
+      "bu": "this (is)",
+      "xotira": "memory"
+    }
+  }
+]

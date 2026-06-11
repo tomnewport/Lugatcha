@@ -1,0 +1,121 @@
+[
+  {
+    "id": "cafe.morning-coffee",
+    "theme": "cafe",
+    "title": {
+      "en": "Morning Coffee",
+      "uz": "Ertalabki kofe"
+    },
+    "sentences": [
+      {
+        "uzbek": "Har ertalab men kafega boraman.",
+        "english": "Every morning I go to the cafe."
+      },
+      {
+        "uzbek": "Men bitta katta kofe buyuraman.",
+        "english": "I order one big coffee."
+      },
+      {
+        "uzbek": "Ofitsiant meni taniydi.",
+        "english": "The waiter knows me."
+      },
+      {
+        "uzbek": "Men deraza yonida o'tiraman.",
+        "english": "I sit by the window."
+      },
+      {
+        "uzbek": "Ko'chada odamlar ishga ketadi.",
+        "english": "On the street people go to work."
+      },
+      {
+        "uzbek": "Bu mening sevimli vaqtim.",
+        "english": "This is my favourite time."
+      }
+    ],
+    "glossary": {
+      "Har": "every",
+      "ertalab": "morning",
+      "men": "I",
+      "kafega": "to the cafe",
+      "boraman": "I go",
+      "Men": "I",
+      "bitta": "one",
+      "katta": "big",
+      "kofe": "coffee",
+      "buyuraman": "I order",
+      "Ofitsiant": "the waiter",
+      "meni": "me (object)",
+      "taniydi": "knows / recognises",
+      "deraza": "window",
+      "yonida": "by / next to",
+      "o'tiraman": "I sit",
+      "Ko'chada": "on the street",
+      "odamlar": "people",
+      "ishga": "to work",
+      "ketadi": "go",
+      "Bu": "this",
+      "mening": "my",
+      "sevimli": "favourite",
+      "vaqtim": "my time"
+    }
+  },
+  {
+    "id": "cafe.rainy-afternoon",
+    "theme": "cafe",
+    "title": {
+      "en": "A Rainy Afternoon",
+      "uz": "Yomg'irli kun"
+    },
+    "sentences": [
+      {
+        "uzbek": "Tashqarida yomg'ir yog'di.",
+        "english": "Outside it rained."
+      },
+      {
+        "uzbek": "Men issiq kafega kirdim.",
+        "english": "I went into a warm cafe."
+      },
+      {
+        "uzbek": "Issiq choy va tort buyurdim.",
+        "english": "I ordered hot tea and cake."
+      },
+      {
+        "uzbek": "Men kitob o'qidim va dam oldim.",
+        "english": "I read a book and rested."
+      },
+      {
+        "uzbek": "Yomg'ir deraza oynasiga urildi.",
+        "english": "The rain knocked on the window pane."
+      },
+      {
+        "uzbek": "Bu juda tinch va yoqimli edi.",
+        "english": "It was very peaceful and pleasant."
+      }
+    ],
+    "glossary": {
+      "Tashqarida": "outside",
+      "yomg'ir": "rain",
+      "yog'di": "rained / fell",
+      "Men": "I",
+      "issiq": "warm / hot",
+      "kafega": "into the cafe",
+      "kirdim": "I entered",
+      "choy": "tea",
+      "va": "and",
+      "tort": "cake",
+      "buyurdim": "I ordered",
+      "kitob": "book",
+      "o'qidim": "I read",
+      "dam": "rest (dam oldim = rested)",
+      "oldim": "I took",
+      "deraza": "window",
+      "oynasiga": "to its pane",
+      "urildi": "knocked / struck",
+      "Bu": "this / it",
+      "juda": "very",
+      "tinch": "peaceful",
+      "yoqimli": "pleasant",
+      "edi": "was"
+    }
+  }
+]

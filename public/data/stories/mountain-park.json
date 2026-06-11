@@ -1,0 +1,124 @@
+[
+  {
+    "id": "mountain-park.to-the-top",
+    "theme": "mountain-park",
+    "title": {
+      "en": "To the Summit",
+      "uz": "Cho'qqiga"
+    },
+    "sentences": [
+      {
+        "uzbek": "Erta tongda men tog'ga chiqdim.",
+        "english": "Early in the morning I climbed the mountain."
+      },
+      {
+        "uzbek": "So'qmoq tik va tor edi.",
+        "english": "The path was steep and narrow."
+      },
+      {
+        "uzbek": "Daryo toshlar ustidan oqardi.",
+        "english": "The river flowed over the stones."
+      },
+      {
+        "uzbek": "Cho'qqida shamol sovuq edi.",
+        "english": "At the summit the wind was cold."
+      },
+      {
+        "uzbek": "Pastda butun shahar ko'rinardi.",
+        "english": "Below, the whole city was visible."
+      },
+      {
+        "uzbek": "Bu manzara mehnatga arziydi!",
+        "english": "This view is worth the effort!"
+      }
+    ],
+    "glossary": {
+      "Erta": "early",
+      "tongda": "at dawn",
+      "men": "I",
+      "tog'ga": "the mountain (up)",
+      "chiqdim": "I climbed",
+      "So'qmoq": "the path",
+      "tik": "steep",
+      "va": "and",
+      "tor": "narrow",
+      "edi": "was",
+      "Daryo": "the river",
+      "toshlar": "stones",
+      "ustidan": "over",
+      "oqardi": "flowed",
+      "Cho'qqida": "at the summit",
+      "shamol": "wind",
+      "sovuq": "cold",
+      "Pastda": "below",
+      "butun": "whole",
+      "shahar": "city",
+      "ko'rinardi": "was visible",
+      "Bu": "this",
+      "manzara": "view",
+      "mehnatga": "the effort (to)",
+      "arziydi": "is worth"
+    }
+  },
+  {
+    "id": "mountain-park.mountain-tea",
+    "theme": "mountain-park",
+    "title": {
+      "en": "Tea on the Mountain",
+      "uz": "Tog'da choy"
+    },
+    "sentences": [
+      {
+        "uzbek": "Tog'da kichik choyxona bor edi.",
+        "english": "On the mountain there was a small teahouse."
+      },
+      {
+        "uzbek": "Men charchadim va o'tirdim.",
+        "english": "I was tired and sat down."
+      },
+      {
+        "uzbek": "Bir cho'pon menga choy taklif qildi.",
+        "english": "A shepherd offered me tea."
+      },
+      {
+        "uzbek": "Biz toza havoda choy ichdik.",
+        "english": "We drank tea in the fresh air."
+      },
+      {
+        "uzbek": "Osmon ko'm-ko'k va tiniq edi.",
+        "english": "The sky was deep blue and clear."
+      },
+      {
+        "uzbek": "Men bu tinchlikni unutmayman.",
+        "english": "I will not forget this peace."
+      }
+    ],
+    "glossary": {
+      "Tog'da": "on the mountain",
+      "kichik": "small",
+      "choyxona": "teahouse",
+      "bor": "there was",
+      "edi": "was",
+      "Men": "I",
+      "charchadim": "I was tired",
+      "va": "and",
+      "o'tirdim": "I sat down",
+      "Bir": "one / a",
+      "cho'pon": "shepherd",
+      "menga": "to me",
+      "choy": "tea",
+      "taklif": "offer (taklif qildi = offered)",
+      "qildi": "did / made",
+      "Biz": "we",
+      "toza": "fresh / clean",
+      "havoda": "in the air",
+      "ichdik": "we drank",
+      "Osmon": "the sky",
+      "ko'm-ko'k": "deep blue",
+      "tiniq": "clear",
+      "bu": "this",
+      "tinchlikni": "the peace (object)",
+      "unutmayman": "I will not forget"
+    }
+  }
+]

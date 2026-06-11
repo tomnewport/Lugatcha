@@ -1,49 +1,108 @@
-{
-  "id": "airport.arrival",
-  "theme": "airport",
-  "title": {
-    "en": "Arrival in Tashkent",
-    "uz": "Toshkentga kelish"
-  },
-  "sentences": [
-    {
-      "uzbek": "Men Toshkent aeroportiga keldim.",
-      "english": "I arrived at Tashkent airport."
+[
+  {
+    "id": "airport.arrival",
+    "theme": "airport",
+    "title": {
+      "en": "Arrival in Tashkent",
+      "uz": "Toshkentga kelish"
     },
-    {
-      "uzbek": "Men pasport nazoratiga bordim.",
-      "english": "I went to passport control."
-    },
-    {
-      "uzbek": "Xodim mening pasportimni tekshirdi.",
-      "english": "The officer checked my passport."
-    },
-    {
-      "uzbek": "Men bagajimni oldim.",
-      "english": "I collected my luggage."
-    },
-    {
-      "uzbek": "Tashqarida quyosh charaqlab turardi.",
-      "english": "Outside, the sun was shining brightly."
+    "sentences": [
+      {
+        "uzbek": "Men Toshkent aeroportiga keldim.",
+        "english": "I arrived at Tashkent airport."
+      },
+      {
+        "uzbek": "Men pasport nazoratiga bordim.",
+        "english": "I went to passport control."
+      },
+      {
+        "uzbek": "Xodim mening pasportimni tekshirdi.",
+        "english": "The officer checked my passport."
+      },
+      {
+        "uzbek": "Men bagajimni oldim.",
+        "english": "I collected my luggage."
+      },
+      {
+        "uzbek": "Tashqarida quyosh charaqlab turardi.",
+        "english": "Outside, the sun was shining brightly."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "Toshkent": "Tashkent",
+      "aeroportiga": "to the airport (aeroport + -ga)",
+      "keldim": "I arrived, I came",
+      "pasport": "passport",
+      "nazoratiga": "to the control (nazorat + -ga)",
+      "bordim": "I went",
+      "Xodim": "the officer, staff member",
+      "mening": "my",
+      "pasportimni": "my passport (pasport + -im + -ni)",
+      "tekshirdi": "checked",
+      "bagajimni": "my luggage (bagaj + -im + -ni)",
+      "oldim": "I took, I collected",
+      "Tashqarida": "outside",
+      "quyosh": "sun",
+      "charaqlab": "shining brightly",
+      "turardi": "was (kept on being)"
     }
-  ],
-  "glossary": {
-    "Men": "I",
-    "Toshkent": "Tashkent",
-    "aeroportiga": "to the airport (aeroport + -ga)",
-    "keldim": "I arrived, I came",
-    "pasport": "passport",
-    "nazoratiga": "to the control (nazorat + -ga)",
-    "bordim": "I went",
-    "Xodim": "the officer, staff member",
-    "mening": "my",
-    "pasportimni": "my passport (pasport + -im + -ni)",
-    "tekshirdi": "checked",
-    "bagajimni": "my luggage (bagaj + -im + -ni)",
-    "oldim": "I took, I collected",
-    "Tashqarida": "outside",
-    "quyosh": "sun",
-    "charaqlab": "shining brightly",
-    "turardi": "was (kept on being)"
+  },
+  {
+    "id": "airport.departure",
+    "theme": "airport",
+    "title": {
+      "en": "Flying Home",
+      "uz": "Uyga uchish"
+    },
+    "sentences": [
+      {
+        "uzbek": "Bugun men uyga uchaman.",
+        "english": "Today I fly home."
+      },
+      {
+        "uzbek": "Men taksida aeroportga bordim.",
+        "english": "I went to the airport by taxi."
+      },
+      {
+        "uzbek": "Chipta va pasportimni berdim.",
+        "english": "I gave my ticket and passport."
+      },
+      {
+        "uzbek": "Bagajim katta edi.",
+        "english": "My luggage was big."
+      },
+      {
+        "uzbek": "Men do'stlarimga sovg'alar oldim.",
+        "english": "I bought gifts for my friends."
+      },
+      {
+        "uzbek": "Xayr, O'zbekiston! Men yana kelaman.",
+        "english": "Goodbye, Uzbekistan! I will come again."
+      }
+    ],
+    "glossary": {
+      "Bugun": "today",
+      "men": "I",
+      "uyga": "home (uy + -ga, to)",
+      "uchaman": "I fly",
+      "taksida": "by taxi (taksi + -da)",
+      "aeroportga": "to the airport",
+      "bordim": "I went",
+      "pasportimni": "my passport (object)",
+      "berdim": "I gave",
+      "Bagajim": "my luggage",
+      "katta": "big",
+      "edi": "was",
+      "do'stlarimga": "to my friends",
+      "sovg'alar": "gifts",
+      "oldim": "I bought / took",
+      "Xayr": "goodbye",
+      "yana": "again",
+      "kelaman": "I will come",
+      "va": "and",
+      "Chipta": "ticket",
+      "O'zbekiston": "Uzbekistan"
+    }
   }
-}
+]

@@ -1,0 +1,123 @@
+[
+  {
+    "id": "grocery-store.morning-shop",
+    "theme": "grocery-store",
+    "title": {
+      "en": "Morning Shopping",
+      "uz": "Ertalabki xarid"
+    },
+    "sentences": [
+      {
+        "uzbek": "Ertalab men do'konga bordim.",
+        "english": "In the morning I went to the shop."
+      },
+      {
+        "uzbek": "Men non, sut va tuxum oldim.",
+        "english": "I bought bread, milk, and eggs."
+      },
+      {
+        "uzbek": "Sotuvchi yangi meva ko'rsatdi.",
+        "english": "The seller showed me fresh fruit."
+      },
+      {
+        "uzbek": "Men ikki kilo olma oldim.",
+        "english": "I bought two kilos of apples."
+      },
+      {
+        "uzbek": "Olmalar shirin va pishgan edi.",
+        "english": "The apples were sweet and ripe."
+      },
+      {
+        "uzbek": "Nonushta juda mazali bo'ldi!",
+        "english": "Breakfast was very delicious!"
+      }
+    ],
+    "glossary": {
+      "Ertalab": "in the morning",
+      "men": "I",
+      "do'konga": "to the shop",
+      "bordim": "I went",
+      "Men": "I",
+      "non": "bread",
+      "sut": "milk",
+      "va": "and",
+      "tuxum": "eggs",
+      "oldim": "I bought / took",
+      "Sotuvchi": "the seller",
+      "yangi": "fresh",
+      "meva": "fruit",
+      "ko'rsatdi": "showed",
+      "ikki": "two",
+      "kilo": "kilos",
+      "olma": "apples",
+      "Olmalar": "the apples",
+      "shirin": "sweet",
+      "pishgan": "ripe",
+      "edi": "was",
+      "Nonushta": "breakfast",
+      "juda": "very",
+      "mazali": "delicious",
+      "bo'ldi": "was / became"
+    }
+  },
+  {
+    "id": "grocery-store.the-melon",
+    "theme": "grocery-store",
+    "title": {
+      "en": "The Famous Melon",
+      "uz": "Mashhur qovun"
+    },
+    "sentences": [
+      {
+        "uzbek": "O'zbek qovuni butun dunyoda mashhur.",
+        "english": "Uzbek melon is famous all over the world."
+      },
+      {
+        "uzbek": "Men bozorda katta qovun ko'rdim.",
+        "english": "I saw a big melon at the bazaar."
+      },
+      {
+        "uzbek": "Sotuvchi menga bir bo'lak berdi.",
+        "english": "The seller gave me a piece."
+      },
+      {
+        "uzbek": "Qovun shirin va xushbo'y edi.",
+        "english": "The melon was sweet and fragrant."
+      },
+      {
+        "uzbek": "Men butun qovunni sotib oldim.",
+        "english": "I bought the whole melon."
+      },
+      {
+        "uzbek": "Bu eng shirin qovun edi!",
+        "english": "It was the sweetest melon!"
+      }
+    ],
+    "glossary": {
+      "O'zbek": "Uzbek",
+      "qovuni": "melon (of)",
+      "butun": "whole / entire",
+      "dunyoda": "in the world",
+      "mashhur": "famous",
+      "Men": "I",
+      "bozorda": "at the bazaar",
+      "katta": "big",
+      "qovun": "melon",
+      "ko'rdim": "I saw",
+      "Sotuvchi": "the seller",
+      "menga": "to me",
+      "bir": "one / a",
+      "bo'lak": "piece",
+      "berdi": "gave",
+      "shirin": "sweet",
+      "va": "and",
+      "xushbo'y": "fragrant",
+      "edi": "was",
+      "qovunni": "the melon (object)",
+      "sotib": "buying (sotib oldim = bought)",
+      "oldim": "I took",
+      "Bu": "this / it",
+      "eng": "the most"
+    }
+  }
+]

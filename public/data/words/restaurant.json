@@ -1,18 +1,117 @@
 [
-  { "id": "restaurant.table",        "uzbek": "stol",          "english": "table",                 "theme": "restaurant" },
-  { "id": "restaurant.menu",         "uzbek": "menyu",         "english": "menu",                  "theme": "restaurant" },
-  { "id": "restaurant.waiter",       "uzbek": "ofitsiant",     "english": "waiter",                "theme": "restaurant" },
-  { "id": "restaurant.order",        "uzbek": "buyurtma",      "english": "order",                 "theme": "restaurant" },
-  { "id": "restaurant.food",         "uzbek": "taom",          "english": "dish / food",           "theme": "restaurant" },
-  { "id": "restaurant.water",        "uzbek": "suv",           "english": "water",                 "theme": "restaurant" },
-  { "id": "restaurant.tea",          "uzbek": "choy",          "english": "tea",                   "theme": "restaurant", "usageNotes": "Green tea (ko'k choy) is the default; black tea (qora choy) must be specified." },
-  { "id": "restaurant.bread",        "uzbek": "non",           "english": "bread",                 "theme": "restaurant", "usageNotes": "Non (flatbread) is sacred in Uzbek culture — never place it upside-down or waste it." },
-  { "id": "restaurant.plov",         "uzbek": "osh",           "english": "plov",                  "theme": "restaurant", "usageNotes": "The national dish: rice cooked with lamb, carrots, and onions. Also called palov." },
-  { "id": "restaurant.kebab",        "uzbek": "kabob",         "english": "kebab",                 "theme": "restaurant" },
-  { "id": "restaurant.meat",         "uzbek": "go'sht",        "english": "meat",                  "theme": "restaurant" },
-  { "id": "restaurant.vegetables",   "uzbek": "sabzavot",      "english": "vegetables",            "theme": "restaurant" },
-  { "id": "restaurant.delicious",    "uzbek": "mazali",        "english": "delicious",             "theme": "restaurant" },
-  { "id": "restaurant.spicy",        "uzbek": "achchiq",       "english": "spicy",                 "theme": "restaurant" },
-  { "id": "restaurant.bill",         "uzbek": "hisob",         "english": "bill / check",          "theme": "restaurant" },
-  { "id": "restaurant.portion",      "uzbek": "porsiya",       "english": "portion",               "theme": "restaurant" }
+  {
+    "id": "restaurant.table",
+    "uzbek": "stol",
+    "english": "table",
+    "theme": "restaurant",
+    "level": 1
+  },
+  {
+    "id": "restaurant.menu",
+    "uzbek": "menyu",
+    "english": "menu",
+    "theme": "restaurant",
+    "level": 1
+  },
+  {
+    "id": "restaurant.waiter",
+    "uzbek": "ofitsiant",
+    "english": "waiter",
+    "theme": "restaurant",
+    "level": 2
+  },
+  {
+    "id": "restaurant.order",
+    "uzbek": "buyurtma",
+    "english": "order",
+    "theme": "restaurant",
+    "level": 2
+  },
+  {
+    "id": "restaurant.food",
+    "uzbek": "taom",
+    "english": "dish / food",
+    "theme": "restaurant",
+    "level": 1
+  },
+  {
+    "id": "restaurant.water",
+    "uzbek": "suv",
+    "english": "water",
+    "theme": "restaurant",
+    "level": 1
+  },
+  {
+    "id": "restaurant.tea",
+    "uzbek": "choy",
+    "english": "tea",
+    "theme": "restaurant",
+    "usageNotes": "Green tea (ko'k choy) is the default; black tea (qora choy) must be specified.",
+    "level": 1
+  },
+  {
+    "id": "restaurant.bread",
+    "uzbek": "non",
+    "english": "bread",
+    "theme": "restaurant",
+    "usageNotes": "Non (flatbread) is sacred in Uzbek culture — never place it upside-down or waste it.",
+    "level": 1
+  },
+  {
+    "id": "restaurant.plov",
+    "uzbek": "osh",
+    "english": "plov",
+    "theme": "restaurant",
+    "usageNotes": "The national dish: rice cooked with lamb, carrots, and onions. Also called palov.",
+    "level": 1
+  },
+  {
+    "id": "restaurant.kebab",
+    "uzbek": "kabob",
+    "english": "kebab",
+    "theme": "restaurant",
+    "level": 2
+  },
+  {
+    "id": "restaurant.meat",
+    "uzbek": "go'sht",
+    "english": "meat",
+    "theme": "restaurant",
+    "level": 2
+  },
+  {
+    "id": "restaurant.vegetables",
+    "uzbek": "sabzavot",
+    "english": "vegetables",
+    "theme": "restaurant",
+    "level": 2
+  },
+  {
+    "id": "restaurant.delicious",
+    "uzbek": "mazali",
+    "english": "delicious",
+    "theme": "restaurant",
+    "level": 1
+  },
+  {
+    "id": "restaurant.spicy",
+    "uzbek": "achchiq",
+    "english": "spicy",
+    "theme": "restaurant",
+    "level": 2
+  },
+  {
+    "id": "restaurant.bill",
+    "uzbek": "hisob",
+    "english": "bill / check",
+    "theme": "restaurant",
+    "level": 1
+  },
+  {
+    "id": "restaurant.portion",
+    "uzbek": "porsiya",
+    "english": "portion",
+    "theme": "restaurant",
+    "level": 3
+  }
 ]

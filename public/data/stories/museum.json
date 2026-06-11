@@ -1,0 +1,129 @@
+[
+  {
+    "id": "museum.old-map",
+    "theme": "museum",
+    "title": {
+      "en": "The Old Map",
+      "uz": "Eski xarita"
+    },
+    "sentences": [
+      {
+        "uzbek": "Muzeyda men eski xaritani ko'rdim.",
+        "english": "In the museum I saw an old map."
+      },
+      {
+        "uzbek": "Unda Buyuk ipak yo'li bor edi.",
+        "english": "The Great Silk Road was on it."
+      },
+      {
+        "uzbek": "Karvonlar Samarqandga bordi.",
+        "english": "Caravans went to Samarkand."
+      },
+      {
+        "uzbek": "Ular ipak va sopol olib keldi.",
+        "english": "They brought silk and ceramics."
+      },
+      {
+        "uzbek": "Men xaritaga uzoq qaradim.",
+        "english": "I looked at the map for a long time."
+      },
+      {
+        "uzbek": "Tarix shu yerda, juda yaqin edi.",
+        "english": "History was right here, very near."
+      }
+    ],
+    "glossary": {
+      "Muzeyda": "in the museum",
+      "men": "I",
+      "eski": "old",
+      "xaritani": "the map (object)",
+      "ko'rdim": "I saw",
+      "Unda": "on it",
+      "Buyuk": "great",
+      "yo'li": "road (of)",
+      "bor": "there was",
+      "edi": "was",
+      "Karvonlar": "caravans",
+      "Samarqandga": "to Samarkand",
+      "bordi": "went",
+      "Ular": "they",
+      "olib": "taking (olib keldi = brought)",
+      "keldi": "came",
+      "xaritaga": "at the map",
+      "uzoq": "long / far",
+      "qaradim": "I looked",
+      "Tarix": "history",
+      "juda": "very",
+      "yaqin": "near",
+      "va": "and",
+      "ipak": "silk",
+      "shu": "this very",
+      "yerda": "at (a place)"
+    }
+  },
+  {
+    "id": "museum.grandfathers-house",
+    "theme": "museum",
+    "title": {
+      "en": "The Master's House",
+      "uz": "Usta uyi"
+    },
+    "sentences": [
+      {
+        "uzbek": "Bu muzey eski usta uyi edi.",
+        "english": "This museum was an old master's house."
+      },
+      {
+        "uzbek": "Usta chiroyli sopol idishlar yasadi.",
+        "english": "The master made beautiful ceramic dishes."
+      },
+      {
+        "uzbek": "Hovlida katta tut daraxti bor.",
+        "english": "In the courtyard there is a big mulberry tree."
+      },
+      {
+        "uzbek": "Men ko'k piyolani ko'rdim.",
+        "english": "I saw a blue tea bowl."
+      },
+      {
+        "uzbek": "U yuz yoshda, lekin yangi kabi.",
+        "english": "It is a hundred years old, but like new."
+      },
+      {
+        "uzbek": "San'at hech qachon qarimaydi.",
+        "english": "Art never grows old."
+      }
+    ],
+    "glossary": {
+      "Bu": "this",
+      "muzey": "museum",
+      "eski": "old",
+      "usta": "master / craftsman",
+      "uyi": "house (of)",
+      "edi": "was",
+      "chiroyli": "beautiful",
+      "sopol": "ceramic",
+      "idishlar": "dishes",
+      "yasadi": "made",
+      "Hovlida": "in the courtyard",
+      "katta": "big",
+      "tut": "mulberry",
+      "daraxti": "tree",
+      "bor": "there is",
+      "Men": "I",
+      "ko'k": "blue",
+      "piyolani": "the tea bowl (object)",
+      "ko'rdim": "I saw",
+      "U": "it",
+      "yuz": "hundred",
+      "yoshda": "years old",
+      "lekin": "but",
+      "yangi": "new",
+      "kabi": "like",
+      "San'at": "art",
+      "qarimaydi": "does not grow old",
+      "hech": "never (with qachon)",
+      "qachon": "when"
+    }
+  }
+]
