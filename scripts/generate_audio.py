@@ -19,6 +19,8 @@ Two backends:
                               or the Russia cloud (tts.api.cloud.yandex.net).
 
 Setup (once):
+    git clone https://github.com/tomnewport/Lugatcha.git
+    cd Lugatcha
     brew install uv ffmpeg
 
 Usage (local backend):
