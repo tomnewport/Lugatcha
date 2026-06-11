@@ -7,6 +7,10 @@ content-addressed MP3s plus public/audio/manifest.json. The app looks clips up
 by the same text hash (src/audio/key.ts) and falls back to the Web Speech API
 for anything missing, so partial runs are safe.
 
+The manifest is rewritten after every clip, so a run is safe to quit anytime.
+It stays in sync with disk both ways: deleting a clip file drops its entry on
+the next save, and deleting an entry by hand deletes the clip on the next run.
+
 Two backends:
   --backend local  (default)  Runs the uzlm/sayro-tts-1.7B Uzbek model on this
                               machine via the Qwen3-TTS `qwen_tts` runtime. The
@@ -675,6 +679,54 @@ def write_candidates_manifest(out_dir: Path, texts: dict[str, str]) -> int:
     return len(manifest)
 
 
+def _read_manifest(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {}
+
+
+def prune_main_orphans(out_dir: Path) -> int:
+    """Delete <key>.mp3 files whose manifest entry was removed by hand.
+
+    The reverse direction (file deleted -> entry dropped) is handled by
+    write_manifest rebuilding from disk. A missing or empty manifest is treated
+    as "adopt whatever is on disk", never as "delete everything".
+    """
+    manifest = _read_manifest(out_dir / "manifest.json")
+    if not manifest:
+        return 0
+    keys = set(manifest)
+    removed = 0
+    for mp3 in out_dir.glob("*.mp3"):
+        if mp3.stem not in keys:
+            mp3.unlink()
+            removed += 1
+            print(f"  pruned {mp3.name} (removed from manifest)")
+    return removed
+
+
+def prune_candidate_orphans(out_dir: Path) -> int:
+    """Delete candidate clips whose manifest variant was removed by hand."""
+    manifest = _read_manifest(out_dir / "manifest.json")
+    if not manifest:
+        return 0
+    allowed = {
+        variant["file"]
+        for entry in manifest.values()
+        for variant in entry.get("variants", [])
+    }
+    removed = 0
+    for mp3 in out_dir.glob("*.mp3"):
+        if mp3.name not in allowed:
+            mp3.unlink()
+            removed += 1
+            print(f"  pruned {mp3.name} (removed from candidates manifest)")
+    return removed
+
+
 def run_candidates(args, texts: dict[str, str], ffmpeg: str) -> None:
     """Generate CANDIDATE_PROFILES variants per word for in-app A/B review."""
     out_dir = args.out / "candidates"
@@ -682,6 +734,10 @@ def run_candidates(args, texts: dict[str, str], ffmpeg: str) -> None:
 
     def variant_path(key: str, profile_id: str) -> Path:
         return out_dir / f"{key}-{profile_id}.mp3"
+
+    pruned = prune_candidate_orphans(out_dir)
+    if pruned:
+        print(f"pruned {pruned} candidate clips removed from the manifest")
 
     pending = {
         key: text
@@ -719,6 +775,8 @@ def run_candidates(args, texts: dict[str, str], ffmpeg: str) -> None:
                     samples = trim_to_speech(samples, rate, args.trim_pad_ms)
                 write_mp3(samples, rate, target, ffmpeg)
                 print(f"    {p['id']}")
+            # Save after each word so the run is safe to quit anytime.
+            write_candidates_manifest(out_dir, texts)
 
     count = write_candidates_manifest(out_dir, texts)
     total_kb = sum(p.stat().st_size for p in out_dir.glob("*.mp3")) // 1024
@@ -792,6 +850,9 @@ def main() -> None:
         return
 
     args.out.mkdir(parents=True, exist_ok=True)
+    pruned = prune_main_orphans(args.out)
+    if pruned:
+        print(f"pruned {pruned} clips removed from the manifest")
     pending = {
         key: text
         for key, text in texts.items()
@@ -844,6 +905,8 @@ def main() -> None:
                 note = f"  ({before:.2f}s→{len(samples) / rate:.2f}s)"
             print(f"[{i}/{len(pending)}] {text}{note}")
             write_mp3(samples, rate, args.out / f"{key}.mp3", ffmpeg)
+            # Save after each clip so the run is safe to quit anytime.
+            write_manifest(args.out)
 
     count = write_manifest(args.out)
     total_kb = sum(p.stat().st_size for p in args.out.glob("*.mp3")) // 1024
