@@ -8,9 +8,6 @@ __pycache__/
 # Dependencies
 node_modules/
 
-# Generated audio (built by CI pipeline)
-public/audio/
-
 # Editor
 .vscode/*
 !.vscode/extensions.json
