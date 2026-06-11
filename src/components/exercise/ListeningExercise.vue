@@ -4,6 +4,7 @@ import { db } from '@/db'
 import { normalizeToken, shuffle, tokenize } from '@/exercises/validate'
 import { speakUzbek } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
+import UzbekSentence from '@/components/UzbekSentence.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -66,7 +67,9 @@ function next() {
 
       <div class="listening__card">
         <AudioButton :text="current.uzbek" large label="Play the phrase" />
-        <p class="listening__uzbek" lang="uz">{{ current.uzbek }}</p>
+        <p class="listening__uzbek">
+          <UzbekSentence :uzbek="current.uzbek" />
+        </p>
         <p class="listening__english">{{ current.english }}</p>
       </div>
 
@@ -131,6 +134,8 @@ function next() {
 }
 
 .listening__uzbek {
+  display: flex;
+  justify-content: center;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-primary);
