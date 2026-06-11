@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { db } from '@/db'
 import type { Verdict } from '@/db/types'
 import { setVerdict, getAllReviews, clearReviews } from '@/db/reviews'
+import { getAudioManifest, isReviewed } from '@/audio/audio'
 import {
   getCandidatesManifest,
   candidateUrl,
@@ -22,6 +23,7 @@ interface Entry {
 const router = useRouter()
 
 const loading = ref(true)
+const hadCandidates = ref(false)
 const entries = ref<Entry[]>([])
 const index = ref(0)
 // key -> (profile id -> verdict)
@@ -48,14 +50,29 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 onMounted(async () => {
-  const [manifest, saved] = await Promise.all([getCandidatesManifest(), getAllReviews(db)])
+  const [candidates, manifest, saved] = await Promise.all([
+    getCandidatesManifest(),
+    getAudioManifest(),
+    getAllReviews(db),
+  ])
   for (const r of saved) verdicts[r.key] = { ...r.verdicts }
-  if (manifest) {
-    entries.value = Object.entries(manifest).map(([key, e]) => ({
-      key,
-      text: e.text,
-      variants: shuffle(e.variants), // blind: position shouldn't bias
-    }))
+  // Words whose canonical clip is already reviewed drop out of the queue.
+  const reviewed = new Set(
+    manifest
+      ? Object.entries(manifest)
+          .filter(([, entry]) => isReviewed(entry))
+          .map(([key]) => key)
+      : [],
+  )
+  if (candidates) {
+    hadCandidates.value = Object.keys(candidates).length > 0
+    entries.value = Object.entries(candidates)
+      .filter(([key]) => !reviewed.has(key))
+      .map(([key, e]) => ({
+        key,
+        text: e.text,
+        variants: shuffle(e.variants), // blind: position shouldn't bias
+      }))
   }
   loading.value = false
   window.addEventListener('keydown', onKey)
@@ -171,6 +188,11 @@ async function resetReviews() {
     </header>
 
     <p v-if="loading" class="review__msg">Loading candidates…</p>
+
+    <template v-else-if="!total && hadCandidates">
+      <h1 class="review__title">All caught up ✓</h1>
+      <p class="review__msg">Every word with candidates has been reviewed. Nothing left to rate.</p>
+    </template>
 
     <template v-else-if="!total">
       <h1 class="review__title">No candidates found</h1>

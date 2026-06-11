@@ -9,7 +9,23 @@ import { audioKey } from './key'
 
 const base = import.meta.env.BASE_URL
 
-export type AudioManifest = Record<string, string>
+export interface AudioManifestEntry {
+  file: string
+  reviewed?: boolean
+}
+
+/** key -> entry. Legacy manifests used a bare filename string; both are read. */
+export type AudioManifest = Record<string, AudioManifestEntry | string>
+
+/** Filename for a manifest entry, tolerating the legacy string form. */
+export function audioFile(entry: AudioManifestEntry | string): string {
+  return typeof entry === 'string' ? entry : entry.file
+}
+
+/** Whether a manifest entry has been reviewed (false for legacy/string form). */
+export function isReviewed(entry: AudioManifestEntry | string | undefined): boolean {
+  return typeof entry === 'object' && entry !== null ? Boolean(entry.reviewed) : false
+}
 
 let manifestPromise: Promise<AudioManifest | null> | undefined
 
@@ -70,7 +86,8 @@ function speakWithSynthesis(text: string): Promise<void> {
 export async function speakUzbek(text: string): Promise<void> {
   stopSpeaking()
   const manifest = await getAudioManifest()
-  const file = manifest?.[audioKey(text)]
+  const entry = manifest?.[audioKey(text)]
+  const file = entry ? audioFile(entry) : undefined
   if (file && (await playFile(`${base}audio/${file}`))) return
   await speakWithSynthesis(text)
 }
