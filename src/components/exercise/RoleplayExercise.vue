@@ -6,6 +6,7 @@ import { tokenize, buildDecoys, shuffle } from '@/exercises/validate'
 import { speakUzbek, stopSpeaking } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
+import UzbekSentence from '@/components/UzbekSentence.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -140,8 +141,8 @@ function restart() {
           class="bubble"
           :class="turn.speaker === 'npc' ? 'bubble--npc' : 'bubble--user'"
         >
-          <p class="bubble__uzbek" lang="uz">
-            {{ turn.uzbek }}
+          <p class="bubble__uzbek">
+            <UzbekSentence :uzbek="turn.uzbek" />
             <AudioButton :text="turn.uzbek" />
           </p>
           <p class="bubble__english">{{ turn.english }}</p>
@@ -149,7 +150,9 @@ function restart() {
 
         <!-- Current NPC turn while speaking -->
         <div v-if="currentTurn?.speaker === 'npc' && npcSpeaking" class="bubble bubble--npc">
-          <p class="bubble__uzbek" lang="uz">{{ currentTurn.uzbek }}</p>
+          <p class="bubble__uzbek">
+            <UzbekSentence :uzbek="currentTurn.uzbek" />
+          </p>
           <p class="bubble__english">{{ currentTurn.english }}</p>
         </div>
       </div>
@@ -320,8 +323,9 @@ function restart() {
 
 .bubble__uzbek {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   font-size: 0.98rem;
   font-weight: 700;
   color: var(--color-primary);
