@@ -1,10 +1,24 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { loadLocations } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
 import type { Location, LocationProgress } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
+import { useAudioReady } from '@/audio/offline'
+
+const router = useRouter()
+const { ready: audioReady } = useAudioReady()
+
+const BANNER_KEY = 'lugatcha.audioBannerDismissed'
+const bannerDismissed = ref(localStorage.getItem(BANNER_KEY) === 'true')
+const showBanner = computed(() => !audioReady.value && !bannerDismissed.value)
+
+function dismissBanner() {
+  bannerDismissed.value = true
+  try { localStorage.setItem(BANNER_KEY, 'true') } catch { /* private mode */ }
+}
 
 const locations = ref<Location[]>([])
 
@@ -49,7 +63,7 @@ const lockedMap = computed(() => {
 
 <template>
   <main class="home">
-    <RouterLink class="settings-link" to="/settings" aria-label="Settings">
+    <RouterLink class="settings-link" to="/settings" :aria-label="audioReady ? 'Settings' : 'Settings — audio not yet downloaded'">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -62,6 +76,7 @@ const lockedMap = computed(() => {
           d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
         />
       </svg>
+      <span v-if="!audioReady" class="settings-link__dot" aria-hidden="true" />
     </RouterLink>
 
     <header class="home-header">
@@ -95,6 +110,14 @@ const lockedMap = computed(() => {
       <h1 class="home-header__title">Lugʻatcha</h1>
       <p class="home-header__subtitle">O'zbekcha o'rganamiz</p>
     </header>
+
+    <div v-if="showBanner" class="audio-banner">
+      <div class="audio-banner__body">
+        <p class="audio-banner__text">Download audio for the best experience — words and phrases spoken by a native-quality Uzbek voice.</p>
+        <button class="btn btn--primary audio-banner__btn" type="button" @click="router.push('/settings')">Download audio</button>
+      </div>
+      <button class="audio-banner__close" type="button" aria-label="Dismiss" @click="dismissBanner">✕</button>
+    </div>
 
     <div v-if="sortedLocations.length" class="city-grid" role="list">
       <template v-for="loc in sortedLocations" :key="loc.id">
@@ -159,6 +182,62 @@ const lockedMap = computed(() => {
 .settings-link:hover {
   box-shadow: var(--shadow-md);
   color: var(--color-primary);
+}
+
+.settings-link__dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-terracotta);
+  border: 2px solid var(--color-bg);
+}
+
+.audio-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 520px;
+  padding: 0.9rem 1rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.audio-banner__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.audio-banner__text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+
+.audio-banner__btn {
+  align-self: flex-start;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+}
+
+.audio-banner__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  padding: 0.1rem 0.25rem;
+  cursor: pointer;
+  line-height: 1;
 }
 
 /* Header */
