@@ -16,6 +16,601 @@
       }
     ]
   },
+  "88c2d98828a3e2f7": {
+    "text": "Ayvonda kichik stol topdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "88c2d98828a3e2f7-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "88c2d98828a3e2f7-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "88c2d98828a3e2f7-expressive.mp3"
+      }
+    ]
+  },
+  "ea1ca24e32f589df": {
+    "text": "Bagajim katta edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "ea1ca24e32f589df-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "ea1ca24e32f589df-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "ea1ca24e32f589df-expressive.mp3"
+      }
+    ]
+  },
+  "f2d2b446864c3200": {
+    "text": "Bayram bor edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "f2d2b446864c3200-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "f2d2b446864c3200-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "f2d2b446864c3200-expressive.mp3"
+      }
+    ]
+  },
+  "7978f8e41e661587": {
+    "text": "Bayram juda chiroyli edi!",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "7978f8e41e661587-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "7978f8e41e661587-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "7978f8e41e661587-expressive.mp3"
+      }
+    ]
+  },
+  "16763a2df073312a": {
+    "text": "Bekatda uzoq kutdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "16763a2df073312a-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "16763a2df073312a-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "16763a2df073312a-expressive.mp3"
+      }
+    ]
+  },
+  "b1c7d901571ea0a6": {
+    "text": "Bir bekat saroy kabi edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "b1c7d901571ea0a6-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "b1c7d901571ea0a6-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "b1c7d901571ea0a6-expressive.mp3"
+      }
+    ]
+  },
+  "1d35188fa47ee70b": {
+    "text": "Bir keksa ayolga joy berdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "1d35188fa47ee70b-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "1d35188fa47ee70b-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "1d35188fa47ee70b-expressive.mp3"
+      }
+    ]
+  },
+  "788a7601808f62b9": {
+    "text": "Bir keksa odam u yerda o'tirardi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "788a7601808f62b9-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "788a7601808f62b9-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "788a7601808f62b9-expressive.mp3"
+      }
+    ]
+  },
+  "b00a85f25a4cae49": {
+    "text": "Bir kichik restoranga kirdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "b00a85f25a4cae49-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "b00a85f25a4cae49-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "b00a85f25a4cae49-expressive.mp3"
+      }
+    ]
+  },
+  "e2120b44d827bd3a": {
+    "text": "Bir kishi telefonimni topdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "e2120b44d827bd3a-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "e2120b44d827bd3a-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "e2120b44d827bd3a-expressive.mp3"
+      }
+    ]
+  },
+  "70d01d7c2c3a48b0": {
+    "text": "Bir kishidan yo'l so'radim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "70d01d7c2c3a48b0-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "70d01d7c2c3a48b0-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "70d01d7c2c3a48b0-expressive.mp3"
+      }
+    ]
+  },
+  "066ae1c8ce678349": {
+    "text": "Bir kun dam oldim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "066ae1c8ce678349-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "066ae1c8ce678349-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "066ae1c8ce678349-expressive.mp3"
+      }
+    ]
+  },
+  "9a18ea0197d1497d": {
+    "text": "Biz birga choy ichdik va gaplashdik.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "9a18ea0197d1497d-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "9a18ea0197d1497d-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "9a18ea0197d1497d-expressive.mp3"
+      }
+    ]
+  },
+  "59c75c3667092333": {
+    "text": "Biz do'stim bilan restoraniga bordik.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "59c75c3667092333-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "59c75c3667092333-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "59c75c3667092333-expressive.mp3"
+      }
+    ]
+  },
+  "85f46eaf121a3d4b": {
+    "text": "Biz kasalxonaga bordik.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "85f46eaf121a3d4b-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "85f46eaf121a3d4b-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "85f46eaf121a3d4b-expressive.mp3"
+      }
+    ]
+  },
+  "4d0206a9cc3868dd": {
+    "text": "Biz non yedik va suhbatlashdik.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "4d0206a9cc3868dd-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "4d0206a9cc3868dd-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "4d0206a9cc3868dd-expressive.mp3"
+      }
+    ]
+  },
+  "0d8ac092da714c08": {
+    "text": "Boshim og'ridi va isitmam bor edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "0d8ac092da714c08-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "0d8ac092da714c08-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "0d8ac092da714c08-expressive.mp3"
+      }
+    ]
+  },
+  "43447f516f782165": {
+    "text": "Bozor masjid yonida edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "43447f516f782165-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "43447f516f782165-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "43447f516f782165-expressive.mp3"
+      }
+    ]
+  },
+  "7b7c1e934a5f90c3": {
+    "text": "Bu eng yaxshi tushlik edi!",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "7b7c1e934a5f90c3-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "7b7c1e934a5f90c3-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "7b7c1e934a5f90c3-expressive.mp3"
+      }
+    ]
+  },
+  "f9f456d1bc6cddb5": {
+    "text": "Bu juda chiroyli manzara edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "f9f456d1bc6cddb5-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "f9f456d1bc6cddb5-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "f9f456d1bc6cddb5-expressive.mp3"
+      }
+    ]
+  },
+  "a74b8601f7d409fa": {
+    "text": "Bu muzey eski usta uyi edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "a74b8601f7d409fa-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "a74b8601f7d409fa-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "a74b8601f7d409fa-expressive.mp3"
+      }
+    ]
+  },
+  "d302a0be2b5bfa64": {
+    "text": "Bu shahar oqshomda juda chiroyli.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "d302a0be2b5bfa64-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "d302a0be2b5bfa64-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "d302a0be2b5bfa64-expressive.mp3"
+      }
+    ]
+  },
+  "2d5005aa9e839e61": {
+    "text": "Bu yer osti san'at muzeyi!",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "2d5005aa9e839e61-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "2d5005aa9e839e61-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "2d5005aa9e839e61-expressive.mp3"
+      }
+    ]
+  },
+  "c8c88aad2a302000": {
+    "text": "Bugun katta ko'cha yopiq edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "c8c88aad2a302000-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "c8c88aad2a302000-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "c8c88aad2a302000-expressive.mp3"
+      }
+    ]
+  },
+  "a8359fe06f9257ed": {
+    "text": "Bugun men uyga uchaman.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "a8359fe06f9257ed-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "a8359fe06f9257ed-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "a8359fe06f9257ed-expressive.mp3"
+      }
+    ]
+  },
+  "8bca2c89bc85de5e": {
+    "text": "Bugun o'zimni yaxshi his qilyapman!",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "8bca2c89bc85de5e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "8bca2c89bc85de5e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "8bca2c89bc85de5e-expressive.mp3"
+      }
+    ]
+  },
+  "7f0aadf79ef83834": {
+    "text": "Chipta va pasportimni berdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "7f0aadf79ef83834-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "7f0aadf79ef83834-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "7f0aadf79ef83834-expressive.mp3"
+      }
+    ]
+  },
+  "0f645b576b899663": {
+    "text": "Derazadan buyuk Registon maydoni ko'rinardi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "0f645b576b899663-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "0f645b576b899663-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "0f645b576b899663-expressive.mp3"
+      }
+    ]
+  },
+  "2e4b4fce189d82b7": {
+    "text": "Devorlarda rang-barang sopol bor.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "2e4b4fce189d82b7-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "2e4b4fce189d82b7-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "2e4b4fce189d82b7-expressive.mp3"
+      }
+    ]
+  },
+  "6f7167e846990cf7": {
+    "text": "Do'stim kasal bo'ldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "6f7167e846990cf7-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "6f7167e846990cf7-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "6f7167e846990cf7-expressive.mp3"
+      }
+    ]
+  },
+  "62e75077ca5d95da": {
+    "text": "Ertalab men nonushtaga tushdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "62e75077ca5d95da-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "62e75077ca5d95da-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "62e75077ca5d95da-expressive.mp3"
+      }
+    ]
+  },
+  "07b4086c098aa8cc": {
+    "text": "Ertalab men vokzalga bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "07b4086c098aa8cc-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "07b4086c098aa8cc-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "07b4086c098aa8cc-expressive.mp3"
+      }
+    ]
+  },
+  "a78a5563564c656d": {
+    "text": "Ertalab metro juda gavjum edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "a78a5563564c656d-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "a78a5563564c656d-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "a78a5563564c656d-expressive.mp3"
+      }
+    ]
+  },
+  "dfd9d5530d5122f2": {
+    "text": "Ertasi kuni do'stim sog' edi!",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "dfd9d5530d5122f2-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "dfd9d5530d5122f2-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "dfd9d5530d5122f2-expressive.mp3"
+      }
+    ]
+  },
+  "c9407f84873330c0": {
+    "text": "Favvora yonida bolalar o'ynadi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "c9407f84873330c0-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "c9407f84873330c0-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "c9407f84873330c0-expressive.mp3"
+      }
+    ]
+  },
   "09275707b5bb8822": {
     "text": "Ha",
     "variants": [
@@ -30,6 +625,108 @@
       {
         "id": "expressive",
         "file": "09275707b5bb8822-expressive.mp3"
+      }
+    ]
+  },
+  "319a9bcad4a6dcd6": {
+    "text": "Hamma ishga shoshardi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "319a9bcad4a6dcd6-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "319a9bcad4a6dcd6-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "319a9bcad4a6dcd6-expressive.mp3"
+      }
+    ]
+  },
+  "9961402584bcd198": {
+    "text": "Har bir bekat boshqacha.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "9961402584bcd198-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "9961402584bcd198-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "9961402584bcd198-expressive.mp3"
+      }
+    ]
+  },
+  "88407e9793799cef": {
+    "text": "Havo iliq va yoqimli edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "88407e9793799cef-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "88407e9793799cef-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "88407e9793799cef-expressive.mp3"
+      }
+    ]
+  },
+  "5c7fbf65515738cd": {
+    "text": "Haydovchi kulib salom berdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "5c7fbf65515738cd-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "5c7fbf65515738cd-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "5c7fbf65515738cd-expressive.mp3"
+      }
+    ]
+  },
+  "53bc2b27434ee2cc": {
+    "text": "Hovlida katta tut daraxti bor.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "53bc2b27434ee2cc-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "53bc2b27434ee2cc-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "53bc2b27434ee2cc-expressive.mp3"
+      }
+    ]
+  },
+  "788acdbc5abb4377": {
+    "text": "Ikki soatda Samarqandga keldim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "788acdbc5abb4377-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "788acdbc5abb4377-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "788acdbc5abb4377-expressive.mp3"
       }
     ]
   },
@@ -50,6 +747,57 @@
       }
     ]
   },
+  "f2da2c72ccb64e5f": {
+    "text": "Karvonlar Samarqandga bordi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "f2da2c72ccb64e5f-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "f2da2c72ccb64e5f-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "f2da2c72ccb64e5f-expressive.mp3"
+      }
+    ]
+  },
+  "0a04cbad3e36a1c2": {
+    "text": "Kecha men shamolladim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "0a04cbad3e36a1c2-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "0a04cbad3e36a1c2-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "0a04cbad3e36a1c2-expressive.mp3"
+      }
+    ]
+  },
+  "b00a264d72dc474e": {
+    "text": "Kecha telefonim yo'qoldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "b00a264d72dc474e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "b00a264d72dc474e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "b00a264d72dc474e-expressive.mp3"
+      }
+    ]
+  },
   "6c5635a7634c49aa": {
     "text": "Kechirasiz",
     "variants": [
@@ -64,6 +812,57 @@
       {
         "id": "expressive",
         "file": "6c5635a7634c49aa-expressive.mp3"
+      }
+    ]
+  },
+  "2a95eb197a21c94b": {
+    "text": "Kichik yaxshilik kun boshini yoritadi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "2a95eb197a21c94b-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "2a95eb197a21c94b-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "2a95eb197a21c94b-expressive.mp3"
+      }
+    ]
+  },
+  "2f4be10ce37a935b": {
+    "text": "Mehmonxona menga issiq choy berdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "2f4be10ce37a935b-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "2f4be10ce37a935b-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "2f4be10ce37a935b-expressive.mp3"
+      }
+    ]
+  },
+  "eab23a77cd482b16": {
+    "text": "Men Samarqandga uzoq safar qilib keldim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "eab23a77cd482b16-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "eab23a77cd482b16-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "eab23a77cd482b16-expressive.mp3"
       }
     ]
   },
@@ -84,6 +883,227 @@
       }
     ]
   },
+  "c49e90257bec7ecc": {
+    "text": "Men bagajimni oldim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "c49e90257bec7ecc-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "c49e90257bec7ecc-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "c49e90257bec7ecc-expressive.mp3"
+      }
+    ]
+  },
+  "f0a2539c540261b2": {
+    "text": "Men boshqa ko'chadan bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "f0a2539c540261b2-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "f0a2539c540261b2-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "f0a2539c540261b2-expressive.mp3"
+      }
+    ]
+  },
+  "09ac30c7875c7e5c": {
+    "text": "Men bozorni izladim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "09ac30c7875c7e5c-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "09ac30c7875c7e5c-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "09ac30c7875c7e5c-expressive.mp3"
+      }
+    ]
+  },
+  "3341a6d242452b69": {
+    "text": "Men deraza yonida o'tirdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "3341a6d242452b69-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "3341a6d242452b69-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "3341a6d242452b69-expressive.mp3"
+      }
+    ]
+  },
+  "5a217a733dce242e": {
+    "text": "Men do'stlarimga sovg'alar oldim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "5a217a733dce242e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "5a217a733dce242e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "5a217a733dce242e-expressive.mp3"
+      }
+    ]
+  },
+  "46d479502c0c3e7b": {
+    "text": "Men dorixonadan dori oldim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "46d479502c0c3e7b-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "46d479502c0c3e7b-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "46d479502c0c3e7b-expressive.mp3"
+      }
+    ]
+  },
+  "6ae3161fc3709a86": {
+    "text": "Men eng mazali oshni izladim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "6ae3161fc3709a86-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "6ae3161fc3709a86-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "6ae3161fc3709a86-expressive.mp3"
+      }
+    ]
+  },
+  "410917ad2e288a3a": {
+    "text": "Men haykal yonida o'tirdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "410917ad2e288a3a-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "410917ad2e288a3a-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "410917ad2e288a3a-expressive.mp3"
+      }
+    ]
+  },
+  "839ab43c215601a8": {
+    "text": "Men kichik qishloqqa bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "839ab43c215601a8-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "839ab43c215601a8-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "839ab43c215601a8-expressive.mp3"
+      }
+    ]
+  },
+  "51ec41863ef79259": {
+    "text": "Men ko'k piyolani ko'rdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "51ec41863ef79259-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "51ec41863ef79259-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "51ec41863ef79259-expressive.mp3"
+      }
+    ]
+  },
+  "a0836f749ed7181e": {
+    "text": "Men mehmonxona resepsheniga bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "a0836f749ed7181e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "a0836f749ed7181e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "a0836f749ed7181e-expressive.mp3"
+      }
+    ]
+  },
+  "cd6b7fab2f83dea0": {
+    "text": "Men non bilan yedim va choy ichdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "cd6b7fab2f83dea0-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "cd6b7fab2f83dea0-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "cd6b7fab2f83dea0-expressive.mp3"
+      }
+    ]
+  },
+  "c77e29889f3d0fa2": {
+    "text": "Men osh va ko'k choy buyurtma qildim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "c77e29889f3d0fa2-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "c77e29889f3d0fa2-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "c77e29889f3d0fa2-expressive.mp3"
+      }
+    ]
+  },
   "a4baadbda294d21f": {
     "text": "Men pasport nazoratiga bordim.",
     "variants": [
@@ -98,6 +1118,465 @@
       {
         "id": "expressive",
         "file": "a4baadbda294d21f-expressive.mp3"
+      }
+    ]
+  },
+  "73a401aef8339f9c": {
+    "text": "Men politsiyaga bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "73a401aef8339f9c-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "73a401aef8339f9c-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "73a401aef8339f9c-expressive.mp3"
+      }
+    ]
+  },
+  "6aa7449dc31cd019": {
+    "text": "Men poyezdni kutdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "6aa7449dc31cd019-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "6aa7449dc31cd019-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "6aa7449dc31cd019-expressive.mp3"
+      }
+    ]
+  },
+  "84190ab6ef81d6c3": {
+    "text": "Men sekin nonushta qildim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "84190ab6ef81d6c3-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "84190ab6ef81d6c3-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "84190ab6ef81d6c3-expressive.mp3"
+      }
+    ]
+  },
+  "53eab9a33be97f39": {
+    "text": "Men taksida aeroportga bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "53eab9a33be97f39-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "53eab9a33be97f39-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "53eab9a33be97f39-expressive.mp3"
+      }
+    ]
+  },
+  "b756d0dd36669258": {
+    "text": "Men to'g'riga yurdim, keyin chapga.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "b756d0dd36669258-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "b756d0dd36669258-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "b756d0dd36669258-expressive.mp3"
+      }
+    ]
+  },
+  "73a5cfd98eba2daa": {
+    "text": "Men unga chiptamni ko'rsatdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "73a5cfd98eba2daa-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "73a5cfd98eba2daa-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "73a5cfd98eba2daa-expressive.mp3"
+      }
+    ]
+  },
+  "6a3a1d9fb090b682": {
+    "text": "Men uzoq qarab turdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "6a3a1d9fb090b682-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "6a3a1d9fb090b682-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "6a3a1d9fb090b682-expressive.mp3"
+      }
+    ]
+  },
+  "880d9887e73c785e": {
+    "text": "Men xaritaga uzoq qaradim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "880d9887e73c785e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "880d9887e73c785e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "880d9887e73c785e-expressive.mp3"
+      }
+    ]
+  },
+  "3ba80a99e13cb123": {
+    "text": "Mening bronim bor edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "3ba80a99e13cb123-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "3ba80a99e13cb123-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "3ba80a99e13cb123-expressive.mp3"
+      }
+    ]
+  },
+  "55f7f25e7e309c93": {
+    "text": "Mening xonam to'rtinchi qavatda edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "55f7f25e7e309c93-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "55f7f25e7e309c93-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "55f7f25e7e309c93-expressive.mp3"
+      }
+    ]
+  },
+  "5ee97704e3c5ae99": {
+    "text": "Muzeyda men eski xaritani ko'rdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "5ee97704e3c5ae99-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "5ee97704e3c5ae99-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "5ee97704e3c5ae99-expressive.mp3"
+      }
+    ]
+  },
+  "9a26420c3f83c137": {
+    "text": "Navbat uzun emas edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "9a26420c3f83c137-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "9a26420c3f83c137-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "9a26420c3f83c137-expressive.mp3"
+      }
+    ]
+  },
+  "e8a3ef7d091c2a6e": {
+    "text": "Nihoyat eski avtobus keldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "e8a3ef7d091c2a6e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "e8a3ef7d091c2a6e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "e8a3ef7d091c2a6e-expressive.mp3"
+      }
+    ]
+  },
+  "58329ddcaca28be3": {
+    "text": "Non, qaymoq va choy keldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "58329ddcaca28be3-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "58329ddcaca28be3-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "58329ddcaca28be3-expressive.mp3"
+      }
+    ]
+  },
+  "9cd7ea035a291818": {
+    "text": "Odamlar bu yerda juda halol!",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "9cd7ea035a291818-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "9cd7ea035a291818-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "9cd7ea035a291818-expressive.mp3"
+      }
+    ]
+  },
+  "4cecde2809918866": {
+    "text": "Ofitsiant bizga menyu olib keldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "4cecde2809918866-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "4cecde2809918866-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "4cecde2809918866-expressive.mp3"
+      }
+    ]
+  },
+  "4b8653e535bc0d18": {
+    "text": "Ofitsiant menga katta porsiya keltirdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "4b8653e535bc0d18-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "4b8653e535bc0d18-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "4b8653e535bc0d18-expressive.mp3"
+      }
+    ]
+  },
+  "e67f1c80bd6842c4": {
+    "text": "Oilalar muzqaymoq yedi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "e67f1c80bd6842c4-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "e67f1c80bd6842c4-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "e67f1c80bd6842c4-expressive.mp3"
+      }
+    ]
+  },
+  "2a319a0c845c0efa": {
+    "text": "Oqshomda men maydonga bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "2a319a0c845c0efa-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "2a319a0c845c0efa-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "2a319a0c845c0efa-expressive.mp3"
+      }
+    ]
+  },
+  "ba9bef5da2114c39": {
+    "text": "Osh issiq va juda mazali edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "ba9bef5da2114c39-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "ba9bef5da2114c39-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "ba9bef5da2114c39-expressive.mp3"
+      }
+    ]
+  },
+  "98f090075e72107e": {
+    "text": "Osh juda mazali va to'yimli edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "98f090075e72107e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "98f090075e72107e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "98f090075e72107e-expressive.mp3"
+      }
+    ]
+  },
+  "5ccb2a48e43b73e8": {
+    "text": "Oxirida men hisob so'radim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "5ccb2a48e43b73e8-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "5ccb2a48e43b73e8-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "5ccb2a48e43b73e8-expressive.mp3"
+      }
+    ]
+  },
+  "663127b444f5aad2": {
+    "text": "Politsiyachi menga yo'l ko'rsatdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "663127b444f5aad2-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "663127b444f5aad2-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "663127b444f5aad2-expressive.mp3"
+      }
+    ]
+  },
+  "7bf757c779eb677a": {
+    "text": "Poyezd tez va qulay edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "7bf757c779eb677a-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "7bf757c779eb677a-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "7bf757c779eb677a-expressive.mp3"
+      }
+    ]
+  },
+  "d5ced1b23c88058a": {
+    "text": "Poyezdda mening joyim band edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "d5ced1b23c88058a-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "d5ced1b23c88058a-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "d5ced1b23c88058a-expressive.mp3"
+      }
+    ]
+  },
+  "75ee428ab8f856bd": {
+    "text": "Qishloq tinch va go'zal edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "75ee428ab8f856bd-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "75ee428ab8f856bd-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "75ee428ab8f856bd-expressive.mp3"
+      }
+    ]
+  },
+  "52c6aeeb1fefc1e4": {
+    "text": "Quyosh tog'lar ustida edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "52c6aeeb1fefc1e4-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "52c6aeeb1fefc1e4-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "52c6aeeb1fefc1e4-expressive.mp3"
       }
     ]
   },
@@ -118,6 +1597,23 @@
       }
     ]
   },
+  "b87acaa97c58e7f3": {
+    "text": "Resepshenist menga kalit berdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "b87acaa97c58e7f3-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "b87acaa97c58e7f3-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "b87acaa97c58e7f3-expressive.mp3"
+      }
+    ]
+  },
   "771e0673fdc91ab7": {
     "text": "Salom",
     "variants": [
@@ -132,6 +1628,40 @@
       {
         "id": "expressive",
         "file": "771e0673fdc91ab7-expressive.mp3"
+      }
+    ]
+  },
+  "f8c5763342ffc4ba": {
+    "text": "San'at hech qachon qarimaydi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "f8c5763342ffc4ba-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "f8c5763342ffc4ba-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "f8c5763342ffc4ba-expressive.mp3"
+      }
+    ]
+  },
+  "2977f62d531e6694": {
+    "text": "Shifokor juda mehribon edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "2977f62d531e6694-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "2977f62d531e6694-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "2977f62d531e6694-expressive.mp3"
       }
     ]
   },
@@ -152,6 +1682,91 @@
       }
     ]
   },
+  "cdaad29f1b6fb0fa": {
+    "text": "Tarix shu yerda, juda yaqin edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "cdaad29f1b6fb0fa-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "cdaad29f1b6fb0fa-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "cdaad29f1b6fb0fa-expressive.mp3"
+      }
+    ]
+  },
+  "617487a301eba8fd": {
+    "text": "Tashqarida cho'l va tog'lar edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "617487a301eba8fd-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "617487a301eba8fd-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "617487a301eba8fd-expressive.mp3"
+      }
+    ]
+  },
+  "311e5ab4da12cc9a": {
+    "text": "Tashqarida quyosh charaqlab turardi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "311e5ab4da12cc9a-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "311e5ab4da12cc9a-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "311e5ab4da12cc9a-expressive.mp3"
+      }
+    ]
+  },
+  "af336d8da3d4cb48": {
+    "text": "Tezyurar poyezd perronda turardi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "af336d8da3d4cb48-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "af336d8da3d4cb48-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "af336d8da3d4cb48-expressive.mp3"
+      }
+    ]
+  },
+  "e005ab200d69fae9": {
+    "text": "Toshkent metrosi juda chiroyli.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "e005ab200d69fae9-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "e005ab200d69fae9-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "e005ab200d69fae9-expressive.mp3"
+      }
+    ]
+  },
   "b7d90977849bc446": {
     "text": "Tushunmayapman",
     "variants": [
@@ -166,6 +1781,176 @@
       {
         "id": "expressive",
         "file": "b7d90977849bc446-expressive.mp3"
+      }
+    ]
+  },
+  "92ef3b20b9c03e02": {
+    "text": "U chap tomonni ko'rsatdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "92ef3b20b9c03e02-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "92ef3b20b9c03e02-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "92ef3b20b9c03e02-expressive.mp3"
+      }
+    ]
+  },
+  "493c4c351b524d81": {
+    "text": "U dori yozdi va kuldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "493c4c351b524d81-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "493c4c351b524d81-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "493c4c351b524d81-expressive.mp3"
+      }
+    ]
+  },
+  "61ddb927e45168a9": {
+    "text": "U katta va rang-barang edi!",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "61ddb927e45168a9-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "61ddb927e45168a9-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "61ddb927e45168a9-expressive.mp3"
+      }
+    ]
+  },
+  "d4f1048764c2b597": {
+    "text": "U kuldi va kechirim so'radi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "d4f1048764c2b597-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "d4f1048764c2b597-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "d4f1048764c2b597-expressive.mp3"
+      }
+    ]
+  },
+  "27a3d108395e4e24": {
+    "text": "U menga rahmat aytdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "27a3d108395e4e24-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "27a3d108395e4e24-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "27a3d108395e4e24-expressive.mp3"
+      }
+    ]
+  },
+  "22a814d6da6b9815": {
+    "text": "U uni politsiyaga olib keldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "22a814d6da6b9815-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "22a814d6da6b9815-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "22a814d6da6b9815-expressive.mp3"
+      }
+    ]
+  },
+  "78d721f50efc5726": {
+    "text": "U yuz yoshda, lekin yangi kabi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "78d721f50efc5726-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "78d721f50efc5726-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "78d721f50efc5726-expressive.mp3"
+      }
+    ]
+  },
+  "6417551500dff79f": {
+    "text": "Ular ipak va sopol olib keldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "6417551500dff79f-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "6417551500dff79f-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "6417551500dff79f-expressive.mp3"
+      }
+    ]
+  },
+  "b5bdc2300c0a2c43": {
+    "text": "Unda Buyuk ipak yo'li bor edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "b5bdc2300c0a2c43-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "b5bdc2300c0a2c43-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "b5bdc2300c0a2c43-expressive.mp3"
+      }
+    ]
+  },
+  "8832b7f1ad89b1b7": {
+    "text": "Usta chiroyli sopol idishlar yasadi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "8832b7f1ad89b1b7-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "8832b7f1ad89b1b7-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "8832b7f1ad89b1b7-expressive.mp3"
       }
     ]
   },
@@ -186,6 +1971,23 @@
       }
     ]
   },
+  "796cca166f0fec4b": {
+    "text": "Xayr, O'zbekiston! Men yana kelaman.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "796cca166f0fec4b-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "796cca166f0fec4b-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "796cca166f0fec4b-expressive.mp3"
+      }
+    ]
+  },
   "6d46d9d531ca9945": {
     "text": "Xodim mening pasportimni tekshirdi.",
     "variants": [
@@ -203,6 +2005,57 @@
       }
     ]
   },
+  "ef07591d933f9c39": {
+    "text": "Yo'l qisqa va yoqimli bo'ldi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "ef07591d933f9c39-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "ef07591d933f9c39-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "ef07591d933f9c39-expressive.mp3"
+      }
+    ]
+  },
+  "9643787ff82e6e3e": {
+    "text": "Yo'lda musiqa eshitdim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "9643787ff82e6e3e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "9643787ff82e6e3e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "9643787ff82e6e3e-expressive.mp3"
+      }
+    ]
+  },
+  "1c86460ec9627c8e": {
+    "text": "Yo'lda paxta dalalari bor edi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "1c86460ec9627c8e-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "1c86460ec9627c8e-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "1c86460ec9627c8e-expressive.mp3"
+      }
+    ]
+  },
   "fccbf955a91b1cd9": {
     "text": "Yo'q",
     "variants": [
@@ -217,6 +2070,23 @@
       {
         "id": "expressive",
         "file": "fccbf955a91b1cd9-expressive.mp3"
+      }
+    ]
+  },
+  "792f4014dcd2beac": {
+    "text": "Yosh politsiyachi menga yordam berdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "792f4014dcd2beac-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "792f4014dcd2beac-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "792f4014dcd2beac-expressive.mp3"
       }
     ]
   },
