@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useSettingsStore, type LabelLanguage } from '@/stores/settings'
 import { useProgressStore } from '@/stores/progress'
 import { getAudioManifest, type AudioManifest } from '@/audio/audio'
+import { useAudioDownload } from '@/audio/offline'
 
 const router = useRouter()
 const settings = useSettingsStore()
@@ -14,13 +15,25 @@ const resetDone = ref(false)
 
 const audioManifest = ref<AudioManifest | null>(null)
 const audioChecked = ref(false)
-const downloading = ref(false)
-const downloadedCount = ref(0)
-const downloadError = ref(false)
+
+const {
+  total: audioTotal,
+  done: audioDone,
+  status: audioStatus,
+  error: audioErrorMsg,
+  prepare: prepareAudio,
+  start: startAudio,
+  pause: pauseAudio,
+  resume: resumeAudio,
+} = useAudioDownload()
+const audioPercent = computed(() =>
+  audioTotal.value ? Math.round((audioDone.value / audioTotal.value) * 100) : 0,
+)
 
 onMounted(async () => {
   audioManifest.value = await getAudioManifest()
   audioChecked.value = true
+  await prepareAudio()
 })
 
 function setLanguage(lang: LabelLanguage) {
@@ -32,25 +45,6 @@ async function resetProgress() {
   confirmingReset.value = false
   resetDone.value = true
   setTimeout(() => (resetDone.value = false), 3000)
-}
-
-/** Warms the Workbox CacheFirst audio cache so everything plays offline. */
-async function downloadAllAudio() {
-  if (!audioManifest.value || downloading.value) return
-  downloading.value = true
-  downloadError.value = false
-  downloadedCount.value = 0
-  const base = import.meta.env.BASE_URL
-  try {
-    for (const file of Object.values(audioManifest.value)) {
-      const res = await fetch(`${base}audio/${file}`)
-      if (res.ok) downloadedCount.value++
-    }
-  } catch {
-    downloadError.value = true
-  } finally {
-    downloading.value = false
-  }
 }
 </script>
 
@@ -105,22 +99,52 @@ async function downloadAllAudio() {
       </template>
       <template v-else-if="audioManifest">
         <p class="settings-card__desc">
-          {{ Object.keys(audioManifest).length }} recordings available. Download them all so every
-          word and phrase plays offline.
+          {{ audioTotal }} recordings. Download them all so every word and phrase plays offline —
+          you can pause and resume anytime.
         </p>
-        <button
-          class="btn btn--primary"
-          type="button"
-          :disabled="downloading"
-          @click="downloadAllAudio"
+
+        <div
+          v-if="audioStatus !== 'idle'"
+          class="dl-bar"
+          role="progressbar"
+          :aria-valuenow="audioPercent"
+          aria-valuemin="0"
+          aria-valuemax="100"
         >
-          {{ downloading ? `Downloading… (${downloadedCount})` : 'Download all audio' }}
-        </button>
-        <p v-if="downloadError" class="settings-card__note settings-card__note--error">
-          Some files failed to download — try again when you're online.
+          <div class="dl-bar__fill" :style="{ width: `${audioPercent}%` }" />
+        </div>
+        <p v-if="audioStatus !== 'idle'" class="settings-card__desc">
+          {{ audioDone }} / {{ audioTotal }} ({{ audioPercent }}%)
         </p>
-        <p v-else-if="!downloading && downloadedCount > 0" class="settings-card__note">
-          {{ downloadedCount }} recordings cached for offline use. ✓
+
+        <div class="dl-actions">
+          <button
+            v-if="audioStatus === 'idle' || audioStatus === 'done'"
+            class="btn btn--primary"
+            type="button"
+            :disabled="audioStatus === 'done'"
+            @click="startAudio()"
+          >
+            {{ audioStatus === 'done' ? 'All downloaded ✓' : 'Download all audio' }}
+          </button>
+          <button
+            v-else-if="audioStatus === 'running'"
+            class="btn btn--ghost"
+            type="button"
+            @click="pauseAudio()"
+          >
+            Pause
+          </button>
+          <button v-else class="btn btn--primary" type="button" @click="resumeAudio()">
+            {{ audioStatus === 'error' ? 'Retry' : 'Resume' }}
+          </button>
+        </div>
+
+        <p v-if="audioStatus === 'error'" class="settings-card__note settings-card__note--error">
+          Stopped at an error ({{ audioErrorMsg }}). Resume to retry — progress is kept.
+        </p>
+        <p v-else-if="audioStatus === 'done'" class="settings-card__note">
+          All {{ audioTotal }} recordings cached for offline use. ✓
         </p>
       </template>
       <template v-else>
@@ -246,6 +270,25 @@ async function downloadAllAudio() {
 
 .settings-card__note--error {
   color: var(--color-terracotta);
+}
+
+.dl-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.dl-bar__fill {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width 0.2s ease;
+}
+
+.dl-actions {
+  display: flex;
+  gap: 0.5rem;
 }
 
 .lang-toggle {
