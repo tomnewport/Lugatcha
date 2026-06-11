@@ -23,13 +23,13 @@ Two backends:
 Setup (once):
     git clone https://github.com/tomnewport/Lugatcha.git
     cd Lugatcha
-    brew install uv ffmpeg
+    brew install uv ffmpeg sox      # sox is required by the local qwen_tts backend
 
 Usage (local backend):
     huggingface-cli login                                 # gated Sayro access
-    uv pip install uzbek_normalizer                        # optional text normaliser
     uv run python scripts/generate_audio.py --dry-run     # list what would be made
     uv run python scripts/generate_audio.py --limit 3     # try a few clips first
+    uv run python scripts/generate_audio.py --device mps  # try the GPU (CPU is slow)
     uv run python scripts/generate_audio.py               # generate everything missing
     uv run python scripts/generate_audio.py --self-test   # verify hash parity only
 
@@ -163,7 +163,8 @@ def pick_device() -> str:
     return "cpu"
 
 
-def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str):
+def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str,
+                     explicit_device: bool = False):
     """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
 
     Backed by the Qwen3-TTS `qwen_tts` runtime that uzlm/sayro-tts-1.7B is built
@@ -194,20 +195,29 @@ def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str):
     try:
         from uzbek_normalizer import clean_uzbek_text
     except ImportError:
-        print("uzbek_normalizer not installed; feeding raw text "
-              "(`uv pip install uzbek_normalizer` to match the model card)")
+        print("uzbek_normalizer not found (it isn't on PyPI); feeding raw text. "
+              "Fine for most content — numbers/abbreviations just won't be "
+              "expanded to words.")
 
         def clean_uzbek_text(text: str) -> str:
             return text
 
-    # CUDA gets bfloat16 on its own device; the card's only documented fallback
-    # is plain CPU. MPS isn't supported by this stack, so route it to CPU.
+    # CUDA gets its own device. The card's only documented CPU-class fallback is
+    # plain CPU, and MPS tends to hit unsupported ops in this stack, so an
+    # auto-detected MPS is routed to CPU — but an explicit --device mps is
+    # honoured so you can try the GPU (much faster when it works).
     if device == "cuda":
-        load_kwargs = dict(device_map="cuda:0", dtype=torch.bfloat16)
+        target, dtype = "cuda:0", torch.bfloat16
+    elif device == "mps" and not explicit_device:
+        print("MPS auto-detected but unreliable for Qwen3-TTS; loading on CPU. "
+              "Pass --device mps to force the GPU.")
+        target, dtype = "cpu", torch.bfloat16
+    elif device == "mps":
+        target, dtype = "mps", torch.float32  # forced; mps prefers float32
     else:
-        if device not in ("cpu", None):
-            print(f"{device} is unsupported for Qwen3-TTS; loading on cpu")
-        load_kwargs = dict(device_map="cpu", dtype=torch.bfloat16)
+        target, dtype = "cpu", torch.bfloat16
+    print(f"loading {model_id} on {target} (CPU synthesis is slow, ~minutes/clip)…")
+    load_kwargs = dict(device_map=target, dtype=dtype)
 
     try:
         model = Qwen3TTSModel.from_pretrained(model_id, **load_kwargs)
@@ -411,8 +421,10 @@ def main() -> None:
             )
         else:
             device = args.device or pick_device()
-            print(f"loading {args.model} on {device}…")
-            synthesize = load_synthesizer(args.model, device, args.qwen_speaker, args.qwen_instruct)
+            synthesize = load_synthesizer(
+                args.model, device, args.qwen_speaker, args.qwen_instruct,
+                explicit_device=args.device is not None,
+            )
 
         for i, (key, text) in enumerate(pending.items(), 1):
             print(f"[{i}/{len(pending)}] {text}")
