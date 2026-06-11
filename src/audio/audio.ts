@@ -44,6 +44,7 @@ export function getAudioManifest(voice?: string): Promise<AudioManifest | null> 
 }
 
 let currentAudio: HTMLAudioElement | null = null
+let currentResolve: ((v: boolean) => void) | null = null
 
 export function stopSpeaking(): void {
   if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel()
@@ -51,15 +52,24 @@ export function stopSpeaking(): void {
     currentAudio.pause()
     currentAudio = null
   }
+  if (currentResolve) {
+    currentResolve(false)
+    currentResolve = null
+  }
 }
 
 function playFile(url: string): Promise<boolean> {
   return new Promise((resolve) => {
     const audio = new Audio(url)
     currentAudio = audio
-    audio.onended = () => resolve(true)
-    audio.onerror = () => resolve(false)
-    audio.play().catch(() => resolve(false))
+    currentResolve = resolve
+    const done = (v: boolean) => {
+      if (currentResolve === resolve) currentResolve = null
+      resolve(v)
+    }
+    audio.onended = () => done(true)
+    audio.onerror = () => done(false)
+    audio.play().catch(() => done(false))
   })
 }
 
