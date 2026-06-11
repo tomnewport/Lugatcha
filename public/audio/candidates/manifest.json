@@ -67,6 +67,40 @@
       }
     ]
   },
+  "1219236de79a99ac": {
+    "text": "Men Toshkent aeroportiga keldim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "1219236de79a99ac-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "1219236de79a99ac-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "1219236de79a99ac-expressive.mp3"
+      }
+    ]
+  },
+  "a4baadbda294d21f": {
+    "text": "Men pasport nazoratiga bordim.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "a4baadbda294d21f-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "a4baadbda294d21f-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "a4baadbda294d21f-expressive.mp3"
+      }
+    ]
+  },
   "bf0f55380a182fd6": {
     "text": "Rahmat",
     "variants": [
@@ -149,6 +183,23 @@
       {
         "id": "expressive",
         "file": "036d865b64a6db19-expressive.mp3"
+      }
+    ]
+  },
+  "6d46d9d531ca9945": {
+    "text": "Xodim mening pasportimni tekshirdi.",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "6d46d9d531ca9945-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "6d46d9d531ca9945-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "6d46d9d531ca9945-expressive.mp3"
       }
     ]
   },
@@ -659,6 +710,23 @@
       {
         "id": "expressive",
         "file": "86270d3712261956-expressive.mp3"
+      }
+    ]
+  },
+  "37b5aa8ca6f7a601": {
+    "text": "cho'qqi",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "37b5aa8ca6f7a601-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "37b5aa8ca6f7a601-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "37b5aa8ca6f7a601-expressive.mp3"
       }
     ]
   },
@@ -2226,6 +2294,23 @@
       }
     ]
   },
+  "1dcb2103da181e5c": {
+    "text": "osma yo'l",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "1dcb2103da181e5c-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "1dcb2103da181e5c-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "1dcb2103da181e5c-expressive.mp3"
+      }
+    ]
+  },
   "1f9a4679c173fda7": {
     "text": "osmon",
     "variants": [
@@ -3345,6 +3430,23 @@
       {
         "id": "expressive",
         "file": "3009daef38c2fca2-expressive.mp3"
+      }
+    ]
+  },
+  "cc3a46a80c20a4f7": {
+    "text": "toza havo",
+    "variants": [
+      {
+        "id": "greedy",
+        "file": "cc3a46a80c20a4f7-greedy.mp3"
+      },
+      {
+        "id": "balanced",
+        "file": "cc3a46a80c20a4f7-balanced.mp3"
+      },
+      {
+        "id": "expressive",
+        "file": "cc3a46a80c20a4f7-expressive.mp3"
       }
     ]
   },
