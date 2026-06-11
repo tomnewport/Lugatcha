@@ -13,6 +13,7 @@ import {
   type LocationStats,
 } from '@/exercises/potluck'
 import { useProgressStore } from '@/stores/progress'
+import { playChime } from '@/audio/audio'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
 import FlashcardsExercise from '@/components/exercise/FlashcardsExercise.vue'
@@ -72,6 +73,7 @@ function start(type: ExerciseType) {
 }
 
 async function onComplete() {
+  playChime()
   if (activeExercise.value) {
     await progressStore.completeExercise(locationId.value, activeExercise.value)
   }

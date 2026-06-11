@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { LessonExercise } from '@/db/types'
 import { shuffle } from '@/exercises/validate'
 import AudioButton from '@/components/AudioButton.vue'
+import { playChime } from '@/audio/audio'
 
 const props = defineProps<{ exercise: LessonExercise }>()
 const emit = defineEmits<{ done: [passed: boolean] }>()
@@ -24,7 +25,9 @@ const feedback = computed(() => {
 function pick(i: number) {
   if (solved.value) return
   picked.value = i
-  if (!options.value[i].correct) {
+  if (options.value[i].correct) {
+    playChime()
+  } else {
     wrongPicks.value = new Set(wrongPicks.value).add(i)
     if (wrongPicks.value.size >= 2) revealed.value = true
   }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { LessonExercise } from '@/db/types'
-import { speakUzbek } from '@/audio/audio'
+import { speakUzbek, playChime } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from '@/components/exercise/TokenAssembly.vue'
 
@@ -15,7 +15,10 @@ const spoken = computed(() => props.exercise.audioText ?? assembled.value)
 
 function onResult(r: AssemblyResult) {
   result.value = r
-  if (r.correct) speakUzbek(spoken.value)
+  if (r.correct) {
+    playChime()
+    speakUzbek(spoken.value)
+  }
 }
 
 function finish() {
