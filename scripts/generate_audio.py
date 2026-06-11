@@ -26,6 +26,8 @@ Setup (once):
     brew install uv ffmpeg
 
 Usage (local backend):
+    huggingface-cli login                                 # gated Sayro access
+    uv pip install uzbek_normalizer                        # optional text normaliser
     uv run python scripts/generate_audio.py --dry-run     # list what would be made
     uv run python scripts/generate_audio.py --limit 3     # try a few clips first
     uv run python scripts/generate_audio.py               # generate everything missing
@@ -161,53 +163,51 @@ def pick_device() -> str:
     return "cpu"
 
 
-def _qwen_generate(model, text: str, language: str, speaker: str | None):
-    """Calls the Sayro/Qwen3-TTS generate method, surfacing the right name if wrong.
-
-    uzlm/sayro-tts-1.7B is a Qwen3-TTS fine-tune; the fixed-speaker call is
-    generate_base_voice(text, language, speaker). If the model card's example/
-    folder shows a different method or arguments, change this one line to match.
-    """
-    try:
-        return model.generate_base_voice(text=text, language=language, speaker=speaker)
-    except (AttributeError, TypeError) as error:
-        methods = sorted(m for m in dir(model) if m.startswith("generate"))
-        sys.exit(
-            f"generate_base_voice(text, language, speaker) did not fit this model: {error}\n\n"
-            f"Available generate* methods: {methods}\n"
-            "Copy the exact call from the Sayro model card's example/ folder "
-            "into _qwen_generate() (keep it returning (wavs, sampling_rate))."
-        )
-
-
-def load_synthesizer(model_id: str, device: str, language: str, speaker: str | None):
+def load_synthesizer(model_id: str, device: str, speaker: str, instruct: str):
     """Returns synthesize(text) -> (samples: float32 1-D numpy array, rate: int).
 
     Backed by the Qwen3-TTS `qwen_tts` runtime that uzlm/sayro-tts-1.7B is built
-    on. The upstream snippet assumes an NVIDIA GPU (device_map="cuda:0",
-    bfloat16, flash_attention_2); this adapts it for Apple Silicon / CPU. The
-    exact language string and speaker name live in the gated model card —
-    override with --qwen-language / --qwen-speaker if the defaults are wrong.
+    on, following the model card's Quickstart. The upstream example assumes an
+    NVIDIA GPU (device_map="cuda:0", bfloat16); this falls back to CPU
+    elsewhere. The `speaker` ("sayro") and `instruct` (a style hint like
+    "Happy"/"Neutral"/"") are the card's generate_custom_voice arguments.
     """
     import numpy as np
     import torch
 
     try:
-        from qwen_tts import Qwen3TTSModel
+        from qwen_tts.inference.qwen3_tts_model import Qwen3TTSModel
     except ImportError:
-        sys.exit(
-            "The local backend needs the Qwen3-TTS runtime: `uv pip install qwen-tts`.\n"
-            "uzlm/sayro-tts-1.7B is a Qwen3-TTS fine-tune, not a generic "
-            "transformers text-to-speech pipeline model."
-        )
+        try:
+            from qwen_tts import Qwen3TTSModel  # fallback for other layouts
+        except ImportError:
+            sys.exit(
+                "The local backend needs the Qwen3-TTS runtime: `uv pip install qwen-tts`.\n"
+                "uzlm/sayro-tts-1.7B is a Qwen3-TTS fine-tune, not a generic "
+                "transformers text-to-speech pipeline model."
+            )
 
-    # CUDA gets bfloat16 + flash-attention; MPS/CPU need float32 and the
-    # stock attention, or loading falls over.
+    # The card normalises Uzbek text (numbers, punctuation) before synthesis.
+    # This only shapes what the model hears — the clip's key/filename stays
+    # based on the original text (normalize_spoken_text), so the app still
+    # finds it. Optional: pass text through unchanged if the package is absent.
+    try:
+        from uzbek_normalizer import clean_uzbek_text
+    except ImportError:
+        print("uzbek_normalizer not installed; feeding raw text "
+              "(`uv pip install uzbek_normalizer` to match the model card)")
+
+        def clean_uzbek_text(text: str) -> str:
+            return text
+
+    # CUDA gets bfloat16 on its own device; the card's only documented fallback
+    # is plain CPU. MPS isn't supported by this stack, so route it to CPU.
     if device == "cuda":
-        load_kwargs = dict(device_map="cuda:0", dtype=torch.bfloat16,
-                           attn_implementation="flash_attention_2")
+        load_kwargs = dict(device_map="cuda:0", dtype=torch.bfloat16)
     else:
-        load_kwargs = dict(device_map=device, dtype=torch.float32)
+        if device not in ("cpu", None):
+            print(f"{device} is unsupported for Qwen3-TTS; loading on cpu")
+        load_kwargs = dict(device_map="cpu", dtype=torch.bfloat16)
 
     try:
         model = Qwen3TTSModel.from_pretrained(model_id, **load_kwargs)
@@ -216,22 +216,21 @@ def load_synthesizer(model_id: str, device: str, language: str, speaker: str | N
             f"Could not load {model_id}: {error}\n\n"
             "If the repo is gated, request access on the model page and log in "
             "with `huggingface-cli login` (or set HF_TOKEN). If from_pretrained's "
-            "signature has changed, follow the model card's example/ snippet and "
-            "adapt load_synthesizer()."
+            "signature has changed, follow the model card's Quickstart and adapt "
+            "load_synthesizer()."
         )
 
-    if speaker is None:
-        try:
-            available = model.get_supported_speakers()
-            speaker = available[0] if available else None
-            print(f"speaker not set; using {speaker!r} from get_supported_speakers()")
-        except Exception:  # noqa: BLE001 — older builds may not expose this
-            pass
-
     def synthesize(text: str):
-        wavs, rate = _qwen_generate(model, text, language, speaker)
-        samples = np.asarray(wavs[0], dtype="float32")
-        return samples, rate
+        with torch.inference_mode():
+            wavs, rate = model.generate_custom_voice(
+                text=[clean_uzbek_text(text)],
+                speaker=[speaker],
+                instruct=[instruct],
+            )
+        waveform = wavs[0]
+        if hasattr(waveform, "detach"):  # torch tensor -> numpy
+            waveform = waveform.detach().cpu().numpy()
+        return np.asarray(waveform, dtype="float32").squeeze(), rate
 
     return synthesize
 
@@ -354,10 +353,10 @@ def main() -> None:
     parser.add_argument("--model", default=DEFAULT_MODEL, help="local backend model id")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--device", default=None, help="mps / cuda / cpu (default: auto)")
-    parser.add_argument("--qwen-language", default="Uzbek",
-                        help="language string for the local Qwen3-TTS model")
-    parser.add_argument("--qwen-speaker", default=None,
-                        help="speaker name (default: first from get_supported_speakers)")
+    parser.add_argument("--qwen-speaker", default="sayro",
+                        help="local Qwen3-TTS speaker name (default: sayro)")
+    parser.add_argument("--qwen-instruct", default="",
+                        help="local Qwen3-TTS style hint, e.g. Happy/Neutral (default: none)")
     parser.add_argument("--yandex-host", default="tts.api.yandexcloud.kz",
                         help="SpeechKit host (KZ default; RU is tts.api.cloud.yandex.net)")
     parser.add_argument("--yandex-voice", default="nigora", help="Yandex voice (default: nigora)")
@@ -413,7 +412,7 @@ def main() -> None:
         else:
             device = args.device or pick_device()
             print(f"loading {args.model} on {device}…")
-            synthesize = load_synthesizer(args.model, device, args.qwen_language, args.qwen_speaker)
+            synthesize = load_synthesizer(args.model, device, args.qwen_speaker, args.qwen_instruct)
 
         for i, (key, text) in enumerate(pending.items(), 1):
             print(f"[{i}/{len(pending)}] {text}")
