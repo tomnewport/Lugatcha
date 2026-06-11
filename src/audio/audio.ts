@@ -79,6 +79,38 @@ function speakWithSynthesis(text: string): Promise<void> {
   })
 }
 
+/** Plays a short ascending three-note chime to signal a correct answer. */
+export function playChime(): void {
+  try {
+    const Ctx =
+      window.AudioContext ??
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
+    if (!Ctx) return
+    const ctx = new Ctx()
+    const notes = [
+      { freq: 1046.5, start: 0, dur: 0.45 },
+      { freq: 1318.5, start: 0.1, dur: 0.55 },
+      { freq: 1568.0, start: 0.2, dur: 0.65 },
+    ]
+    for (const { freq, start, dur } of notes) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.type = 'sine'
+      osc.frequency.value = freq
+      gain.gain.setValueAtTime(0, ctx.currentTime + start)
+      gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + start + 0.02)
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur)
+      osc.start(ctx.currentTime + start)
+      osc.stop(ctx.currentTime + start + dur)
+    }
+    setTimeout(() => ctx.close(), 1500)
+  } catch {
+    // audio unavailable
+  }
+}
+
 /**
  * Speaks Uzbek text aloud. Resolves when playback finishes (or immediately if
  * no audio backend is available), so callers can sequence on it.
