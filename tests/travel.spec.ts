@@ -15,8 +15,10 @@ describe('travel places', () => {
       ids.add(p.id)
       expect(p.name.en.length).toBeGreaterThan(0)
       expect(p.name.uz.length).toBeGreaterThan(0)
-      expect(p.mapX, `${p.id} mapX`).toBeTypeOf('number')
-      expect(p.mapY, `${p.id} mapY`).toBeTypeOf('number')
+      expect(p.lat, `${p.id} lat`).toBeGreaterThan(37)
+      expect(p.lat, `${p.id} lat`).toBeLessThan(46)
+      expect(p.lon, `${p.id} lon`).toBeGreaterThan(55)
+      expect(p.lon, `${p.id} lon`).toBeLessThan(74)
       expect(p.article.length, `${p.id} article`).toBeGreaterThan(0)
     }
   })
