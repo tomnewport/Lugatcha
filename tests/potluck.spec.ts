@@ -103,7 +103,7 @@ describe('selectAutoExercise', () => {
 
   it('serves the first test on the fifth visit, not before', () => {
     const served = walk(15, 5)
-    expect(served).toEqual(['intro', 'flashcards', 'intro', 'listening', 'test'])
+    expect(served).toEqual(['intro', 'flashcards', 'intro', 'roleplay', 'test'])
     expect(served.slice(0, 4)).not.toContain('test')
     expect(served[4]).toBe('test')
   })
@@ -121,25 +121,37 @@ describe('selectAutoExercise', () => {
     expect(new Set(practiced).size).toBeGreaterThanOrEqual(3)
   })
 
-  it('turns the New Words slot into a test once every word is met', () => {
-    // seen == total: intro is retired, so its slots drive learning via testing.
-    expect(selectAutoExercise(stats({ totalWords: 10, seenWords: 10, visits: 0 }))).toBe('test')
-    expect(selectAutoExercise(stats({ totalWords: 10, seenWords: 10, visits: 2 }))).toBe('test')
+  it('serves a richer exercise, not another test, once every word is met', () => {
+    // seen == total: New Words retires, but its slot becomes roleplay/storytime
+    // rather than piling on tests — the "prefer practice over tests" boost.
+    const met = (visits: number) =>
+      selectAutoExercise(stats({ totalWords: 10, seenWords: 10, visits }))
+    expect(met(0)).toBe('roleplay')
+    expect(met(2)).toBe('storytime')
+    // The dedicated test slot still fires, so words still get learned.
+    expect(met(4)).toBe('test')
   })
 
-  it('reaches a test quickly at a location with only a handful of words', () => {
-    // Three words: one intro meets them all, so testing should start right after.
-    const served = walk(3, 3)
+  it('still reaches its first test by the fifth visit at a tiny location', () => {
+    const served = walk(3, 5)
     expect(served[0]).toBe('intro')
-    expect(served).toContain('test')
+    expect(served[4]).toBe('test')
   })
 
-  it('keeps roleplay and storytime in the rotation indefinitely', () => {
-    // The richer exercises must keep recurring, not appear once and starve.
+  it('brings roleplay and storytime in early', () => {
+    const served = walk(20, 12)
+    // Their own slots land by visits 4 and 7, regardless of how many words remain.
+    expect(served.indexOf('roleplay')).toBeGreaterThanOrEqual(0)
+    expect(served.indexOf('roleplay')).toBeLessThan(5)
+    expect(served.indexOf('storytime')).toBeLessThan(8)
+  })
+
+  it('keeps roleplay and storytime plentiful, not starved', () => {
+    // The boost: the richer exercises recur often (was ~2 in 30 before), and
+    // every practice type still appears so the completion ring fills.
     const served = walk(15, 60)
-    expect(served.filter((a) => a === 'roleplay').length).toBeGreaterThanOrEqual(3)
-    expect(served.filter((a) => a === 'storytime').length).toBeGreaterThanOrEqual(3)
-    // Every practice type gets used, none left behind.
+    expect(served.filter((a) => a === 'roleplay').length).toBeGreaterThanOrEqual(8)
+    expect(served.filter((a) => a === 'storytime').length).toBeGreaterThanOrEqual(6)
     for (const type of ['flashcards', 'listening', 'phrase-assembly', 'roleplay', 'storytime']) {
       expect(served, type).toContain(type)
     }

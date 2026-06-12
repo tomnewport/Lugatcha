@@ -124,7 +124,7 @@ export async function loadLocationStats(
   }
 }
 
-/** The practice activities that fill the gaps between meeting words and testing. */
+/** Practice activities, in rough difficulty order, used for the fallback search. */
 const PRACTICE_EXERCISES: ExerciseType[] = [
   'flashcards',
   'listening',
@@ -133,74 +133,61 @@ const PRACTICE_EXERCISES: ExerciseType[] = [
   'storytime',
 ]
 
-/**
- * The repeating shape of a location's visits. New words and practice alternate
- * so the seen-word ring keeps climbing, then a test lands on the fifth visit —
- * and every fifth after — to turn met words into learned ones. Once every word
- * is met the "new words" slots fall through to a test, which is what drives the
- * last words to "learned".
- */
-const VISIT_CYCLE = ['intro', 'practice', 'intro', 'practice', 'test'] as const
-
-/** Practice slots in one turn of the cycle. */
-const PRACTICE_SLOTS_PER_CYCLE = VISIT_CYCLE.filter((slot) => slot === 'practice').length
-
-/**
- * How many practice slots have come round by a given visit — a counter that
- * ticks once per practice slot. Rotating on raw `visits` would alias: practice
- * only ever lands on the same residues of the cycle, so `visits % 5` would pick
- * just two of the five exercises and starve the rest (roleplay/storytime).
- */
-function practiceSlotsSoFar(visits: number): number {
-  const period = VISIT_CYCLE.length
-  let withinCycle = 0
-  for (let i = 0; i < visits % period; i++) {
-    if (VISIT_CYCLE[i] === 'practice') withinCycle++
-  }
-  return Math.floor(visits / period) * PRACTICE_SLOTS_PER_CYCLE + withinCycle
+interface PlaylistSlot {
+  /** The exercise this visit serves. */
+  primary: ExerciseType
+  /**
+   * Only for an `intro` slot: once every word here is met, New Words retires, so
+   * the slot serves this richer exercise instead of piling on more tests.
+   */
+  whenMet?: ExerciseType
 }
 
 /**
- * The single exercise a location auto-launches on a given visit. Keyed off how
- * many exercises have been finished here (`stats.visits`) so the activity
- * rotates — meeting new words "every now and again" and reaching a first test
- * around the fifth visit — instead of sticking on whichever exercise comes
- * first and only ever doing the first five words.
+ * The repeating shape of a location's visits, walked by `stats.visits`. New
+ * Words recurs (so the seen ring keeps climbing) until every word is met, the
+ * first test lands on the fifth visit, and roleplay/storytime appear early and
+ * often — both as their own slots and as what the New-Words slots become once
+ * words run out, so the richer exercises stay plentiful rather than the tile
+ * turning into a test grind. Every practice type still appears each cycle, so a
+ * location's completion ring fills. Tune the feel by editing this list.
+ */
+const VISIT_PLAYLIST: PlaylistSlot[] = [
+  { primary: 'intro', whenMet: 'roleplay' }, //  1
+  { primary: 'flashcards' }, //                   2
+  { primary: 'intro', whenMet: 'storytime' }, //  3
+  { primary: 'roleplay' }, //                     4
+  { primary: 'test' }, //                         5 — first test
+  { primary: 'intro', whenMet: 'roleplay' }, //   6
+  { primary: 'storytime' }, //                    7
+  { primary: 'intro', whenMet: 'roleplay' }, //   8
+  { primary: 'listening' }, //                    9
+  { primary: 'phrase-assembly' }, //             10
+  { primary: 'intro', whenMet: 'storytime' }, // 11
+  { primary: 'test' }, //                        12
+]
+
+/**
+ * The single exercise a location auto-launches on a given visit. Walks the
+ * visit playlist by how many exercises have been finished here (`stats.visits`)
+ * so the activity rotates — meeting new words "every now and again", reaching a
+ * first test around the fifth visit, and serving roleplay/storytime plenty —
+ * instead of sticking on whichever exercise comes first and only ever doing the
+ * first five words.
  */
 export function selectAutoExercise(stats: LocationStats): ExerciseType | null {
   const potluck = buildPotluck(stats)
   const byType = new Map(potluck.map((a) => [a.type, a]))
   const available = (type: ExerciseType) => byType.get(type)?.state === 'available'
 
-  // Resolve a "practice" slot to a concrete exercise: an undone one first (so
-  // the five types each get a turn and fill the completion ring), then an even
-  // rotation through the unlocked set so roleplay and storytime keep coming up.
-  const pickPractice = (): ExerciseType | null => {
-    const unlocked = PRACTICE_EXERCISES.filter(available)
-    if (unlocked.length === 0) return null
-    const undone = unlocked.find((type) => !byType.get(type)!.done)
-    return undone ?? unlocked[practiceSlotsSoFar(stats.visits) % unlocked.length]
-  }
+  const slot = VISIT_PLAYLIST[stats.visits % VISIT_PLAYLIST.length]
+  const wanted =
+    slot.primary === 'intro' && !available('intro') ? (slot.whenMet ?? 'test') : slot.primary
+  if (available(wanted)) return wanted
 
-  const slot = VISIT_CYCLE[stats.visits % VISIT_CYCLE.length]
-  // Per slot, the order to try kinds in; the first unlocked one wins, so a slot
-  // whose activity isn't available yet gracefully gives way to one that is.
-  const preference: ('intro' | 'practice' | 'test')[] =
-    slot === 'intro'
-      ? ['intro', 'test', 'practice']
-      : slot === 'test'
-        ? ['test', 'practice', 'intro']
-        : ['practice', 'test', 'intro']
-
-  for (const kind of preference) {
-    if (kind === 'intro' && available('intro')) return 'intro'
-    if (kind === 'test' && available('test')) return 'test'
-    if (kind === 'practice') {
-      const practice = pickPractice()
-      if (practice) return practice
-    }
-  }
-
-  // Defensive: nothing matched (e.g. a word-less theme) — take anything unlocked.
-  return potluck.find((a) => a.state === 'available')?.type ?? null
+  // The scheduled exercise isn't unlocked yet (e.g. a test slot before enough
+  // words are met): take the next unlocked thing — meet words, then practise,
+  // then test — so a tile always has something to offer.
+  const fallback: ExerciseType[] = ['intro', ...PRACTICE_EXERCISES, 'test']
+  return fallback.find(available) ?? potluck.find((a) => a.state === 'available')?.type ?? null
 }
