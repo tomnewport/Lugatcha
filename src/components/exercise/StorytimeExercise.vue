@@ -90,7 +90,9 @@ function next() {
       <ol class="replay-list">
         <li v-for="(s, i) in story.sentences" :key="i" class="replay-item">
           <div class="replay-item__text">
-            <p class="replay-item__uzbek" lang="uz">{{ s.uzbek }}</p>
+            <p class="replay-item__uzbek">
+              <UzbekSentence :uzbek="s.uzbek" :glossary="glossary" />
+            </p>
             <p class="replay-item__english">{{ s.english }}</p>
           </div>
           <AudioButton :text="s.uzbek" />
