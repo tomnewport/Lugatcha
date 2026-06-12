@@ -161,6 +161,8 @@ export interface LessonProgress {
   lessonId: string
   completedAt?: number
   exercisesPassed: string[]
+  /** How many times the lesson has been completed; drives example rotation. */
+  visitCount?: number
 }
 
 // ---------------------------------------------------------------------------

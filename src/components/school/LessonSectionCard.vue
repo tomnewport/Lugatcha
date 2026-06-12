@@ -1,14 +1,22 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { LessonSection } from '@/db/types'
 import AudioButton from '@/components/AudioButton.vue'
 
-defineProps<{ section: LessonSection }>()
+const props = defineProps<{ section: LessonSection; visitCount?: number }>()
 
 /** Tiny formatter: escape HTML, then **bold**. Lesson data is first-party. */
 function renderBody(paragraph: string): string {
   const escaped = paragraph.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
   return escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
 }
+
+/** Picks one example per visit, cycling through all of them. */
+const example = computed(() => {
+  const examples = props.section.examples
+  if (!examples?.length) return null
+  return examples[(props.visitCount ?? 0) % examples.length]
+})
 </script>
 
 <template>
@@ -17,21 +25,21 @@ function renderBody(paragraph: string): string {
     <!-- eslint-disable-next-line vue/no-v-html — first-party lesson data, escaped above -->
     <p v-for="(para, i) in section.body" :key="i" class="section__para" v-html="renderBody(para)" />
 
-    <ul v-if="section.examples?.length" class="examples">
-      <li v-for="(ex, i) in section.examples" :key="i" class="example">
+    <ul v-if="example" class="examples">
+      <li class="example">
         <div class="example__row">
           <div class="example__text">
-            <span class="example__uzbek" lang="uz">{{ ex.uzbek }}</span>
-            <span class="example__english">{{ ex.english }}</span>
+            <span class="example__uzbek" lang="uz">{{ example.uzbek }}</span>
+            <span class="example__english">{{ example.english }}</span>
           </div>
-          <AudioButton :text="ex.uzbek" />
+          <AudioButton :text="example.uzbek" />
         </div>
-        <div v-if="ex.breakdown" class="example__breakdown" aria-label="Word breakdown">
-          <template v-for="(part, j) in ex.breakdown" :key="j">
+        <div v-if="example.breakdown" class="example__breakdown" aria-label="Word breakdown">
+          <template v-for="(part, j) in example.breakdown" :key="j">
             <span v-if="j > 0" class="example__plus" aria-hidden="true">+</span>
             <span class="morpheme">
               <span class="morpheme__part" lang="uz">{{ part }}</span>
-              <span v-if="ex.gloss?.[j]" class="morpheme__gloss">{{ ex.gloss[j] }}</span>
+              <span v-if="example.gloss?.[j]" class="morpheme__gloss">{{ example.gloss[j] }}</span>
             </span>
           </template>
         </div>
