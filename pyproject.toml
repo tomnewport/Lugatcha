@@ -9,6 +9,8 @@ dependencies = [
   "transformers",
   "qwen-tts",
   "silero-vad",
+  "yandexcloud>=0.394.0",
+  "grpcio>=1.81.1",
 ]
 
 [tool.uv]
