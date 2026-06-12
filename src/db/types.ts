@@ -75,6 +75,12 @@ export interface WordProgress {
 export interface LocationProgress {
   locationId: string
   completedExercises: ExerciseType[]
+  /**
+   * Exercises completed here, counted across repeats — the cursor that rotates
+   * the auto-launched activity so a tile keeps meeting new words and reaches a
+   * test, instead of sticking on whichever exercise is first in the list.
+   */
+  visits?: number
 }
 
 export type ExerciseType =
