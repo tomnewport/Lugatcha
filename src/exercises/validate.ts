@@ -21,6 +21,19 @@ export function tokenize(sentence: string): string[] {
   return sentence.split(/\s+/).filter((t) => normalizeToken(t).length > 0)
 }
 
+const EDGE_PUNCT = /^[\s.,!?;:"«»()\[\]{}—–…·+\-“”]+|[\s.,!?;:"«»()\[\]{}—–…·+\-“”]+$/g
+
+/**
+ * Canonical spoken form of a single tapped word: NFC, surrounding punctuation
+ * trimmed, lowercased — so one prebuilt audio clip serves a word wherever it
+ * appears (sentence-initial or mid-sentence, with or without trailing comma).
+ * Apostrophe variants are left for audioKey() to fold. Mirrors
+ * scripts/generate_audio.py:spoken_word_form so taps resolve to generated clips.
+ */
+export function spokenWordForm(token: string): string {
+  return token.normalize('NFC').replace(EDGE_PUNCT, '').toLowerCase()
+}
+
 /** Strict matching: every token in the canonical order. Used by phrase assembly and roleplay. */
 export function validateStrictOrder(assembled: string[], canonical: string[]): boolean {
   if (assembled.length !== canonical.length) return false
