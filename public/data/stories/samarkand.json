@@ -32,5 +32,45 @@
       "sotib": "buy",
       "oladi": "takes / buys"
     }
+  },
+  {
+    "id": "samarkand.by-bus",
+    "theme": "samarkand",
+    "title": { "en": "Around Samarkand by Bus", "uz": "Samarqand boʻylab avtobusda" },
+    "sentences": [
+      { "uzbek": "Samarqandda avtobus va marshrutka yuradi.", "english": "In Samarkand buses and marshrutkas run." },
+      { "uzbek": "Marshrutka kichik, lekin tez.", "english": "The marshrutka is small, but fast." },
+      { "uzbek": "Men haydovchiga naqd pul beraman.", "english": "I give the driver cash." },
+      { "uzbek": "Registonga borish uchun avtobusga chiqaman.", "english": "To get to the Registan I get on the bus." },
+      { "uzbek": "Bekatda odamlar navbatda turadi.", "english": "At the stop people stand in a queue." },
+      { "uzbek": "Taksi qimmat, lekin qulay.", "english": "A taxi is expensive, but convenient." }
+    ],
+    "glossary": {
+      "Samarqandda": "in Samarkand",
+      "avtobus": "bus",
+      "va": "and",
+      "marshrutka": "minibus / marshrutka",
+      "yuradi": "runs / goes",
+      "kichik": "small",
+      "lekin": "but",
+      "tez": "fast",
+      "Men": "I",
+      "haydovchiga": "to the driver",
+      "naqd": "cash",
+      "pul": "money",
+      "beraman": "I give",
+      "Registonga": "to the Registan",
+      "borish": "going",
+      "uchun": "in order to",
+      "avtobusga": "onto the bus",
+      "chiqaman": "I get on",
+      "Bekatda": "at the stop",
+      "odamlar": "people",
+      "navbatda": "in a queue",
+      "turadi": "stands",
+      "Taksi": "taxi",
+      "qimmat": "expensive",
+      "qulay": "convenient"
+    }
   }
 ]
