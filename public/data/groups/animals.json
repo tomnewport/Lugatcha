@@ -1,0 +1,135 @@
+{
+  "id": "animals",
+  "order": 3,
+  "title": {
+    "en": "Animals",
+    "uz": "Hayvonlar"
+  },
+  "icon": "🐫",
+  "blurb": "From the loyal it to the desert tuya",
+  "article": [
+    {
+      "heading": "No he, no she",
+      "body": [
+        "Uzbek has **no grammatical gender** — one word covers a male or female animal, and the pronoun **u** means \"he\", \"she\" and \"it\" all at once. So *it* is simply \"dog\", whether it is a he or a she.",
+        "The general word for animal is **hayvon**; farm and pack animals together are **mol**."
+      ],
+      "examples": [
+        {
+          "uzbek": "bu it",
+          "english": "this dog"
+        },
+        {
+          "uzbek": "oq mushuk",
+          "english": "a white cat"
+        }
+      ]
+    },
+    {
+      "heading": "Animals of the Silk Road",
+      "body": [
+        "Some animals carry real cultural weight. The **tuya** (camel) was the engine of the Silk Road caravans, and the **ot** (horse) is woven through Central Asian life, from games to feasts. Out on the steppe you will still meet flocks of **qo'y** (sheep) and **echki** (goats), watched over by a working **it**."
+      ],
+      "examples": [
+        {
+          "uzbek": "tuya",
+          "english": "camel — the ship of the desert"
+        },
+        {
+          "uzbek": "ot",
+          "english": "horse"
+        }
+      ]
+    }
+  ],
+  "words": [
+    {
+      "id": "core.animal-dog",
+      "uzbek": "it",
+      "english": "dog",
+      "theme": "core",
+      "group": "animals",
+      "level": 2
+    },
+    {
+      "id": "core.animal-cat",
+      "uzbek": "mushuk",
+      "english": "cat",
+      "theme": "core",
+      "group": "animals",
+      "level": 2
+    },
+    {
+      "id": "core.animal-horse",
+      "uzbek": "ot",
+      "english": "horse",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-donkey",
+      "uzbek": "eshak",
+      "english": "donkey",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-camel",
+      "uzbek": "tuya",
+      "english": "camel",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-sheep",
+      "uzbek": "qo'y",
+      "english": "sheep",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-goat",
+      "uzbek": "echki",
+      "english": "goat",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-cow",
+      "uzbek": "sigir",
+      "english": "cow",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-chicken",
+      "uzbek": "tovuq",
+      "english": "chicken",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-bird",
+      "uzbek": "qush",
+      "english": "bird",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    },
+    {
+      "id": "core.animal-snake",
+      "uzbek": "ilon",
+      "english": "snake",
+      "theme": "core",
+      "group": "animals",
+      "level": 3
+    }
+  ]
+}
