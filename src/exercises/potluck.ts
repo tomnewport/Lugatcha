@@ -142,6 +142,24 @@ const PRACTICE_EXERCISES: ExerciseType[] = [
  */
 const VISIT_CYCLE = ['intro', 'practice', 'intro', 'practice', 'test'] as const
 
+/** Practice slots in one turn of the cycle. */
+const PRACTICE_SLOTS_PER_CYCLE = VISIT_CYCLE.filter((slot) => slot === 'practice').length
+
+/**
+ * How many practice slots have come round by a given visit — a counter that
+ * ticks once per practice slot. Rotating on raw `visits` would alias: practice
+ * only ever lands on the same residues of the cycle, so `visits % 5` would pick
+ * just two of the five exercises and starve the rest (roleplay/storytime).
+ */
+function practiceSlotsSoFar(visits: number): number {
+  const period = VISIT_CYCLE.length
+  let withinCycle = 0
+  for (let i = 0; i < visits % period; i++) {
+    if (VISIT_CYCLE[i] === 'practice') withinCycle++
+  }
+  return Math.floor(visits / period) * PRACTICE_SLOTS_PER_CYCLE + withinCycle
+}
+
 /**
  * The single exercise a location auto-launches on a given visit. Keyed off how
  * many exercises have been finished here (`stats.visits`) so the activity
@@ -155,13 +173,13 @@ export function selectAutoExercise(stats: LocationStats): ExerciseType | null {
   const available = (type: ExerciseType) => byType.get(type)?.state === 'available'
 
   // Resolve a "practice" slot to a concrete exercise: an undone one first (so
-  // the five types each get a turn and fill the completion ring), then a steady
-  // rotation through whatever is unlocked.
+  // the five types each get a turn and fill the completion ring), then an even
+  // rotation through the unlocked set so roleplay and storytime keep coming up.
   const pickPractice = (): ExerciseType | null => {
     const unlocked = PRACTICE_EXERCISES.filter(available)
     if (unlocked.length === 0) return null
     const undone = unlocked.find((type) => !byType.get(type)!.done)
-    return undone ?? unlocked[stats.visits % unlocked.length]
+    return undone ?? unlocked[practiceSlotsSoFar(stats.visits) % unlocked.length]
   }
 
   const slot = VISIT_CYCLE[stats.visits % VISIT_CYCLE.length]

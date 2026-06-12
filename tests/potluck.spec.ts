@@ -133,4 +133,26 @@ describe('selectAutoExercise', () => {
     expect(served[0]).toBe('intro')
     expect(served).toContain('test')
   })
+
+  it('keeps roleplay and storytime in the rotation indefinitely', () => {
+    // The richer exercises must keep recurring, not appear once and starve.
+    const served = walk(15, 60)
+    expect(served.filter((a) => a === 'roleplay').length).toBeGreaterThanOrEqual(3)
+    expect(served.filter((a) => a === 'storytime').length).toBeGreaterThanOrEqual(3)
+    // Every practice type gets used, none left behind.
+    for (const type of ['flashcards', 'listening', 'phrase-assembly', 'roleplay', 'storytime']) {
+      expect(served, type).toContain(type)
+    }
+  })
+
+  it('always offers an exercise at any location that has words', () => {
+    for (let visits = 0; visits < 20; visits++) {
+      for (const seenWords of [0, 1, 3, 5, 15]) {
+        const next = selectAutoExercise(stats({ totalWords: 15, seenWords, visits }))
+        expect(next, `visits=${visits} seen=${seenWords}`).not.toBeNull()
+      }
+    }
+    // Even a one-word location, fully met, still has a test to offer.
+    expect(selectAutoExercise(stats({ totalWords: 1, seenWords: 1, visits: 7 }))).not.toBeNull()
+  })
 })
