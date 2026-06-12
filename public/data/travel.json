@@ -1,110 +1,344 @@
 [
   {
     "id": "samarkand",
-    "name": { "en": "Samarkand", "uz": "Samarqand" },
-    "mapX": 560,
-    "mapY": 400,
+    "name": {
+      "en": "Samarkand",
+      "uz": "Samarqand"
+    },
+    "lat": 39.627,
+    "lon": 66.975,
     "article": [
       "Samarkand is one of the oldest cities in the world and a jewel of the Silk Road. For over two thousand years caravans, scholars and conquerors have passed through it.",
       "Its turquoise domes and the vast Registan square have drawn travellers for centuries. Timur made the city the capital of his empire, and his grandson Ulugʻbek built a famous observatory here to map the stars."
     ],
     "words": [
-      { "id": "samarkand.registon", "uzbek": "Registon", "english": "Registan square", "theme": "samarkand", "level": 1 },
-      { "id": "samarkand.gumbaz", "uzbek": "gumbaz", "english": "dome", "theme": "samarkand", "level": 1 },
-      { "id": "samarkand.koshin", "uzbek": "koshin", "english": "glazed tile", "theme": "samarkand", "level": 2 },
-      { "id": "samarkand.maqbara", "uzbek": "maqbara", "english": "mausoleum", "theme": "samarkand", "level": 2 },
-      { "id": "samarkand.rasadxona", "uzbek": "rasadxona", "english": "observatory", "theme": "samarkand", "level": 2 },
-      { "id": "samarkand.ipak", "uzbek": "ipak", "english": "silk", "theme": "samarkand", "level": 1 }
+      {
+        "id": "samarkand.registon",
+        "uzbek": "Registon",
+        "english": "Registan square",
+        "theme": "samarkand",
+        "level": 1
+      },
+      {
+        "id": "samarkand.gumbaz",
+        "uzbek": "gumbaz",
+        "english": "dome",
+        "theme": "samarkand",
+        "level": 1
+      },
+      {
+        "id": "samarkand.koshin",
+        "uzbek": "koshin",
+        "english": "glazed tile",
+        "theme": "samarkand",
+        "level": 2
+      },
+      {
+        "id": "samarkand.maqbara",
+        "uzbek": "maqbara",
+        "english": "mausoleum",
+        "theme": "samarkand",
+        "level": 2
+      },
+      {
+        "id": "samarkand.rasadxona",
+        "uzbek": "rasadxona",
+        "english": "observatory",
+        "theme": "samarkand",
+        "level": 2
+      },
+      {
+        "id": "samarkand.ipak",
+        "uzbek": "ipak",
+        "english": "silk",
+        "theme": "samarkand",
+        "level": 1
+      }
     ]
   },
   {
     "id": "bukhara",
-    "name": { "en": "Bukhara", "uz": "Buxoro" },
-    "mapX": 430,
-    "mapY": 415,
+    "name": {
+      "en": "Bukhara",
+      "uz": "Buxoro"
+    },
+    "lat": 39.767,
+    "lon": 64.421,
     "article": [
       "Bukhara is a living museum of mosques, madrasahs and minarets, little changed in centuries. Its old centre is one of the best-preserved medieval towns in Central Asia.",
       "The towering Kalon minaret once guided caravans across the desert and is so beautiful that, it is said, even Genghis Khan spared it. Around the Lyabi-Hauz pool, traders still sell carpets and gold embroidery."
     ],
     "words": [
-      { "id": "bukhara.minora", "uzbek": "minora", "english": "minaret", "theme": "bukhara", "level": 1 },
-      { "id": "bukhara.madrasa", "uzbek": "madrasa", "english": "madrasah", "theme": "bukhara", "level": 2 },
-      { "id": "bukhara.karvonsaroy", "uzbek": "karvonsaroy", "english": "caravanserai", "theme": "bukhara", "level": 2 },
-      { "id": "bukhara.hovuz", "uzbek": "hovuz", "english": "pool", "theme": "bukhara", "level": 1 },
-      { "id": "bukhara.gilam", "uzbek": "gilam", "english": "carpet", "theme": "bukhara", "level": 1 },
-      { "id": "bukhara.qala", "uzbek": "qalʼa", "english": "fortress", "theme": "bukhara", "level": 2 }
+      {
+        "id": "bukhara.minora",
+        "uzbek": "minora",
+        "english": "minaret",
+        "theme": "bukhara",
+        "level": 1
+      },
+      {
+        "id": "bukhara.madrasa",
+        "uzbek": "madrasa",
+        "english": "madrasah",
+        "theme": "bukhara",
+        "level": 2
+      },
+      {
+        "id": "bukhara.karvonsaroy",
+        "uzbek": "karvonsaroy",
+        "english": "caravanserai",
+        "theme": "bukhara",
+        "level": 2
+      },
+      {
+        "id": "bukhara.hovuz",
+        "uzbek": "hovuz",
+        "english": "pool",
+        "theme": "bukhara",
+        "level": 1
+      },
+      {
+        "id": "bukhara.gilam",
+        "uzbek": "gilam",
+        "english": "carpet",
+        "theme": "bukhara",
+        "level": 1
+      },
+      {
+        "id": "bukhara.qala",
+        "uzbek": "qalʼa",
+        "english": "fortress",
+        "theme": "bukhara",
+        "level": 2
+      }
     ]
   },
   {
     "id": "khiva",
-    "name": { "en": "Khiva", "uz": "Xiva" },
-    "mapX": 250,
-    "mapY": 330,
+    "name": {
+      "en": "Khiva",
+      "uz": "Xiva"
+    },
+    "lat": 41.378,
+    "lon": 60.364,
     "article": [
       "Khiva's old town, Ichan-Qalʼa, sits behind tall mud-brick walls like a city from a fairy tale. Step through the gates and you walk among carved wooden columns and blue-tiled minarets.",
       "For travellers crossing the Kyzylkum desert, Khiva was the last great oasis before the long road west — and, less proudly, a notorious slave market. Today its narrow lanes are quiet and beautifully restored."
     ],
     "words": [
-      { "id": "khiva.darvoza", "uzbek": "darvoza", "english": "gate", "theme": "khiva", "level": 1 },
-      { "id": "khiva.devor", "uzbek": "devor", "english": "wall", "theme": "khiva", "level": 1 },
-      { "id": "khiva.ustun", "uzbek": "ustun", "english": "column", "theme": "khiva", "level": 2 },
-      { "id": "khiva.gisht", "uzbek": "gʻisht", "english": "brick", "theme": "khiva", "level": 2 },
-      { "id": "khiva.chol", "uzbek": "choʻl", "english": "desert", "theme": "khiva", "level": 1 },
-      { "id": "khiva.voha", "uzbek": "voha", "english": "oasis", "theme": "khiva", "level": 2 }
+      {
+        "id": "khiva.darvoza",
+        "uzbek": "darvoza",
+        "english": "gate",
+        "theme": "khiva",
+        "level": 1
+      },
+      {
+        "id": "khiva.devor",
+        "uzbek": "devor",
+        "english": "wall",
+        "theme": "khiva",
+        "level": 1
+      },
+      {
+        "id": "khiva.ustun",
+        "uzbek": "ustun",
+        "english": "column",
+        "theme": "khiva",
+        "level": 2
+      },
+      {
+        "id": "khiva.gisht",
+        "uzbek": "gʻisht",
+        "english": "brick",
+        "theme": "khiva",
+        "level": 2
+      },
+      {
+        "id": "khiva.chol",
+        "uzbek": "choʻl",
+        "english": "desert",
+        "theme": "khiva",
+        "level": 1
+      },
+      {
+        "id": "khiva.voha",
+        "uzbek": "voha",
+        "english": "oasis",
+        "theme": "khiva",
+        "level": 2
+      }
     ]
   },
   {
     "id": "tashkent",
-    "name": { "en": "Tashkent", "uz": "Toshkent" },
-    "mapX": 765,
-    "mapY": 250,
+    "name": {
+      "en": "Tashkent",
+      "uz": "Toshkent"
+    },
+    "lat": 41.311,
+    "lon": 69.28,
     "article": [
       "Tashkent, the capital, is Central Asia's largest city and a busy mix of old and new. A powerful earthquake in 1966 reshaped much of it, leaving wide avenues, leafy parks and a grand, mosaic-lined metro.",
       "At the sprawling Chorsu bazaar, under its great blue dome, you can still buy bread, spices and fruit much as people have for generations. Quiet old mahallas survive between the modern boulevards."
     ],
     "words": [
-      { "id": "tashkent.poytaxt", "uzbek": "poytaxt", "english": "capital city", "theme": "tashkent", "level": 1 },
-      { "id": "tashkent.metro", "uzbek": "metro", "english": "metro", "theme": "tashkent", "level": 1 },
-      { "id": "tashkent.bozor", "uzbek": "bozor", "english": "bazaar", "theme": "tashkent", "level": 1 },
-      { "id": "tashkent.maydon", "uzbek": "maydon", "english": "square", "theme": "tashkent", "level": 2 },
-      { "id": "tashkent.zilzila", "uzbek": "zilzila", "english": "earthquake", "theme": "tashkent", "level": 2 },
-      { "id": "tashkent.zamonaviy", "uzbek": "zamonaviy", "english": "modern", "theme": "tashkent", "level": 2 }
+      {
+        "id": "tashkent.poytaxt",
+        "uzbek": "poytaxt",
+        "english": "capital city",
+        "theme": "tashkent",
+        "level": 1
+      },
+      {
+        "id": "tashkent.metro",
+        "uzbek": "metro",
+        "english": "metro",
+        "theme": "tashkent",
+        "level": 1
+      },
+      {
+        "id": "tashkent.bozor",
+        "uzbek": "bozor",
+        "english": "bazaar",
+        "theme": "tashkent",
+        "level": 1
+      },
+      {
+        "id": "tashkent.maydon",
+        "uzbek": "maydon",
+        "english": "square",
+        "theme": "tashkent",
+        "level": 2
+      },
+      {
+        "id": "tashkent.zilzila",
+        "uzbek": "zilzila",
+        "english": "earthquake",
+        "theme": "tashkent",
+        "level": 2
+      },
+      {
+        "id": "tashkent.zamonaviy",
+        "uzbek": "zamonaviy",
+        "english": "modern",
+        "theme": "tashkent",
+        "level": 2
+      }
     ]
   },
   {
     "id": "fergana",
-    "name": { "en": "Fergana Valley", "uz": "Fargʻona vodiysi" },
-    "mapX": 880,
-    "mapY": 335,
+    "name": {
+      "en": "Fergana Valley",
+      "uz": "Fargʻona vodiysi"
+    },
+    "lat": 40.389,
+    "lon": 71.783,
     "article": [
       "The Fergana Valley is the green, fertile heart of Uzbekistan, ringed by mountains and watered by the Syr Darya. Cotton, fruit and mulberry trees fill its fields.",
       "Its towns are famous for crafts: bright atlas silk woven in Margʻilon, glazed ceramics from Rishton and the curved knives of Chust. In late summer the markets overflow with apricots, melons and grapes."
     ],
     "words": [
-      { "id": "fergana.vodiy", "uzbek": "vodiy", "english": "valley", "theme": "fergana", "level": 1 },
-      { "id": "fergana.paxta", "uzbek": "paxta", "english": "cotton", "theme": "fergana", "level": 1 },
-      { "id": "fergana.atlas", "uzbek": "atlas", "english": "atlas silk", "theme": "fergana", "level": 2 },
-      { "id": "fergana.meva", "uzbek": "meva", "english": "fruit", "theme": "fergana", "level": 1 },
-      { "id": "fergana.orik", "uzbek": "oʻrik", "english": "apricot", "theme": "fergana", "level": 1 },
-      { "id": "fergana.hosil", "uzbek": "hosil", "english": "harvest", "theme": "fergana", "level": 2 }
+      {
+        "id": "fergana.vodiy",
+        "uzbek": "vodiy",
+        "english": "valley",
+        "theme": "fergana",
+        "level": 1
+      },
+      {
+        "id": "fergana.paxta",
+        "uzbek": "paxta",
+        "english": "cotton",
+        "theme": "fergana",
+        "level": 1
+      },
+      {
+        "id": "fergana.atlas",
+        "uzbek": "atlas",
+        "english": "atlas silk",
+        "theme": "fergana",
+        "level": 2
+      },
+      {
+        "id": "fergana.meva",
+        "uzbek": "meva",
+        "english": "fruit",
+        "theme": "fergana",
+        "level": 1
+      },
+      {
+        "id": "fergana.orik",
+        "uzbek": "oʻrik",
+        "english": "apricot",
+        "theme": "fergana",
+        "level": 1
+      },
+      {
+        "id": "fergana.hosil",
+        "uzbek": "hosil",
+        "english": "harvest",
+        "theme": "fergana",
+        "level": 2
+      }
     ]
   },
   {
     "id": "aral",
-    "name": { "en": "Aral Sea & Nukus", "uz": "Orol dengizi" },
-    "mapX": 210,
-    "mapY": 150,
+    "name": {
+      "en": "Aral Sea & Nukus",
+      "uz": "Orol dengizi"
+    },
+    "lat": 43.766,
+    "lon": 59.02,
     "article": [
       "The Aral Sea was once one of the largest lakes on Earth, but it has nearly dried away after its rivers were diverted to irrigate cotton — a stark lesson in how quickly people can change a landscape.",
       "Near Moʻynoq, rusting fishing ships now rest on bare sand where waves once broke. In nearby Nukus, the Savitsky Museum guards a remarkable collection of avant-garde art once forbidden by the Soviet state."
     ],
     "words": [
-      { "id": "aral.dengiz", "uzbek": "dengiz", "english": "sea", "theme": "aral", "level": 1 },
-      { "id": "aral.suv", "uzbek": "suv", "english": "water", "theme": "aral", "level": 1 },
-      { "id": "aral.baliq", "uzbek": "baliq", "english": "fish", "theme": "aral", "level": 1 },
-      { "id": "aral.kema", "uzbek": "kema", "english": "ship", "theme": "aral", "level": 2 },
-      { "id": "aral.qum", "uzbek": "qum", "english": "sand", "theme": "aral", "level": 1 },
-      { "id": "aral.tuz", "uzbek": "tuz", "english": "salt", "theme": "aral", "level": 2 }
+      {
+        "id": "aral.dengiz",
+        "uzbek": "dengiz",
+        "english": "sea",
+        "theme": "aral",
+        "level": 1
+      },
+      {
+        "id": "aral.suv",
+        "uzbek": "suv",
+        "english": "water",
+        "theme": "aral",
+        "level": 1
+      },
+      {
+        "id": "aral.baliq",
+        "uzbek": "baliq",
+        "english": "fish",
+        "theme": "aral",
+        "level": 1
+      },
+      {
+        "id": "aral.kema",
+        "uzbek": "kema",
+        "english": "ship",
+        "theme": "aral",
+        "level": 2
+      },
+      {
+        "id": "aral.qum",
+        "uzbek": "qum",
+        "english": "sand",
+        "theme": "aral",
+        "level": 1
+      },
+      {
+        "id": "aral.tuz",
+        "uzbek": "tuz",
+        "english": "salt",
+        "theme": "aral",
+        "level": 2
+      }
     ]
   }
 ]
