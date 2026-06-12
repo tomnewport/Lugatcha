@@ -1,0 +1,79 @@
+[
+  {
+    "id": "samarkand.shahar",
+    "uzbek": "shahar",
+    "english": "city",
+    "theme": "samarkand",
+    "level": 1
+  },
+  {
+    "id": "samarkand.maydon",
+    "uzbek": "maydon",
+    "english": "square",
+    "theme": "samarkand",
+    "level": 1
+  },
+  {
+    "id": "samarkand.gozal",
+    "uzbek": "goʻzal",
+    "english": "beautiful",
+    "theme": "samarkand",
+    "level": 1
+  },
+  {
+    "id": "samarkand.kok",
+    "uzbek": "koʻk",
+    "english": "blue",
+    "theme": "samarkand",
+    "level": 1
+  },
+  {
+    "id": "samarkand.sayyoh",
+    "uzbek": "sayyoh",
+    "english": "tourist",
+    "theme": "samarkand",
+    "level": 1
+  },
+  {
+    "id": "samarkand.rasm",
+    "uzbek": "rasm",
+    "english": "photo",
+    "theme": "samarkand",
+    "level": 1
+  },
+  {
+    "id": "samarkand.qadimiy",
+    "uzbek": "qadimiy",
+    "english": "ancient",
+    "theme": "samarkand",
+    "level": 2
+  },
+  {
+    "id": "samarkand.madrasa",
+    "uzbek": "madrasa",
+    "english": "madrasah",
+    "theme": "samarkand",
+    "level": 2
+  },
+  {
+    "id": "samarkand.ustoz",
+    "uzbek": "ustoz",
+    "english": "teacher",
+    "theme": "samarkand",
+    "level": 2
+  },
+  {
+    "id": "samarkand.karvon",
+    "uzbek": "karvon",
+    "english": "caravan",
+    "theme": "samarkand",
+    "level": 2
+  },
+  {
+    "id": "samarkand.yulduz",
+    "uzbek": "yulduz",
+    "english": "star",
+    "theme": "samarkand",
+    "level": 2
+  }
+]

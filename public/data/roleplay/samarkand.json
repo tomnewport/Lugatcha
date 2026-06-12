@@ -2,45 +2,142 @@
   {
     "id": "samarkand.registon-guide",
     "theme": "samarkand",
-    "title": { "en": "At the Registan", "uz": "Registonda" },
+    "title": {
+      "en": "At the Registan",
+      "uz": "Registonda"
+    },
     "scenario": "A guide shows you around the great Registan square in Samarkand.",
     "variants": [
       {
         "id": "samarkand.registon-guide.base",
         "description": "Admiring the square",
         "turns": [
-          { "speaker": "npc", "uzbek": "Xush kelibsiz! Bu Registon maydoni.", "english": "Welcome! This is the Registan square." },
-          { "speaker": "user", "uzbek": "Juda goʻzal! Bu nima?", "english": "Very beautiful! What is this?" },
-          { "speaker": "npc", "uzbek": "Bu qadimiy madrasa.", "english": "This is an ancient madrasah." },
-          { "speaker": "user", "uzbek": "Rahmat, ustoz.", "english": "Thank you, teacher." }
+          {
+            "speaker": "npc",
+            "uzbek": "Xush kelibsiz! Bu Registon maydoni.",
+            "english": "Welcome! This is the Registan square."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda goʻzal! Bu nima?",
+            "english": "Very beautiful! What is this?",
+            "tokens": [
+              "Juda",
+              "goʻzal!",
+              "Bu",
+              "nima?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Bu qadimiy madrasa.",
+            "english": "This is an ancient madrasah."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, ustoz.",
+            "english": "Thank you, teacher.",
+            "tokens": [
+              "Rahmat,",
+              "ustoz."
+            ]
+          }
         ]
       },
       {
         "id": "samarkand.registon-guide.silk",
         "description": "Buying silk",
         "turns": [
-          { "speaker": "npc", "uzbek": "Bu yerda ipak sotamiz.", "english": "We sell silk here." },
-          { "speaker": "user", "uzbek": "Ipak qancha turadi?", "english": "How much does the silk cost?" },
-          { "speaker": "npc", "uzbek": "Ellik ming soʻm.", "english": "Fifty thousand som." },
-          { "speaker": "user", "uzbek": "Yaxshi, men olaman.", "english": "Good, I will take it." }
+          {
+            "speaker": "npc",
+            "uzbek": "Bu yerda ipak sotamiz.",
+            "english": "We sell silk here."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ipak qancha turadi?",
+            "english": "How much does the silk cost?",
+            "tokens": [
+              "Ipak",
+              "qancha",
+              "turadi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ellik ming soʻm.",
+            "english": "Fifty thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, men olaman.",
+            "english": "Good, I will take it.",
+            "tokens": [
+              "Yaxshi,",
+              "men",
+              "olaman."
+            ]
+          }
         ]
       },
       {
         "id": "samarkand.registon-guide.photo",
         "description": "Asking to take a photo",
         "turns": [
-          { "speaker": "user", "uzbek": "Men rasmga olsam boʻladimi?", "english": "May I take a photo?" },
-          { "speaker": "npc", "uzbek": "Albatta, marhamat.", "english": "Of course, please do." },
-          { "speaker": "user", "uzbek": "Katta rahmat!", "english": "Thank you very much!" }
+          {
+            "speaker": "user",
+            "uzbek": "Men rasmga olsam boʻladimi?",
+            "english": "May I take a photo?",
+            "tokens": [
+              "Men",
+              "rasmga",
+              "olsam",
+              "boʻladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Albatta, marhamat.",
+            "english": "Of course, please do."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Katta rahmat!",
+            "english": "Thank you very much!",
+            "tokens": [
+              "Katta",
+              "rahmat!"
+            ]
+          }
         ]
       },
       {
         "id": "samarkand.registon-guide.way",
         "description": "Finding the mausoleum",
         "turns": [
-          { "speaker": "user", "uzbek": "Maqbara qayerda?", "english": "Where is the mausoleum?" },
-          { "speaker": "npc", "uzbek": "U yerda, chap tomonda.", "english": "Over there, on the left." },
-          { "speaker": "user", "uzbek": "Tushunarli, rahmat.", "english": "Understood, thank you." }
+          {
+            "speaker": "user",
+            "uzbek": "Maqbara qayerda?",
+            "english": "Where is the mausoleum?",
+            "tokens": [
+              "Maqbara",
+              "qayerda?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "U yerda, chap tomonda.",
+            "english": "Over there, on the left."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tushunarli, rahmat.",
+            "english": "Understood, thank you.",
+            "tokens": [
+              "Tushunarli,",
+              "rahmat."
+            ]
+          }
         ]
       }
     ]
