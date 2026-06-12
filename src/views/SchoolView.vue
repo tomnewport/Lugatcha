@@ -3,13 +3,17 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLiveQuery, db } from '@/db/useDb'
 import { loadLessonIndex, lessonState, missingPrerequisites } from '@/db/lessons'
-import type { LessonMeta, LessonProgress } from '@/db/types'
+import { loadGroupIndex } from '@/db/groups'
+import { isWordLearned } from '@/exercises/test'
+import type { LessonMeta, LessonProgress, VocabGroupMeta } from '@/db/types'
 
 const router = useRouter()
 const lessons = ref<LessonMeta[]>([])
+const groups = ref<VocabGroupMeta[]>([])
 
 onMounted(async () => {
   lessons.value = await loadLessonIndex()
+  groups.value = await loadGroupIndex()
 })
 
 const allProgress = useLiveQuery(() => db.lessonProgress.toArray(), [] as LessonProgress[])
@@ -18,6 +22,33 @@ const progressMap = computed(() => {
   for (const p of allProgress.value) map.set(p.lessonId, p)
   return map
 })
+
+/** Per-group { learned, total } word counts for the vocab-set cards (#62). */
+const groupStats = useLiveQuery(
+  async () => {
+    const [words, wordProgress] = await Promise.all([
+      db.words.toArray(),
+      db.wordProgress.toArray(),
+    ])
+    const prog = new Map(wordProgress.map((p) => [p.wordId, p]))
+    const stats = new Map<string, { learned: number; total: number }>()
+    for (const w of words) {
+      if (!w.group) continue
+      const s = stats.get(w.group) ?? { learned: 0, total: 0 }
+      s.total++
+      if (isWordLearned(prog.get(w.id))) s.learned++
+      stats.set(w.group, s)
+    }
+    return stats
+  },
+  new Map<string, { learned: number; total: number }>(),
+)
+
+function groupProgress(id: string): string {
+  const s = groupStats.value.get(id)
+  if (!s || s.total === 0) return ''
+  return `${s.learned}/${s.total}`
+}
 
 const doneCount = computed(
   () => lessons.value.filter((m) => lessonState(m, progressMap.value) === 'done').length,
@@ -104,6 +135,31 @@ function prereqHint(meta: LessonMeta): string {
     </ol>
 
     <p v-else class="school-loading" aria-live="polite">Loading lessons…</p>
+
+    <section v-if="groups.length" class="groups">
+      <h2 class="groups__heading">Vocabulary sets</h2>
+      <p class="groups__intro">
+        Learn a whole family of words at once — read the story, then take the test.
+      </p>
+      <ul class="group-list">
+        <li v-for="group in groups" :key="group.id">
+          <button
+            class="group-card"
+            type="button"
+            @click="router.push(`/school/group/${group.id}`)"
+          >
+            <span class="group-card__icon" aria-hidden="true">{{ group.icon }}</span>
+            <span class="group-card__text">
+              <span class="group-card__title">{{ group.title.en }}</span>
+              <span class="group-card__blurb">{{ group.blurb }}</span>
+            </span>
+            <span v-if="groupProgress(group.id)" class="group-card__count">
+              {{ groupProgress(group.id) }}
+            </span>
+          </button>
+        </li>
+      </ul>
+    </section>
   </main>
 </template>
 
@@ -272,5 +328,83 @@ function prereqHint(meta: LessonMeta): string {
   font-size: 0.9rem;
   color: var(--color-text-muted);
   text-align: center;
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.groups__heading {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-teal);
+  margin: 0;
+}
+
+.groups__intro {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.4rem;
+}
+
+.group-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.group-card {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.group-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.group-card__icon {
+  font-size: 1.7rem;
+  flex-shrink: 0;
+}
+
+.group-card__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.group-card__title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.group-card__blurb {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.group-card__count {
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-gold);
 }
 </style>
