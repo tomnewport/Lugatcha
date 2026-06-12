@@ -6,6 +6,7 @@ import {
   validateLoose,
   contentWords,
   buildDecoys,
+  spokenWordForm,
 } from '@/exercises/validate'
 
 describe('normalizeToken', () => {
@@ -17,6 +18,24 @@ describe('normalizeToken', () => {
   it('folds Uzbek apostrophe variants together', () => {
     expect(normalizeToken('oʻzbekcha')).toBe(normalizeToken("o'zbekcha"))
     expect(normalizeToken('to’g’ri')).toBe(normalizeToken("to'g'ri"))
+  })
+})
+
+describe('spokenWordForm', () => {
+  it('strips leading/trailing punctuation and lowercases', () => {
+    expect(spokenWordForm('Salom!')).toBe('salom')
+    expect(spokenWordForm('keldim.')).toBe('keldim')
+    expect(spokenWordForm(',pasportim,')).toBe('pasportim')
+  })
+
+  it('preserves apostrophes inside the word', () => {
+    expect(spokenWordForm("o'tir")).toBe("o'tir")
+    expect(spokenWordForm("yo'l.")).toBe("yo'l")
+  })
+
+  it('lowercases sentence-initial capitals', () => {
+    expect(spokenWordForm('Men')).toBe('men')
+    expect(spokenWordForm('Toshkent')).toBe('toshkent')
   })
 })
 
