@@ -45,8 +45,10 @@ export function getAudioManifest(voice?: string): Promise<AudioManifest | null> 
 
 let currentAudio: HTMLAudioElement | null = null
 let currentResolve: ((v: boolean) => void) | null = null
+let speakGen = 0
 
 export function stopSpeaking(): void {
+  speakGen++
   if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel()
   if (currentAudio) {
     currentAudio.pause()
@@ -134,10 +136,13 @@ export function playChime(): void {
  */
 export async function speakUzbek(text: string): Promise<void> {
   stopSpeaking()
+  const gen = speakGen
   const voice = useSettingsStore().audioVoice
   const manifest = await getAudioManifest(voice)
+  if (gen !== speakGen) return
   const entry = manifest?.[audioKey(text)]
   const file = entry ? audioFile(entry) : undefined
   if (file && (await playFile(`${base}audio/${voice}/${file}`))) return
+  if (gen !== speakGen) return
   await speakWithSynthesis(text)
 }
