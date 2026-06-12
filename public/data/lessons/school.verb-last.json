@@ -28,6 +28,34 @@
             "bread",
             "ate"
           ]
+        },
+        {
+          "uzbek": "Men choy ichdim",
+          "english": "I drank tea",
+          "breakdown": [
+            "Men",
+            "choy",
+            "ichdim"
+          ],
+          "gloss": [
+            "I",
+            "tea",
+            "drank"
+          ]
+        },
+        {
+          "uzbek": "U kitob o'qidi",
+          "english": "She/he read a book",
+          "breakdown": [
+            "U",
+            "kitob",
+            "o'qidi"
+          ],
+          "gloss": [
+            "she/he",
+            "book",
+            "read"
+          ]
         }
       ]
     },
