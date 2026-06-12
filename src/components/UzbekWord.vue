@@ -30,6 +30,10 @@ const isMultiMorpheme = computed(() => (breakdown.value?.breakdown.length ?? 0) 
 const isAgglutinated = computed(() => breakdown.value !== null)
 const hasTooltip = computed(() => isAgglutinated.value || !!props.meaning)
 
+// Full assembled-word meaning shown under the morpheme grid. Prefer the curated
+// lesson gloss; fall back to the sentence glossary lookup passed via `meaning`.
+const fullMeaning = computed(() => breakdown.value?.meaning ?? props.meaning)
+
 function toggle() {
   void speakUzbek(props.word)
   if (!hasTooltip.value) return
@@ -72,6 +76,9 @@ function toggle() {
             <span class="bk-morpheme__gloss">{{ breakdown.gloss[i] }}</span>
           </span>
         </template>
+      </span>
+      <span v-if="fullMeaning" class="bk-meaning">
+        <span lang="uz">{{ word }}</span> = {{ fullMeaning }}
       </span>
     </span>
 
@@ -215,5 +222,24 @@ function toggle() {
   text-align: center;
   max-width: 72px;
   line-height: 1.2;
+}
+
+/* Full-word meaning footer under the morpheme grid */
+.bk-meaning {
+  display: block;
+  margin-top: 0.45rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--color-teal);
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--font-sans, inherit);
+  color: var(--color-text);
+  text-align: center;
+  line-height: 1.25;
+}
+
+.bk-meaning [lang='uz'] {
+  font-weight: 700;
+  color: var(--color-primary);
 }
 </style>
