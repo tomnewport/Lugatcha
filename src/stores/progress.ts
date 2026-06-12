@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import { db } from '@/db'
-import type { ExerciseType } from '@/db/types'
+import type { ExerciseType, TestQuestionType } from '@/db/types'
 import {
   markWordsSeen,
   recordMatchResult,
+  recordTestResult,
   completeExercise,
   recordLessonExercise,
   completeLesson,
@@ -22,6 +23,9 @@ export const useProgressStore = defineStore('progress', {
     },
     recordMatchResult(wordId: string, correct: boolean) {
       return recordMatchResult(db, wordId, correct)
+    },
+    recordTestResult(wordId: string, type: TestQuestionType, correct: boolean) {
+      return recordTestResult(db, wordId, type, correct)
     },
     completeExercise(locationId: string, exercise: ExerciseType) {
       return completeExercise(db, locationId, exercise)

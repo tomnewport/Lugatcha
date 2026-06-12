@@ -1,0 +1,177 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { LugatchaDB } from '@/db/LugatchaDB'
+import { recordTestResult } from '@/db/progress'
+import {
+  isWordLearned,
+  isWordPartiallyLearned,
+  pickQuestionType,
+  selectTestWords,
+  buildOptionBank,
+  buildTest,
+  typingTarget,
+  foldTyping,
+} from '@/exercises/test'
+import { TEST_QUESTION_TYPES } from '@/db/types'
+import type { Word, WordProgress } from '@/db/types'
+
+function word(id: string, english = id): Word {
+  return { id, uzbek: id, english, theme: 'airport', level: 1 }
+}
+
+function progress(passed: string[], extra: Partial<WordProgress> = {}): WordProgress {
+  return { wordId: 'w', lastResults: [], seenAt: 1, testPassed: passed as never, ...extra }
+}
+
+describe('learned classification', () => {
+  it('treats all three passed types as learned', () => {
+    expect(isWordLearned(progress([...TEST_QUESTION_TYPES]))).toBe(true)
+    expect(isWordLearned(progress(['type']))).toBe(false)
+    expect(isWordLearned(undefined)).toBe(false)
+  })
+
+  it('treats one or two passed types as partial', () => {
+    expect(isWordPartiallyLearned(progress(['type']))).toBe(true)
+    expect(isWordPartiallyLearned(progress(['type', 'read-choice']))).toBe(true)
+    expect(isWordPartiallyLearned(progress([]))).toBe(false)
+    expect(isWordPartiallyLearned(progress([...TEST_QUESTION_TYPES]))).toBe(false)
+  })
+})
+
+describe('pickQuestionType', () => {
+  it('only offers types the word has not passed yet', () => {
+    const p = progress(['type', 'read-choice'])
+    for (let i = 0; i < 20; i++) {
+      expect(pickQuestionType(p, Math.random)).toBe('listen-choice')
+    }
+  })
+
+  it('offers any type once the word is fully learned (re-test)', () => {
+    const p = progress([...TEST_QUESTION_TYPES])
+    const seen = new Set<string>()
+    for (let i = 0; i < 60; i++) seen.add(pickQuestionType(p, Math.random))
+    expect(seen.size).toBeGreaterThan(1)
+  })
+})
+
+describe('selectTestWords', () => {
+  const prog = new Map<string, WordProgress | undefined>()
+  const partial = word('partial')
+  const fresh1 = word('fresh1')
+  const fresh2 = word('fresh2')
+  const fresh3 = word('fresh3')
+  const learnedA = word('learnedA')
+  const learnedB = word('learnedB')
+  prog.set('partial', progress(['type']))
+  prog.set('learnedA', progress([...TEST_QUESTION_TYPES]))
+  prog.set('learnedB', progress([...TEST_QUESTION_TYPES]))
+
+  it('mixes three new words with two learned re-tests', () => {
+    const candidates = [partial, fresh1, fresh2, fresh3, learnedA, learnedB]
+    const learnedPool = [learnedA, learnedB]
+    const picked = selectTestWords(candidates, learnedPool, prog)
+    expect(picked).toHaveLength(5)
+    const learnedPicked = picked.filter((w) => isWordLearned(prog.get(w.id)))
+    expect(learnedPicked).toHaveLength(2)
+    // Partially-learned word is always prioritised into the new slots.
+    expect(picked.map((w) => w.id)).toContain('partial')
+  })
+
+  it('fills entirely with new words when nothing is learned yet', () => {
+    const candidates = [fresh1, fresh2, fresh3, word('fresh4'), word('fresh5')]
+    const picked = selectTestWords(candidates, [], new Map())
+    expect(picked).toHaveLength(5)
+    expect(picked.every(() => !isWordLearned(undefined))).toBe(true)
+  })
+})
+
+describe('buildOptionBank', () => {
+  const allWords = Array.from({ length: 60 }, (_, i) => word(`w${i}`, `meaning ${i}`))
+
+  it('returns a fixed-size searchable bank that always holds the answer', () => {
+    const correct = allWords[3]
+    const bank = buildOptionBank(correct, allWords)
+    expect(bank).toHaveLength(40)
+    expect(bank).toContain(correct.english)
+    expect(new Set(bank).size).toBe(bank.length) // no duplicates
+  })
+})
+
+describe('buildTest', () => {
+  it('builds option banks for choice questions and none for typing', () => {
+    const allWords = Array.from({ length: 60 }, (_, i) => word(`w${i}`, `m${i}`))
+    const words = [word('w0', 'm0')]
+    const prog = new Map<string, WordProgress | undefined>([
+      ['w0', progress(['listen-choice', 'read-choice'])], // forces 'type'
+    ])
+    const [q] = buildTest(words, prog, allWords)
+    expect(q.type).toBe('type')
+    expect(q.options).toEqual([])
+  })
+})
+
+describe('typing helpers', () => {
+  it('strips punctuation but keeps apostrophes and spaces', () => {
+    expect(typingTarget('Rahmat!')).toBe('Rahmat')
+    expect(typingTarget('  jo‘nash. ')).toBe('jo‘nash')
+    expect(typingTarget('xayrli kun')).toBe('xayrli kun')
+  })
+
+  it('folds case and apostrophe variants together', () => {
+    expect(foldTyping('Joʻnash')).toBe(foldTyping("jo'nash"))
+  })
+})
+
+describe('recordTestResult', () => {
+  let db: LugatchaDB
+  const emptyManifest = { words: [], stories: [], roleplay: [] }
+  beforeEach(() => {
+    vi.stubGlobal('fetch', async () => ({
+      ok: true,
+      status: 200,
+      json: async () => emptyManifest,
+    }) as Response)
+    db = new LugatchaDB()
+  })
+  afterEach(async () => {
+    await db.delete()
+    vi.unstubAllGlobals()
+  })
+
+  it('learns a word only after all three types pass', async () => {
+    let r = await recordTestResult(db, 'w', 'type', true)
+    expect(r.newlyLearned).toBe(false)
+    r = await recordTestResult(db, 'w', 'read-choice', true)
+    expect(r.newlyLearned).toBe(false)
+    r = await recordTestResult(db, 'w', 'listen-choice', true)
+    expect(r.newlyLearned).toBe(true)
+    const p = await db.wordProgress.get('w')
+    expect(isWordLearned(p)).toBe(true)
+    expect(p?.learnedAt).toBeTypeOf('number')
+  })
+
+  it('forgives wrong answers on an un-learned word', async () => {
+    await recordTestResult(db, 'w', 'type', false)
+    const p = await db.wordProgress.get('w')
+    expect(p?.testPassed).toEqual([])
+  })
+
+  it('unlearns a learned word after two wrong answers', async () => {
+    for (const t of TEST_QUESTION_TYPES) await recordTestResult(db, 'w', t, true)
+    let r = await recordTestResult(db, 'w', 'type', false)
+    expect(r.unlearned).toBe(false)
+    expect(isWordLearned(await db.wordProgress.get('w'))).toBe(true)
+    r = await recordTestResult(db, 'w', 'type', false)
+    expect(r.unlearned).toBe(true)
+    const p = await db.wordProgress.get('w')
+    expect(isWordLearned(p)).toBe(false)
+    expect(p?.learnedAt).toBeUndefined()
+  })
+
+  it('resets the fail streak after a correct answer', async () => {
+    for (const t of TEST_QUESTION_TYPES) await recordTestResult(db, 'w', t, true)
+    await recordTestResult(db, 'w', 'type', false)
+    await recordTestResult(db, 'w', 'type', true) // streak reset
+    const r = await recordTestResult(db, 'w', 'type', false)
+    expect(r.unlearned).toBe(false) // would need two in a row again
+  })
+})

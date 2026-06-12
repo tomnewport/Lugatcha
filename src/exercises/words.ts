@@ -1,6 +1,7 @@
 import { db } from '@/db'
-import type { Word } from '@/db/types'
+import type { Word, WordProgress } from '@/db/types'
 import { shuffle } from './validate'
+import { isWordLearned } from './test'
 
 async function seenWordIds(): Promise<Set<string>> {
   const progress = await db.wordProgress.toArray()
@@ -44,4 +45,38 @@ export async function pickFlashcardWords(theme: string, count = 5): Promise<Word
   // Fallback for the (unreachable in normal flow) case of too few seen words
   const unseenTheme = shuffle(themeWords.filter((w) => !seen.has(w.id)))
   return [...seenTheme, ...seenCore, ...unseenTheme].slice(0, count)
+}
+
+export interface TestData {
+  /** Seen words at this location (theme + core), the pool for new test words. */
+  candidates: Word[]
+  /** Already-learned words anywhere, the pool for re-testing retention. */
+  learnedPool: Word[]
+  /** Every word, used to fill the searchable option banks. */
+  allWords: Word[]
+  /** Progress keyed by word id, for learned/partial classification. */
+  progress: Map<string, WordProgress | undefined>
+}
+
+/** Loads everything a Test needs in one pass: candidates, re-test pool, banks. */
+export async function loadTestData(theme: string): Promise<TestData> {
+  const [themeWords, coreWords, allWords, allProgress] = await Promise.all([
+    db.words.where('theme').equals(theme).toArray(),
+    db.words.where('theme').equals('core').toArray(),
+    db.words.toArray(),
+    db.wordProgress.toArray(),
+  ])
+  const progress = new Map<string, WordProgress | undefined>(
+    allProgress.map((p) => [p.wordId, p]),
+  )
+  const seen = new Set(allProgress.filter((p) => p.seenAt).map((p) => p.wordId))
+  const byId = new Map(allWords.map((w) => [w.id, w]))
+
+  const candidates = [...themeWords, ...coreWords].filter((w) => seen.has(w.id))
+  const learnedPool = allProgress
+    .filter((p) => isWordLearned(p))
+    .map((p) => byId.get(p.wordId))
+    .filter((w): w is Word => Boolean(w))
+
+  return { candidates, learnedPool, allWords, progress }
 }
