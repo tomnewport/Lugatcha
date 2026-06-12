@@ -61,7 +61,9 @@ watch(
   stats,
   (newStats) => {
     if (activeExercise.value || !newStats) return
-    const next = potluck.value.find((a) => a.state === 'available')
+    const next =
+      potluck.value.find((a) => a.state === 'available' && !a.done) ??
+      potluck.value.find((a) => a.state === 'available')
     if (next) {
       sessionKey.value++
       activeExercise.value = next.type
