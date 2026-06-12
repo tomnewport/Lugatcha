@@ -28,24 +28,17 @@ describe('buildPotluck', () => {
     }
   })
 
-  it('brings matching and listening to the table after one word session', () => {
+  it('brings all exercise types to the table after one word session', () => {
     const potluck = buildPotluck(stats({ seenWords: 5, completed: ['intro'] }))
     expect(stateOf(potluck, 'flashcards').state).toBe('available')
     expect(stateOf(potluck, 'listening').state).toBe('available')
-    expect(stateOf(potluck, 'phrase-assembly').state).toBe('locked')
-  })
-
-  it('keeps phrase building, roleplay and story behind a listening session', () => {
-    const enoughWords = stats({ seenWords: 15, completed: ['intro', 'flashcards'] })
-    for (const type of ['phrase-assembly', 'roleplay', 'storytime'] as ExerciseType[]) {
-      const activity = stateOf(buildPotluck(enoughWords), type)
-      expect(activity.state, type).toBe('locked')
-      expect(activity.hint).toMatch(/listening/i)
-    }
+    expect(stateOf(potluck, 'phrase-assembly').state).toBe('available')
+    expect(stateOf(potluck, 'roleplay').state).toBe('available')
+    expect(stateOf(potluck, 'storytime').state).toBe('available')
   })
 
   it('unlocks roleplay and story on a return visit with enough words heard', () => {
-    const back = stats({ seenWords: 12, completed: ['intro', 'flashcards', 'listening'] })
+    const back = stats({ seenWords: 5, completed: ['intro', 'flashcards', 'listening'] })
     const potluck = buildPotluck(back)
     expect(stateOf(potluck, 'phrase-assembly').state).toBe('available')
     expect(stateOf(potluck, 'roleplay').state).toBe('available')
