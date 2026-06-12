@@ -7,6 +7,7 @@ import type { Location, ExerciseType } from '@/db/types'
 import {
   buildPotluck,
   loadLocationStats,
+  selectAutoExercise,
   type LocationStats,
 } from '@/exercises/potluck'
 import { useProgressStore } from '@/stores/progress'
@@ -61,17 +62,15 @@ onMounted(async () => {
 
 const potluck = computed(() => (stats.value ? buildPotluck(stats.value) : []))
 
-// Auto-launch the first available exercise once stats load (only if no exercise is running)
+// Auto-launch the visit's exercise once stats load (only if no exercise is running)
 watch(
   stats,
   (newStats) => {
     if (activeExercise.value || !newStats) return
-    const next =
-      potluck.value.find((a) => a.state === 'available' && !a.done) ??
-      potluck.value.find((a) => a.state === 'available')
+    const next = selectAutoExercise(newStats)
     if (next) {
       sessionKey.value++
-      activeExercise.value = next.type
+      activeExercise.value = next
     }
   },
   { immediate: true },
@@ -93,6 +92,10 @@ async function onComplete() {
   // so it stays on the table for repeated learning and re-testing.
   if (activeExercise.value && activeExercise.value !== 'test') {
     await progressStore.completeExercise(locationId.value, activeExercise.value)
+  }
+  // Every finished exercise advances the rotation so the next visit varies.
+  if (activeExercise.value) {
+    await progressStore.recordLocationVisit(locationId.value)
   }
   router.push('/')
 }

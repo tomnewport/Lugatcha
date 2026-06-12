@@ -1,7 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { LugatchaDB } from '@/db/LugatchaDB'
 import { ensureSeeded } from '@/db/seed'
-import { markWordsSeen, recordMatchResult, completeExercise, resetAllProgress } from '@/db/progress'
+import {
+  markWordsSeen,
+  recordMatchResult,
+  completeExercise,
+  recordLocationVisit,
+  resetAllProgress,
+} from '@/db/progress'
 import { isWordKnown } from '@/db/useDb'
 import type { Word, Story, Roleplay } from '@/db/types'
 
@@ -129,6 +135,23 @@ describe('completeExercise', () => {
     await completeExercise(db, 'airport', 'flashcards')
     const progress = await db.locationProgress.get('airport')
     expect(progress?.completedExercises).toEqual(['intro', 'flashcards'])
+  })
+
+  it('preserves the visit count when marking an exercise done', async () => {
+    await recordLocationVisit(db, 'airport')
+    await completeExercise(db, 'airport', 'intro')
+    expect((await db.locationProgress.get('airport'))?.visits).toBe(1)
+  })
+})
+
+describe('recordLocationVisit', () => {
+  it('counts up from nothing and preserves completed exercises', async () => {
+    await completeExercise(db, 'airport', 'intro')
+    await recordLocationVisit(db, 'airport')
+    await recordLocationVisit(db, 'airport')
+    const progress = await db.locationProgress.get('airport')
+    expect(progress?.visits).toBe(2)
+    expect(progress?.completedExercises).toEqual(['intro'])
   })
 })
 

@@ -6,6 +6,7 @@ import {
   recordMatchResult,
   recordTestResult,
   completeExercise,
+  recordLocationVisit,
   recordLessonExercise,
   completeLesson,
   resetAllProgress,
@@ -29,6 +30,9 @@ export const useProgressStore = defineStore('progress', {
     },
     completeExercise(locationId: string, exercise: ExerciseType) {
       return completeExercise(db, locationId, exercise)
+    },
+    recordLocationVisit(locationId: string) {
+      return recordLocationVisit(db, locationId)
     },
     recordLessonExercise(lessonId: string, exerciseId: string) {
       return recordLessonExercise(db, lessonId, exerciseId)

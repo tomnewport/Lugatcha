@@ -10,7 +10,7 @@ import SchoolTile from '@/components/SchoolTile.vue'
 import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
 import { useAudioReady } from '@/audio/offline'
-import { buildPotluck, type LocationStats } from '@/exercises/potluck'
+import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 const SEED_KEY = 'lugatcha.sessionSeed'
@@ -117,12 +117,21 @@ const EXERCISE_EMOJIS: Record<ExerciseType, string> = {
 
 /** Returns the emoji for the exercise LocationView would actually serve next. */
 function nextExerciseEmoji(locationId: string): string {
-  const completed = [...(progressMap.value.get(locationId)?.completedExercises ?? [])]
+  const progress = progressMap.value.get(locationId)
+  const completed = [...(progress?.completedExercises ?? [])]
   const seenWords = wordStats.value.seen.get(locationId) ?? 0
   const totalWords = wordStats.value.total.get(locationId) ?? 0
-  const stats: LocationStats = { locationId, seenWords, totalWords, knownWords: 0, completed }
-  const next = buildPotluck(stats).find((a) => a.state === 'available' && !a.done)
-  return next ? EXERCISE_EMOJIS[next.type] : '✨'
+  const knownWords = wordStats.value.known.get(locationId) ?? 0
+  const stats: LocationStats = {
+    locationId,
+    seenWords,
+    totalWords,
+    knownWords,
+    completed,
+    visits: progress?.visits ?? 0,
+  }
+  const next = selectAutoExercise(stats)
+  return next ? EXERCISE_EMOJIS[next] : '✨'
 }
 
 /**

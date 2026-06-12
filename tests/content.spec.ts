@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tokenize, normalizeToken } from '@/exercises/validate'
-import type { Word, Story, Roleplay } from '@/db/types'
+import type { Word, Story, Roleplay, TravelPlace } from '@/db/types'
 
 const DATA = join(__dirname, '..', 'public', 'data')
 const read = <T>(p: string): T => JSON.parse(readFileSync(join(DATA, p), 'utf8'))
@@ -98,5 +98,23 @@ describe('roleplay scenarios', () => {
     // The brief asks for a base + ~5 complications; allow a soft floor of 4
     const slim = allRoleplays.filter((r) => r.variants.length < 4).map((r) => r.id)
     expect(slim, `scenarios with few variants: ${slim.join(', ')}`).toHaveLength(0)
+  })
+})
+
+describe('content coverage', () => {
+  // The auto-launcher can serve roleplay or storytime at any location/place, so
+  // every word theme must actually have both — otherwise it surfaces an empty
+  // exercise. Travel places carry their words in travel.json, not the manifest.
+  const travelPlaces = read<TravelPlace[]>('travel.json')
+  const themes = [
+    ...manifest.words.filter((t) => t !== 'core'),
+    ...travelPlaces.map((p) => p.id),
+  ]
+  const storyThemes = new Set(allStories.map((s) => s.theme))
+  const roleplayThemes = new Set(allRoleplays.map((r) => r.theme))
+
+  it.each(themes)('%s has at least one story and one roleplay', (theme) => {
+    expect(storyThemes.has(theme), `no story for "${theme}"`).toBe(true)
+    expect(roleplayThemes.has(theme), `no roleplay for "${theme}"`).toBe(true)
   })
 })
