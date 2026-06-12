@@ -2,45 +2,142 @@
   {
     "id": "bukhara.old-bazaar",
     "theme": "bukhara",
-    "title": { "en": "In the Old Bazaar", "uz": "Eski bozorda" },
+    "title": {
+      "en": "In the Old Bazaar",
+      "uz": "Eski bozorda"
+    },
     "scenario": "You browse the trading domes of Bukhara, where carpets and crafts are sold.",
     "variants": [
       {
         "id": "bukhara.old-bazaar.base",
         "description": "Looking at carpets",
         "turns": [
-          { "speaker": "npc", "uzbek": "Salom! Gilamlarni koʻring.", "english": "Hello! Have a look at the carpets." },
-          { "speaker": "user", "uzbek": "Bu gilam chiroyli ekan.", "english": "This carpet is lovely." },
-          { "speaker": "npc", "uzbek": "Qoʻlda toʻqilgan.", "english": "It is handwoven." },
-          { "speaker": "user", "uzbek": "Narxi qancha?", "english": "What is the price?" }
+          {
+            "speaker": "npc",
+            "uzbek": "Salom! Gilamlarni koʻring.",
+            "english": "Hello! Have a look at the carpets."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bu gilam chiroyli ekan.",
+            "english": "This carpet is lovely.",
+            "tokens": [
+              "Bu",
+              "gilam",
+              "chiroyli",
+              "ekan."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qoʻlda toʻqilgan.",
+            "english": "It is handwoven."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Narxi qancha?",
+            "english": "What is the price?",
+            "tokens": [
+              "Narxi",
+              "qancha?"
+            ]
+          }
         ]
       },
       {
         "id": "bukhara.old-bazaar.tea",
         "description": "Resting by the pool",
         "turns": [
-          { "speaker": "user", "uzbek": "Bir choy, iltimos.", "english": "One tea, please." },
-          { "speaker": "npc", "uzbek": "Qora yoki koʻkmi?", "english": "Black or green?" },
-          { "speaker": "user", "uzbek": "Koʻk choy, rahmat.", "english": "Green tea, thank you." }
+          {
+            "speaker": "user",
+            "uzbek": "Bir choy, iltimos.",
+            "english": "One tea, please.",
+            "tokens": [
+              "Bir",
+              "choy,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Qora yoki koʻkmi?",
+            "english": "Black or green?"
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Koʻk choy, rahmat.",
+            "english": "Green tea, thank you.",
+            "tokens": [
+              "Koʻk",
+              "choy,",
+              "rahmat."
+            ]
+          }
         ]
       },
       {
         "id": "bukhara.old-bazaar.minaret",
         "description": "Asking about the minaret",
         "turns": [
-          { "speaker": "user", "uzbek": "Bu minora juda baland.", "english": "This minaret is very tall." },
-          { "speaker": "npc", "uzbek": "Ha, u Kalon minorasi.", "english": "Yes, it is the Kalon minaret." },
-          { "speaker": "user", "uzbek": "Ajoyib!", "english": "Wonderful!" }
+          {
+            "speaker": "user",
+            "uzbek": "Bu minora juda baland.",
+            "english": "This minaret is very tall.",
+            "tokens": [
+              "Bu",
+              "minora",
+              "juda",
+              "baland."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, u Kalon minorasi.",
+            "english": "Yes, it is the Kalon minaret."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ajoyib!",
+            "english": "Wonderful!",
+            "tokens": [
+              "Ajoyib!"
+            ]
+          }
         ]
       },
       {
         "id": "bukhara.old-bazaar.bargain",
         "description": "Bargaining for a carpet",
         "turns": [
-          { "speaker": "npc", "uzbek": "Bu gilam ikki yuz ming soʻm.", "english": "This carpet is two hundred thousand som." },
-          { "speaker": "user", "uzbek": "Biroz arzon boʻladimi?", "english": "Can it be a little cheaper?" },
-          { "speaker": "npc", "uzbek": "Mayli, sizga chegirma.", "english": "Alright, a discount for you." },
-          { "speaker": "user", "uzbek": "Rahmat, olaman.", "english": "Thanks, I will take it." }
+          {
+            "speaker": "npc",
+            "uzbek": "Bu gilam ikki yuz ming soʻm.",
+            "english": "This carpet is two hundred thousand som."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Biroz arzon boʻladimi?",
+            "english": "Can it be a little cheaper?",
+            "tokens": [
+              "Biroz",
+              "arzon",
+              "boʻladimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mayli, sizga chegirma.",
+            "english": "Alright, a discount for you."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, olaman.",
+            "english": "Thanks, I will take it.",
+            "tokens": [
+              "Rahmat,",
+              "olaman."
+            ]
+          }
         ]
       }
     ]

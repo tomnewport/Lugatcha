@@ -1,0 +1,79 @@
+[
+  {
+    "id": "khiva.shahar",
+    "uzbek": "shahar",
+    "english": "city",
+    "theme": "khiva",
+    "level": 1
+  },
+  {
+    "id": "khiva.kichik",
+    "uzbek": "kichik",
+    "english": "small",
+    "theme": "khiva",
+    "level": 1
+  },
+  {
+    "id": "khiva.gozal",
+    "uzbek": "goʻzal",
+    "english": "beautiful",
+    "theme": "khiva",
+    "level": 1
+  },
+  {
+    "id": "khiva.issiq",
+    "uzbek": "issiq",
+    "english": "hot",
+    "theme": "khiva",
+    "level": 1
+  },
+  {
+    "id": "khiva.baland",
+    "uzbek": "baland",
+    "english": "tall",
+    "theme": "khiva",
+    "level": 1
+  },
+  {
+    "id": "khiva.saroy",
+    "uzbek": "saroy",
+    "english": "palace",
+    "theme": "khiva",
+    "level": 1
+  },
+  {
+    "id": "khiva.yogoch",
+    "uzbek": "yogʻoch",
+    "english": "wood",
+    "theme": "khiva",
+    "level": 2
+  },
+  {
+    "id": "khiva.qum",
+    "uzbek": "qum",
+    "english": "sand",
+    "theme": "khiva",
+    "level": 1
+  },
+  {
+    "id": "khiva.tarix",
+    "uzbek": "tarix",
+    "english": "history",
+    "theme": "khiva",
+    "level": 2
+  },
+  {
+    "id": "khiva.qadimiy",
+    "uzbek": "qadimiy",
+    "english": "ancient",
+    "theme": "khiva",
+    "level": 2
+  },
+  {
+    "id": "khiva.sayyoh",
+    "uzbek": "sayyoh",
+    "english": "tourist",
+    "theme": "khiva",
+    "level": 1
+  }
+]

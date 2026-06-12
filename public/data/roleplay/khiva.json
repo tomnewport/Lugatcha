@@ -2,45 +2,142 @@
   {
     "id": "khiva.city-gate",
     "theme": "khiva",
-    "title": { "en": "At the City Gate", "uz": "Shahar darvozasida" },
+    "title": {
+      "en": "At the City Gate",
+      "uz": "Shahar darvozasida"
+    },
     "scenario": "You arrive at the walls of Khiva's old town and step inside.",
     "variants": [
       {
         "id": "khiva.city-gate.base",
         "description": "Entering the old town",
         "turns": [
-          { "speaker": "npc", "uzbek": "Bu Ichan-Qalʼa darvozasi.", "english": "This is the Ichan-Qala gate." },
-          { "speaker": "user", "uzbek": "Kirish bepulmi?", "english": "Is entry free?" },
-          { "speaker": "npc", "uzbek": "Yoʻq, chipta kerak.", "english": "No, you need a ticket." },
-          { "speaker": "user", "uzbek": "Bitta chipta, iltimos.", "english": "One ticket, please." }
+          {
+            "speaker": "npc",
+            "uzbek": "Bu Ichan-Qalʼa darvozasi.",
+            "english": "This is the Ichan-Qala gate."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Kirish bepulmi?",
+            "english": "Is entry free?",
+            "tokens": [
+              "Kirish",
+              "bepulmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yoʻq, chipta kerak.",
+            "english": "No, you need a ticket."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bitta chipta, iltimos.",
+            "english": "One ticket, please.",
+            "tokens": [
+              "Bitta",
+              "chipta,",
+              "iltimos."
+            ]
+          }
         ]
       },
       {
         "id": "khiva.city-gate.guide",
         "description": "Hiring a guide",
         "turns": [
-          { "speaker": "user", "uzbek": "Menga gid kerak.", "english": "I need a guide." },
-          { "speaker": "npc", "uzbek": "Men sizga yordam beraman.", "english": "I will help you." },
-          { "speaker": "user", "uzbek": "Juda yaxshi, rahmat.", "english": "Very good, thank you." }
+          {
+            "speaker": "user",
+            "uzbek": "Menga gid kerak.",
+            "english": "I need a guide.",
+            "tokens": [
+              "Menga",
+              "gid",
+              "kerak."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Men sizga yordam beraman.",
+            "english": "I will help you."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda yaxshi, rahmat.",
+            "english": "Very good, thank you.",
+            "tokens": [
+              "Juda",
+              "yaxshi,",
+              "rahmat."
+            ]
+          }
         ]
       },
       {
         "id": "khiva.city-gate.columns",
         "description": "The wooden columns",
         "turns": [
-          { "speaker": "user", "uzbek": "Bu ustunlar yogʻochdanmi?", "english": "Are these columns made of wood?" },
-          { "speaker": "npc", "uzbek": "Ha, juda qadimiy.", "english": "Yes, very ancient." },
-          { "speaker": "user", "uzbek": "Hayratlanarli.", "english": "Astonishing." }
+          {
+            "speaker": "user",
+            "uzbek": "Bu ustunlar yogʻochdanmi?",
+            "english": "Are these columns made of wood?",
+            "tokens": [
+              "Bu",
+              "ustunlar",
+              "yogʻochdanmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, juda qadimiy.",
+            "english": "Yes, very ancient."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Hayratlanarli.",
+            "english": "Astonishing.",
+            "tokens": [
+              "Hayratlanarli."
+            ]
+          }
         ]
       },
       {
         "id": "khiva.city-gate.water",
         "description": "The heat outside",
         "turns": [
-          { "speaker": "user", "uzbek": "Iltimos, bir shisha suv.", "english": "Please, a bottle of water." },
-          { "speaker": "npc", "uzbek": "Mana, oling.", "english": "Here, take it." },
-          { "speaker": "user", "uzbek": "Tashqarida juda issiq.", "english": "It is very hot outside." },
-          { "speaker": "npc", "uzbek": "Ha, choʻl yaqin.", "english": "Yes, the desert is near." }
+          {
+            "speaker": "user",
+            "uzbek": "Iltimos, bir shisha suv.",
+            "english": "Please, a bottle of water.",
+            "tokens": [
+              "Iltimos,",
+              "bir",
+              "shisha",
+              "suv."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, oling.",
+            "english": "Here, take it."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Tashqarida juda issiq.",
+            "english": "It is very hot outside.",
+            "tokens": [
+              "Tashqarida",
+              "juda",
+              "issiq."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, choʻl yaqin.",
+            "english": "Yes, the desert is near."
+          }
         ]
       }
     ]
