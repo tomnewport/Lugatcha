@@ -6,13 +6,15 @@
  * the Web Speech API, requesting an Uzbek voice where the device has one.
  */
 import { audioKey } from './key'
-import { useSettingsStore } from '@/stores/settings'
 
 const base = import.meta.env.BASE_URL
+
+const AUDIO_VOICE = 'yandex'
 
 export interface AudioManifestEntry {
   file: string
   reviewed?: boolean
+  slowFile?: string
 }
 
 /** key -> entry. Legacy manifests used a bare filename string; both are read. */
@@ -31,7 +33,7 @@ export function isReviewed(entry: AudioManifestEntry | string | undefined): bool
 const manifestCache = new Map<string, Promise<AudioManifest | null>>()
 
 export function getAudioManifest(voice?: string): Promise<AudioManifest | null> {
-  const v = voice ?? useSettingsStore().audioVoice
+  const v = voice ?? AUDIO_VOICE
   if (!manifestCache.has(v)) {
     manifestCache.set(
       v,
@@ -75,7 +77,7 @@ function playFile(url: string): Promise<boolean> {
   })
 }
 
-function speakWithSynthesis(text: string): Promise<void> {
+function speakWithSynthesis(text: string, { slow = false } = {}): Promise<void> {
   if (typeof speechSynthesis === 'undefined') return Promise.resolve()
   return new Promise((resolve) => {
     // Some engines never fire onend/onerror (e.g. no voice for the language),
@@ -91,7 +93,7 @@ function speakWithSynthesis(text: string): Promise<void> {
       .find((v) => v.lang.toLowerCase().startsWith('uz'))
     if (uzbekVoice) utterance.voice = uzbekVoice
     utterance.lang = 'uz-UZ'
-    utterance.rate = 0.85
+    utterance.rate = slow ? 0.65 : 0.85
     utterance.onend = done
     utterance.onerror = done
     speechSynthesis.speak(utterance)
@@ -133,16 +135,21 @@ export function playChime(): void {
 /**
  * Speaks Uzbek text aloud. Resolves when playback finishes (or immediately if
  * no audio backend is available), so callers can sequence on it.
+ *
+ * Pass `{ slow: true }` to play the 0.75× pre-built version (second click on
+ * the speaker). Falls back to the normal-speed clip or Web Speech if no slow
+ * file is available.
  */
-export async function speakUzbek(text: string): Promise<void> {
+export async function speakUzbek(text: string, { slow = false } = {}): Promise<void> {
   stopSpeaking()
   const gen = speakGen
-  const voice = useSettingsStore().audioVoice
-  const manifest = await getAudioManifest(voice)
+  const manifest = await getAudioManifest()
   if (gen !== speakGen) return
   const entry = manifest?.[audioKey(text)]
-  const file = entry ? audioFile(entry) : undefined
-  if (file && (await playFile(`${base}audio/${voice}/${file}`))) return
+  const file = slow
+    ? (entry && typeof entry === 'object' && entry.slowFile ? entry.slowFile : (entry ? audioFile(entry) : undefined))
+    : (entry ? audioFile(entry) : undefined)
+  if (file && (await playFile(`${base}audio/${AUDIO_VOICE}/${file}`))) return
   if (gen !== speakGen) return
-  await speakWithSynthesis(text)
+  await speakWithSynthesis(text, { slow })
 }

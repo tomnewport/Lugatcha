@@ -184,18 +184,6 @@ export interface VocabGroup extends VocabGroupMeta {
   quiz?: 'counting'
 }
 
-// ---------------------------------------------------------------------------
-// Audio candidate review (owner tool). Reviews persist locally so a session is
-// resumable; the export builds a GitHub issue an agent acts on.
-// ---------------------------------------------------------------------------
-
-export type Verdict = 'good' | 'bad'
-
-export interface AudioReview {
-  key: string // audio key (hash of the spoken text)
-  verdicts: Record<string, Verdict> // profile id -> verdict
-  updatedAt: number
-}
 
 // Static config — not stored in IndexedDB, read from locations.yaml at startup
 export interface Location {
