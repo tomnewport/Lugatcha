@@ -80,3 +80,21 @@ export async function loadTestData(theme: string): Promise<TestData> {
 
   return { candidates, learnedPool, allWords, progress }
 }
+
+/**
+ * Test data for an explicit pool of words (a vocab group, issue #62). Every
+ * word in the pool is a candidate — focused practice tests the whole set rather
+ * than only the words already met elsewhere. Option banks still draw from all
+ * vocabulary so the choices stay varied.
+ */
+export async function loadPoolTestData(pool: Word[]): Promise<TestData> {
+  const [allWords, allProgress] = await Promise.all([
+    db.words.toArray(),
+    db.wordProgress.toArray(),
+  ])
+  const progress = new Map<string, WordProgress | undefined>(
+    allProgress.map((p) => [p.wordId, p]),
+  )
+  const learnedPool = pool.filter((w) => isWordLearned(progress.get(w.id)))
+  return { candidates: pool, learnedPool, allWords, progress }
+}

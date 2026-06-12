@@ -1,0 +1,42 @@
+[
+  {
+    "id": "numbers",
+    "order": 1,
+    "title": {
+      "en": "Numbers",
+      "uz": "Sonlar"
+    },
+    "icon": "🔢",
+    "blurb": "Count to a thousand with a dozen building blocks"
+  },
+  {
+    "id": "colours",
+    "order": 2,
+    "title": {
+      "en": "Colours",
+      "uz": "Ranglar"
+    },
+    "icon": "🎨",
+    "blurb": "Name the colours — and meet the famous ko'k"
+  },
+  {
+    "id": "animals",
+    "order": 3,
+    "title": {
+      "en": "Animals",
+      "uz": "Hayvonlar"
+    },
+    "icon": "🐫",
+    "blurb": "From the loyal it to the desert tuya"
+  },
+  {
+    "id": "foods",
+    "order": 4,
+    "title": {
+      "en": "Foods",
+      "uz": "Taomlar"
+    },
+    "icon": "🍲",
+    "blurb": "Plov, soups and the colours of the bazaar"
+  }
+]

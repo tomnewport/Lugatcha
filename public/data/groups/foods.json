@@ -1,0 +1,144 @@
+{
+  "id": "foods",
+  "order": 4,
+  "title": {
+    "en": "Foods",
+    "uz": "Taomlar"
+  },
+  "icon": "🍲",
+  "blurb": "Plov, soups and the colours of the bazaar",
+  "article": [
+    {
+      "heading": "A cuisine built around the dasturxon",
+      "body": [
+        "Meals gather around the **dasturxon**, the spread of food laid out for guests. At its heart is **palov** (also called *osh*) — rice with carrots, onion and meat, cooked in a great cast-iron *qozon*. Around it come hand-folded **manti** (steamed dumplings), pulled-noodle **lag'mon**, and hearty **sho'rva** soup.",
+        "Uzbek hospitality is generous to a fault: expect your plate to be refilled before it is ever empty."
+      ],
+      "examples": [
+        {
+          "uzbek": "palov",
+          "english": "plov — the national dish"
+        },
+        {
+          "uzbek": "manti yaxshi",
+          "english": "the manti is good"
+        }
+      ]
+    },
+    {
+      "heading": "Colours of the bazaar",
+      "body": [
+        "The markets overflow with produce. Look for **anor** (pomegranate), **qovun** (melon) — Uzbek melons are legendary — and **tarvuz** (watermelon), piled in fragrant pyramids. Cooking starts from **sabzi** (carrot), **piyoz** (onion) and **kartoshka** (potato), and a touch of **asal** (honey) sweetens the tea."
+      ],
+      "examples": [
+        {
+          "uzbek": "qovun shirin",
+          "english": "the melon is sweet"
+        },
+        {
+          "uzbek": "bir kilo anor",
+          "english": "one kilo of pomegranates"
+        }
+      ]
+    }
+  ],
+  "words": [
+    {
+      "id": "core.food-plov",
+      "uzbek": "palov",
+      "english": "plov",
+      "theme": "core",
+      "group": "foods",
+      "level": 2,
+      "usageNotes": "Also called osh — rice, carrots, onion and meat. The national dish."
+    },
+    {
+      "id": "core.food-manti",
+      "uzbek": "manti",
+      "english": "manti (steamed dumplings)",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-lagman",
+      "uzbek": "lag'mon",
+      "english": "lagman (pulled noodles)",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-shorva",
+      "uzbek": "sho'rva",
+      "english": "soup",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-carrot",
+      "uzbek": "sabzi",
+      "english": "carrot",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-onion",
+      "uzbek": "piyoz",
+      "english": "onion",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-potato",
+      "uzbek": "kartoshka",
+      "english": "potato",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-pomegranate",
+      "uzbek": "anor",
+      "english": "pomegranate",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-melon",
+      "uzbek": "qovun",
+      "english": "melon",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-watermelon",
+      "uzbek": "tarvuz",
+      "english": "watermelon",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-honey",
+      "uzbek": "asal",
+      "english": "honey",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    },
+    {
+      "id": "core.food-sweets",
+      "uzbek": "shirinlik",
+      "english": "sweets",
+      "theme": "core",
+      "group": "foods",
+      "level": 3
+    }
+  ]
+}
