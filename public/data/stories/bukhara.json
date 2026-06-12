@@ -1,0 +1,36 @@
+[
+  {
+    "id": "bukhara.kalon-minaret",
+    "theme": "bukhara",
+    "title": { "en": "By the Pool", "uz": "Hovuz yonida" },
+    "sentences": [
+      { "uzbek": "Buxoro koʻhna shahar.", "english": "Bukhara is an old city." },
+      { "uzbek": "Kalon minorasi juda baland.", "english": "The Kalon minaret is very tall." },
+      { "uzbek": "Qadimda karvonlar bu yerda toʻxtagan.", "english": "In the old days caravans stopped here." },
+      { "uzbek": "Savdogarlar gilam sotadi.", "english": "Merchants sell carpets." },
+      { "uzbek": "Men hovuz yonida choy ichaman.", "english": "I drink tea by the pool." }
+    ],
+    "glossary": {
+      "Buxoro": "Bukhara",
+      "koʻhna": "old / ancient",
+      "shahar": "city",
+      "Kalon": "Kalon (great)",
+      "minorasi": "its minaret",
+      "juda": "very",
+      "baland": "tall / high",
+      "Qadimda": "in old times",
+      "karvonlar": "caravans",
+      "bu": "this",
+      "yerda": "here",
+      "toʻxtagan": "stopped",
+      "Savdogarlar": "merchants",
+      "gilam": "carpet",
+      "sotadi": "sells",
+      "Men": "I",
+      "hovuz": "pool",
+      "yonida": "beside",
+      "choy": "tea",
+      "ichaman": "I drink"
+    }
+  }
+]

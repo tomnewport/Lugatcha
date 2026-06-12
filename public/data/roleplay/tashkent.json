@@ -1,0 +1,48 @@
+[
+  {
+    "id": "tashkent.finding-the-metro",
+    "theme": "tashkent",
+    "title": { "en": "Around the Capital", "uz": "Poytaxt boʻylab" },
+    "scenario": "You find your way around busy Tashkent and its grand metro.",
+    "variants": [
+      {
+        "id": "tashkent.finding-the-metro.base",
+        "description": "Asking for the metro",
+        "turns": [
+          { "speaker": "user", "uzbek": "Kechirasiz, metro qayerda?", "english": "Excuse me, where is the metro?" },
+          { "speaker": "npc", "uzbek": "Toʻgʻriga yuring.", "english": "Go straight ahead." },
+          { "speaker": "user", "uzbek": "Rahmat!", "english": "Thank you!" }
+        ]
+      },
+      {
+        "id": "tashkent.finding-the-metro.ticket",
+        "description": "Buying a ticket",
+        "turns": [
+          { "speaker": "npc", "uzbek": "Qayerga borasiz?", "english": "Where are you going?" },
+          { "speaker": "user", "uzbek": "Chorsu bozoriga.", "english": "To the Chorsu bazaar." },
+          { "speaker": "npc", "uzbek": "Bitta chipta, ming soʻm.", "english": "One ticket, one thousand som." },
+          { "speaker": "user", "uzbek": "Mana pul.", "english": "Here is the money." }
+        ]
+      },
+      {
+        "id": "tashkent.finding-the-metro.market",
+        "description": "At the bazaar",
+        "turns": [
+          { "speaker": "user", "uzbek": "Bu mevalar yangimi?", "english": "Is this fruit fresh?" },
+          { "speaker": "npc", "uzbek": "Ha, bugun keldi.", "english": "Yes, it arrived today." },
+          { "speaker": "user", "uzbek": "Bir kilo bering.", "english": "Give me one kilo." }
+        ]
+      },
+      {
+        "id": "tashkent.finding-the-metro.lost",
+        "description": "Lost in the city",
+        "turns": [
+          { "speaker": "user", "uzbek": "Men adashdim.", "english": "I am lost." },
+          { "speaker": "npc", "uzbek": "Qayerni qidiryapsiz?", "english": "What are you looking for?" },
+          { "speaker": "user", "uzbek": "Mehmonxonani.", "english": "The hotel." },
+          { "speaker": "npc", "uzbek": "U zamonaviy bino, yaqin.", "english": "It is the modern building, nearby." }
+        ]
+      }
+    ]
+  }
+]
