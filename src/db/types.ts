@@ -181,8 +181,16 @@ export interface Location {
 export interface TravelPlace {
   id: string
   name: { en: string; uz: string }
-  mapX: number
-  mapY: number
+  /** Real-world location, projected onto the map at render time. */
+  lat: number
+  lon: number
   article: string[]
   words: Word[]
+}
+
+/** Pre-built Uzbekistan map layers (public/data/uzbekistan.geo.json). */
+export interface UzbekMap {
+  border: { type: 'Polygon' | 'MultiPolygon'; coordinates: number[][][] | number[][][][] }
+  railways: number[][][]
+  towns: { name: string; lon: number; lat: number; rank: number }[]
 }
