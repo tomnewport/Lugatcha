@@ -18,6 +18,7 @@ import ListeningExercise from '@/components/exercise/ListeningExercise.vue'
 import PhraseAssemblyExercise from '@/components/exercise/PhraseAssemblyExercise.vue'
 import RoleplayExercise from '@/components/exercise/RoleplayExercise.vue'
 import StorytimeExercise from '@/components/exercise/StorytimeExercise.vue'
+import TestExercise from '@/components/exercise/TestExercise.vue'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 
@@ -79,11 +80,14 @@ const EXERCISE_COMPONENTS = {
   'phrase-assembly': PhraseAssemblyExercise,
   roleplay: RoleplayExercise,
   storytime: StorytimeExercise,
+  test: TestExercise,
 } as const
 
 async function onComplete() {
   playChime()
-  if (activeExercise.value) {
+  // The Test is a recurring activity — it never gets marked permanently done,
+  // so it stays on the table for repeated learning and re-testing.
+  if (activeExercise.value && activeExercise.value !== 'test') {
     await progressStore.completeExercise(locationId.value, activeExercise.value)
   }
   router.push('/')
