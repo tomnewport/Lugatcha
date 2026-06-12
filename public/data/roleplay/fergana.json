@@ -2,44 +2,136 @@
   {
     "id": "fergana.valley-market",
     "theme": "fergana",
-    "title": { "en": "At the Valley Market", "uz": "Vodiy bozorida" },
+    "title": {
+      "en": "At the Valley Market",
+      "uz": "Vodiy bozorida"
+    },
     "scenario": "You shop at a Fergana Valley market, famous for fruit and crafts.",
     "variants": [
       {
         "id": "fergana.valley-market.base",
         "description": "Buying apricots",
         "turns": [
-          { "speaker": "npc", "uzbek": "Bizda shirin oʻrik bor.", "english": "We have sweet apricots." },
-          { "speaker": "user", "uzbek": "Bir kilo oʻrik, iltimos.", "english": "One kilo of apricots, please." },
-          { "speaker": "npc", "uzbek": "Mana, juda mazali.", "english": "Here, very tasty." },
-          { "speaker": "user", "uzbek": "Rahmat!", "english": "Thank you!" }
+          {
+            "speaker": "npc",
+            "uzbek": "Bizda shirin oʻrik bor.",
+            "english": "We have sweet apricots."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bir kilo oʻrik, iltimos.",
+            "english": "One kilo of apricots, please.",
+            "tokens": [
+              "Bir",
+              "kilo",
+              "oʻrik,",
+              "iltimos."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, juda mazali.",
+            "english": "Here, very tasty."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat!",
+            "english": "Thank you!",
+            "tokens": [
+              "Rahmat!"
+            ]
+          }
         ]
       },
       {
         "id": "fergana.valley-market.silk",
         "description": "Asking about atlas silk",
         "turns": [
-          { "speaker": "user", "uzbek": "Bu atlas qayerda toʻqilgan?", "english": "Where was this atlas silk woven?" },
-          { "speaker": "npc", "uzbek": "Margʻilonda.", "english": "In Margilan." },
-          { "speaker": "user", "uzbek": "Ranglari chiroyli.", "english": "The colours are beautiful." }
+          {
+            "speaker": "user",
+            "uzbek": "Bu atlas qayerda toʻqilgan?",
+            "english": "Where was this atlas silk woven?",
+            "tokens": [
+              "Bu",
+              "atlas",
+              "qayerda",
+              "toʻqilgan?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Margʻilonda.",
+            "english": "In Margilan."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Ranglari chiroyli.",
+            "english": "The colours are beautiful.",
+            "tokens": [
+              "Ranglari",
+              "chiroyli."
+            ]
+          }
         ]
       },
       {
         "id": "fergana.valley-market.knife",
         "description": "A Chust knife",
         "turns": [
-          { "speaker": "user", "uzbek": "Menga pichoq kerak.", "english": "I need a knife." },
-          { "speaker": "npc", "uzbek": "Chust pichogʻi mashhur.", "english": "The Chust knife is famous." },
-          { "speaker": "user", "uzbek": "Bittasini olaman.", "english": "I will take one." }
+          {
+            "speaker": "user",
+            "uzbek": "Menga pichoq kerak.",
+            "english": "I need a knife.",
+            "tokens": [
+              "Menga",
+              "pichoq",
+              "kerak."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Chust pichogʻi mashhur.",
+            "english": "The Chust knife is famous."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bittasini olaman.",
+            "english": "I will take one.",
+            "tokens": [
+              "Bittasini",
+              "olaman."
+            ]
+          }
         ]
       },
       {
         "id": "fergana.valley-market.harvest",
         "description": "Talking about the harvest",
         "turns": [
-          { "speaker": "user", "uzbek": "Hosil yaxshimi?", "english": "Is the harvest good?" },
-          { "speaker": "npc", "uzbek": "Ha, bu yil moʻl.", "english": "Yes, this year it is plentiful." },
-          { "speaker": "user", "uzbek": "Bu juda yaxshi.", "english": "That is very good." }
+          {
+            "speaker": "user",
+            "uzbek": "Hosil yaxshimi?",
+            "english": "Is the harvest good?",
+            "tokens": [
+              "Hosil",
+              "yaxshimi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, bu yil moʻl.",
+            "english": "Yes, this year it is plentiful."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Bu juda yaxshi.",
+            "english": "That is very good.",
+            "tokens": [
+              "Bu",
+              "juda",
+              "yaxshi."
+            ]
+          }
         ]
       }
     ]
