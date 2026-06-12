@@ -6,7 +6,6 @@ import type {
   WordProgress,
   LocationProgress,
   LessonProgress,
-  AudioReview,
 } from './types'
 import { seedDatabase } from './seed'
 
@@ -17,7 +16,6 @@ export class LugatchaDB extends Dexie {
   wordProgress!: Table<WordProgress, string>
   locationProgress!: Table<LocationProgress, string>
   lessonProgress!: Table<LessonProgress, string>
-  audioReviews!: Table<AudioReview, string>
 
   constructor() {
     super('lugatcha')
@@ -32,9 +30,13 @@ export class LugatchaDB extends Dexie {
     this.version(2).stores({
       lessonProgress: 'lessonId',
     })
-    // v3: audio candidate reviews (owner tool)
+    // v3: audio candidate reviews (no longer used — kept for upgrade path)
     this.version(3).stores({
       audioReviews: 'key',
+    })
+    // v4: drop the audio review table now that Sayro TTS is retired
+    this.version(4).stores({
+      audioReviews: null,
     })
     // Fires only on first-ever open of this DB in the browser
     this.on('populate', () => seedDatabase(this))
