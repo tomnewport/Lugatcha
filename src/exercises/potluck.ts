@@ -34,9 +34,9 @@ export const UNLOCK_AT: Record<ExerciseType, number> = {
   intro: 0,
   flashcards: 5,
   listening: 5,
-  'phrase-assembly': 8,
-  roleplay: 10,
-  storytime: 12,
+  'phrase-assembly': 5,
+  roleplay: 5,
+  storytime: 5,
 }
 
 export interface LocationStats {
@@ -81,13 +81,6 @@ export function buildPotluck(stats: LocationStats): Activity[] {
 
     if (stats.seenWords < needed(type)) {
       return { ...base, state: 'locked', hint: moreWords(type) }
-    }
-
-    if (
-      (type === 'phrase-assembly' || type === 'roleplay' || type === 'storytime') &&
-      !done.has('listening')
-    ) {
-      return { ...base, state: 'locked', hint: 'Do a listening session first' }
     }
 
     return { ...base, state: 'available' }
