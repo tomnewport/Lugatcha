@@ -6,8 +6,9 @@ import { useLiveQuery, db, isWordKnown } from '@/db/useDb'
 import type { Location, LocationProgress, ExerciseType } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
+import TreasureChest from '@/components/TreasureChest.vue'
 import { useAudioReady } from '@/audio/offline'
-import { ACTIVITY_ORDER, buildPotluck, type LocationStats } from '@/exercises/potluck'
+import { buildPotluck, type LocationStats } from '@/exercises/potluck'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 const SEED_KEY = 'lugatcha.sessionSeed'
@@ -109,6 +110,7 @@ const EXERCISE_EMOJIS: Record<ExerciseType, string> = {
   'phrase-assembly': '🔤',
   roleplay: '🤝',
   storytime: '📖',
+  test: '🎯',
 }
 
 /** Returns the emoji for the exercise LocationView would actually serve next. */
@@ -146,6 +148,8 @@ const chipMap = computed(() => {
 
 <template>
   <main class="home">
+    <TreasureChest />
+
     <RouterLink class="settings-link" to="/settings" :aria-label="audioReady ? 'Settings' : 'Settings — audio not yet downloaded'">
       <svg
         viewBox="0 0 24 24"

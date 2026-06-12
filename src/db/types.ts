@@ -45,10 +45,23 @@ export interface Roleplay {
   variants: RoleplayVariant[]
 }
 
+/**
+ * The three ways a word is quizzed in a Test. A word is "learned" only once all
+ * three have been passed at least once (issue #61).
+ */
+export const TEST_QUESTION_TYPES = ['listen-choice', 'read-choice', 'type'] as const
+export type TestQuestionType = (typeof TEST_QUESTION_TYPES)[number]
+
 export interface WordProgress {
   wordId: string
   seenAt?: number // unix timestamp of first exposure
   lastResults: boolean[] // newest first, capped at 4 entries
+  /** Test question types passed at least once — three of them means "learned". */
+  testPassed?: TestQuestionType[]
+  /** When the word was first fully learned (all three types). Drives the chest. */
+  learnedAt?: number
+  /** Failed test questions accrued since it was learned; two of them unlearns it. */
+  failsSinceLearned?: number
 }
 
 export interface LocationProgress {
@@ -63,6 +76,7 @@ export type ExerciseType =
   | 'phrase-assembly'
   | 'roleplay'
   | 'storytime'
+  | 'test'
 
 // ---------------------------------------------------------------------------
 // Language School lessons (issue #8). Lesson content is static config fetched
