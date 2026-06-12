@@ -94,6 +94,20 @@ def audio_key(text: str) -> str:
     return f"{h:016x}"
 
 
+# Surrounding punctuation trimmed + lowercased: the canonical spoken form of a
+# single tapped word. MUST mirror src/exercises/validate.ts:spokenWordForm so a
+# word tapped in the app resolves to the clip generated here.
+_EDGE_PUNCT = " \t\r\n.,!?;:\"«»()[]{}—–…·+-“”"
+
+
+def spoken_word_form(token: str) -> str:
+    return unicodedata.normalize("NFC", token).strip(_EDGE_PUNCT).lower()
+
+
+def _has_letter(text: str) -> bool:
+    return any(ch.isalpha() for ch in text)
+
+
 def self_test() -> None:
     fixtures = json.loads(FIXTURES.read_text(encoding="utf-8"))
     failures = [
@@ -114,24 +128,35 @@ def self_test() -> None:
 
 
 def collect_texts() -> dict[str, str]:
-    """Returns key -> text for all spoken strings, first occurrence wins."""
+    """Returns key -> text for everything the app can speak, first occurrence wins.
+
+    Two tiers:
+      * Whole strings — word/phrase entries, story sentences, roleplay turns and
+        lesson audio — spoken when a card, sentence or turn is played.
+      * Individual words — every token of a phrase/entry in its `spoken_word_form`
+        (punctuation trimmed, lowercased). Each Uzbek word in the app is tappable
+        for audio (see UzbekWord.vue), so without these a tap falls through to the
+        Web Speech fallback. public/data/spoken-words.json captures this set and is
+        unioned in so words can be curated or added by hand.
+    """
     manifest = json.loads((DATA_DIR / "manifest.json").read_text(encoding="utf-8"))
-    texts: list[str] = []
+    phrases: list[str] = []  # multi-word, spoken as a unit
+    entries: list[str] = []  # vocabulary entries (may be single or multi word)
 
     for name in manifest["words"]:
         for word in json.loads((DATA_DIR / "words" / f"{name}.json").read_text(encoding="utf-8")):
-            texts.append(word["uzbek"])
+            entries.append(word["uzbek"])
 
     for name in manifest["stories"]:
         stories = json.loads((DATA_DIR / "stories" / f"{name}.json").read_text(encoding="utf-8"))
         for story in stories:
-            texts.extend(sentence["uzbek"] for sentence in story["sentences"])
+            phrases.extend(sentence["uzbek"] for sentence in story["sentences"])
 
     for name in manifest["roleplay"]:
         roleplays = json.loads((DATA_DIR / "roleplay" / f"{name}.json").read_text(encoding="utf-8"))
         for roleplay in roleplays:
             for variant in roleplay["variants"]:
-                texts.extend(turn["uzbek"] for turn in variant["turns"])
+                phrases.extend(turn["uzbek"] for turn in variant["turns"])
 
     # Language School lessons: spoken examples and exercise audio
     lessons_dir = DATA_DIR / "lessons"
@@ -139,17 +164,44 @@ def collect_texts() -> dict[str, str]:
         for meta in json.loads((lessons_dir / "index.json").read_text(encoding="utf-8")):
             lesson = json.loads((lessons_dir / f"{meta['id']}.json").read_text(encoding="utf-8"))
             for section in lesson["sections"]:
-                texts.extend(ex["uzbek"] for ex in section.get("examples", []))
+                phrases.extend(ex["uzbek"] for ex in section.get("examples", []))
             for exercise in lesson["exercises"]:
                 if exercise.get("promptUzbek"):
-                    texts.append(exercise["promptUzbek"])
+                    phrases.append(exercise["promptUzbek"])
                 if exercise["engine"] == "build":
                     joiner = exercise.get("joiner", " ")
-                    texts.append(exercise.get("audioText") or joiner.join(exercise["tokens"]))
+                    phrases.append(exercise.get("audioText") or joiner.join(exercise["tokens"]))
 
     collected: dict[str, str] = {}
-    for text in texts:
-        collected.setdefault(audio_key(text), normalize_spoken_text(text))
+
+    def add(text: str) -> None:
+        if text:
+            collected.setdefault(audio_key(text), normalize_spoken_text(text))
+
+    # Tier 1: whole strings, exactly as a card/sentence/turn is played.
+    for text in [*entries, *phrases]:
+        add(text)
+
+    # Tier 2: each tappable word, in its canonical spoken form. Multi-word vocab
+    # entries are also added whole so the flashcard tap on the full entry resolves.
+    for text in [*phrases, *entries]:
+        for token in text.split():
+            word = spoken_word_form(token)
+            if word and _has_letter(word):
+                add(word)
+    for entry in entries:
+        whole = spoken_word_form(entry)
+        if " " in whole and _has_letter(whole):
+            add(whole)
+
+    # Optional curated/extra words.
+    spoken_path = DATA_DIR / "spoken-words.json"
+    if spoken_path.exists():
+        for word in json.loads(spoken_path.read_text(encoding="utf-8")).get("words", []):
+            form = spoken_word_form(word)
+            if form and _has_letter(form):
+                add(form)
+
     return collected
 
 

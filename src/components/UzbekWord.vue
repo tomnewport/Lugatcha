@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, inject } from 'vue'
 import type { Ref } from 'vue'
 import { getBreakdown, ensureBreakdownIndex } from '@/exercises/deagglutination'
+import { spokenWordForm } from '@/exercises/validate'
 import { speakUzbek } from '@/audio/audio'
 
 const props = defineProps<{
@@ -31,7 +32,7 @@ const isAgglutinated = computed(() => breakdown.value !== null)
 const hasTooltip = computed(() => isAgglutinated.value || !!props.meaning)
 
 function toggle() {
-  void speakUzbek(props.word)
+  void speakUzbek(spokenWordForm(props.word))
   if (!hasTooltip.value) return
   if (sentenceActive !== null) {
     sentenceActive.value = sentenceActive.value === id ? null : id
