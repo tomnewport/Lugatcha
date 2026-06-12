@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loadLocations } from '@/db/locations'
-import { useLiveQuery, db } from '@/db/useDb'
+import { useLiveQuery, db, isWordKnown } from '@/db/useDb'
 import type { Location, LocationProgress, ExerciseType } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
@@ -10,6 +10,7 @@ import { useAudioReady } from '@/audio/offline'
 import { ACTIVITY_ORDER, buildPotluck, type LocationStats } from '@/exercises/potluck'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
+const SEED_KEY = 'lugatcha.sessionSeed'
 
 const router = useRouter()
 const { ready: audioReady } = useAudioReady()
@@ -23,9 +24,18 @@ function dismissBanner() {
   try { localStorage.setItem(BANNER_KEY, 'true') } catch { /* private mode */ }
 }
 
+function getOrCreateSeed(): number {
+  try {
+    const stored = localStorage.getItem(SEED_KEY)
+    if (stored !== null) return parseInt(stored, 10)
+  } catch { /* private mode */ }
+  const seed = Math.floor(Math.random() * 1_000_000)
+  try { localStorage.setItem(SEED_KEY, String(seed)) } catch { /* private mode */ }
+  return seed
+}
+
 const locations = ref<Location[]>([])
-// Fresh random seed each time the city map mounts (i.e. after each exercise)
-const sessionSeed = ref(Math.floor(Math.random() * 1_000_000))
+const sessionSeed = ref(getOrCreateSeed())
 
 onMounted(async () => {
   locations.value = await loadLocations()
@@ -33,7 +43,7 @@ onMounted(async () => {
 
 const allProgress = useLiveQuery(() => db.locationProgress.toArray(), [] as LocationProgress[])
 
-/** Seen-word and total-word counts keyed by location theme, for accurate chip computation. */
+/** Seen-word, known-word, and total-word counts keyed by location theme. */
 const wordStats = useLiveQuery(
   async () => {
     const [wordProgress, allWords] = await Promise.all([
@@ -41,16 +51,19 @@ const wordStats = useLiveQuery(
       db.words.toArray(),
     ])
     const seenIds = new Set(wordProgress.filter((p) => p.seenAt).map((p) => p.wordId))
+    const knownIds = new Set(wordProgress.filter((p) => isWordKnown(p)).map((p) => p.wordId))
     const seen = new Map<string, number>()
+    const known = new Map<string, number>()
     const total = new Map<string, number>()
     for (const w of allWords) {
       if (w.theme === 'core') continue
       total.set(w.theme, (total.get(w.theme) ?? 0) + 1)
       if (seenIds.has(w.id)) seen.set(w.theme, (seen.get(w.theme) ?? 0) + 1)
+      if (knownIds.has(w.id)) known.set(w.theme, (known.get(w.theme) ?? 0) + 1)
     }
-    return { seen, total }
+    return { seen, known, total }
   },
-  { seen: new Map<string, number>(), total: new Map<string, number>() },
+  { seen: new Map<string, number>(), known: new Map<string, number>(), total: new Map<string, number>() },
 )
 
 const lastTried = ref<string | null>(null)
@@ -201,8 +214,11 @@ const chipMap = computed(() => {
           role="listitem"
           :location="loc"
           :progress="progressMap.get(loc.id)"
-          :locked="chipMap.get(loc.id) === null"
+          :locked="false"
           :exercise-emoji="chipMap.get(loc.id) ?? undefined"
+          :seen-words="wordStats.seen.get(loc.id) ?? 0"
+          :total-words="wordStats.total.get(loc.id) ?? 0"
+          :known-words="wordStats.known.get(loc.id) ?? 0"
           :style="{
             gridRow: loc.gridRow,
             gridColumn: loc.gridCol,

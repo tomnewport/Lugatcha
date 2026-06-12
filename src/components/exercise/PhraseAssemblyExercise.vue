@@ -10,20 +10,22 @@ import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 
-type PromptMode = 'english' | 'uzbek' | 'audio'
+type PromptMode = 'english' | 'uzbek-to-english' | 'audio'
 
 interface Phrase {
   uzbek: string
   english: string
   tokens: string[]
+  englishTokens: string[]
   mode: PromptMode
 }
 
 const PHRASES_PER_SESSION = 4
-const MODES: PromptMode[] = ['english', 'uzbek', 'audio']
+const MODES: PromptMode[] = ['english', 'uzbek-to-english', 'audio']
 
 const phrases = ref<Phrase[]>([])
 const decoyPool = ref<string[]>([])
+const englishDecoyPool = ref<string[]>([])
 const index = ref(0)
 const solved = ref(false)
 const loading = ref(true)
@@ -43,6 +45,7 @@ onMounted(async () => {
           uzbek: turn.uzbek,
           english: turn.english,
           tokens: turn.tokens ?? tokenize(turn.uzbek),
+          englishTokens: tokenize(turn.english),
         })
       }
     }
@@ -51,13 +54,23 @@ onMounted(async () => {
     .slice(0, PHRASES_PER_SESSION)
     .map((p, i) => ({ ...p, mode: MODES[i % MODES.length] }))
   decoyPool.value = userPhrases.flatMap((p) => p.tokens)
+  englishDecoyPool.value = userPhrases.flatMap((p) => p.englishTokens)
   loading.value = false
 })
 
 const current = computed(() => phrases.value[index.value])
-const decoys = computed(() =>
-  current.value ? buildDecoys(current.value.tokens, decoyPool.value, 3) : [],
+const isEnglishAssembly = computed(() => current.value?.mode === 'uzbek-to-english')
+const activeTokens = computed(() =>
+  current.value
+    ? (isEnglishAssembly.value ? current.value.englishTokens : current.value.tokens)
+    : []
 )
+const decoys = computed(() => {
+  if (!current.value) return []
+  return isEnglishAssembly.value
+    ? buildDecoys(current.value.englishTokens, englishDecoyPool.value, 3)
+    : buildDecoys(current.value.tokens, decoyPool.value, 3)
+})
 const isLast = computed(() => index.value >= phrases.value.length - 1)
 
 function onResult(result: AssemblyResult) {
@@ -87,8 +100,8 @@ function next() {
           <span class="phrase__prompt-label">Build this in Uzbek:</span>
           <p class="phrase__prompt-text">{{ current.english }}</p>
         </template>
-        <template v-else-if="current.mode === 'uzbek'">
-          <span class="phrase__prompt-label">Rebuild this phrase:</span>
+        <template v-else-if="current.mode === 'uzbek-to-english'">
+          <span class="phrase__prompt-label">Translate into English:</span>
           <p class="phrase__prompt-text">
             <UzbekSentence :uzbek="current.uzbek" />
           </p>
@@ -101,9 +114,9 @@ function next() {
 
       <TokenAssembly
         :key="index"
-        :tokens="current.tokens"
+        :tokens="activeTokens"
         :decoys="decoys"
-        mode="strict"
+        :mode="isEnglishAssembly ? 'loose' : 'strict'"
         @result="onResult"
       />
 

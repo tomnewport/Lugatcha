@@ -9,6 +9,9 @@ const props = defineProps<{
   progress: LocationProgress | undefined
   locked: boolean
   exerciseEmoji?: string
+  seenWords?: number
+  totalWords?: number
+  knownWords?: number
 }>()
 
 const router = useRouter()
@@ -21,13 +24,22 @@ const secondaryName = computed(() =>
   settings.labelLanguage === 'uz' ? props.location.name.en : props.location.name.uz,
 )
 
-const TOTAL_EXERCISES = 6
 const RADIUS = 18
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 const completedCount = computed(() => props.progress?.completedExercises.length ?? 0)
-const isComplete = computed(() => completedCount.value >= TOTAL_EXERCISES)
-const dashOffset = computed(() => CIRCUMFERENCE * (1 - completedCount.value / TOTAL_EXERCISES))
+const isComplete = computed(() => completedCount.value >= 6)
+
+const seenFraction = computed(() => {
+  if (!props.totalWords) return 0
+  return Math.min(1, (props.seenWords ?? 0) / props.totalWords)
+})
+const knownFraction = computed(() => {
+  if (!props.totalWords) return 0
+  return Math.min(1, (props.knownWords ?? 0) / props.totalWords)
+})
+const seenDashOffset = computed(() => CIRCUMFERENCE * (1 - seenFraction.value))
+const knownDashOffset = computed(() => CIRCUMFERENCE * (1 - knownFraction.value))
 
 function navigate() {
   if (!props.locked) {
@@ -52,16 +64,29 @@ function navigate() {
       <svg class="tile__svg" viewBox="0 0 44 44">
         <circle cx="22" cy="22" :r="RADIUS" class="ring-track" fill="none" stroke-width="3" />
         <circle
-          v-if="completedCount > 0"
+          v-if="seenFraction > 0"
           cx="22"
           cy="22"
           :r="RADIUS"
-          class="ring-fill"
+          class="ring-seen"
           fill="none"
           stroke-width="3"
           stroke-linecap="round"
           :stroke-dasharray="CIRCUMFERENCE"
-          :stroke-dashoffset="dashOffset"
+          :stroke-dashoffset="seenDashOffset"
+          transform="rotate(-90 22 22)"
+        />
+        <circle
+          v-if="knownFraction > 0"
+          cx="22"
+          cy="22"
+          :r="RADIUS"
+          class="ring-known"
+          fill="none"
+          stroke-width="3"
+          stroke-linecap="round"
+          :stroke-dasharray="CIRCUMFERENCE"
+          :stroke-dashoffset="knownDashOffset"
           transform="rotate(-90 22 22)"
         />
       </svg>
@@ -93,9 +118,9 @@ function navigate() {
         <path d="M2.5 8l4 4 7-7" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
 
-      <!-- Initial letter -->
+      <!-- Exercise emoji chip or initial letter -->
       <span v-else class="tile__icon tile__icon--letter" aria-hidden="true">
-        {{ location.name.en.charAt(0) }}
+        {{ exerciseEmoji ?? location.name.en.charAt(0) }}
       </span>
     </div>
 
@@ -105,8 +130,6 @@ function navigate() {
     <span class="tile__name-uz" :lang="settings.labelLanguage === 'uz' ? undefined : 'uz'">{{
       secondaryName
     }}</span>
-
-    <span v-if="exerciseEmoji && !locked" class="tile__chip" aria-hidden="true">{{ exerciseEmoji }}</span>
   </button>
 </template>
 
@@ -169,13 +192,15 @@ function navigate() {
   stroke: var(--color-border);
 }
 
-.ring-fill {
-  stroke: var(--color-primary);
+.ring-seen {
+  stroke: var(--color-gold);
+  opacity: 0.5;
   transition: stroke-dashoffset 0.35s ease;
 }
 
-.tile--complete .ring-fill {
-  stroke: var(--color-gold);
+.ring-known {
+  stroke: var(--color-primary);
+  transition: stroke-dashoffset 0.35s ease;
 }
 
 /* Centre icons */
@@ -241,20 +266,4 @@ function navigate() {
   white-space: nowrap;
 }
 
-.tile__chip {
-  position: absolute;
-  top: -7px;
-  right: -7px;
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  background: var(--color-surface);
-  border: 1.5px solid var(--color-gold);
-  border-radius: 50%;
-  box-shadow: var(--shadow-sm);
-  z-index: 1;
-}
 </style>
