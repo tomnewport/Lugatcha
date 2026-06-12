@@ -38,6 +38,14 @@
         {
           "uzbek": "O'zbekiston",
           "english": "Ўзбекистон in Cyrillic"
+        },
+        {
+          "uzbek": "Samarqand",
+          "english": "Самарқанд in Cyrillic — tailed Қ is the deep q"
+        },
+        {
+          "uzbek": "halol",
+          "english": "ҳалол in Cyrillic — tailed Ҳ is plain h (not kh)"
         }
       ]
     }

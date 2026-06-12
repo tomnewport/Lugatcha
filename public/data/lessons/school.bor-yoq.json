@@ -56,6 +56,14 @@
         {
           "uzbek": "Choy bormi?",
           "english": "Is there tea? / Do you have tea?"
+        },
+        {
+          "uzbek": "Non bormi?",
+          "english": "Is there bread? / Do you have bread?"
+        },
+        {
+          "uzbek": "Bilet bormi?",
+          "english": "Are there tickets? / Do you have tickets?"
         }
       ]
     }

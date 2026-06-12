@@ -30,6 +30,34 @@
       "body": [
         "As a visitor, **siz is always safe**. Using *sen* with the wrong person is genuinely rude. If a friendship warms up, locals will happily invite you to switch.",
         "There's even an extra-deferential **sizlar** for groups you respect — but siz covers everything a traveller needs."
+      ],
+      "examples": [
+        {
+          "uzbek": "Kechirasiz",
+          "english": "Excuse me — -siz built right into the word",
+          "breakdown": [
+            "Kechira",
+            "siz"
+          ],
+          "gloss": [
+            "forgive",
+            "you (polite)"
+          ]
+        },
+        {
+          "uzbek": "Xush kelibsiz",
+          "english": "Welcome — the -siz ending marks respect",
+          "breakdown": [
+            "Xush",
+            "kelib",
+            "siz"
+          ],
+          "gloss": [
+            "well",
+            "came",
+            "you (polite)"
+          ]
+        }
       ]
     }
   ],
