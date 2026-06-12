@@ -30,6 +30,38 @@
             "my",
             "from"
           ]
+        },
+        {
+          "uzbek": "kitoblarimda",
+          "english": "in my books",
+          "breakdown": [
+            "kitob",
+            "lar",
+            "im",
+            "da"
+          ],
+          "gloss": [
+            "book",
+            "plural",
+            "my",
+            "in"
+          ]
+        },
+        {
+          "uzbek": "do'stlarimga",
+          "english": "to my friends",
+          "breakdown": [
+            "do'st",
+            "lar",
+            "im",
+            "ga"
+          ],
+          "gloss": [
+            "friend",
+            "plural",
+            "my",
+            "to"
+          ]
         }
       ]
     },
@@ -88,6 +120,38 @@
       "body": [
         "Long words look intimidating, but they are towers of regular bricks. Once you can peel a word into its parts, **uylarimdan** stops being noise and starts being house-s-my-from.",
         "Time to stack some bricks yourself."
+      ],
+      "examples": [
+        {
+          "uzbek": "mehmonxonadan",
+          "english": "from the hotel",
+          "breakdown": [
+            "mehmon",
+            "xona",
+            "dan"
+          ],
+          "gloss": [
+            "guest",
+            "room",
+            "from"
+          ]
+        },
+        {
+          "uzbek": "do'stlarimizga",
+          "english": "to our friends",
+          "breakdown": [
+            "do'st",
+            "lar",
+            "imiz",
+            "ga"
+          ],
+          "gloss": [
+            "friend",
+            "plural",
+            "our",
+            "to"
+          ]
+        }
       ]
     }
   ],

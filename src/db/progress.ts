@@ -151,7 +151,7 @@ export async function recordLessonExercise(
   })
 }
 
-/** Marks a lesson complete (wrap-up reached). Keeps the first completion time. */
+/** Marks a lesson complete (wrap-up reached). Keeps the first completion time; increments visitCount. */
 export async function completeLesson(db: LugatchaDB, lessonId: string): Promise<void> {
   await db.transaction('rw', db.lessonProgress, async () => {
     const existing = await db.lessonProgress.get(lessonId)
@@ -159,6 +159,7 @@ export async function completeLesson(db: LugatchaDB, lessonId: string): Promise<
       lessonId,
       completedAt: existing?.completedAt ?? Date.now(),
       exercisesPassed: existing?.exercisesPassed ?? [],
+      visitCount: (existing?.visitCount ?? 0) + 1,
     })
   })
 }
