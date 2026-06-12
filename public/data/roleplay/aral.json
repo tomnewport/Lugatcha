@@ -2,44 +2,139 @@
   {
     "id": "aral.ship-graveyard",
     "theme": "aral",
-    "title": { "en": "The Ship Graveyard", "uz": "Kemalar qabristoni" },
+    "title": {
+      "en": "The Ship Graveyard",
+      "uz": "Kemalar qabristoni"
+    },
     "scenario": "You visit Moʻynoq and Nukus, where the Aral Sea has retreated.",
     "variants": [
       {
         "id": "aral.ship-graveyard.base",
         "description": "On the dry seabed",
         "turns": [
-          { "speaker": "npc", "uzbek": "Bu yerda dengiz bor edi.", "english": "There was a sea here." },
-          { "speaker": "user", "uzbek": "Endi faqat qum bor.", "english": "Now there is only sand." },
-          { "speaker": "npc", "uzbek": "Ha, juda achinarli.", "english": "Yes, very sad." },
-          { "speaker": "user", "uzbek": "Eski kemalar qayerda?", "english": "Where are the old ships?" }
+          {
+            "speaker": "npc",
+            "uzbek": "Bu yerda dengiz bor edi.",
+            "english": "There was a sea here."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Endi faqat qum bor.",
+            "english": "Now there is only sand.",
+            "tokens": [
+              "Endi",
+              "faqat",
+              "qum",
+              "bor."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, juda achinarli.",
+            "english": "Yes, very sad."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Eski kemalar qayerda?",
+            "english": "Where are the old ships?",
+            "tokens": [
+              "Eski",
+              "kemalar",
+              "qayerda?"
+            ]
+          }
         ]
       },
       {
         "id": "aral.ship-graveyard.museum",
         "description": "Visiting the museum",
         "turns": [
-          { "speaker": "user", "uzbek": "Muzey bugun ochiqmi?", "english": "Is the museum open today?" },
-          { "speaker": "npc", "uzbek": "Ha, soat oltigacha.", "english": "Yes, until six o'clock." },
-          { "speaker": "user", "uzbek": "Yaxshi, kiramiz.", "english": "Good, let us go in." }
+          {
+            "speaker": "user",
+            "uzbek": "Muzey bugun ochiqmi?",
+            "english": "Is the museum open today?",
+            "tokens": [
+              "Muzey",
+              "bugun",
+              "ochiqmi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Ha, soat oltigacha.",
+            "english": "Yes, until six o'clock."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Yaxshi, kiramiz.",
+            "english": "Good, let us go in.",
+            "tokens": [
+              "Yaxshi,",
+              "kiramiz."
+            ]
+          }
         ]
       },
       {
         "id": "aral.ship-graveyard.fish",
         "description": "Asking about fish",
         "turns": [
-          { "speaker": "user", "uzbek": "Bu yerda baliq bormi?", "english": "Is there fish here?" },
-          { "speaker": "npc", "uzbek": "Yoʻq, suv qurigan.", "english": "No, the water has dried up." },
-          { "speaker": "user", "uzbek": "Juda afsus.", "english": "Such a pity." }
+          {
+            "speaker": "user",
+            "uzbek": "Bu yerda baliq bormi?",
+            "english": "Is there fish here?",
+            "tokens": [
+              "Bu",
+              "yerda",
+              "baliq",
+              "bormi?"
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Yoʻq, suv qurigan.",
+            "english": "No, the water has dried up."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Juda afsus.",
+            "english": "Such a pity.",
+            "tokens": [
+              "Juda",
+              "afsus."
+            ]
+          }
         ]
       },
       {
         "id": "aral.ship-graveyard.water",
         "description": "In the heat",
         "turns": [
-          { "speaker": "user", "uzbek": "Iltimos, suv bering.", "english": "Please give me water." },
-          { "speaker": "npc", "uzbek": "Mana, sovuq suv.", "english": "Here, cold water." },
-          { "speaker": "user", "uzbek": "Rahmat, havo issiq.", "english": "Thanks, the weather is hot." }
+          {
+            "speaker": "user",
+            "uzbek": "Iltimos, suv bering.",
+            "english": "Please give me water.",
+            "tokens": [
+              "Iltimos,",
+              "suv",
+              "bering."
+            ]
+          },
+          {
+            "speaker": "npc",
+            "uzbek": "Mana, sovuq suv.",
+            "english": "Here, cold water."
+          },
+          {
+            "speaker": "user",
+            "uzbek": "Rahmat, havo issiq.",
+            "english": "Thanks, the weather is hot.",
+            "tokens": [
+              "Rahmat,",
+              "havo",
+              "issiq."
+            ]
+          }
         ]
       }
     ]

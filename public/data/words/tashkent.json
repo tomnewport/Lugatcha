@@ -1,0 +1,79 @@
+[
+  {
+    "id": "tashkent.katta",
+    "uzbek": "katta",
+    "english": "big",
+    "theme": "tashkent",
+    "level": 1
+  },
+  {
+    "id": "tashkent.shahar",
+    "uzbek": "shahar",
+    "english": "city",
+    "theme": "tashkent",
+    "level": 1
+  },
+  {
+    "id": "tashkent.odam",
+    "uzbek": "odam",
+    "english": "person",
+    "theme": "tashkent",
+    "level": 1
+  },
+  {
+    "id": "tashkent.meva",
+    "uzbek": "meva",
+    "english": "fruit",
+    "theme": "tashkent",
+    "level": 1
+  },
+  {
+    "id": "tashkent.kocha",
+    "uzbek": "koʻcha",
+    "english": "street",
+    "theme": "tashkent",
+    "level": 1
+  },
+  {
+    "id": "tashkent.avtobus",
+    "uzbek": "avtobus",
+    "english": "bus",
+    "theme": "tashkent",
+    "level": 1
+  },
+  {
+    "id": "tashkent.dokon",
+    "uzbek": "doʻkon",
+    "english": "shop",
+    "theme": "tashkent",
+    "level": 1
+  },
+  {
+    "id": "tashkent.toza",
+    "uzbek": "toza",
+    "english": "clean",
+    "theme": "tashkent",
+    "level": 2
+  },
+  {
+    "id": "tashkent.ish",
+    "uzbek": "ish",
+    "english": "work",
+    "theme": "tashkent",
+    "level": 2
+  },
+  {
+    "id": "tashkent.bino",
+    "uzbek": "bino",
+    "english": "building",
+    "theme": "tashkent",
+    "level": 2
+  },
+  {
+    "id": "tashkent.mehmonxona",
+    "uzbek": "mehmonxona",
+    "english": "hotel",
+    "theme": "tashkent",
+    "level": 2
+  }
+]
