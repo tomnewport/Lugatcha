@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { loadLesson } from '@/db/lessons'
 import { useProgressStore } from '@/stores/progress'
+import { db } from '@/db'
 import type { Lesson, LessonExercise, LessonSection } from '@/db/types'
 import LessonSectionCard from '@/components/school/LessonSectionCard.vue'
 import ChoiceExercise from '@/components/school/ChoiceExercise.vue'
@@ -15,6 +16,8 @@ const progressStore = useProgressStore()
 const lesson = ref<Lesson | null>(null)
 const stepIndex = ref(0)
 const missing = ref(false)
+/** Snapshot of completed visits at load time, used to rotate examples. */
+const visitCount = ref(0)
 
 type Step =
   | { kind: 'section'; section: LessonSection }
@@ -22,12 +25,17 @@ type Step =
   | { kind: 'wrapup' }
 
 onMounted(async () => {
-  const found = await loadLesson(route.params.id as string)
+  const lessonId = route.params.id as string
+  const [found, progress] = await Promise.all([
+    loadLesson(lessonId),
+    db.lessonProgress.get(lessonId),
+  ])
   if (!found) {
     missing.value = true
     return
   }
   lesson.value = found
+  visitCount.value = progress?.visitCount ?? 0
 })
 
 const steps = computed<Step[]>(() => {
@@ -120,6 +128,7 @@ async function finishLesson() {
           v-if="current.kind === 'section'"
           :key="`s-${stepIndex}`"
           :section="current.section"
+          :visit-count="visitCount"
         />
 
         <ChoiceExercise
