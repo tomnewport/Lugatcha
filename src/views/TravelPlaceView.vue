@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getTravelPlace, recordTravelVisit } from '@/db/travel'
 import { useLiveQuery, db } from '@/db/useDb'
 import type { TravelPlace, ExerciseType } from '@/db/types'
-import { buildPotluck, loadLocationStats, type LocationStats } from '@/exercises/potluck'
+import { loadLocationStats, selectAutoExercise, type LocationStats } from '@/exercises/potluck'
 import { useProgressStore } from '@/stores/progress'
 import { playChime } from '@/audio/audio'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
@@ -43,8 +43,6 @@ onMounted(async () => {
   recordTravelVisit(placeId.value)
 })
 
-const potluck = computed(() => (stats.value ? buildPotluck(stats.value) : []))
-
 const EXERCISE_COMPONENTS = {
   intro: WordIntroExercise,
   flashcards: FlashcardsExercise,
@@ -56,15 +54,13 @@ const EXERCISE_COMPONENTS = {
 } as const
 
 function startExercise() {
-  const next =
-    potluck.value.find((a) => a.state === 'available' && !a.done) ??
-    potluck.value.find((a) => a.state === 'available')
+  const next = stats.value ? selectAutoExercise(stats.value) : null
   if (!next) {
     router.push('/travel')
     return
   }
   sessionKey.value++
-  activeExercise.value = next.type
+  activeExercise.value = next
   phase.value = 'exercise'
 }
 
@@ -73,6 +69,10 @@ async function onComplete() {
   // Like a normal location, the Test stays replayable and is never retired.
   if (activeExercise.value && activeExercise.value !== 'test') {
     await progressStore.completeExercise(placeId.value, activeExercise.value)
+  }
+  // Every finished exercise advances the rotation so the next visit varies.
+  if (activeExercise.value) {
+    await progressStore.recordLocationVisit(placeId.value)
   }
   router.push('/travel')
 }
