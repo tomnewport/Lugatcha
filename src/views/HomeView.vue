@@ -2,7 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loadLocations } from '@/db/locations'
-import { useLiveQuery, db, isWordKnown } from '@/db/useDb'
+import { useLiveQuery, db } from '@/db/useDb'
+import { isWordLearned } from '@/exercises/test'
 import type { Location, LocationProgress, ExerciseType } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
@@ -52,7 +53,7 @@ const wordStats = useLiveQuery(
       db.words.toArray(),
     ])
     const seenIds = new Set(wordProgress.filter((p) => p.seenAt).map((p) => p.wordId))
-    const knownIds = new Set(wordProgress.filter((p) => isWordKnown(p)).map((p) => p.wordId))
+    const knownIds = new Set(wordProgress.filter((p) => isWordLearned(p)).map((p) => p.wordId))
     const seen = new Map<string, number>()
     const known = new Map<string, number>()
     const total = new Map<string, number>()
