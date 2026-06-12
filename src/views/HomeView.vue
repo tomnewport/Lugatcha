@@ -3,10 +3,13 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loadLocations } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
-import type { Location, LocationProgress } from '@/db/types'
+import type { Location, LocationProgress, ExerciseType } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
 import { useAudioReady } from '@/audio/offline'
+import { ACTIVITY_ORDER } from '@/exercises/potluck'
+
+const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 
 const router = useRouter()
 const { ready: audioReady } = useAudioReady()
@@ -21,12 +24,23 @@ function dismissBanner() {
 }
 
 const locations = ref<Location[]>([])
+// Fresh random seed each time the city map mounts (i.e. after each exercise)
+const sessionSeed = ref(Math.floor(Math.random() * 1_000_000))
 
 onMounted(async () => {
   locations.value = await loadLocations()
 })
 
 const allProgress = useLiveQuery(() => db.locationProgress.toArray(), [] as LocationProgress[])
+const lastTried = ref<string | null>(null)
+
+onMounted(() => {
+  try {
+    lastTried.value = localStorage.getItem(LAST_TRIED_KEY)
+  } catch {
+    // private mode
+  }
+})
 
 const progressMap = computed(() => {
   const map = new Map<string, LocationProgress>()
@@ -41,22 +55,55 @@ const sortedLocations = computed(() =>
   ),
 )
 
-// First location always unlocked; each subsequent unlocks once the one before
-// it has at least one completed exercise. The School is a meta tile: always
-// unlocked and not part of the chain.
-const lockedMap = computed(() => {
-  const map = new Map<string, boolean>()
-  const locs = sortedLocations.value.filter((l) => l.id !== 'school')
-  for (let i = 0; i < locs.length; i++) {
-    if (i === 0) {
-      map.set(locs[i].id, false)
-    } else {
-      const prev = locs[i - 1]
-      const prevDone = (progressMap.value.get(prev.id)?.completedExercises.length ?? 0) > 0
-      map.set(locs[i].id, !prevDone)
-    }
+/** Seeded Fisher-Yates shuffle — reproducible within a session. */
+function seededShuffle<T>(items: T[], seed: number): T[] {
+  const copy = [...items]
+  let s = seed
+  for (let i = copy.length - 1; i > 0; i--) {
+    s = (Math.imul(s, 1103515245) + 12345) & 0x7fffffff
+    const j = s % (i + 1)
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
   }
-  map.set('school', false)
+  return copy
+}
+
+/** Emoji representing the next exercise a location would serve. */
+const EXERCISE_EMOJIS: Record<ExerciseType, string> = {
+  intro: '📝',
+  flashcards: '🃏',
+  listening: '🎧',
+  'phrase-assembly': '🔤',
+  roleplay: '🤝',
+  storytime: '📖',
+}
+
+function nextExerciseEmoji(locationId: string): string {
+  const completed = new Set(progressMap.value.get(locationId)?.completedExercises ?? [])
+  for (const type of ACTIVITY_ORDER) {
+    if (!completed.has(type)) return EXERCISE_EMOJIS[type]
+  }
+  return '✨'
+}
+
+/**
+ * For each non-school location: an emoji chip if it's in the active 90%,
+ * null otherwise. Last-tried location is always excluded from the chip set.
+ */
+const chipMap = computed(() => {
+  const map = new Map<string, string | null>()
+  const locs = sortedLocations.value.filter((l) => l.id !== 'school')
+
+  const eligible = locs.filter((l) => l.id !== lastTried.value)
+  const count = Math.max(1, Math.round(eligible.length * 0.9))
+  const chipped = new Set(
+    seededShuffle(eligible, sessionSeed.value)
+      .slice(0, count)
+      .map((l) => l.id),
+  )
+
+  for (const loc of locs) {
+    map.set(loc.id, chipped.has(loc.id) ? nextExerciseEmoji(loc.id) : null)
+  }
   return map
 })
 </script>
@@ -131,7 +178,8 @@ const lockedMap = computed(() => {
           role="listitem"
           :location="loc"
           :progress="progressMap.get(loc.id)"
-          :locked="lockedMap.get(loc.id) ?? true"
+          :locked="chipMap.get(loc.id) === null"
+          :exercise-emoji="chipMap.get(loc.id) ?? undefined"
           :style="{
             gridRow: loc.gridRow,
             gridColumn: loc.gridCol,
