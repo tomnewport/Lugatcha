@@ -6,6 +6,8 @@ import { db } from '@/db/useDb'
 export interface Breakdown {
   breakdown: string[]
   gloss: string[]
+  /** Full-word meaning for the assembled form, e.g. "my houses". */
+  meaning?: string
 }
 
 export const breakdownIndex = shallowRef<Map<string, Breakdown>>(new Map())
@@ -235,6 +237,7 @@ export function ensureBreakdownIndex(): Promise<void> {
             map.set(normalizeToken(ex.uzbek), {
               breakdown: ex.breakdown,
               gloss: ex.gloss,
+              meaning: ex.english,
             })
           }
         }
