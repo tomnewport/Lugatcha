@@ -172,3 +172,17 @@ export interface Location {
   colSpan?: number
   rowSpan?: number
 }
+
+/**
+ * A significant place on the Travel Agency map of Uzbekistan (issue #63). Each
+ * place is its own vocab theme — its words seed into the same `words` table —
+ * plus an article and a pin position on the cartoon map (viewBox 1000×620).
+ */
+export interface TravelPlace {
+  id: string
+  name: { en: string; uz: string }
+  mapX: number
+  mapY: number
+  article: string[]
+  words: Word[]
+}

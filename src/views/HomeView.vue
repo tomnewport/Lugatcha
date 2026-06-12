@@ -6,6 +6,7 @@ import { useLiveQuery, db, isWordKnown } from '@/db/useDb'
 import type { Location, LocationProgress, ExerciseType } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
+import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
 import { useAudioReady } from '@/audio/offline'
 import { buildPotluck, type LocationStats } from '@/exercises/potluck'
@@ -129,7 +130,7 @@ function nextExerciseEmoji(locationId: string): string {
  */
 const chipMap = computed(() => {
   const map = new Map<string, string | null>()
-  const locs = sortedLocations.value.filter((l) => l.id !== 'school')
+  const locs = sortedLocations.value.filter((l) => l.id !== 'school' && l.id !== 'travel')
 
   const eligible = locs.filter((l) => l.id !== lastTried.value)
   const count = Math.max(1, Math.round(eligible.length * 0.9))
@@ -210,6 +211,11 @@ const chipMap = computed(() => {
       <template v-for="loc in sortedLocations" :key="loc.id">
         <SchoolTile
           v-if="loc.id === 'school'"
+          role="listitem"
+          :style="{ gridRow: loc.gridRow, gridColumn: loc.gridCol }"
+        />
+        <TravelTile
+          v-else-if="loc.id === 'travel'"
           role="listitem"
           :style="{ gridRow: loc.gridRow, gridColumn: loc.gridCol }"
         />

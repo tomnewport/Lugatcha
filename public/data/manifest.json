@@ -36,7 +36,13 @@
     "cafe",
     "choyxona",
     "bank",
-    "mountain-park"
+    "mountain-park",
+    "samarkand",
+    "bukhara",
+    "khiva",
+    "tashkent",
+    "fergana",
+    "aral"
   ],
   "roleplay": [
     "airport",
@@ -55,6 +61,12 @@
     "cafe",
     "choyxona",
     "bank",
-    "mountain-park"
+    "mountain-park",
+    "samarkand",
+    "bukhara",
+    "khiva",
+    "tashkent",
+    "fergana",
+    "aral"
   ]
 }

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "khiva.inner-fortress",
+    "theme": "khiva",
+    "title": { "en": "Behind the Walls", "uz": "Devorlar ortida" },
+    "sentences": [
+      { "uzbek": "Xiva kichik va goʻzal shahar.", "english": "Khiva is a small and beautiful city." },
+      { "uzbek": "Baland devorlar shaharni oʻraydi.", "english": "Tall walls surround the city." },
+      { "uzbek": "Biz katta darvozadan kiramiz.", "english": "We enter through the big gate." },
+      { "uzbek": "Ichkarida yogʻoch ustunlar bor.", "english": "Inside there are wooden columns." },
+      { "uzbek": "Tashqarida issiq choʻl yotadi.", "english": "Outside lies the hot desert." }
+    ],
+    "glossary": {
+      "Xiva": "Khiva",
+      "kichik": "small",
+      "va": "and",
+      "goʻzal": "beautiful",
+      "shahar": "city",
+      "Baland": "tall",
+      "devorlar": "walls",
+      "shaharni": "the city (object)",
+      "oʻraydi": "surrounds",
+      "Biz": "we",
+      "katta": "big",
+      "darvozadan": "through the gate",
+      "kiramiz": "we enter",
+      "Ichkarida": "inside",
+      "yogʻoch": "wood / wooden",
+      "ustunlar": "columns",
+      "bor": "there is / there are",
+      "Tashqarida": "outside",
+      "issiq": "hot",
+      "choʻl": "desert",
+      "yotadi": "lies"
+    }
+  }
+]
