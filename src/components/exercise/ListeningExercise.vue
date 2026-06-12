@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { db } from '@/db'
 import { normalizeToken, shuffle, tokenize } from '@/exercises/validate'
-import { speakUzbek } from '@/audio/audio'
+import { speakUzbek, stopSpeaking } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 
@@ -39,6 +39,11 @@ onMounted(async () => {
     .slice(0, PHRASES_PER_SESSION)
     .sort((a, b) => tokenize(a.uzbek).length - tokenize(b.uzbek).length)
   loading.value = false
+  if (phrases.value.length > 0) speakUzbek(phrases.value[0].uzbek)
+})
+
+onUnmounted(() => {
+  stopSpeaking()
 })
 
 const current = computed(() => phrases.value[index.value])
