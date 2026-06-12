@@ -1,0 +1,36 @@
+[
+  {
+    "id": "tashkent.big-city",
+    "theme": "tashkent",
+    "title": { "en": "The Big Capital", "uz": "Katta poytaxt" },
+    "sentences": [
+      { "uzbek": "Toshkent katta poytaxt.", "english": "Tashkent is a big capital." },
+      { "uzbek": "Bu yerda koʻp odam yashaydi.", "english": "Many people live here." },
+      { "uzbek": "Men metroda ishga boraman.", "english": "I go to work by metro." },
+      { "uzbek": "Chorsu bozorida meva sotiladi.", "english": "Fruit is sold at the Chorsu bazaar." },
+      { "uzbek": "Shahar zamonaviy va toza.", "english": "The city is modern and clean." }
+    ],
+    "glossary": {
+      "Toshkent": "Tashkent",
+      "katta": "big",
+      "poytaxt": "capital",
+      "Bu": "this",
+      "yerda": "here",
+      "koʻp": "many",
+      "odam": "person / people",
+      "yashaydi": "lives",
+      "Men": "I",
+      "metroda": "by metro",
+      "ishga": "to work",
+      "boraman": "I go",
+      "Chorsu": "Chorsu",
+      "bozorida": "at the bazaar",
+      "meva": "fruit",
+      "sotiladi": "is sold",
+      "Shahar": "city",
+      "zamonaviy": "modern",
+      "va": "and",
+      "toza": "clean"
+    }
+  }
+]

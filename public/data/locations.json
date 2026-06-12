@@ -178,5 +178,15 @@
     "icon": "school",
     "gridRow": 5,
     "gridCol": 2
+  },
+  {
+    "id": "travel",
+    "name": {
+      "en": "Travel Agency",
+      "uz": "Sayohat agentligi"
+    },
+    "icon": "travel",
+    "gridRow": 5,
+    "gridCol": 3
   }
 ]
