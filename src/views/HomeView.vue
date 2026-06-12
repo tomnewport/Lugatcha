@@ -7,7 +7,7 @@ import type { Location, LocationProgress, ExerciseType } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
 import { useAudioReady } from '@/audio/offline'
-import { ACTIVITY_ORDER } from '@/exercises/potluck'
+import { ACTIVITY_ORDER, buildPotluck, type LocationStats } from '@/exercises/potluck'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 
@@ -32,6 +32,27 @@ onMounted(async () => {
 })
 
 const allProgress = useLiveQuery(() => db.locationProgress.toArray(), [] as LocationProgress[])
+
+/** Seen-word and total-word counts keyed by location theme, for accurate chip computation. */
+const wordStats = useLiveQuery(
+  async () => {
+    const [wordProgress, allWords] = await Promise.all([
+      db.wordProgress.toArray(),
+      db.words.toArray(),
+    ])
+    const seenIds = new Set(wordProgress.filter((p) => p.seenAt).map((p) => p.wordId))
+    const seen = new Map<string, number>()
+    const total = new Map<string, number>()
+    for (const w of allWords) {
+      if (w.theme === 'core') continue
+      total.set(w.theme, (total.get(w.theme) ?? 0) + 1)
+      if (seenIds.has(w.id)) seen.set(w.theme, (seen.get(w.theme) ?? 0) + 1)
+    }
+    return { seen, total }
+  },
+  { seen: new Map<string, number>(), total: new Map<string, number>() },
+)
+
 const lastTried = ref<string | null>(null)
 
 onMounted(() => {
@@ -67,7 +88,7 @@ function seededShuffle<T>(items: T[], seed: number): T[] {
   return copy
 }
 
-/** Emoji representing the next exercise a location would serve. */
+/** Emoji representing each exercise type shown on city-map chips. */
 const EXERCISE_EMOJIS: Record<ExerciseType, string> = {
   intro: '📝',
   flashcards: '🃏',
@@ -77,12 +98,14 @@ const EXERCISE_EMOJIS: Record<ExerciseType, string> = {
   storytime: '📖',
 }
 
+/** Returns the emoji for the exercise LocationView would actually serve next. */
 function nextExerciseEmoji(locationId: string): string {
-  const completed = new Set(progressMap.value.get(locationId)?.completedExercises ?? [])
-  for (const type of ACTIVITY_ORDER) {
-    if (!completed.has(type)) return EXERCISE_EMOJIS[type]
-  }
-  return '✨'
+  const completed = [...(progressMap.value.get(locationId)?.completedExercises ?? [])]
+  const seenWords = wordStats.value.seen.get(locationId) ?? 0
+  const totalWords = wordStats.value.total.get(locationId) ?? 0
+  const stats: LocationStats = { locationId, seenWords, totalWords, knownWords: 0, completed }
+  const next = buildPotluck(stats).find((a) => a.state === 'available' && !a.done)
+  return next ? EXERCISE_EMOJIS[next.type] : '✨'
 }
 
 /**
