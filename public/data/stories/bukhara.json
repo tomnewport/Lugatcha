@@ -32,5 +32,45 @@
       "choy": "tea",
       "ichaman": "I drink"
     }
+  },
+  {
+    "id": "bukhara.narrow-streets",
+    "theme": "bukhara",
+    "title": { "en": "Through the Old City", "uz": "Eski shahar boʻylab" },
+    "sentences": [
+      { "uzbek": "Buxoroda avtobus va marshrutka bor.", "english": "In Bukhara there are buses and marshrutkas." },
+      { "uzbek": "Eski shaharda koʻchalar tor.", "english": "In the old city the streets are narrow." },
+      { "uzbek": "Men marshrutkaga chiqaman va pul beraman.", "english": "I get on the marshrutka and give money." },
+      { "uzbek": "Haydovchi meni bekatda tushiradi.", "english": "The driver drops me at the stop." },
+      { "uzbek": "Labihovuzga piyoda boraman.", "english": "I walk to Lyabi-Hauz." },
+      { "uzbek": "Taksi chaqirsam, telefon kerak.", "english": "If I call a taxi, I need a phone." }
+    ],
+    "glossary": {
+      "Buxoroda": "in Bukhara",
+      "avtobus": "bus",
+      "va": "and",
+      "marshrutka": "minibus / marshrutka",
+      "bor": "there is / there are",
+      "Eski": "old",
+      "shaharda": "in the city",
+      "koʻchalar": "streets",
+      "tor": "narrow",
+      "Men": "I",
+      "marshrutkaga": "onto the marshrutka",
+      "chiqaman": "I get on",
+      "pul": "money",
+      "beraman": "I give",
+      "Haydovchi": "driver",
+      "meni": "me",
+      "bekatda": "at the stop",
+      "tushiradi": "drops off",
+      "Labihovuzga": "to Lyabi-Hauz",
+      "piyoda": "on foot",
+      "boraman": "I go",
+      "Taksi": "taxi",
+      "chaqirsam": "if I call",
+      "telefon": "phone",
+      "kerak": "is needed"
+    }
   }
 ]
