@@ -205,6 +205,17 @@ async function checkMatch() {
   )
 }
 
+function retryMatch() {
+  const correct = new Map<string, string>()
+  for (const [leftId, rightId] of matchPairs.value) {
+    if (matchResults.value.get(leftId)) correct.set(leftId, rightId)
+  }
+  matchPairs.value = correct
+  matchChecked.value = false
+  matchResults.value = new Map()
+  matchSelected.value = null
+}
+
 async function advanceFromMatch() {
   await loadPhrases()
   step.value = 'phrases'
@@ -406,9 +417,19 @@ async function finish() {
         >
           Check matches
         </button>
-        <button v-else class="btn btn--primary" type="button" @click="advanceFromMatch">
-          Continue
-        </button>
+        <template v-else>
+          <button
+            v-if="matchCorrectCount < words.length"
+            class="btn btn--primary"
+            type="button"
+            @click="retryMatch"
+          >
+            Try again
+          </button>
+          <button class="btn btn--primary" type="button" @click="advanceFromMatch">
+            Continue
+          </button>
+        </template>
       </div>
     </template>
 
@@ -419,7 +440,7 @@ async function finish() {
       <template v-else-if="currentPhrase">
         <p class="intro__step-label">Phrase {{ phraseIndex + 1 }} of {{ phrases.length }}</p>
         <p class="intro__instruction">
-          Listen and read. Tap any word to see its meaning or structure.
+          Listen and read. Tap any word to hear it or see its structure.
         </p>
 
         <div class="phrase-card">
@@ -427,7 +448,10 @@ async function finish() {
           <p class="phrase-card__uzbek">
             <UzbekSentence :uzbek="currentPhrase.uzbek" />
           </p>
-          <p class="phrase-card__english">{{ currentPhrase.english }}</p>
+          <div class="phrase-card__translation">
+            <span class="phrase-card__translation-label">Translation</span>
+            <p class="phrase-card__english">{{ currentPhrase.english }}</p>
+          </div>
         </div>
 
         <div class="intro__footer">
@@ -757,9 +781,27 @@ async function finish() {
   gap: 0.2em;
 }
 
-.phrase-card__english {
-  font-size: 0.9rem;
+.phrase-card__translation {
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.phrase-card__translation-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
   color: var(--color-text-muted);
+}
+
+.phrase-card__english {
+  font-size: 0.95rem;
+  color: var(--color-text);
   margin: 0;
+  line-height: 1.4;
 }
 </style>

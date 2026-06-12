@@ -3,6 +3,7 @@ import { ref, computed, onMounted, inject } from 'vue'
 import type { Ref } from 'vue'
 import { breakdownIndex, ensureBreakdownIndex } from '@/exercises/deagglutination'
 import { normalizeToken } from '@/exercises/validate'
+import { speakUzbek } from '@/audio/audio'
 
 const props = defineProps<{
   word: string
@@ -30,6 +31,7 @@ const isAgglutinated = computed(() => breakdown.value !== null)
 const hasTooltip = computed(() => isAgglutinated.value || !!props.meaning)
 
 function toggle() {
+  void speakUzbek(props.word)
   if (!hasTooltip.value) return
   if (sentenceActive !== null) {
     sentenceActive.value = sentenceActive.value === id ? null : id
@@ -50,13 +52,11 @@ function toggle() {
     }"
   >
     <button
-      v-if="hasTooltip"
       class="uz-word__btn"
       type="button"
-      :aria-expanded="isOpen"
+      :aria-expanded="hasTooltip ? isOpen : undefined"
       @click.stop="toggle"
     >{{ word }}</button>
-    <span v-else>{{ word }}</span>
 
     <!-- Breakdown tooltip -->
     <span
