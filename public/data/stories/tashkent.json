@@ -32,5 +32,47 @@
       "va": "and",
       "toza": "clean"
     }
+  },
+  {
+    "id": "tashkent.getting-around",
+    "theme": "tashkent",
+    "title": { "en": "Getting Around the City", "uz": "Shahar boʻylab yurish" },
+    "sentences": [
+      { "uzbek": "Toshkentda metro, avtobus va marshrutka bor.", "english": "In Tashkent there is the metro, the bus and the marshrutka." },
+      { "uzbek": "Metro eng tez va arzon.", "english": "The metro is the fastest and cheapest." },
+      { "uzbek": "Avtobusda men plastik karta bilan toʻlayman.", "english": "On the bus I pay with a plastic card." },
+      { "uzbek": "Har bir bekatda nom yozilgan.", "english": "At every stop the name is written." },
+      { "uzbek": "Men telefonda xaritaga qarayman.", "english": "I look at the map on my phone." },
+      { "uzbek": "Agar adashsam, haydovchidan soʻrayman.", "english": "If I get lost, I ask the driver." }
+    ],
+    "glossary": {
+      "Toshkentda": "in Tashkent",
+      "metro": "metro",
+      "avtobus": "bus",
+      "va": "and",
+      "marshrutka": "minibus / marshrutka",
+      "bor": "there is / there are",
+      "eng": "most",
+      "tez": "fast",
+      "arzon": "cheap",
+      "Avtobusda": "on the bus",
+      "men": "I",
+      "plastik": "plastic",
+      "karta": "card",
+      "bilan": "with",
+      "toʻlayman": "I pay",
+      "Har": "every",
+      "bir": "one",
+      "bekatda": "at the stop",
+      "nom": "name",
+      "yozilgan": "is written",
+      "telefonda": "on the phone",
+      "xaritaga": "at the map",
+      "qarayman": "I look",
+      "Agar": "if",
+      "adashsam": "if I get lost",
+      "haydovchidan": "from the driver",
+      "soʻrayman": "I ask"
+    }
   }
 ]

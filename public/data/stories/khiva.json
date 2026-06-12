@@ -33,5 +33,47 @@
       "choʻl": "desert",
       "yotadi": "lies"
     }
+  },
+  {
+    "id": "khiva.on-foot-and-by-taxi",
+    "theme": "khiva",
+    "title": { "en": "On Foot and by Taxi", "uz": "Piyoda va taksida" },
+    "sentences": [
+      { "uzbek": "Xiva kichik, koʻp joyga piyoda boramiz.", "english": "Khiva is small, we walk to many places." },
+      { "uzbek": "Ichan qalʼa ichida mashina yoʻq.", "english": "Inside the Ichan Qala there are no cars." },
+      { "uzbek": "Shahardan tashqariga marshrutka qatnaydi.", "english": "Marshrutkas run to outside the city." },
+      { "uzbek": "Men haydovchiga naqd pul toʻlayman.", "english": "I pay the driver cash." },
+      { "uzbek": "Urganchga taksi bilan boramiz.", "english": "We go to Urgench by taxi." },
+      { "uzbek": "Yoʻlni bilmasam, odamlardan soʻrayman.", "english": "If I don't know the way, I ask people." }
+    ],
+    "glossary": {
+      "Xiva": "Khiva",
+      "kichik": "small",
+      "koʻp": "many",
+      "joyga": "to a place",
+      "piyoda": "on foot",
+      "boramiz": "we go",
+      "Ichan": "Ichan (inner)",
+      "qalʼa": "fortress",
+      "ichida": "inside",
+      "mashina": "car",
+      "yoʻq": "there is not",
+      "Shahardan": "from the city",
+      "tashqariga": "to the outside",
+      "marshrutka": "minibus / marshrutka",
+      "qatnaydi": "runs / commutes",
+      "Men": "I",
+      "haydovchiga": "to the driver",
+      "naqd": "cash",
+      "pul": "money",
+      "toʻlayman": "I pay",
+      "Urganchga": "to Urgench",
+      "taksi": "taxi",
+      "bilan": "with / by",
+      "Yoʻlni": "the way (object)",
+      "bilmasam": "if I don't know",
+      "odamlardan": "from people",
+      "soʻrayman": "I ask"
+    }
   }
 ]
