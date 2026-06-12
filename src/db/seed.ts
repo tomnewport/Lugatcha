@@ -1,5 +1,5 @@
 import type { LugatchaDB } from './LugatchaDB'
-import type { Word, Story, Roleplay } from './types'
+import type { Word, Story, Roleplay, TravelPlace } from './types'
 
 interface DataManifest {
   words: string[]
@@ -18,23 +18,36 @@ async function fetchData<T>(path: string): Promise<T> {
 export async function seedDatabase(db: LugatchaDB): Promise<void> {
   const manifest = await fetchData<DataManifest>('manifest.json')
 
-  // Each stories/roleplay file holds every item for one theme
-  const [wordArrays, storyArrays, roleplayArrays] = await Promise.all([
+  // Each stories/roleplay file holds every item for one theme. Travel-place
+  // vocab lives inline in travel.json (a few bespoke words per place) and seeds
+  // into the same words table under each place's theme.
+  const [wordArrays, storyArrays, roleplayArrays, travelPlaces] = await Promise.all([
     Promise.all(manifest.words.map((name) => fetchData<Word[]>(`words/${name}.json`))),
     Promise.all(manifest.stories.map((name) => fetchData<Story[]>(`stories/${name}.json`))),
     Promise.all(manifest.roleplay.map((name) => fetchData<Roleplay[]>(`roleplay/${name}.json`))),
+    fetchTravelWords(),
   ])
 
   await Promise.all([
-    db.words.bulkPut(wordArrays.flat()),
+    db.words.bulkPut([...wordArrays.flat(), ...travelPlaces]),
     db.stories.bulkPut(storyArrays.flat()),
     db.roleplay.bulkPut(roleplayArrays.flat()),
   ])
 }
 
+/** Travel-place vocab, tolerant of the file being absent (e.g. in tests). */
+async function fetchTravelWords(): Promise<Word[]> {
+  try {
+    const places = await fetchData<TravelPlace[]>('travel.json')
+    return Array.isArray(places) ? places.flatMap((p) => p.words ?? []) : []
+  } catch {
+    return []
+  }
+}
+
 // Bump when shipped data files change: bulkPut overwrites by id, so
 // re-seeding refreshes content without touching progress tables.
-export const CONTENT_VERSION = 3
+export const CONTENT_VERSION = 4
 const CONTENT_VERSION_KEY = 'lugatcha.contentVersion'
 
 function storedContentVersion(): string | null {

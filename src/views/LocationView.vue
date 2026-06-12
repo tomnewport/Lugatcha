@@ -42,6 +42,10 @@ onMounted(async () => {
     router.replace('/school')
     return
   }
+  if (locationId.value === 'travel') {
+    router.replace('/travel')
+    return
+  }
   const found = await getLocation(locationId.value)
   if (!found) {
     router.replace('/')

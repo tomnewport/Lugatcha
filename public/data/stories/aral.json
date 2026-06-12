@@ -1,0 +1,38 @@
+[
+  {
+    "id": "aral.lost-sea",
+    "theme": "aral",
+    "title": { "en": "The Lost Sea", "uz": "Yoʻqolgan dengiz" },
+    "sentences": [
+      { "uzbek": "Orol katta dengiz edi.", "english": "The Aral was a big sea." },
+      { "uzbek": "Endi suv deyarli yoʻq.", "english": "Now there is almost no water." },
+      { "uzbek": "Qum ustida eski kemalar turadi.", "english": "Old ships stand on the sand." },
+      { "uzbek": "Baliqchilar bu yerni tark etgan.", "english": "The fishermen have left this place." },
+      { "uzbek": "Nukusda mashhur muzey bor.", "english": "There is a famous museum in Nukus." }
+    ],
+    "glossary": {
+      "Orol": "Aral",
+      "katta": "big",
+      "dengiz": "sea",
+      "edi": "was",
+      "Endi": "now",
+      "suv": "water",
+      "deyarli": "almost",
+      "yoʻq": "there is none / no",
+      "Qum": "sand",
+      "ustida": "on top of",
+      "eski": "old",
+      "kemalar": "ships",
+      "turadi": "stands",
+      "Baliqchilar": "fishermen",
+      "bu": "this",
+      "yerni": "the place (object)",
+      "tark": "leaving",
+      "etgan": "has done",
+      "Nukusda": "in Nukus",
+      "mashhur": "famous",
+      "muzey": "museum",
+      "bor": "there is"
+    }
+  }
+]

@@ -1,0 +1,33 @@
+[
+  {
+    "id": "fergana.green-valley",
+    "theme": "fergana",
+    "title": { "en": "The Green Valley", "uz": "Yashil vodiy" },
+    "sentences": [
+      { "uzbek": "Fargʻona yashil vodiy.", "english": "Fergana is a green valley." },
+      { "uzbek": "Dalalarda paxta oʻsadi.", "english": "Cotton grows in the fields." },
+      { "uzbek": "Bogʻlarda shirin meva bor.", "english": "There is sweet fruit in the orchards." },
+      { "uzbek": "Margʻilonda atlas toʻqiladi.", "english": "Atlas silk is woven in Margilan." },
+      { "uzbek": "Kuzda dehqonlar hosil yigʻadi.", "english": "In autumn the farmers gather the harvest." }
+    ],
+    "glossary": {
+      "Fargʻona": "Fergana",
+      "yashil": "green",
+      "vodiy": "valley",
+      "Dalalarda": "in the fields",
+      "paxta": "cotton",
+      "oʻsadi": "grows",
+      "Bogʻlarda": "in the orchards",
+      "shirin": "sweet",
+      "meva": "fruit",
+      "bor": "there is",
+      "Margʻilonda": "in Margilan",
+      "atlas": "atlas silk",
+      "toʻqiladi": "is woven",
+      "Kuzda": "in autumn",
+      "dehqonlar": "farmers",
+      "hosil": "harvest",
+      "yigʻadi": "gathers"
+    }
+  }
+]

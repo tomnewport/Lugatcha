@@ -1,0 +1,36 @@
+[
+  {
+    "id": "samarkand.silk-road",
+    "theme": "samarkand",
+    "title": { "en": "Jewel of the Silk Road", "uz": "Ipak yoʻli durdonasi" },
+    "sentences": [
+      { "uzbek": "Samarqand juda qadimiy shahar.", "english": "Samarkand is a very ancient city." },
+      { "uzbek": "Registon maydoni juda goʻzal.", "english": "The Registan square is very beautiful." },
+      { "uzbek": "Men koʻk gumbazlarni koʻraman.", "english": "I see the blue domes." },
+      { "uzbek": "Ulugʻbek bu yerda rasadxona qurgan.", "english": "Ulugbek built an observatory here." },
+      { "uzbek": "Sayyohlar ipak sotib oladi.", "english": "Tourists buy silk." }
+    ],
+    "glossary": {
+      "Samarqand": "Samarkand",
+      "juda": "very",
+      "qadimiy": "ancient",
+      "shahar": "city",
+      "Registon": "Registan",
+      "maydoni": "square",
+      "goʻzal": "beautiful",
+      "Men": "I",
+      "koʻk": "blue",
+      "gumbazlarni": "the domes",
+      "koʻraman": "I see",
+      "Ulugʻbek": "Ulugbek",
+      "bu": "this",
+      "yerda": "here",
+      "rasadxona": "observatory",
+      "qurgan": "built",
+      "Sayyohlar": "tourists",
+      "ipak": "silk",
+      "sotib": "buy",
+      "oladi": "takes / buys"
+    }
+  }
+]
