@@ -8,27 +8,22 @@
  */
 import { ref, computed } from 'vue'
 import { getAudioManifest, audioFile } from './audio'
-import { useSettingsStore } from '@/stores/settings'
 
 const base = import.meta.env.BASE_URL
 
+const AUDIO_VOICE = 'yandex'
+const AUDIO_DONE_KEY = `lugatcha.audioDone.${AUDIO_VOICE}`
+
 export type DownloadStatus = 'idle' | 'running' | 'paused' | 'done' | 'error'
 
-function audioDoneKey(voice: string) {
-  return `lugatcha.audioDone.${voice}`
-}
-
-/** True once all clips for a voice have been downloaded and cached. Reactive. */
+/** True once all clips have been downloaded and cached. Reactive. */
 export function useAudioReady() {
-  const settings = useSettingsStore()
-  // Re-evaluated whenever audioVoice changes or the flag is written.
-  // Uses a ref so components can react when the download finishes.
   const _tick = ref(0)
   function recheck() { _tick.value++ }
   return {
     ready: computed(() => {
       void _tick.value
-      return localStorage.getItem(audioDoneKey(settings.audioVoice)) === 'true'
+      return localStorage.getItem(AUDIO_DONE_KEY) === 'true'
     }),
     recheck,
   }
@@ -44,13 +39,11 @@ export function useAudioDownload() {
   let files: string[] = []
   let paused = false
 
-  function doneKey(): string {
-    return `lugatcha.audioDownloaded.${useSettingsStore().audioVoice}`
-  }
+  const DOWNLOADED_KEY = `lugatcha.audioDownloaded.${AUDIO_VOICE}`
 
   function loadDone(): Set<string> {
     try {
-      return new Set(JSON.parse(localStorage.getItem(doneKey()) ?? '[]') as string[])
+      return new Set(JSON.parse(localStorage.getItem(DOWNLOADED_KEY) ?? '[]') as string[])
     } catch {
       return new Set()
     }
@@ -58,7 +51,7 @@ export function useAudioDownload() {
 
   function saveDone(downloaded: Set<string>): void {
     try {
-      localStorage.setItem(doneKey(), JSON.stringify([...downloaded]))
+      localStorage.setItem(DOWNLOADED_KEY, JSON.stringify([...downloaded]))
     } catch {
       // private mode etc. — progress just won't survive a reload
     }
@@ -66,8 +59,7 @@ export function useAudioDownload() {
 
   /** Load the manifest and reflect how much is already cached. Call on mount. */
   async function prepare(): Promise<void> {
-    const voice = useSettingsStore().audioVoice
-    const manifest = await getAudioManifest(voice)
+    const manifest = await getAudioManifest()
     files = manifest ? Object.values(manifest).map(audioFile) : []
     total.value = files.length
     const downloaded = loadDone()
@@ -80,7 +72,6 @@ export function useAudioDownload() {
     status.value = 'running'
     error.value = ''
     paused = false
-    const voice = useSettingsStore().audioVoice
     const downloaded = loadDone()
     done.value = files.filter((f) => downloaded.has(f)).length
     try {
@@ -90,14 +81,14 @@ export function useAudioDownload() {
           return
         }
         if (downloaded.has(file)) continue
-        const res = await fetch(`${base}audio/${voice}/${file}`)
+        const res = await fetch(`${base}audio/${AUDIO_VOICE}/${file}`)
         if (!res.ok) throw new Error(`${file}: HTTP ${res.status}`)
         await res.blob() // drain the body so the service worker caches it
         downloaded.add(file)
         saveDone(downloaded)
         done.value++
       }
-      localStorage.setItem(audioDoneKey(useSettingsStore().audioVoice), 'true')
+      localStorage.setItem(AUDIO_DONE_KEY, 'true')
       recheckReady()
       status.value = 'done'
     } catch (e) {
