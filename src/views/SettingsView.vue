@@ -180,11 +180,6 @@ async function resetProgress() {
       </div>
       <p v-if="resetDone" class="settings-card__note" aria-live="polite">Progress reset. ✓</p>
     </section>
-
-    <p class="settings__footer">
-      Lugʻatcha — a little dictionary. Made with respect for the people, culture, and history of
-      Uzbekistan.
-    </p>
   </main>
 </template>
 
@@ -319,13 +314,5 @@ async function resetProgress() {
 .reset-confirm__actions {
   display: flex;
   gap: 0.5rem;
-}
-
-.settings__footer {
-  margin-top: auto;
-  padding-top: 1rem;
-  font-size: 0.78rem;
-  color: var(--color-text-muted);
-  text-align: center;
 }
 </style>
