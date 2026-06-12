@@ -1,0 +1,79 @@
+[
+  {
+    "id": "fergana.yashil",
+    "uzbek": "yashil",
+    "english": "green",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.bog",
+    "uzbek": "bogʻ",
+    "english": "orchard",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.shirin",
+    "uzbek": "shirin",
+    "english": "sweet",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.dala",
+    "uzbek": "dala",
+    "english": "field",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.daraxt",
+    "uzbek": "daraxt",
+    "english": "tree",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.gul",
+    "uzbek": "gul",
+    "english": "flower",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.anor",
+    "uzbek": "anor",
+    "english": "pomegranate",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.uzum",
+    "uzbek": "uzum",
+    "english": "grape",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.quyosh",
+    "uzbek": "quyosh",
+    "english": "sun",
+    "theme": "fergana",
+    "level": 1
+  },
+  {
+    "id": "fergana.dehqon",
+    "uzbek": "dehqon",
+    "english": "farmer",
+    "theme": "fergana",
+    "level": 2
+  },
+  {
+    "id": "fergana.kuz",
+    "uzbek": "kuz",
+    "english": "autumn",
+    "theme": "fergana",
+    "level": 2
+  }
+]

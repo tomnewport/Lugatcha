@@ -1,0 +1,79 @@
+[
+  {
+    "id": "bukhara.shahar",
+    "uzbek": "shahar",
+    "english": "city",
+    "theme": "bukhara",
+    "level": 1
+  },
+  {
+    "id": "bukhara.baland",
+    "uzbek": "baland",
+    "english": "tall",
+    "theme": "bukhara",
+    "level": 1
+  },
+  {
+    "id": "bukhara.savdogar",
+    "uzbek": "savdogar",
+    "english": "merchant",
+    "theme": "bukhara",
+    "level": 1
+  },
+  {
+    "id": "bukhara.choy",
+    "uzbek": "choy",
+    "english": "tea",
+    "theme": "bukhara",
+    "level": 1
+  },
+  {
+    "id": "bukhara.masjid",
+    "uzbek": "masjid",
+    "english": "mosque",
+    "theme": "bukhara",
+    "level": 1
+  },
+  {
+    "id": "bukhara.bozor",
+    "uzbek": "bozor",
+    "english": "bazaar",
+    "theme": "bukhara",
+    "level": 1
+  },
+  {
+    "id": "bukhara.kohna",
+    "uzbek": "koʻhna",
+    "english": "old",
+    "theme": "bukhara",
+    "level": 2
+  },
+  {
+    "id": "bukhara.karvon",
+    "uzbek": "karvon",
+    "english": "caravan",
+    "theme": "bukhara",
+    "level": 2
+  },
+  {
+    "id": "bukhara.amir",
+    "uzbek": "amir",
+    "english": "emir",
+    "theme": "bukhara",
+    "level": 2
+  },
+  {
+    "id": "bukhara.tarix",
+    "uzbek": "tarix",
+    "english": "history",
+    "theme": "bukhara",
+    "level": 2
+  },
+  {
+    "id": "bukhara.qadimiy",
+    "uzbek": "qadimiy",
+    "english": "ancient",
+    "theme": "bukhara",
+    "level": 2
+  }
+]
