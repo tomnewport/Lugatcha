@@ -5,6 +5,7 @@ import { pickFlashcardWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
 import AudioButton from '@/components/AudioButton.vue'
+import UzbekWord from '@/components/UzbekWord.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -169,7 +170,7 @@ function gradeClass(row: Row): string {
           @click="tap(cell.kind, cell.word)"
         >
           <AudioButton v-if="soundMode && cell.kind === 'left'" :text="cell.word.uzbek" />
-          <span v-else-if="cell.kind === 'left'" lang="uz">{{ cell.word.uzbek }}</span>
+          <UzbekWord v-else-if="cell.kind === 'left'" :word="cell.word.uzbek" />
           <span v-else>{{ cell.word.english }}</span>
         </button>
       </div>

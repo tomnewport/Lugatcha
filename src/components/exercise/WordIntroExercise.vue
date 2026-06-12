@@ -324,7 +324,9 @@ async function finish() {
 
       <div class="quiz-card">
         <AudioButton :text="currentQuestion.word.uzbek" />
-        <p class="quiz-card__word" lang="uz">{{ currentQuestion.word.uzbek }}</p>
+        <p class="quiz-card__word">
+          <UzbekWord :word="currentQuestion.word.uzbek" />
+        </p>
       </div>
 
       <ul class="quiz-options">
@@ -379,7 +381,7 @@ async function finish() {
             type="button"
             @click="matchTap(cell.kind as 'left' | 'right', cell.word)"
           >
-            <span v-if="cell.kind === 'left'" lang="uz">{{ cell.word.uzbek }}</span>
+            <UzbekWord v-if="cell.kind === 'left'" :word="cell.word.uzbek" />
             <span v-else>{{ cell.word.english }}</span>
           </button>
         </div>
