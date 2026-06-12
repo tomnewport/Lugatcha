@@ -33,6 +33,11 @@ const router = createRouter({
       component: () => import('@/views/ReviewView.vue'),
     },
     {
+      path: '/school/group/:id',
+      name: 'group',
+      component: () => import('@/views/GroupView.vue'),
+    },
+    {
       path: '/school/:id',
       name: 'lesson',
       component: () => import('@/views/LessonView.vue'),

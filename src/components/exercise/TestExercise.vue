@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { db, useLiveQuery } from '@/db/useDb'
-import { loadTestData } from '@/exercises/words'
+import { loadTestData, loadPoolTestData } from '@/exercises/words'
 import { buildTest, selectTestWords, type TestQuestion } from '@/exercises/test'
 import { useProgressStore } from '@/stores/progress'
+import type { Word } from '@/db/types'
 import TestChoiceQuestion from './TestChoiceQuestion.vue'
 import TestTypeQuestion from './TestTypeQuestion.vue'
 import ConfettiBurst from '@/components/ConfettiBurst.vue'
 
 const emit = defineEmits<{ complete: [] }>()
-const props = defineProps<{ locationId: string }>()
+/** Location test by theme, or a focused test over an explicit word pool (#62). */
+const props = defineProps<{ locationId?: string; pool?: Word[] }>()
 
 const progress = useProgressStore()
 
@@ -32,7 +34,9 @@ const current = computed(() => questions.value[index.value])
 const isLast = computed(() => index.value >= questions.value.length - 1)
 
 onMounted(async () => {
-  const { candidates, learnedPool, allWords, progress: prog } = await loadTestData(props.locationId)
+  const { candidates, learnedPool, allWords, progress: prog } = props.pool
+    ? await loadPoolTestData(props.pool)
+    : await loadTestData(props.locationId ?? '')
   const words = selectTestWords(candidates, learnedPool, prog)
   questions.value = buildTest(words, prog, allWords)
   loading.value = false

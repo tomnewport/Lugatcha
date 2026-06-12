@@ -8,6 +8,14 @@ export interface Word {
   /** 1 = essential, 2 = useful, 3 = nice-to-have. Intro serves level 1 first. */
   level?: 1 | 2 | 3
   cyrillic?: string
+  /**
+   * Vocab group this word belongs to (issue #62), e.g. 'numbers', 'colours'.
+   * Group words are normal `core` vocab — they show up in ordinary tests — but
+   * the School can also gather them for focused, themed learning.
+   */
+  group?: string
+  /** Hex swatch for colour words, shown in the group's review gallery. */
+  swatch?: string
 }
 
 export interface StorySentence {
@@ -147,6 +155,33 @@ export interface LessonProgress {
   lessonId: string
   completedAt?: number
   exercisesPassed: string[]
+}
+
+// ---------------------------------------------------------------------------
+// Vocab groups (issue #62). A themed set of words — colours, numbers, animals,
+// foods — that the School lets you learn and test together. Each group opens
+// with a short article about how the group behaves in Uzbek; its words are
+// ordinary `core` vocab, so they also surface in normal location tests. The
+// numbers group additionally offers a procedurally generated counting quiz
+// (issue #59) in place of the standard word test.
+// ---------------------------------------------------------------------------
+
+export interface VocabGroupMeta {
+  id: string
+  order: number
+  title: { en: string; uz: string }
+  /** Emoji shown on the School card. */
+  icon: string
+  blurb: string
+}
+
+export interface VocabGroup extends VocabGroupMeta {
+  /** The fun read shown before reviewing — reuses the lesson section shape. */
+  article: LessonSection[]
+  /** Words in the group. Seeded as `core` vocab with `group` set to this id. */
+  words: Word[]
+  /** Swaps the standard word test for the bespoke counting quiz. */
+  quiz?: 'counting'
 }
 
 // ---------------------------------------------------------------------------

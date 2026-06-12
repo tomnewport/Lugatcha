@@ -1,0 +1,140 @@
+{
+  "id": "colours",
+  "order": 2,
+  "title": {
+    "en": "Colours",
+    "uz": "Ranglar"
+  },
+  "icon": "🎨",
+  "blurb": "Name the colours — and meet the famous ko'k",
+  "article": [
+    {
+      "heading": "The word for colour is rang",
+      "body": [
+        "**Rang** means \"colour\". You will see it stuck onto other words: *jigarrang* (liver-colour = brown), *kulrang* (ash-colour = grey). Colours work like ordinary adjectives and go **before** the noun, with no agreement to worry about: *qizil olma* (a red apple), *qizil olmalar* (red apples) — the colour word never changes."
+      ],
+      "examples": [
+        {
+          "uzbek": "qizil gilam",
+          "english": "a red carpet"
+        },
+        {
+          "uzbek": "oq non",
+          "english": "white bread"
+        }
+      ]
+    },
+    {
+      "heading": "The famous ko'k",
+      "body": [
+        "The one colour to watch is **ko'k**. Today it usually means **blue** — the colour of the sky and of Samarqand's tiled domes. But traditionally it also covers fresh **green**: green tea is **ko'k choy**, and *ko'kat* means leafy greens. The modern, unambiguous word for green is **yashil**.",
+        "So if someone offers you *ko'k choy*, they mean green tea, not blue tea!"
+      ],
+      "examples": [
+        {
+          "uzbek": "ko'k osmon",
+          "english": "the blue sky"
+        },
+        {
+          "uzbek": "ko'k choy",
+          "english": "green tea (literally \"ko'k tea\")"
+        }
+      ]
+    }
+  ],
+  "words": [
+    {
+      "id": "core.colour-white",
+      "uzbek": "oq",
+      "english": "white",
+      "theme": "core",
+      "group": "colours",
+      "level": 2,
+      "swatch": "#fbfbf7"
+    },
+    {
+      "id": "core.colour-black",
+      "uzbek": "qora",
+      "english": "black",
+      "theme": "core",
+      "group": "colours",
+      "level": 2,
+      "swatch": "#1f2024"
+    },
+    {
+      "id": "core.colour-red",
+      "uzbek": "qizil",
+      "english": "red",
+      "theme": "core",
+      "group": "colours",
+      "level": 2,
+      "swatch": "#d1342f"
+    },
+    {
+      "id": "core.colour-blue",
+      "uzbek": "ko'k",
+      "english": "blue",
+      "theme": "core",
+      "group": "colours",
+      "level": 2,
+      "swatch": "#2563b8",
+      "usageNotes": "Also covers fresh green in older usage — ko'k choy is green tea."
+    },
+    {
+      "id": "core.colour-green",
+      "uzbek": "yashil",
+      "english": "green",
+      "theme": "core",
+      "group": "colours",
+      "level": 2,
+      "swatch": "#2f9e44"
+    },
+    {
+      "id": "core.colour-yellow",
+      "uzbek": "sariq",
+      "english": "yellow",
+      "theme": "core",
+      "group": "colours",
+      "level": 3,
+      "swatch": "#f5c518"
+    },
+    {
+      "id": "core.colour-brown",
+      "uzbek": "jigarrang",
+      "english": "brown",
+      "theme": "core",
+      "group": "colours",
+      "level": 3,
+      "swatch": "#6b4423",
+      "usageNotes": "Literally \"liver-colour\" — rang means colour."
+    },
+    {
+      "id": "core.colour-grey",
+      "uzbek": "kulrang",
+      "english": "grey",
+      "theme": "core",
+      "group": "colours",
+      "level": 3,
+      "swatch": "#9aa0a6",
+      "usageNotes": "Literally \"ash-colour\"."
+    },
+    {
+      "id": "core.colour-pink",
+      "uzbek": "pushti",
+      "english": "pink",
+      "theme": "core",
+      "group": "colours",
+      "level": 3,
+      "swatch": "#e85d9c"
+    },
+    {
+      "id": "core.colour-purple",
+      "uzbek": "binafsha",
+      "english": "purple",
+      "theme": "core",
+      "group": "colours",
+      "level": 3,
+      "swatch": "#7c3aed"
+    }
+  ]
+}
