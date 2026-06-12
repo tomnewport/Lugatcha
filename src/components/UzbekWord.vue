@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, inject } from 'vue'
 import type { Ref } from 'vue'
-import { breakdownIndex, ensureBreakdownIndex } from '@/exercises/deagglutination'
-import { normalizeToken } from '@/exercises/validate'
+import { getBreakdown, ensureBreakdownIndex } from '@/exercises/deagglutination'
 import { speakUzbek } from '@/audio/audio'
 
 const props = defineProps<{
@@ -26,7 +25,8 @@ onMounted(() => {
   void ensureBreakdownIndex()
 })
 
-const breakdown = computed(() => breakdownIndex.value.get(normalizeToken(props.word)) ?? null)
+const breakdown = computed(() => getBreakdown(props.word))
+const isMultiMorpheme = computed(() => (breakdown.value?.breakdown.length ?? 0) > 1)
 const isAgglutinated = computed(() => breakdown.value !== null)
 const hasTooltip = computed(() => isAgglutinated.value || !!props.meaning)
 
@@ -46,8 +46,8 @@ function toggle() {
     class="uz-word"
     lang="uz"
     :class="{
-      'uz-word--agglutinated': isAgglutinated,
-      'uz-word--meaning': !isAgglutinated && !!meaning,
+      'uz-word--agglutinated': isMultiMorpheme,
+      'uz-word--meaning': !isMultiMorpheme && (isAgglutinated || !!meaning),
       'uz-word--open': isOpen,
     }"
   >
@@ -58,9 +58,9 @@ function toggle() {
       @click.stop="toggle"
     >{{ word }}</button>
 
-    <!-- Breakdown tooltip -->
+    <!-- Multi-morpheme breakdown tooltip (teal, morpheme grid) -->
     <span
-      v-if="isOpen && isAgglutinated && breakdown"
+      v-if="isOpen && isMultiMorpheme && breakdown"
       class="uz-word__tooltip uz-word__tooltip--breakdown"
       role="tooltip"
     >
@@ -75,9 +75,16 @@ function toggle() {
       </span>
     </span>
 
-    <!-- Meaning tooltip -->
+    <!-- Single-morpheme vocab match: "word = meaning" pill -->
     <span
-      v-else-if="isOpen && !isAgglutinated && meaning"
+      v-else-if="isOpen && !isMultiMorpheme && breakdown"
+      class="uz-word__tooltip uz-word__tooltip--meaning"
+      role="tooltip"
+    ><span lang="uz">{{ word }}</span> = {{ breakdown.gloss[0] }}</span>
+
+    <!-- Fallback: meaning prop only -->
+    <span
+      v-else-if="isOpen && !breakdown && meaning"
       class="uz-word__tooltip uz-word__tooltip--meaning"
       role="tooltip"
     >{{ meaning }}</span>
