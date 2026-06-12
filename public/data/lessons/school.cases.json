@@ -73,6 +73,30 @@
             "Tashkent",
             "to"
           ]
+        },
+        {
+          "uzbek": "mehmonxonada",
+          "english": "at the hotel",
+          "breakdown": [
+            "mehmonxona",
+            "da"
+          ],
+          "gloss": [
+            "hotel",
+            "at"
+          ]
+        },
+        {
+          "uzbek": "Samarqanddan",
+          "english": "from Samarkand",
+          "breakdown": [
+            "Samarqand",
+            "dan"
+          ],
+          "gloss": [
+            "Samarkand",
+            "from"
+          ]
         }
       ]
     }
