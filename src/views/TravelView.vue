@@ -2,17 +2,106 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loadTravelPlaces, loadVisitedPlaces, TRAVEL_RESET_AT } from '@/db/travel'
-import type { TravelPlace } from '@/db/types'
+import type { TravelPlace, UzbekMap } from '@/db/types'
 
+const base = import.meta.env.BASE_URL
 const router = useRouter()
 
 const places = ref<TravelPlace[]>([])
+const geo = ref<UzbekMap | null>(null)
 const visited = ref<string[]>([])
 const selectedId = ref<string | null>(null)
 
 onMounted(async () => {
-  places.value = await loadTravelPlaces()
   visited.value = loadVisitedPlaces()
+  const [p, g] = await Promise.all([
+    loadTravelPlaces(),
+    fetch(`${base}data/uzbekistan.geo.json`).then((r) => (r.ok ? r.json() : null)),
+  ])
+  places.value = p
+  geo.value = g
+})
+
+// --- Projection: equirectangular, longitude squeezed by cos(midLat) so the
+// country isn't stretched, fit to a 1000-wide viewBox. -------------------
+const W = 1000
+const PAD = 40
+
+const proj = computed(() => {
+  const g = geo.value
+  if (!g) return null
+  let minLon = 999, maxLon = -999, minLat = 999, maxLat = -999
+  const scan = (c: unknown): void => {
+    if (typeof (c as number[])[0] === 'number') {
+      const [lon, lat] = c as number[]
+      minLon = Math.min(minLon, lon); maxLon = Math.max(maxLon, lon)
+      minLat = Math.min(minLat, lat); maxLat = Math.max(maxLat, lat)
+    } else (c as unknown[]).forEach(scan)
+  }
+  scan(g.border.coordinates)
+  const k = Math.cos((((minLat + maxLat) / 2) * Math.PI) / 180)
+  const scale = (W - 2 * PAD) / ((maxLon - minLon) * k)
+  const H = (maxLat - minLat) * scale + 2 * PAD
+  const project = (lon: number, lat: number): [number, number] => [
+    PAD + (lon - minLon) * k * scale,
+    PAD + (maxLat - lat) * scale,
+  ]
+  return { project, H }
+})
+
+const viewBox = computed(() => `0 0 ${W} ${proj.value ? proj.value.H : 620}`)
+
+function ringsToPath(rings: number[][][], project: (lon: number, lat: number) => [number, number]): string {
+  return rings
+    .map((ring) => {
+      const pts = ring.map((c) => {
+        const [x, y] = project(c[0], c[1])
+        return `${x.toFixed(1)} ${y.toFixed(1)}`
+      })
+      return 'M' + pts.join(' L') + 'Z'
+    })
+    .join(' ')
+}
+
+const borderPath = computed(() => {
+  const p = proj.value, g = geo.value
+  if (!p || !g) return ''
+  const polys = (g.border.type === 'MultiPolygon'
+    ? (g.border.coordinates as number[][][][])
+    : [g.border.coordinates as number[][][]])
+  return polys.map((poly) => ringsToPath(poly, p.project)).join(' ')
+})
+
+const railPaths = computed(() => {
+  const p = proj.value, g = geo.value
+  if (!p || !g) return [] as string[]
+  return g.railways.map(
+    (line) =>
+      'M' +
+      line.map((c) => { const [x, y] = p.project(c[0], c[1]); return `${x.toFixed(1)} ${y.toFixed(1)}` }).join(' L'),
+  )
+})
+
+const pins = computed(() => {
+  const p = proj.value
+  if (!p) return [] as { place: TravelPlace; x: number; y: number }[]
+  return places.value.map((place) => {
+    const [x, y] = p.project(place.lon, place.lat)
+    return { place, x, y }
+  })
+})
+
+const towns = computed(() => {
+  const p = proj.value, g = geo.value
+  if (!p || !g) return [] as { name: string; x: number; y: number; label: boolean }[]
+  const pinXY = pins.value.map((pn) => [pn.x, pn.y])
+  const near = (x: number, y: number) => pinXY.some(([px, py]) => Math.hypot(px - x, py - y) < 16)
+  return g.towns
+    .map((t) => {
+      const [x, y] = p.project(t.lon, t.lat)
+      return { name: t.name, x, y, label: t.rank <= 6 }
+    })
+    .filter((t) => !near(t.x, t.y))
 })
 
 const isDisabled = (id: string) => visited.value.includes(id)
@@ -22,10 +111,6 @@ const remainingToReset = computed(() => Math.max(0, TRAVEL_RESET_AT - visited.va
 function tapPin(place: TravelPlace) {
   if (isDisabled(place.id)) return
   selectedId.value = selectedId.value === place.id ? null : place.id
-}
-
-function visit(place: TravelPlace) {
-  router.push(`/travel/${place.id}`)
 }
 </script>
 
@@ -50,12 +135,8 @@ function visit(place: TravelPlace) {
     </header>
 
     <div class="map-wrap">
-      <svg class="map" viewBox="0 0 1000 620" role="group" aria-label="Map of Uzbekistan">
+      <svg class="map" :viewBox="viewBox" role="group" aria-label="Map of Uzbekistan">
         <defs>
-          <radialGradient id="land" cx="40%" cy="35%" r="80%">
-            <stop offset="0%" stop-color="#f3e2bd" />
-            <stop offset="100%" stop-color="#e4c98f" />
-          </radialGradient>
           <radialGradient id="pin" cx="38%" cy="30%" r="75%">
             <stop offset="0%" stop-color="#e9905f" />
             <stop offset="100%" stop-color="#c2522a" />
@@ -68,58 +149,70 @@ function visit(place: TravelPlace) {
             <stop offset="0%" stop-color="#cfcabb" />
             <stop offset="100%" stop-color="#a39d8d" />
           </radialGradient>
+          <clipPath id="land-clip"><path :d="borderPath" /></clipPath>
         </defs>
 
-        <!-- Chunky cartoon outline of Uzbekistan -->
+        <!-- Country landmass -->
         <path
           class="land"
-          d="M 120 170 Q 140 80 260 90 Q 380 100 470 150 Q 560 120 640 150 Q 700 110 780 160
-             Q 880 150 980 250 Q 1000 320 920 380 Q 840 410 760 380 Q 700 430 600 470
-             Q 480 510 380 480 Q 300 500 250 430 Q 180 440 160 360 Q 110 320 150 260
-             Q 100 210 120 170 Z"
-          fill="url(#land)"
+          :d="borderPath"
+          fill="#e8d4a4"
           stroke="#b9954f"
-          stroke-width="6"
+          stroke-width="3.5"
           stroke-linejoin="round"
+          fill-rule="evenodd"
         />
 
-        <!-- Pins -->
+        <!-- Railways, clipped to the border -->
+        <g clip-path="url(#land-clip)" class="rails">
+          <path v-for="(d, i) in railPaths" :key="i" :d="d" fill="none" />
+        </g>
+
+        <!-- Towns -->
+        <g class="towns">
+          <g v-for="t in towns" :key="t.name">
+            <circle :cx="t.x" :cy="t.y" r="3" />
+            <text v-if="t.label" :x="t.x + 5" :y="t.y + 3.5" class="town-label">{{ t.name }}</text>
+          </g>
+        </g>
+
+        <!-- Travel pins -->
         <g
-          v-for="place in places"
-          :key="place.id"
+          v-for="pin in pins"
+          :key="pin.place.id"
           class="pin"
-          :class="{ 'pin--disabled': isDisabled(place.id), 'pin--selected': selectedId === place.id }"
-          :transform="`translate(${place.mapX} ${place.mapY})`"
+          :class="{ 'pin--disabled': isDisabled(pin.place.id), 'pin--selected': selectedId === pin.place.id }"
+          :transform="`translate(${pin.x} ${pin.y})`"
           role="button"
           tabindex="0"
-          :aria-label="isDisabled(place.id) ? `${place.name.en} (visited)` : place.name.en"
-          @click="tapPin(place)"
-          @keydown.enter.prevent="tapPin(place)"
+          :aria-label="isDisabled(pin.place.id) ? `${pin.place.name.en} (visited)` : pin.place.name.en"
+          @click="tapPin(pin.place)"
+          @keydown.enter.prevent="tapPin(pin.place)"
         >
-          <ellipse class="pin__shadow" cx="0" cy="3" rx="15" ry="5" />
-          <g class="pin__body">
+          <g class="pin__lift">
+            <ellipse class="pin__shadow" cx="0" cy="3" rx="11" ry="3.5" />
             <path
-              d="M0,0 C-13,-22 -22,-30 -22,-46 a22,22 0 1,1 44,0 C22,-30 13,-22 0,0 Z"
-              :fill="isDisabled(place.id) ? 'url(#pinOff)' : selectedId === place.id ? 'url(#pinSel)' : 'url(#pin)'"
-              stroke="rgba(0,0,0,0.18)"
-              stroke-width="1.5"
+              class="pin__body"
+              d="M0,0 C-10,-17 -17,-23 -17,-35 a17,17 0 1,1 34,0 C17,-23 10,-17 0,0 Z"
+              :fill="isDisabled(pin.place.id) ? 'url(#pinOff)' : selectedId === pin.place.id ? 'url(#pinSel)' : 'url(#pin)'"
+              stroke="rgba(0,0,0,0.2)"
+              stroke-width="1.2"
             />
-            <circle cx="0" cy="-46" r="8.5" fill="#fff" opacity="0.92" />
+            <circle cx="0" cy="-35" r="6.5" fill="#fff" opacity="0.92" />
             <path
-              v-if="isDisabled(place.id)"
-              d="M-4 -46 l3 3 l6 -6"
+              v-if="isDisabled(pin.place.id)"
+              d="M-3 -35 l2.4 2.4 l4.6 -4.8"
               fill="none"
               stroke="#1a5e52"
-              stroke-width="2.4"
+              stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
             />
           </g>
 
-          <!-- Name revealed on tap -->
-          <g v-if="selectedId === place.id" class="pin__label">
-            <rect x="-66" y="-92" width="132" height="26" rx="13" fill="#1a1a1a" />
-            <text x="0" y="-74" text-anchor="middle" class="pin__label-text">{{ place.name.en }}</text>
+          <g v-if="selectedId === pin.place.id" class="pin__label">
+            <rect :x="-pin.place.name.en.length * 4.4 - 8" y="-74" :width="pin.place.name.en.length * 8.8 + 16" height="22" rx="11" fill="#1a1a1a" />
+            <text x="0" y="-59" text-anchor="middle" class="pin__label-text">{{ pin.place.name.en }}</text>
           </g>
         </g>
       </svg>
@@ -136,7 +229,9 @@ function visit(place: TravelPlace) {
           <button class="place-card__close" type="button" aria-label="Close" @click="selectedId = null">✕</button>
         </div>
         <p class="place-card__teaser">{{ selected.article[0] }}</p>
-        <button class="btn btn--primary" type="button" @click="visit(selected)">Read &amp; practise</button>
+        <button class="btn btn--primary" type="button" @click="router.push(`/travel/${selected.id}`)">
+          Read &amp; practise
+        </button>
       </div>
     </Transition>
   </main>
@@ -198,7 +293,7 @@ function visit(place: TravelPlace) {
 
 .map-wrap {
   width: 100%;
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
 }
 
@@ -209,12 +304,32 @@ function visit(place: TravelPlace) {
   filter: drop-shadow(0 6px 16px rgb(0 0 0 / 0.12));
 }
 
-.land {
-  transition: fill 0.3s ease;
+.rails path {
+  stroke: #8a7a52;
+  stroke-width: 1.4;
+  stroke-dasharray: 5 4;
+  opacity: 0.7;
+}
+
+.towns circle {
+  fill: #6b6559;
+  stroke: #fff;
+  stroke-width: 1;
+}
+
+.town-label {
+  fill: #5a5346;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: var(--font-sans, sans-serif);
+  paint-order: stroke;
+  stroke: rgba(245, 240, 232, 0.85);
+  stroke-width: 2.5px;
 }
 
 .pin {
   cursor: pointer;
+  outline: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -222,17 +337,20 @@ function visit(place: TravelPlace) {
   fill: rgb(0 0 0 / 0.22);
 }
 
-.pin__body {
+/* Lift on hover/focus/select — translate only, so it never drifts sideways */
+.pin__lift {
   transition: transform 0.15s ease;
-  transform-origin: center bottom;
 }
 
-.pin:hover:not(.pin--disabled) .pin__body {
-  transform: translateY(-4px) scale(1.06);
+.pin:hover:not(.pin--disabled) .pin__lift,
+.pin:focus-visible:not(.pin--disabled) .pin__lift,
+.pin--selected .pin__lift {
+  transform: translateY(-5px);
 }
 
-.pin--selected .pin__body {
-  transform: translateY(-4px) scale(1.12);
+.pin:focus-visible .pin__body {
+  stroke: var(--color-primary);
+  stroke-width: 2.5;
 }
 
 .pin--disabled {
@@ -245,7 +363,7 @@ function visit(place: TravelPlace) {
 
 .pin__label-text {
   fill: #fff;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   font-family: var(--font-sans, sans-serif);
 }
