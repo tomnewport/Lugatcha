@@ -8,6 +8,7 @@ const props = defineProps<{
   location: Location
   progress: LocationProgress | undefined
   locked: boolean
+  exerciseEmoji?: string
 }>()
 
 const router = useRouter()
@@ -104,11 +105,14 @@ function navigate() {
     <span class="tile__name-uz" :lang="settings.labelLanguage === 'uz' ? undefined : 'uz'">{{
       secondaryName
     }}</span>
+
+    <span v-if="exerciseEmoji && !locked" class="tile__chip" aria-hidden="true">{{ exerciseEmoji }}</span>
   </button>
 </template>
 
 <style scoped>
 .tile {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -235,5 +239,22 @@ function navigate() {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tile__chip {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-gold);
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+  z-index: 1;
 }
 </style>
