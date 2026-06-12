@@ -11,14 +11,18 @@ const props = defineProps<{
 const emit = defineEmits<{ played: [] }>()
 
 const playing = ref(false)
+// Cycles normal → slow → normal on successive clicks.
+const nextSlow = ref(false)
 
 async function play() {
   if (playing.value) return
   playing.value = true
+  const slow = nextSlow.value
   try {
-    await speakUzbek(props.text)
+    await speakUzbek(props.text, { slow })
   } finally {
     playing.value = false
+    nextSlow.value = !slow
     emit('played')
   }
 }
@@ -29,8 +33,9 @@ onUnmounted(stopSpeaking)
 <template>
   <button
     class="audio-btn"
-    :class="{ 'audio-btn--playing': playing, 'audio-btn--large': large }"
+    :class="{ 'audio-btn--playing': playing, 'audio-btn--large': large, 'audio-btn--slow': nextSlow && !playing }"
     :aria-label="label ?? `Play audio: ${text}`"
+    :title="nextSlow && !playing ? 'Play slow (0.75×)' : undefined"
     type="button"
     @click.stop="play"
   >
@@ -85,6 +90,12 @@ onUnmounted(stopSpeaking)
   color: #fff;
   border-color: var(--color-primary);
   animation: pulse 1s ease infinite;
+}
+
+/* Subtle teal tint signals "next click = slow speed". */
+.audio-btn--slow {
+  border-color: var(--color-teal, #2a9d8f);
+  color: var(--color-teal, #2a9d8f);
 }
 
 @keyframes pulse {
