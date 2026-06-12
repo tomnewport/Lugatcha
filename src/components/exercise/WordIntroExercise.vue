@@ -111,6 +111,48 @@ function initMatch() {
   matchResults.value = new Map()
 }
 
+const matchById = (id: string) => words.value.find((w) => w.id === id)!
+
+interface MatchRow {
+  left: Word
+  right: Word | null
+  matched: boolean
+}
+
+/** Matched pairs float to the top; remaining unmatched rows fill below. */
+const matchRows = computed<MatchRow[]>(() => {
+  const matched: MatchRow[] = [...matchPairs.value.entries()].map(([l, r]) => ({
+    left: matchById(l),
+    right: matchById(r),
+    matched: true,
+  }))
+  const lefts = matchLeft.value.filter((w) => !matchPairs.value.has(w.id))
+  const rights = matchRight.value.filter((w) => !matchPairedRight.value.has(w.id))
+  const open: MatchRow[] = lefts.map((left, i) => ({ left, right: rights[i] ?? null, matched: false }))
+  return [...matched, ...open]
+})
+
+interface MatchCell {
+  key: string
+  kind: 'left' | 'connector' | 'right'
+  word: Word | null
+  row: MatchRow
+}
+
+/** One keyed element per grid cell so TransitionGroup can FLIP-animate each. */
+const matchCells = computed<MatchCell[]>(() =>
+  matchRows.value.flatMap((row): MatchCell[] => [
+    { key: `l-${row.left.id}`, kind: 'left', word: row.left, row },
+    { key: `c-${row.left.id}`, kind: 'connector', word: null, row },
+    {
+      key: row.right ? `r-${row.right.id}` : `r-empty-${row.left.id}`,
+      kind: 'right',
+      word: row.right,
+      row,
+    },
+  ]),
+)
+
 function matchUnpair(leftId: string) {
   const next = new Map(matchPairs.value)
   next.delete(leftId)
@@ -146,9 +188,9 @@ function isMatchSelected(side: 'left' | 'right', id: string) {
   return matchSelected.value?.side === side && matchSelected.value.id === id
 }
 
-function matchGradeClass(leftId: string, inPair: boolean): string {
-  if (!matchChecked.value || !inPair) return ''
-  return matchResults.value.get(leftId) ? 'is-correct' : 'is-wrong'
+function matchGradeClass(row: MatchRow): string {
+  if (!matchChecked.value || !row.matched) return ''
+  return matchResults.value.get(row.left.id) ? 'is-correct' : 'is-wrong'
 }
 
 async function checkMatch() {
@@ -282,7 +324,9 @@ async function finish() {
 
       <div class="quiz-card">
         <AudioButton :text="currentQuestion.word.uzbek" />
-        <p class="quiz-card__word" lang="uz">{{ currentQuestion.word.uzbek }}</p>
+        <p class="quiz-card__word">
+          <UzbekWord :word="currentQuestion.word.uzbek" />
+        </p>
       </div>
 
       <ul class="quiz-options">
@@ -314,53 +358,34 @@ async function finish() {
     <template v-else-if="step === 'match'">
       <p class="intro__instruction">Pair each Uzbek word with its English meaning.</p>
 
-      <div class="match-grid">
-        <template v-for="(leftWord, i) in matchLeft" :key="leftWord.id">
-          <!-- Left card -->
-          <button
-            class="match-card match-card--left"
-            :class="[
-              matchGradeClass(leftWord.id, matchPairs.has(leftWord.id)),
-              {
-                'match-card--selected': isMatchSelected('left', leftWord.id),
-                'match-card--paired': matchPairs.has(leftWord.id),
-              },
-            ]"
-            type="button"
-            @click="matchTap('left', leftWord)"
-          >
-            <span lang="uz">{{ leftWord.uzbek }}</span>
-          </button>
-
-          <!-- Connector -->
-          <span class="match-connector" aria-hidden="true">
+      <TransitionGroup name="match-move" tag="div" class="match-grid">
+        <div v-for="cell in matchCells" :key="cell.key" class="match-cell">
+          <span v-if="cell.kind === 'connector'" class="match-connector" aria-hidden="true">
             <span
-              v-if="matchPairs.has(leftWord.id)"
+              v-if="cell.row.matched"
               class="match-connector__line"
-              :class="matchGradeClass(leftWord.id, true)"
+              :class="matchGradeClass(cell.row)"
             />
           </span>
 
-          <!-- Right card — aligned to right column, shuffled independently -->
           <button
-            class="match-card match-card--right"
+            v-else-if="cell.word"
+            class="match-card"
             :class="[
-              matchGradeClass(
-                [...matchPairs.entries()].find(([, r]) => r === matchRight[i]?.id)?.[0] ?? '',
-                matchPairedRight.has(matchRight[i]?.id ?? ''),
-              ),
+              matchGradeClass(cell.row),
               {
-                'match-card--selected': isMatchSelected('right', matchRight[i]?.id ?? ''),
-                'match-card--paired': matchPairedRight.has(matchRight[i]?.id ?? ''),
+                'match-card--selected': isMatchSelected(cell.kind as 'left' | 'right', cell.word.id),
+                'match-card--paired': cell.row.matched,
               },
             ]"
             type="button"
-            @click="matchRight[i] && matchTap('right', matchRight[i])"
+            @click="matchTap(cell.kind as 'left' | 'right', cell.word)"
           >
-            {{ matchRight[i]?.english ?? '' }}
+            <UzbekWord v-if="cell.kind === 'left'" :word="cell.word.uzbek" />
+            <span v-else>{{ cell.word.english }}</span>
           </button>
-        </template>
-      </div>
+        </div>
+      </TransitionGroup>
 
       <p v-if="!matchChecked" class="intro__hint">
         Tap a card on each side to pair — tap a paired card to undo.
@@ -596,17 +621,37 @@ async function finish() {
 /* ── Step 3: matching ───────────────────────────────────────────────────────── */
 .match-grid {
   display: grid;
-  grid-template-columns: 1fr 24px 1fr;
-  row-gap: 0.55rem;
+  grid-template-columns: 1fr 26px 1fr;
+  row-gap: 0.6rem;
   align-items: stretch;
+  position: relative;
+}
+
+/* FLIP reordering */
+.match-move-move {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.match-cell {
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+}
+
+.match-cell > .match-card {
+  flex: 1;
+}
+
+.match-cell > .match-connector {
+  flex: 1;
 }
 
 .match-card {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 52px;
-  padding: 0.55rem 0.65rem;
+  min-height: 56px;
+  padding: 0.6rem 0.7rem;
   font-size: 0.88rem;
   font-weight: 600;
   color: var(--color-text);
@@ -616,12 +661,13 @@ async function finish() {
   box-shadow: var(--shadow-sm);
   text-align: center;
   transition:
+    transform 0.12s ease,
     border-color 0.15s ease,
     background-color 0.15s ease;
 }
 
 .match-card:hover {
-  border-color: var(--color-primary-light);
+  transform: translateY(-1px);
 }
 
 .match-card--selected {
@@ -637,17 +683,19 @@ async function finish() {
 .match-card.is-correct {
   border-color: var(--color-teal);
   background: #f0f7f5;
+  animation: match-pop 0.3s ease;
 }
 
 .match-card.is-wrong {
   border-color: var(--color-terracotta);
   background: #fbf1ec;
+  animation: match-shake 0.35s ease;
 }
 
 .match-connector {
   display: flex;
   align-items: center;
-  min-height: 52px;
+  min-height: 56px;
 }
 
 .match-connector__line {
@@ -656,6 +704,8 @@ async function finish() {
   height: 3px;
   border-radius: 2px;
   background: var(--color-primary-light);
+  transform-origin: left center;
+  animation: match-draw 0.35s ease;
 }
 
 .match-connector__line.is-correct {
@@ -664,6 +714,22 @@ async function finish() {
 
 .match-connector__line.is-wrong {
   background: var(--color-terracotta);
+}
+
+@keyframes match-draw {
+  from { transform: scaleX(0); }
+}
+
+@keyframes match-pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes match-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
 }
 
 /* ── Step 4: phrases ────────────────────────────────────────────────────────── */

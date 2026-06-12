@@ -4,6 +4,7 @@ import { db } from '@/db'
 import { tokenize, shuffle, buildDecoys, normalizeToken } from '@/exercises/validate'
 import { speakUzbek } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
+import UzbekSentence from '@/components/UzbekSentence.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 
 const props = defineProps<{ locationId: string }>()
@@ -88,7 +89,9 @@ function next() {
         </template>
         <template v-else-if="current.mode === 'uzbek'">
           <span class="phrase__prompt-label">Rebuild this phrase:</span>
-          <p class="phrase__prompt-text" lang="uz">{{ current.uzbek }}</p>
+          <p class="phrase__prompt-text">
+            <UzbekSentence :uzbek="current.uzbek" />
+          </p>
         </template>
         <template v-else>
           <span class="phrase__prompt-label">Listen, then build what you hear:</span>
@@ -105,8 +108,8 @@ function next() {
       />
 
       <div v-if="solved" class="phrase__solution">
-        <p class="phrase__solution-uz" lang="uz">
-          {{ current.uzbek }}
+        <p class="phrase__solution-uz">
+          <UzbekSentence :uzbek="current.uzbek" />
           <AudioButton :text="current.uzbek" />
         </p>
         <p class="phrase__solution-en">{{ current.english }}</p>
