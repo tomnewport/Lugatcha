@@ -5,6 +5,7 @@ import { pickIntroWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
 import { db } from '@/db/useDb'
+import { speakUzbek } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekWord from '@/components/UzbekWord.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
@@ -161,6 +162,7 @@ function matchUnpair(leftId: string) {
 
 function matchTap(side: 'left' | 'right', word: Word) {
   if (matchChecked.value) return
+  if (side === 'left') void speakUzbek(word.uzbek)
   if (side === 'left' && matchPairs.value.has(word.id)) {
     matchUnpair(word.id)
     return
@@ -392,7 +394,7 @@ async function finish() {
             type="button"
             @click="matchTap(cell.kind as 'left' | 'right', cell.word)"
           >
-            <UzbekWord v-if="cell.kind === 'left'" :word="cell.word.uzbek" />
+            <span v-if="cell.kind === 'left'" lang="uz">{{ cell.word.uzbek }}</span>
             <span v-else>{{ cell.word.english }}</span>
           </button>
         </div>
