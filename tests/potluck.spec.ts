@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { buildPotluck, UNLOCK_AT, type LocationStats } from '@/exercises/potluck'
+import {
+  buildPotluck,
+  selectAutoExercise,
+  UNLOCK_AT,
+  type LocationStats,
+} from '@/exercises/potluck'
 import type { ExerciseType } from '@/db/types'
 
 function stats(overrides: Partial<LocationStats> = {}): LocationStats {
@@ -9,6 +14,7 @@ function stats(overrides: Partial<LocationStats> = {}): LocationStats {
     seenWords: 0,
     knownWords: 0,
     completed: [],
+    visits: 0,
     ...overrides,
   }
 }
@@ -67,5 +73,64 @@ describe('buildPotluck', () => {
     // intro done + all words seen: done flag survives the locked state
     const potluck = buildPotluck(stats({ seenWords: 15, completed: ['intro'] }))
     expect(stateOf(potluck, 'intro').done).toBe(true)
+  })
+})
+
+describe('selectAutoExercise', () => {
+  /**
+   * Replays a location the way the app does: each visit serves one exercise,
+   * then its effect (words met, exercise marked done, cursor advanced) feeds the
+   * next selection — exactly the loop LocationView drives through Dexie.
+   */
+  function walk(totalWords: number, steps: number): ExerciseType[] {
+    let seenWords = 0
+    const completed = new Set<ExerciseType>()
+    const served: ExerciseType[] = []
+    for (let visits = 0; visits < steps; visits++) {
+      const next = selectAutoExercise(
+        stats({ totalWords, seenWords, completed: [...completed], visits }),
+      )!
+      served.push(next)
+      if (next === 'intro') seenWords = Math.min(totalWords, seenWords + 5)
+      if (next !== 'test') completed.add(next) // the Test is never retired
+    }
+    return served
+  }
+
+  it('opens a fresh location with New Words', () => {
+    expect(selectAutoExercise(stats({ seenWords: 0, visits: 0 }))).toBe('intro')
+  })
+
+  it('serves the first test on the fifth visit, not before', () => {
+    const served = walk(15, 5)
+    expect(served).toEqual(['intro', 'flashcards', 'intro', 'listening', 'test'])
+    expect(served.slice(0, 4)).not.toContain('test')
+    expect(served[4]).toBe('test')
+  })
+
+  it('keeps meeting new words across visits so the seen ring climbs', () => {
+    // The reported bug: only the first five words, then never again. New Words
+    // must recur while unmet words remain.
+    const served = walk(15, 5)
+    expect(served.filter((a) => a === 'intro').length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('rotates through the practice exercises for variety', () => {
+    const served = walk(15, 8)
+    const practiced = served.filter((a) => a !== 'intro' && a !== 'test')
+    expect(new Set(practiced).size).toBeGreaterThanOrEqual(3)
+  })
+
+  it('turns the New Words slot into a test once every word is met', () => {
+    // seen == total: intro is retired, so its slots drive learning via testing.
+    expect(selectAutoExercise(stats({ totalWords: 10, seenWords: 10, visits: 0 }))).toBe('test')
+    expect(selectAutoExercise(stats({ totalWords: 10, seenWords: 10, visits: 2 }))).toBe('test')
+  })
+
+  it('reaches a test quickly at a location with only a handful of words', () => {
+    // Three words: one intro meets them all, so testing should start right after.
+    const served = walk(3, 3)
+    expect(served[0]).toBe('intro')
+    expect(served).toContain('test')
   })
 })

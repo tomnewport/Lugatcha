@@ -107,7 +107,29 @@ export async function completeExercise(
     const existing = await db.locationProgress.get(locationId)
     const completed = existing?.completedExercises ?? []
     if (!completed.includes(exercise)) completed.push(exercise)
-    await db.locationProgress.put({ locationId, completedExercises: completed })
+    await db.locationProgress.put({
+      locationId,
+      completedExercises: completed,
+      visits: existing?.visits,
+    })
+  })
+}
+
+/**
+ * Counts one finished exercise at a location, advancing the rotation cursor so
+ * the next visit serves a different activity (new words, practice, or a test).
+ */
+export async function recordLocationVisit(
+  db: LugatchaDB,
+  locationId: string,
+): Promise<void> {
+  await db.transaction('rw', db.locationProgress, async () => {
+    const existing = await db.locationProgress.get(locationId)
+    await db.locationProgress.put({
+      locationId,
+      completedExercises: existing?.completedExercises ?? [],
+      visits: (existing?.visits ?? 0) + 1,
+    })
   })
 }
 
