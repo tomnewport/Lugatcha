@@ -9,6 +9,7 @@ export const ACTIVITY_ORDER: ExerciseType[] = [
   'phrase-assembly',
   'roleplay',
   'storytime',
+  'test',
 ]
 
 export const EXERCISE_LABELS: Record<ExerciseType, string> = {
@@ -18,6 +19,7 @@ export const EXERCISE_LABELS: Record<ExerciseType, string> = {
   'phrase-assembly': 'Phrase Assembly',
   roleplay: 'Roleplay',
   storytime: 'Storytime',
+  test: 'Test',
 }
 
 export const EXERCISE_DESCRIPTIONS: Record<ExerciseType, string> = {
@@ -27,6 +29,7 @@ export const EXERCISE_DESCRIPTIONS: Record<ExerciseType, string> = {
   'phrase-assembly': 'Build phrases from a word bank',
   roleplay: 'Hold a conversation, turn by turn',
   storytime: 'Read a short story and translate it',
+  test: 'Prove you know five words to learn them',
 }
 
 /** Seen-word thresholds that bring each activity to the table. */
@@ -37,6 +40,7 @@ export const UNLOCK_AT: Record<ExerciseType, number> = {
   'phrase-assembly': 5,
   roleplay: 5,
   storytime: 5,
+  test: 5,
 }
 
 export interface LocationStats {
