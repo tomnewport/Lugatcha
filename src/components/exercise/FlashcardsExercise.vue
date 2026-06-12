@@ -4,8 +4,7 @@ import type { Word } from '@/db/types'
 import { pickFlashcardWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
-import AudioButton from '@/components/AudioButton.vue'
-import UzbekWord from '@/components/UzbekWord.vue'
+import { speakUzbek } from '@/audio/audio'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -91,6 +90,8 @@ function unmatch(leftId: string) {
 function tap(side: 'left' | 'right', word: Word) {
   if (checked.value) return
 
+  if (side === 'left') void speakUzbek(word.uzbek)
+
   // Tapping a matched card dissolves that pair
   if (side === 'left' && pairs.value.has(word.id)) {
     unmatch(word.id)
@@ -169,8 +170,13 @@ function gradeClass(row: Row): string {
           type="button"
           @click="tap(cell.kind, cell.word)"
         >
-          <AudioButton v-if="soundMode && cell.kind === 'left'" :text="cell.word.uzbek" />
-          <UzbekWord v-else-if="cell.kind === 'left'" :word="cell.word.uzbek" />
+          <template v-if="cell.kind === 'left'">
+            <svg v-if="soundMode" class="card__speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M11 5L6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none" />
+              <path d="M15.5 8.5a5 5 0 0 1 0 7" stroke-linecap="round" />
+            </svg>
+            <span v-else lang="uz">{{ cell.word.uzbek }}</span>
+          </template>
           <span v-else>{{ cell.word.english }}</span>
         </button>
       </div>
@@ -374,5 +380,11 @@ function gradeClass(row: Row): string {
   padding-top: 1rem;
   display: flex;
   flex-direction: column;
+}
+
+.card__speaker {
+  width: 20px;
+  height: 20px;
+  color: var(--color-primary);
 }
 </style>
