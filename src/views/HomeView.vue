@@ -260,7 +260,7 @@ const chipMap = computed(() => {
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
-  padding: 1.25rem 1rem 2rem;
+  padding: 1.25rem 1rem 4rem;
   background: var(--color-bg);
   position: relative;
 }
