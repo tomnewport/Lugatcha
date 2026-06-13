@@ -3,41 +3,56 @@
   "order": 2,
   "title": {
     "en": "Colours",
-    "uz": "Ranglar"
+    "uz": "Ranglar",
+    "ru": "Цвета"
   },
   "icon": "🎨",
   "blurb": "Name the colours — and meet the famous ko'k",
+  "blurbRu": "Называйте цвета — и познакомьтесь со знаменитым ko'k",
   "article": [
     {
       "heading": "The word for colour is rang",
+      "headingRu": "Слово «цвет» — это rang",
       "body": [
         "**Rang** means \"colour\". You will see it stuck onto other words: *jigarrang* (liver-colour = brown), *kulrang* (ash-colour = grey). Colours work like ordinary adjectives and go **before** the noun, with no agreement to worry about: *qizil olma* (a red apple), *qizil olmalar* (red apples) — the colour word never changes."
+      ],
+      "bodyRu": [
+        "**Rang** означает «цвет». Вы встретите это слово приклеенным к другим: *jigarrang* (цвет печени = коричневый), *kulrang* (цвет пепла = серый). Цвета ведут себя как обычные прилагательные и ставятся **перед** существительным, без всякого согласования: *qizil olma* (красное яблоко), *qizil olmalar* (красные яблоки) — слово-цвет никогда не меняется."
       ],
       "examples": [
         {
           "uzbek": "qizil gilam",
-          "english": "a red carpet"
+          "english": "a red carpet",
+          "russian": "красный ковёр"
         },
         {
           "uzbek": "oq non",
-          "english": "white bread"
+          "english": "white bread",
+          "russian": "белый хлеб"
         }
       ]
     },
     {
       "heading": "The famous ko'k",
+      "headingRu": "Знаменитый ko'k",
       "body": [
         "The one colour to watch is **ko'k**. Today it usually means **blue** — the colour of the sky and of Samarqand's tiled domes. But traditionally it also covers fresh **green**: green tea is **ko'k choy**, and *ko'kat* means leafy greens. The modern, unambiguous word for green is **yashil**.",
         "So if someone offers you *ko'k choy*, they mean green tea, not blue tea!"
       ],
+      "bodyRu": [
+        "Особого внимания заслуживает цвет **ko'k**. Сегодня он обычно означает **синий** — цвет неба и изразцовых куполов Самарканда. Но традиционно он охватывает и свежий **зелёный**: зелёный чай — это **ko'k choy**, а *ko'kat* означает зелень. Современное, однозначное слово для зелёного — **yashil**.",
+        "Так что если вам предложат *ko'k choy*, имеется в виду зелёный чай, а не синий!"
+      ],
       "examples": [
         {
           "uzbek": "ko'k osmon",
-          "english": "the blue sky"
+          "english": "the blue sky",
+          "russian": "синее небо"
         },
         {
           "uzbek": "ko'k choy",
-          "english": "green tea (literally \"ko'k tea\")"
+          "english": "green tea (literally \"ko'k tea\")",
+          "russian": "зелёный чай (буквально «ko'k чай»)"
         }
       ]
     }
@@ -47,6 +62,7 @@
       "id": "core.colour-white",
       "uzbek": "oq",
       "english": "white",
+      "russian": "белый",
       "theme": "core",
       "group": "colours",
       "level": 2,
@@ -56,6 +72,7 @@
       "id": "core.colour-black",
       "uzbek": "qora",
       "english": "black",
+      "russian": "чёрный",
       "theme": "core",
       "group": "colours",
       "level": 2,
@@ -65,6 +82,7 @@
       "id": "core.colour-red",
       "uzbek": "qizil",
       "english": "red",
+      "russian": "красный",
       "theme": "core",
       "group": "colours",
       "level": 2,
@@ -74,16 +92,19 @@
       "id": "core.colour-blue",
       "uzbek": "ko'k",
       "english": "blue",
+      "russian": "синий",
       "theme": "core",
       "group": "colours",
       "level": 2,
       "swatch": "#2563b8",
-      "usageNotes": "Also covers fresh green in older usage — ko'k choy is green tea."
+      "usageNotes": "Also covers fresh green in older usage — ko'k choy is green tea.",
+      "usageNotesRu": "В старом употреблении также означает свежий зелёный — ko'k choy это зелёный чай."
     },
     {
       "id": "core.colour-green",
       "uzbek": "yashil",
       "english": "green",
+      "russian": "зелёный",
       "theme": "core",
       "group": "colours",
       "level": 2,
@@ -93,6 +114,7 @@
       "id": "core.colour-yellow",
       "uzbek": "sariq",
       "english": "yellow",
+      "russian": "жёлтый",
       "theme": "core",
       "group": "colours",
       "level": 3,
@@ -102,26 +124,31 @@
       "id": "core.colour-brown",
       "uzbek": "jigarrang",
       "english": "brown",
+      "russian": "коричневый",
       "theme": "core",
       "group": "colours",
       "level": 3,
       "swatch": "#6b4423",
-      "usageNotes": "Literally \"liver-colour\" — rang means colour."
+      "usageNotes": "Literally \"liver-colour\" — rang means colour.",
+      "usageNotesRu": "Буквально «цвет печени» — rang означает цвет."
     },
     {
       "id": "core.colour-grey",
       "uzbek": "kulrang",
       "english": "grey",
+      "russian": "серый",
       "theme": "core",
       "group": "colours",
       "level": 3,
       "swatch": "#9aa0a6",
-      "usageNotes": "Literally \"ash-colour\"."
+      "usageNotes": "Literally \"ash-colour\".",
+      "usageNotesRu": "Буквально «цвет пепла»."
     },
     {
       "id": "core.colour-pink",
       "uzbek": "pushti",
       "english": "pink",
+      "russian": "розовый",
       "theme": "core",
       "group": "colours",
       "level": 3,
@@ -131,6 +158,7 @@
       "id": "core.colour-purple",
       "uzbek": "binafsha",
       "english": "purple",
+      "russian": "фиолетовый",
       "theme": "core",
       "group": "colours",
       "level": 3,

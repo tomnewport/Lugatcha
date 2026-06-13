@@ -4,23 +4,28 @@
     "theme": "museum",
     "title": {
       "en": "Museum Tickets",
+      "ru": "Билеты в музей",
       "uz": "Muzey chiptalari"
     },
     "scenario": "The history museum looks wonderful. You go to the ticket desk.",
+    "scenarioRu": "Исторический музей выглядит замечательно. Ты идёшь к кассе.",
     "variants": [
       {
         "id": "museum.tickets.base",
         "description": "Two tickets, no fuss",
+        "descriptionRu": "Два билета, без хлопот",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Nechta chipta?",
-            "english": "Hello! How many tickets?"
+            "english": "Hello! How many tickets?",
+            "russian": "Здравствуйте! Сколько билетов?"
           },
           {
             "speaker": "user",
             "uzbek": "Ikkita chipta, iltimos.",
             "english": "Two tickets, please.",
+            "russian": "Два билета, пожалуйста.",
             "tokens": [
               "Ikkita",
               "chipta,",
@@ -30,12 +35,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yigirma ming so'm bo'ladi.",
-            "english": "That will be twenty thousand som."
+            "english": "That will be twenty thousand som.",
+            "russian": "С вас двадцать тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul.",
             "english": "Here is the money.",
+            "russian": "Вот деньги.",
             "tokens": [
               "Mana",
               "pul."
@@ -44,12 +51,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Muzey soat oltigacha ochiq.",
-            "english": "Thank you! The museum is open until six."
+            "english": "Thank you! The museum is open until six.",
+            "russian": "Спасибо! Музей открыт до шести."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat!",
             "english": "Great, thank you!",
+            "russian": "Отлично, спасибо!",
             "tokens": [
               "Yaxshi,",
               "rahmat!"
@@ -60,11 +69,13 @@
       {
         "id": "museum.tickets.student",
         "description": "A student discount — with ID",
+        "descriptionRu": "Студенческая скидка — с удостоверением",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Talabalarga chegirma bormi?",
             "english": "Is there a student discount?",
+            "russian": "Есть ли студенческая скидка?",
             "tokens": [
               "Talabalarga",
               "chegirma",
@@ -74,12 +85,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, talaba guvohnomangiz bormi?",
-            "english": "Yes — do you have your student card?"
+            "english": "Yes — do you have your student card?",
+            "russian": "Да — у вас есть студенческий билет?"
           },
           {
             "speaker": "user",
             "uzbek": "Mana guvohnoma.",
             "english": "Here is the card.",
+            "russian": "Вот удостоверение.",
             "tokens": [
               "Mana",
               "guvohnoma."
@@ -88,12 +101,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Chipta besh ming so'm.",
-            "english": "Good. The ticket is five thousand som."
+            "english": "Good. The ticket is five thousand som.",
+            "russian": "Хорошо. Билет стоит пять тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -103,11 +118,13 @@
       {
         "id": "museum.tickets.monday",
         "description": "Closed on Mondays",
+        "descriptionRu": "Закрыто по понедельникам",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Ikkita chipta, iltimos.",
             "english": "Two tickets, please.",
+            "russian": "Два билета, пожалуйста.",
             "tokens": [
               "Ikkita",
               "chipta,",
@@ -117,12 +134,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, bugun dushanba. Muzey yopiq.",
-            "english": "Sorry, today is Monday. The museum is closed."
+            "english": "Sorry, today is Monday. The museum is closed.",
+            "russian": "Извините, сегодня понедельник. Музей закрыт."
           },
           {
             "speaker": "user",
             "uzbek": "Qachon ochiq?",
             "english": "When is it open?",
+            "russian": "Когда он открыт?",
             "tokens": [
               "Qachon",
               "ochiq?"
@@ -131,12 +150,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ertaga, soat to'qqizdan.",
-            "english": "Tomorrow, from nine."
+            "english": "Tomorrow, from nine.",
+            "russian": "Завтра, с девяти."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, ertaga kelamiz.",
             "english": "Fine, we will come tomorrow.",
+            "russian": "Хорошо, мы придём завтра.",
             "tokens": [
               "Yaxshi,",
               "ertaga",
@@ -148,16 +169,19 @@
       {
         "id": "museum.tickets.no-photo",
         "description": "No photos inside",
+        "descriptionRu": "Внутри фотографировать нельзя",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Mana chiptalar. Suratga olish mumkin emas.",
-            "english": "Here are the tickets. Taking photos is not allowed."
+            "english": "Here are the tickets. Taking photos is not allowed.",
+            "russian": "Вот билеты. Фотографировать запрещено."
           },
           {
             "speaker": "user",
             "uzbek": "Telefonsiz ham mumkin emasmi?",
             "english": "Not even without flash, with a phone?",
+            "russian": "Даже без вспышки, на телефон, нельзя?",
             "tokens": [
               "Telefonsiz",
               "ham",
@@ -168,12 +192,14 @@
           {
             "speaker": "npc",
             "uzbek": "Birinchi zalda mumkin, qolganlarida yo'q.",
-            "english": "In the first hall it is allowed, in the others no."
+            "english": "In the first hall it is allowed, in the others no.",
+            "russian": "В первом зале можно, в остальных нет."
           },
           {
             "speaker": "user",
             "uzbek": "Tushundim, rahmat.",
             "english": "Understood, thank you.",
+            "russian": "Понятно, спасибо.",
             "tokens": [
               "Tushundim,",
               "rahmat."
@@ -184,11 +210,13 @@
       {
         "id": "museum.tickets.tour",
         "description": "You join a guided tour",
+        "descriptionRu": "Ты присоединяешься к экскурсии",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Inglizcha ekskursiya bormi?",
             "english": "Is there a tour in English?",
+            "russian": "Есть ли экскурсия на английском?",
             "tokens": [
               "Inglizcha",
               "ekskursiya",
@@ -198,12 +226,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, soat o'n birda boshlanadi.",
-            "english": "Yes, it starts at eleven."
+            "english": "Yes, it starts at eleven.",
+            "russian": "Да, она начинается в одиннадцать."
           },
           {
             "speaker": "user",
             "uzbek": "Ikki kishi uchun, iltimos.",
             "english": "For two people, please.",
+            "russian": "На двоих, пожалуйста.",
             "tokens": [
               "Ikki",
               "kishi",
@@ -214,12 +244,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Birinchi zalda kuting.",
-            "english": "Fine. Wait in the first hall."
+            "english": "Fine. Wait in the first hall.",
+            "russian": "Хорошо. Подождите в первом зале."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -229,16 +261,19 @@
       {
         "id": "museum.tickets.cash",
         "description": "Card machine is broken — cash only",
+        "descriptionRu": "Терминал не работает — только наличные",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, karta ishlamayapti. Faqat naqd pul.",
-            "english": "Sorry, the card machine is not working. Cash only."
+            "english": "Sorry, the card machine is not working. Cash only.",
+            "russian": "Извините, терминал не работает. Только наличные."
           },
           {
             "speaker": "user",
             "uzbek": "Naqd pulim yo'q. Bankomat qayerda?",
             "english": "I have no cash. Where is an ATM?",
+            "russian": "У меня нет наличных. Где банкомат?",
             "tokens": [
               "Naqd",
               "pulim",
@@ -250,12 +285,14 @@
           {
             "speaker": "npc",
             "uzbek": "Muzey yonida, chap tomonda.",
-            "english": "Next to the museum, on the left."
+            "english": "Next to the museum, on the left.",
+            "russian": "Рядом с музеем, слева."
           },
           {
             "speaker": "user",
             "uzbek": "Besh daqiqada kelaman!",
             "english": "I will be back in five minutes!",
+            "russian": "Вернусь через пять минут!",
             "tokens": [
               "Besh",
               "daqiqada",
@@ -265,7 +302,8 @@
           {
             "speaker": "npc",
             "uzbek": "Kutamiz!",
-            "english": "We will wait!"
+            "english": "We will wait!",
+            "russian": "Подождём!"
           }
         ]
       }
@@ -276,18 +314,22 @@
     "theme": "museum",
     "title": {
       "en": "In the Gallery",
+      "ru": "В зале",
       "uz": "Zalda"
     },
     "scenario": "Inside the museum, a friendly guide notices your interest in a beautiful old painting.",
+    "scenarioRu": "В музее приветливый гид замечает твой интерес к красивой старинной картине.",
     "variants": [
       {
         "id": "museum.in-gallery.base",
         "description": "You ask about the painting",
+        "descriptionRu": "Ты спрашиваешь про картину",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu rasm juda chiroyli! Bu nima?",
             "english": "This painting is very beautiful! What is it?",
+            "russian": "Эта картина очень красивая! Что это?",
             "tokens": [
               "Bu",
               "rasm",
@@ -300,12 +342,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bu eski Samarqand. Ikki yuz yillik rasm.",
-            "english": "It is old Samarkand. A two-hundred-year-old painting."
+            "english": "It is old Samarkand. A two-hundred-year-old painting.",
+            "russian": "Это старый Самарканд. Картине двести лет."
           },
           {
             "speaker": "user",
             "uzbek": "Rassom kim?",
             "english": "Who is the artist?",
+            "russian": "Кто художник?",
             "tokens": [
               "Rassom",
               "kim?"
@@ -314,12 +358,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mashhur usta. Mana bu zal ham uniki.",
-            "english": "A famous master. This hall is also his."
+            "english": "A famous master. This hall is also his.",
+            "russian": "Знаменитый мастер. Этот зал тоже его."
           },
           {
             "speaker": "user",
             "uzbek": "Juda qiziq. Rahmat!",
             "english": "Very interesting. Thank you!",
+            "russian": "Очень интересно. Спасибо!",
             "tokens": [
               "Juda",
               "qiziq.",
@@ -331,16 +377,19 @@
       {
         "id": "museum.in-gallery.silk",
         "description": "The silk room is the highlight",
+        "descriptionRu": "Зал шёлка — самое интересное",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Ipak zalini ko'rdingizmi?",
-            "english": "Have you seen the silk hall?"
+            "english": "Have you seen the silk hall?",
+            "russian": "Вы видели зал шёлка?"
           },
           {
             "speaker": "user",
             "uzbek": "Hali yo'q. U qayerda?",
             "english": "Not yet. Where is it?",
+            "russian": "Ещё нет. Где он?",
             "tokens": [
               "Hali",
               "yo'q.",
@@ -351,12 +400,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ikkinchi qavatda. Eng chiroyli zal!",
-            "english": "On the second floor. The most beautiful hall!"
+            "english": "On the second floor. The most beautiful hall!",
+            "russian": "На втором этаже. Самый красивый зал!"
           },
           {
             "speaker": "user",
             "uzbek": "Hozir boraman. Rahmat!",
             "english": "I will go now. Thank you!",
+            "russian": "Сейчас пойду. Спасибо!",
             "tokens": [
               "Hozir",
               "boraman.",
@@ -368,11 +419,13 @@
       {
         "id": "museum.in-gallery.ceramics",
         "description": "You ask about the blue ceramics",
+        "descriptionRu": "Ты спрашиваешь про синюю керамику",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu sopol idishlar qayerdan?",
             "english": "Where are these ceramic dishes from?",
+            "russian": "Откуда эта керамическая посуда?",
             "tokens": [
               "Bu",
               "sopol",
@@ -383,12 +436,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rishtondan. Ko'k rang mashhur.",
-            "english": "From Rishtan. The blue colour is famous."
+            "english": "From Rishtan. The blue colour is famous.",
+            "russian": "Из Риштана. Синий цвет знаменит."
           },
           {
             "speaker": "user",
             "uzbek": "Sotib olsam bo'ladimi?",
             "english": "Can I buy one somewhere?",
+            "russian": "Могу ли я где-нибудь купить?",
             "tokens": [
               "Sotib",
               "olsam",
@@ -398,12 +453,14 @@
           {
             "speaker": "npc",
             "uzbek": "Muzey do'konida bor. Birinchi qavatda.",
-            "english": "The museum shop has them. On the first floor."
+            "english": "The museum shop has them. On the first floor.",
+            "russian": "В музейном магазине есть. На первом этаже."
           },
           {
             "speaker": "user",
             "uzbek": "Ajoyib! Rahmat!",
             "english": "Wonderful! Thank you!",
+            "russian": "Замечательно! Спасибо!",
             "tokens": [
               "Ajoyib!",
               "Rahmat!"
@@ -414,16 +471,19 @@
       {
         "id": "museum.in-gallery.closing",
         "description": "The museum is closing soon",
+        "descriptionRu": "Музей скоро закрывается",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, muzey o'n daqiqada yopiladi.",
-            "english": "Excuse me, the museum closes in ten minutes."
+            "english": "Excuse me, the museum closes in ten minutes.",
+            "russian": "Извините, музей закрывается через десять минут."
           },
           {
             "speaker": "user",
             "uzbek": "Voy! Oxirgi zalni ko'rsam bo'ladimi?",
             "english": "Oh! May I see the last hall?",
+            "russian": "Ой! Можно мне посмотреть последний зал?",
             "tokens": [
               "Voy!",
               "Oxirgi",
@@ -435,12 +495,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tez bo'lsangiz, mumkin.",
-            "english": "If you are quick, yes."
+            "english": "If you are quick, yes.",
+            "russian": "Если быстро, то можно."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat! Tez ko'raman.",
             "english": "Thank you! I will look quickly.",
+            "russian": "Спасибо! Посмотрю быстро.",
             "tokens": [
               "Rahmat!",
               "Tez",
@@ -452,16 +514,19 @@
       {
         "id": "museum.in-gallery.question",
         "description": "The guide quizzes you back",
+        "descriptionRu": "Гид сам задаёт тебе вопросы",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Siz qayerdan keldingiz?",
-            "english": "Where have you come from?"
+            "english": "Where have you come from?",
+            "russian": "Откуда вы приехали?"
           },
           {
             "speaker": "user",
             "uzbek": "Men Angliyadan keldim.",
             "english": "I came from England.",
+            "russian": "Я приехал из Англии.",
             "tokens": [
               "Men",
               "Angliyadan",
@@ -471,12 +536,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bizning tariximiz yoqdimi?",
-            "english": "Do you like our history?"
+            "english": "Do you like our history?",
+            "russian": "Вам нравится наша история?"
           },
           {
             "speaker": "user",
             "uzbek": "Juda yoqdi. Tarix boy va qiziq.",
             "english": "Very much. The history is rich and interesting.",
+            "russian": "Очень нравится. История богатая и интересная.",
             "tokens": [
               "Juda",
               "yoqdi.",
@@ -489,7 +556,8 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Yana keling!",
-            "english": "Thank you! Come again!"
+            "english": "Thank you! Come again!",
+            "russian": "Спасибо! Приходите ещё!"
           }
         ]
       }

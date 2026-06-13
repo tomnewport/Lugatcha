@@ -4,32 +4,39 @@
     "theme": "bank",
     "title": {
       "en": "My First Som",
+      "ru": "Мой первый сум",
       "uz": "Birinchi so'mim"
     },
     "sentences": [
       {
         "uzbek": "Men bankka pul almashtirishga bordim.",
-        "english": "I went to the bank to change money."
+        "english": "I went to the bank to change money.",
+        "russian": "Я пошёл в банк, чтобы поменять деньги."
       },
       {
         "uzbek": "Men yuz dollar berdim.",
-        "english": "I gave one hundred dollars."
+        "english": "I gave one hundred dollars.",
+        "russian": "Я дал сто долларов."
       },
       {
         "uzbek": "Ayol menga ko'p so'm berdi.",
-        "english": "The woman gave me a lot of som."
+        "english": "The woman gave me a lot of som.",
+        "russian": "Женщина дала мне много сумов."
       },
       {
         "uzbek": "Pul katta dasta edi!",
-        "english": "The money was a big bundle!"
+        "english": "The money was a big bundle!",
+        "russian": "Деньги были большой пачкой!"
       },
       {
         "uzbek": "Men pulni sanadim va xursand bo'ldim.",
-        "english": "I counted the money and was happy."
+        "english": "I counted the money and was happy.",
+        "russian": "Я пересчитал деньги и обрадовался."
       },
       {
         "uzbek": "Endi men osh va sovg'a sotib olaman.",
-        "english": "Now I will buy plov and gifts."
+        "english": "Now I will buy plov and gifts.",
+        "russian": "Теперь я куплю плов и подарки."
       }
     ],
     "glossary": {
@@ -59,6 +66,34 @@
       "sotib": "buying",
       "olaman": "I will buy / take",
       "berdi": "gave"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "bankka": "в банк",
+      "pul": "деньги",
+      "almashtirishga": "чтобы обменять",
+      "bordim": "я пошёл",
+      "yuz": "сто",
+      "dollar": "долларов",
+      "berdim": "я дал",
+      "Ayol": "женщина",
+      "menga": "мне",
+      "ko'p": "много",
+      "so'm": "сум",
+      "katta": "большой",
+      "dasta": "пачка",
+      "edi": "был",
+      "pulni": "деньги (дополнение)",
+      "sanadim": "я пересчитал",
+      "va": "и",
+      "xursand": "радостный",
+      "bo'ldim": "я стал",
+      "Endi": "теперь",
+      "osh": "плов",
+      "sovg'a": "подарок(и)",
+      "sotib": "покупая",
+      "olaman": "я куплю / возьму",
+      "berdi": "дала"
     }
   },
   {
@@ -66,32 +101,39 @@
     "theme": "bank",
     "title": {
       "en": "Learning the Numbers",
+      "ru": "Учим числа",
       "uz": "Raqamlarni o'rganish"
     },
     "sentences": [
       {
         "uzbek": "O'zbek puli katta raqamlar bilan.",
-        "english": "Uzbek money comes in big numbers."
+        "english": "Uzbek money comes in big numbers.",
+        "russian": "Узбекские деньги исчисляются большими числами."
       },
       {
         "uzbek": "Bir choy ming so'm turadi.",
-        "english": "One tea costs a thousand som."
+        "english": "One tea costs a thousand som.",
+        "russian": "Один чай стоит тысячу сумов."
       },
       {
         "uzbek": "Bir osh o'ttiz ming so'm.",
-        "english": "One plov is thirty thousand som."
+        "english": "One plov is thirty thousand som.",
+        "russian": "Один плов — тридцать тысяч сумов."
       },
       {
         "uzbek": "Avval men adashdim.",
-        "english": "At first I got confused."
+        "english": "At first I got confused.",
+        "russian": "Сначала я запутался."
       },
       {
         "uzbek": "Lekin sekin-sekin o'rgandim.",
-        "english": "But slowly I learned."
+        "english": "But slowly I learned.",
+        "russian": "Но постепенно я научился."
       },
       {
         "uzbek": "Endi men tez sanayman!",
-        "english": "Now I count quickly!"
+        "english": "Now I count quickly!",
+        "russian": "Теперь я считаю быстро!"
       }
     ],
     "glossary": {
@@ -116,6 +158,29 @@
       "Endi": "now",
       "tez": "quickly / fast",
       "sanayman": "I count"
+    },
+    "glossaryRu": {
+      "O'zbek": "узбекский",
+      "puli": "деньги (чьи-то)",
+      "katta": "большой",
+      "raqamlar": "числа",
+      "bilan": "с",
+      "Bir": "один",
+      "choy": "чай",
+      "ming": "тысяча",
+      "so'm": "сум",
+      "turadi": "стоит / стоит на месте",
+      "osh": "плов",
+      "o'ttiz": "тридцать",
+      "Avval": "сначала",
+      "men": "я",
+      "adashdim": "я запутался / заблудился",
+      "Lekin": "но",
+      "sekin-sekin": "медленно, понемногу",
+      "o'rgandim": "я научился",
+      "Endi": "теперь",
+      "tez": "быстро",
+      "sanayman": "я считаю"
     }
   }
 ]

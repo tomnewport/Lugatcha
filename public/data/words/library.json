@@ -3,6 +3,7 @@
     "id": "library.book",
     "uzbek": "kitob",
     "english": "book",
+    "russian": "книга",
     "theme": "library",
     "level": 1
   },
@@ -10,14 +11,17 @@
     "id": "library.library",
     "uzbek": "kutubxona",
     "english": "library",
+    "russian": "библиотека",
     "theme": "library",
     "level": 1,
-    "usageNotes": "kitob + xona idea: the place for books."
+    "usageNotes": "kitob + xona idea: the place for books.",
+    "usageNotesRu": "Идея kitob + xona: место для книг."
   },
   {
     "id": "library.read",
     "uzbek": "o'qish",
     "english": "reading",
+    "russian": "чтение",
     "theme": "library",
     "level": 1
   },
@@ -25,6 +29,7 @@
     "id": "library.quiet",
     "uzbek": "jim",
     "english": "quiet",
+    "russian": "тихо",
     "theme": "library",
     "level": 1
   },
@@ -32,6 +37,7 @@
     "id": "library.word",
     "uzbek": "so'z",
     "english": "word",
+    "russian": "слово",
     "theme": "library",
     "level": 1
   },
@@ -39,6 +45,7 @@
     "id": "library.newspaper",
     "uzbek": "gazeta",
     "english": "newspaper",
+    "russian": "газета",
     "theme": "library",
     "level": 2
   },
@@ -46,6 +53,7 @@
     "id": "library.language",
     "uzbek": "til",
     "english": "language",
+    "russian": "язык",
     "theme": "library",
     "level": 2
   },
@@ -53,6 +61,7 @@
     "id": "library.write",
     "uzbek": "yozish",
     "english": "writing",
+    "russian": "письмо (процесс)",
     "theme": "library",
     "level": 2
   },
@@ -60,6 +69,7 @@
     "id": "library.page",
     "uzbek": "sahifa",
     "english": "page",
+    "russian": "страница",
     "theme": "library",
     "level": 2
   },
@@ -67,6 +77,7 @@
     "id": "library.help",
     "uzbek": "yordam",
     "english": "help",
+    "russian": "помощь",
     "theme": "library",
     "level": 2
   },
@@ -74,6 +85,7 @@
     "id": "library.name",
     "uzbek": "ism",
     "english": "name",
+    "russian": "имя",
     "theme": "library",
     "level": 2
   },
@@ -81,6 +93,7 @@
     "id": "library.story",
     "uzbek": "hikoya",
     "english": "story",
+    "russian": "рассказ",
     "theme": "library",
     "level": 3
   }

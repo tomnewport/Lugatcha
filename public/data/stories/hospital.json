@@ -4,32 +4,39 @@
     "theme": "hospital",
     "title": {
       "en": "Tea and Rest",
+      "ru": "Чай и отдых",
       "uz": "Choy va dam"
     },
     "sentences": [
       {
         "uzbek": "Kecha men shamolladim.",
-        "english": "Yesterday I caught a cold."
+        "english": "Yesterday I caught a cold.",
+        "russian": "Вчера я простудился."
       },
       {
         "uzbek": "Boshim og'ridi va isitmam bor edi.",
-        "english": "My head ached and I had a fever."
+        "english": "My head ached and I had a fever.",
+        "russian": "У меня болела голова и была температура."
       },
       {
         "uzbek": "Mehmonxona menga issiq choy berdi.",
-        "english": "The hotel gave me hot tea."
+        "english": "The hotel gave me hot tea.",
+        "russian": "В гостинице мне дали горячий чай."
       },
       {
         "uzbek": "Men dorixonadan dori oldim.",
-        "english": "I got medicine from the pharmacy."
+        "english": "I got medicine from the pharmacy.",
+        "russian": "Я купил лекарство в аптеке."
       },
       {
         "uzbek": "Bir kun dam oldim.",
-        "english": "I rested for one day."
+        "english": "I rested for one day.",
+        "russian": "Один день я отдыхал."
       },
       {
         "uzbek": "Bugun o'zimni yaxshi his qilyapman!",
-        "english": "Today I feel good!"
+        "english": "Today I feel good!",
+        "russian": "Сегодня я чувствую себя хорошо!"
       }
     ],
     "glossary": {
@@ -56,6 +63,31 @@
       "va": "and",
       "Bir": "one",
       "Mehmonxona": "the hotel"
+    },
+    "glossaryRu": {
+      "Kecha": "вчера",
+      "men": "я",
+      "shamolladim": "я простудился",
+      "Boshim": "моя голова",
+      "og'ridi": "болела",
+      "isitmam": "моя температура",
+      "bor": "была",
+      "edi": "было",
+      "menga": "мне",
+      "issiq": "горячий",
+      "berdi": "дал(и)",
+      "dorixonadan": "из аптеки",
+      "oldim": "я взял / купил",
+      "kun": "день",
+      "dam": "отдых",
+      "Bugun": "сегодня",
+      "o'zimni": "себя",
+      "his": "чувство (his qilmoq = чувствовать)",
+      "qilyapman": "я делаю",
+      "yaxshi": "хорошо",
+      "va": "и",
+      "Bir": "один",
+      "Mehmonxona": "гостиница"
     }
   },
   {
@@ -63,32 +95,39 @@
     "theme": "hospital",
     "title": {
       "en": "The Kind Doctor",
+      "ru": "Добрый врач",
       "uz": "Mehribon shifokor"
     },
     "sentences": [
       {
         "uzbek": "Do'stim kasal bo'ldi.",
-        "english": "My friend became ill."
+        "english": "My friend became ill.",
+        "russian": "Мой друг заболел."
       },
       {
         "uzbek": "Biz kasalxonaga bordik.",
-        "english": "We went to the hospital."
+        "english": "We went to the hospital.",
+        "russian": "Мы пошли в больницу."
       },
       {
         "uzbek": "Navbat uzun emas edi.",
-        "english": "The queue was not long."
+        "english": "The queue was not long.",
+        "russian": "Очередь была недлинной."
       },
       {
         "uzbek": "Shifokor juda mehribon edi.",
-        "english": "The doctor was very kind."
+        "english": "The doctor was very kind.",
+        "russian": "Врач был очень добрым."
       },
       {
         "uzbek": "U dori yozdi va kuldi.",
-        "english": "She prescribed medicine and smiled."
+        "english": "She prescribed medicine and smiled.",
+        "russian": "Она выписала лекарство и улыбнулась."
       },
       {
         "uzbek": "Ertasi kuni do'stim sog' edi!",
-        "english": "The next day my friend was well!"
+        "english": "The next day my friend was well!",
+        "russian": "На следующий день мой друг был здоров!"
       }
     ],
     "glossary": {
@@ -111,6 +150,27 @@
       "kuni": "day",
       "sog'": "healthy / well",
       "va": "and"
+    },
+    "glossaryRu": {
+      "Do'stim": "мой друг",
+      "kasal": "больной",
+      "bo'ldi": "стал / заболел",
+      "Biz": "мы",
+      "kasalxonaga": "в больницу",
+      "bordik": "мы пошли",
+      "Navbat": "очередь",
+      "uzun": "длинный",
+      "emas": "не",
+      "edi": "был",
+      "juda": "очень",
+      "mehribon": "добрый",
+      "U": "она / он",
+      "yozdi": "написал / выписал",
+      "kuldi": "улыбнулся / засмеялся",
+      "Ertasi": "следующий",
+      "kuni": "день",
+      "sog'": "здоровый",
+      "va": "и"
     }
   }
 ]

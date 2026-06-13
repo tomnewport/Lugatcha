@@ -6,6 +6,7 @@ import { useLiveQuery, db } from '@/db/useDb'
 import type { TravelPlace, ExerciseType } from '@/db/types'
 import { loadLocationStats, selectAutoExercise, type LocationStats } from '@/exercises/potluck'
 import { useProgressStore } from '@/stores/progress'
+import { useContentLang } from '@/i18n/content'
 import { playChime } from '@/audio/audio'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
@@ -19,8 +20,12 @@ import TestExercise from '@/components/exercise/TestExercise.vue'
 const route = useRoute()
 const router = useRouter()
 const progressStore = useProgressStore()
+const { name, pickArray } = useContentLang()
 
 const place = ref<TravelPlace | null>(null)
+const localizedArticle = computed(() =>
+  place.value ? pickArray(place.value.article, place.value.articleRu) : [],
+)
 const phase = ref<'article' | 'exercise'>('article')
 const activeExercise = ref<ExerciseType | null>(null)
 const sessionKey = ref(0)
@@ -83,7 +88,7 @@ async function onComplete() {
   <ExerciseLayout
     v-if="place && phase === 'exercise' && activeExercise"
     :exercise="activeExercise"
-    :location-name="place.name.en"
+    :location-name="name(place.name)"
     @exit="router.push('/travel')"
   >
     <component
@@ -96,26 +101,26 @@ async function onComplete() {
 
   <!-- The article -->
   <main v-else-if="place" class="place">
-    <button class="back-btn" aria-label="Back to map" type="button" @click="router.push('/travel')">
+    <button class="back-btn" :aria-label="$t('travel.backToMap')" type="button" @click="router.push('/travel')">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      Map
+      {{ $t('travel.map') }}
     </button>
 
     <article class="place-article">
-      <h1 class="place-article__name">{{ place.name.en }}</h1>
+      <h1 class="place-article__name">{{ name(place.name) }}</h1>
       <p class="place-article__name-uz" lang="uz">{{ place.name.uz }}</p>
-      <p v-for="(para, i) in place.article" :key="i" class="place-article__para">{{ para }}</p>
+      <p v-for="(para, i) in localizedArticle" :key="i" class="place-article__para">{{ para }}</p>
     </article>
 
     <div class="place-footer">
-      <button class="btn btn--primary" type="button" @click="startExercise">Start the exercise</button>
+      <button class="btn btn--primary" type="button" @click="startExercise">{{ $t('travel.startExercise') }}</button>
     </div>
   </main>
 
   <main v-else class="place">
-    <p class="place-loading" aria-live="polite">Loading…</p>
+    <p class="place-loading" aria-live="polite">{{ $t('common.loading') }}</p>
   </main>
 </template>
 

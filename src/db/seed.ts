@@ -66,7 +66,8 @@ async function fetchTravelWords(): Promise<Word[]> {
 
 // Bump when shipped data files change: bulkPut overwrites by id, so
 // re-seeding refreshes content without touching progress tables.
-export const CONTENT_VERSION = 5
+// v6: added Russian translations (russian/ru fields) across all content.
+export const CONTENT_VERSION = 6
 const CONTENT_VERSION_KEY = 'lugatcha.contentVersion'
 
 function storedContentVersion(): string | null {

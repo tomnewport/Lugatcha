@@ -4,23 +4,27 @@
     "theme": "bank",
     "title": {
       "en": "Changing Money",
-      "uz": "Pul almashtirish"
+      "ru": "Обмен денег"
     },
     "scenario": "You need to change some dollars into som. You go to the bank counter.",
+    "scenarioRu": "Вам нужно обменять доллары на сумы. Вы подходите к банковской стойке.",
     "variants": [
       {
         "id": "bank.exchange-money.base",
         "description": "A simple exchange",
+        "descriptionRu": "Простой обмен",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Sizga qanday yordam beray?",
-            "english": "Hello! How can I help you?"
+            "english": "Hello! How can I help you?",
+            "russian": "Здравствуйте! Чем могу вам помочь?"
           },
           {
             "speaker": "user",
             "uzbek": "Men dollar almashtirmoqchiman.",
             "english": "I want to change dollars.",
+            "russian": "Я хочу обменять доллары.",
             "tokens": [
               "Men",
               "dollar",
@@ -30,12 +34,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qancha?",
-            "english": "How much?"
+            "english": "How much?",
+            "russian": "Сколько?"
           },
           {
             "speaker": "user",
             "uzbek": "Yuz dollar, iltimos.",
             "english": "One hundred dollars, please.",
+            "russian": "Сто долларов, пожалуйста.",
             "tokens": [
               "Yuz",
               "dollar,",
@@ -45,12 +51,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasportingizni bering.",
-            "english": "Give me your passport."
+            "english": "Give me your passport.",
+            "russian": "Дайте ваш паспорт."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim.",
             "english": "Here is my passport.",
+            "russian": "Вот мой паспорт.",
             "tokens": [
               "Mana",
               "pasportim."
@@ -59,18 +67,21 @@
           {
             "speaker": "npc",
             "uzbek": "Mana so'mingiz. Sanab oling.",
-            "english": "Here is your som. Count it."
+            "english": "Here is your som. Count it.",
+            "russian": "Вот ваши сумы. Пересчитайте."
           }
         ]
       },
       {
         "id": "bank.exchange-money.rate",
         "description": "You ask about the rate",
+        "descriptionRu": "Вы спрашиваете о курсе",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bugungi kurs qancha?",
             "english": "What is today's rate?",
+            "russian": "Какой сегодня курс?",
             "tokens": [
               "Bugungi",
               "kurs",
@@ -80,12 +91,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir dollar o'n ikki ming so'm.",
-            "english": "One dollar is twelve thousand som."
+            "english": "One dollar is twelve thousand som.",
+            "russian": "Один доллар — двенадцать тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi. Ellik dollar almashtiraman.",
             "english": "Good. I will change fifty dollars.",
+            "russian": "Хорошо. Я обменяю пятьдесят долларов.",
             "tokens": [
               "Yaxshi.",
               "Ellik",
@@ -96,12 +109,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasport bilan, iltimos.",
-            "english": "With your passport, please."
+            "english": "With your passport, please.",
+            "russian": "С паспортом, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Mana. Rahmat.",
             "english": "Here you are. Thank you.",
+            "russian": "Вот, пожалуйста. Спасибо.",
             "tokens": [
               "Mana.",
               "Rahmat."
@@ -112,11 +127,13 @@
       {
         "id": "bank.exchange-money.passport",
         "description": "You forgot your passport",
+        "descriptionRu": "Вы забыли паспорт",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Dollar almashtirmoqchiman.",
             "english": "I want to change dollars.",
+            "russian": "Я хочу обменять доллары.",
             "tokens": [
               "Dollar",
               "almashtirmoqchiman."
@@ -125,12 +142,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasportingiz kerak.",
-            "english": "You need your passport."
+            "english": "You need your passport.",
+            "russian": "Вам нужен паспорт."
           },
           {
             "speaker": "user",
             "uzbek": "Voy, pasportim mehmonxonada.",
             "english": "Oh no, my passport is at the hotel.",
+            "russian": "Ой, мой паспорт в гостинице.",
             "tokens": [
               "Voy,",
               "pasportim",
@@ -140,12 +159,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasportsiz almashtira olmaymiz.",
-            "english": "We cannot exchange without a passport."
+            "english": "We cannot exchange without a passport.",
+            "russian": "Без паспорта мы не можем обменять."
           },
           {
             "speaker": "user",
             "uzbek": "Tushunaman. Olib kelaman.",
             "english": "I understand. I will bring it.",
+            "russian": "Понимаю. Я его принесу.",
             "tokens": [
               "Tushunaman.",
               "Olib",
@@ -157,11 +178,13 @@
       {
         "id": "bank.exchange-money.atm",
         "description": "The ATM is a better option",
+        "descriptionRu": "Банкомат — вариант получше",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Men naqd pul olmoqchiman.",
             "english": "I want to withdraw cash.",
+            "russian": "Я хочу снять наличные.",
             "tokens": [
               "Men",
               "naqd",
@@ -172,12 +195,14 @@
           {
             "speaker": "npc",
             "uzbek": "Karta bilanmi? Bankomatdan oling.",
-            "english": "With a card? Use the ATM."
+            "english": "With a card? Use the ATM.",
+            "russian": "По карте? Снимите в банкомате."
           },
           {
             "speaker": "user",
             "uzbek": "Bankomat qayerda?",
             "english": "Where is the ATM?",
+            "russian": "Где банкомат?",
             "tokens": [
               "Bankomat",
               "qayerda?"
@@ -186,12 +211,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kirishda, o'ng tomonda.",
-            "english": "At the entrance, on the right."
+            "english": "At the entrance, on the right.",
+            "russian": "У входа, справа."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -201,11 +228,13 @@
       {
         "id": "bank.exchange-money.small-notes",
         "description": "You ask for small notes",
+        "descriptionRu": "Вы просите мелкие купюры",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Mayda pul bera olasizmi?",
             "english": "Can you give me small notes?",
+            "russian": "Вы можете дать мне мелкими купюрами?",
             "tokens": [
               "Mayda",
               "pul",
@@ -216,12 +245,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta. Yigirma minglik mayli?",
-            "english": "Of course. Are twenty-thousand notes okay?"
+            "english": "Of course. Are twenty-thousand notes okay?",
+            "russian": "Конечно. Купюры по двадцать тысяч подойдут?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, juda yaxshi.",
             "english": "Yes, very good.",
+            "russian": "Да, очень хорошо.",
             "tokens": [
               "Ha,",
               "juda",
@@ -231,12 +262,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana. Imzo qo'ying, iltimos.",
-            "english": "Here you are. Sign here, please."
+            "english": "Here you are. Sign here, please.",
+            "russian": "Вот, пожалуйста. Распишитесь здесь, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -246,16 +279,19 @@
       {
         "id": "bank.exchange-money.closed",
         "description": "The exchange desk is closing",
+        "descriptionRu": "Пункт обмена закрывается",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, almashtirish bo'limi yopilyapti.",
-            "english": "Sorry, the exchange desk is closing."
+            "english": "Sorry, the exchange desk is closing.",
+            "russian": "Извините, пункт обмена закрывается."
           },
           {
             "speaker": "user",
             "uzbek": "Faqat ellik dollar. Iltimos!",
             "english": "Just fifty dollars. Please!",
+            "russian": "Всего пятьдесят долларов. Пожалуйста!",
             "tokens": [
               "Faqat",
               "ellik",
@@ -266,12 +302,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mayli, tez bo'lamiz. Pasport?",
-            "english": "Okay, we will be quick. Passport?"
+            "english": "Okay, we will be quick. Passport?",
+            "russian": "Ладно, мы быстро. Паспорт?"
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim. Rahmat!",
             "english": "Here is my passport. Thank you!",
+            "russian": "Вот мой паспорт. Спасибо!",
             "tokens": [
               "Mana",
               "pasportim.",
@@ -281,7 +319,8 @@
           {
             "speaker": "npc",
             "uzbek": "Mana so'mingiz. Yaxshi kun!",
-            "english": "Here is your som. Have a good day!"
+            "english": "Here is your som. Have a good day!",
+            "russian": "Вот ваши сумы. Хорошего дня!"
           }
         ]
       }
@@ -292,18 +331,21 @@
     "theme": "bank",
     "title": {
       "en": "The ATM",
-      "uz": "Bankomat"
+      "ru": "Банкомат"
     },
     "scenario": "You try to withdraw cash from the ATM, but something is not working.",
+    "scenarioRu": "Вы пытаетесь снять наличные в банкомате, но что-то не работает.",
     "variants": [
       {
         "id": "bank.atm-help.base",
         "description": "A worker helps you",
+        "descriptionRu": "Сотрудник вам помогает",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, bankomat ishlamayapti.",
             "english": "Excuse me, the ATM is not working.",
+            "russian": "Извините, банкомат не работает.",
             "tokens": [
               "Kechirasiz,",
               "bankomat",
@@ -313,12 +355,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi karta? Chet el kartasimi?",
-            "english": "Which card? A foreign card?"
+            "english": "Which card? A foreign card?",
+            "russian": "Какая карта? Иностранная карта?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, chet el kartasi.",
             "english": "Yes, a foreign card.",
+            "russian": "Да, иностранная карта.",
             "tokens": [
               "Ha,",
               "chet",
@@ -329,12 +373,14 @@
           {
             "speaker": "npc",
             "uzbek": "Inglizcha tilni tanlang.",
-            "english": "Choose the English language."
+            "english": "Choose the English language.",
+            "russian": "Выберите английский язык."
           },
           {
             "speaker": "user",
             "uzbek": "Ha, endi ishlayapti! Rahmat!",
             "english": "Yes, now it works! Thank you!",
+            "russian": "Да, теперь работает! Спасибо!",
             "tokens": [
               "Ha,",
               "endi",
@@ -347,11 +393,13 @@
       {
         "id": "bank.atm-help.no-money",
         "description": "The ATM is out of cash",
+        "descriptionRu": "В банкомате закончились наличные",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bankomatda pul yo'q.",
             "english": "There is no money in the ATM.",
+            "russian": "В банкомате нет денег.",
             "tokens": [
               "Bankomatda",
               "pul",
@@ -361,12 +409,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, pul tugagan.",
-            "english": "Sorry, the cash has run out."
+            "english": "Sorry, the cash has run out.",
+            "russian": "Извините, наличные закончились."
           },
           {
             "speaker": "user",
             "uzbek": "Boshqa bankomat qayerda?",
             "english": "Where is another ATM?",
+            "russian": "Где другой банкомат?",
             "tokens": [
               "Boshqa",
               "bankomat",
@@ -376,12 +426,14 @@
           {
             "speaker": "npc",
             "uzbek": "Maydon yonida bor.",
-            "english": "There is one by the square."
+            "english": "There is one by the square.",
+            "russian": "Есть один возле площади."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -391,11 +443,13 @@
       {
         "id": "bank.atm-help.card-stuck",
         "description": "Your card gets stuck",
+        "descriptionRu": "Ваша карта застряла",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Yordam bering! Kartam ichida qoldi!",
             "english": "Help! My card is stuck inside!",
+            "russian": "Помогите! Моя карта застряла внутри!",
             "tokens": [
               "Yordam",
               "bering!",
@@ -407,12 +461,14 @@
           {
             "speaker": "npc",
             "uzbek": "Xavotir olmang. Men chaqiraman.",
-            "english": "Do not worry. I will call someone."
+            "english": "Do not worry. I will call someone.",
+            "russian": "Не волнуйтесь. Я кого-нибудь позову."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat. Tez kerak.",
             "english": "Thank you. I need it quickly.",
+            "russian": "Спасибо. Мне нужно срочно.",
             "tokens": [
               "Rahmat.",
               "Tez",
@@ -422,12 +478,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir daqiqa. Hozir olamiz.",
-            "english": "One minute. We will get it now."
+            "english": "One minute. We will get it now.",
+            "russian": "Минутку. Сейчас достанем."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -438,11 +496,13 @@
       {
         "id": "bank.atm-help.limit",
         "description": "There is a withdrawal limit",
+        "descriptionRu": "Есть лимит на снятие",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Men ko'p pul olmoqchiman.",
             "english": "I want to withdraw a lot of money.",
+            "russian": "Я хочу снять много денег.",
             "tokens": [
               "Men",
               "ko'p",
@@ -453,12 +513,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bankomatда limit bor. Bir milliongacha.",
-            "english": "There is a limit on the ATM. Up to one million."
+            "english": "There is a limit on the ATM. Up to one million.",
+            "russian": "На банкомате есть лимит. До одного миллиона."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, bir million olaman.",
             "english": "Fine, I will withdraw one million.",
+            "russian": "Хорошо, я сниму один миллион.",
             "tokens": [
               "Yaxshi,",
               "bir",
@@ -469,12 +531,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ichkarida ko'proq olsangiz bo'ladi.",
-            "english": "Inside you can withdraw more."
+            "english": "Inside you can withdraw more.",
+            "russian": "Внутри вы можете снять больше."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, ichkariga kiraman.",
             "english": "Thank you, I will go inside.",
+            "russian": "Спасибо, я зайду внутрь.",
             "tokens": [
               "Rahmat,",
               "ichkariga",

@@ -4,32 +4,39 @@
     "theme": "restaurant",
     "title": {
       "en": "An Evening of Plov",
+      "ru": "Вечер плова",
       "uz": "Osh kechasi"
     },
     "sentences": [
       {
         "uzbek": "Biz do'stim bilan restoraniga bordik.",
-        "english": "My friend and I went to a restaurant."
+        "english": "My friend and I went to a restaurant.",
+        "russian": "Мы с другом пошли в ресторан."
       },
       {
         "uzbek": "Ofitsiant bizga menyu olib keldi.",
-        "english": "The waiter brought us a menu."
+        "english": "The waiter brought us a menu.",
+        "russian": "Официант принёс нам меню."
       },
       {
         "uzbek": "Men osh va ko'k choy buyurtma qildim.",
-        "english": "I ordered plov and green tea."
+        "english": "I ordered plov and green tea.",
+        "russian": "Я заказал плов и зелёный чай."
       },
       {
         "uzbek": "Osh juda mazali va to'yimli edi.",
-        "english": "The plov was very delicious and filling."
+        "english": "The plov was very delicious and filling.",
+        "russian": "Плов был очень вкусным и сытным."
       },
       {
         "uzbek": "Biz non yedik va suhbatlashdik.",
-        "english": "We ate bread and talked."
+        "english": "We ate bread and talked.",
+        "russian": "Мы ели лепёшку и беседовали."
       },
       {
         "uzbek": "Oxirida men hisob so'radim.",
-        "english": "At the end I asked for the bill."
+        "english": "At the end I asked for the bill.",
+        "russian": "В конце я попросил счёт."
       }
     ],
     "glossary": {
@@ -60,6 +67,35 @@
       "Oxirida": "at the end",
       "hisob": "the bill",
       "so'radim": "I asked (for)"
+    },
+    "glossaryRu": {
+      "Biz": "мы",
+      "do'stim": "мой друг (do'st + -im)",
+      "bilan": "с",
+      "restoraniga": "в ресторан",
+      "bordik": "мы пошли",
+      "Ofitsiant": "официант",
+      "bizga": "нам",
+      "menyu": "меню",
+      "olib": "принося (olib keldi = принёс)",
+      "keldi": "пришёл",
+      "Men": "я",
+      "osh": "плов (национальное блюдо из риса)",
+      "va": "и",
+      "ko'k": "зелёный",
+      "choy": "чай",
+      "buyurtma": "заказ",
+      "qildim": "я сделал (buyurtma qildim = я заказал)",
+      "juda": "очень",
+      "mazali": "вкусный",
+      "to'yimli": "сытный",
+      "edi": "был",
+      "non": "лепёшка / хлеб",
+      "yedik": "мы ели",
+      "suhbatlashdik": "мы беседовали",
+      "Oxirida": "в конце",
+      "hisob": "счёт",
+      "so'radim": "я попросил"
     }
   },
   {
@@ -67,32 +103,39 @@
     "theme": "restaurant",
     "title": {
       "en": "The Best Plov",
+      "ru": "Лучший плов",
       "uz": "Eng mazali osh"
     },
     "sentences": [
       {
         "uzbek": "Men eng mazali oshni izladim.",
-        "english": "I searched for the most delicious plov."
+        "english": "I searched for the most delicious plov.",
+        "russian": "Я искал самый вкусный плов."
       },
       {
         "uzbek": "Bir kichik restoranga kirdim.",
-        "english": "I went into a small restaurant."
+        "english": "I went into a small restaurant.",
+        "russian": "Я зашёл в маленький ресторан."
       },
       {
         "uzbek": "Ofitsiant menga katta porsiya keltirdi.",
-        "english": "The waiter brought me a big portion."
+        "english": "The waiter brought me a big portion.",
+        "russian": "Официант принёс мне большую порцию."
       },
       {
         "uzbek": "Osh issiq va juda mazali edi.",
-        "english": "The plov was hot and very delicious."
+        "english": "The plov was hot and very delicious.",
+        "russian": "Плов был горячим и очень вкусным."
       },
       {
         "uzbek": "Men non bilan yedim va choy ichdim.",
-        "english": "I ate it with bread and drank tea."
+        "english": "I ate it with bread and drank tea.",
+        "russian": "Я ел его с лепёшкой и пил чай."
       },
       {
         "uzbek": "Bu eng yaxshi tushlik edi!",
-        "english": "It was the best lunch!"
+        "english": "It was the best lunch!",
+        "russian": "Это был лучший обед!"
       }
     ],
     "glossary": {
@@ -116,6 +159,28 @@
       "juda": "very",
       "katta": "big",
       "kichik": "small"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "eng": "самый",
+      "oshni": "плов (объект)",
+      "izladim": "я искал",
+      "Bir": "один / некий",
+      "restoranga": "в ресторан",
+      "kirdim": "я вошёл",
+      "menga": "мне",
+      "keltirdi": "принёс",
+      "issiq": "горячий",
+      "edi": "был",
+      "bilan": "с",
+      "yedim": "я ел",
+      "ichdim": "я пил",
+      "Bu": "это",
+      "tushlik": "обед",
+      "va": "и",
+      "juda": "очень",
+      "katta": "большой",
+      "kichik": "маленький"
     }
   }
 ]

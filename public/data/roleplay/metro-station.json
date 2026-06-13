@@ -4,18 +4,22 @@
     "theme": "metro-station",
     "title": {
       "en": "Which Line to the Centre?",
+      "ru": "По какой линии до центра?",
       "uz": "Markazga qaysi yo'nalish?"
     },
     "scenario": "You are in the Tashkent metro and want to reach the city centre, but the lines are confusing.",
+    "scenarioRu": "Вы в ташкентском метро и хотите добраться до центра города, но линии вас запутали.",
     "variants": [
       {
         "id": "metro-station.which-way.base",
         "description": "Two stops, no change",
+        "descriptionRu": "Две остановки, без пересадки",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, markazga qanday boraman?",
             "english": "Excuse me, how do I get to the centre?",
+            "russian": "Извините, как мне доехать до центра?",
             "tokens": [
               "Kechirasiz,",
               "markazga",
@@ -26,12 +30,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bu yo'nalishda boring. Ikki bekat.",
-            "english": "Take this line. Two stops."
+            "english": "Take this line. Two stops.",
+            "russian": "Поезжайте по этой линии. Две остановки."
           },
           {
             "speaker": "user",
             "uzbek": "O'tish kerakmi?",
             "english": "Do I need to change?",
+            "russian": "Нужно делать пересадку?",
             "tokens": [
               "O'tish",
               "kerakmi?"
@@ -40,12 +46,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, to'g'ri boradi.",
-            "english": "No, it goes direct."
+            "english": "No, it goes direct.",
+            "russian": "Нет, идёт напрямую."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -55,11 +63,13 @@
       {
         "id": "metro-station.which-way.transfer",
         "description": "You must change lines once",
+        "descriptionRu": "Нужно сделать одну пересадку",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Markazga qanday boraman?",
             "english": "How do I get to the centre?",
+            "russian": "Как мне доехать до центра?",
             "tokens": [
               "Markazga",
               "qanday",
@@ -69,12 +79,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir marta o'tish kerak. Keyingi bekatda.",
-            "english": "You need to change once. At the next stop."
+            "english": "You need to change once. At the next stop.",
+            "russian": "Нужна одна пересадка. На следующей остановке."
           },
           {
             "speaker": "user",
             "uzbek": "Qaysi yo'nalishga o'taman?",
             "english": "Which line do I change to?",
+            "russian": "На какую линию пересесть?",
             "tokens": [
               "Qaysi",
               "yo'nalishga",
@@ -84,12 +96,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ko'k yo'nalishga.",
-            "english": "To the blue line."
+            "english": "To the blue line.",
+            "russian": "На синюю линию."
           },
           {
             "speaker": "user",
             "uzbek": "Tushundim, rahmat!",
             "english": "I understand, thank you!",
+            "russian": "Понятно, спасибо!",
             "tokens": [
               "Tushundim,",
               "rahmat!"
@@ -100,11 +114,13 @@
       {
         "id": "metro-station.which-way.card",
         "description": "You need a travel card first",
+        "descriptionRu": "Сначала нужна проездная карта",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Markazga chipta qayerdan olaman?",
             "english": "Where do I buy a ticket to the centre?",
+            "russian": "Где купить билет до центра?",
             "tokens": [
               "Markazga",
               "chipta",
@@ -115,12 +131,14 @@
           {
             "speaker": "npc",
             "uzbek": "Karta kerak. Anavi oynadan oling.",
-            "english": "You need a card. Buy it from that window."
+            "english": "You need a card. Buy it from that window.",
+            "russian": "Нужна карта. Купите вон в том окошке."
           },
           {
             "speaker": "user",
             "uzbek": "Qancha turadi?",
             "english": "How much does it cost?",
+            "russian": "Сколько это стоит?",
             "tokens": [
               "Qancha",
               "turadi?"
@@ -129,12 +147,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir safar ikki ming so'm.",
-            "english": "One trip is two thousand som."
+            "english": "One trip is two thousand som.",
+            "russian": "Одна поездка — две тысячи сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -144,11 +164,13 @@
       {
         "id": "metro-station.which-way.wrong-way",
         "description": "You are about to go the wrong way",
+        "descriptionRu": "Вы чуть не поехали не в ту сторону",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu poyezd markazga boradimi?",
             "english": "Does this train go to the centre?",
+            "russian": "Этот поезд идёт в центр?",
             "tokens": [
               "Bu",
               "poyezd",
@@ -159,12 +181,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, bu teskari tomonga ketadi!",
-            "english": "No, this goes the opposite way!"
+            "english": "No, this goes the opposite way!",
+            "russian": "Нет, этот идёт в обратную сторону!"
           },
           {
             "speaker": "user",
             "uzbek": "Voy! Markaz qaysi tomonda?",
             "english": "Oh! Which way is the centre?",
+            "russian": "Ой! В какой стороне центр?",
             "tokens": [
               "Voy!",
               "Markaz",
@@ -175,12 +199,14 @@
           {
             "speaker": "npc",
             "uzbek": "Narigi tomonda. Chiqishdan o'ting.",
-            "english": "On the other side. Go through the exit."
+            "english": "On the other side. Go through the exit.",
+            "russian": "На другой стороне. Пройдите через выход."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -191,11 +217,13 @@
       {
         "id": "metro-station.which-way.count",
         "description": "You ask how many stops",
+        "descriptionRu": "Вы спрашиваете, сколько остановок",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Markazgacha necha bekat?",
             "english": "How many stops to the centre?",
+            "russian": "Сколько остановок до центра?",
             "tokens": [
               "Markazgacha",
               "necha",
@@ -205,12 +233,14 @@
           {
             "speaker": "npc",
             "uzbek": "To'rt bekat.",
-            "english": "Four stops."
+            "english": "Four stops.",
+            "russian": "Четыре остановки."
           },
           {
             "speaker": "user",
             "uzbek": "Qaysi bekatda tushaman?",
             "english": "At which stop do I get off?",
+            "russian": "На какой остановке мне выходить?",
             "tokens": [
               "Qaysi",
               "bekatda",
@@ -220,12 +250,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mustaqillik bekatida.",
-            "english": "At Mustaqillik station."
+            "english": "At Mustaqillik station.",
+            "russian": "На станции Мустакиллик."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, esladim!",
             "english": "Thank you, I remember!",
+            "russian": "Спасибо, запомнил!",
             "tokens": [
               "Rahmat,",
               "esladim!"
@@ -240,18 +272,22 @@
     "theme": "metro-station",
     "title": {
       "en": "The Card Will Not Work",
+      "ru": "Карта не работает",
       "uz": "Karta ishlamayapti"
     },
     "scenario": "Your travel card is not opening the gate.",
+    "scenarioRu": "Ваша проездная карта не открывает турникет.",
     "variants": [
       {
         "id": "metro-station.lost-card.base",
         "description": "Just needs topping up",
+        "descriptionRu": "Просто нужно пополнить",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, kartam ishlamayapti.",
             "english": "Excuse me, my card is not working.",
+            "russian": "Извините, моя карта не работает.",
             "tokens": [
               "Kechirasiz,",
               "kartam",
@@ -261,12 +297,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pul tugagan. Qayta to'ldiring.",
-            "english": "The money has run out. Top it up again."
+            "english": "The money has run out. Top it up again.",
+            "russian": "Деньги закончились. Пополните её снова."
           },
           {
             "speaker": "user",
             "uzbek": "Qayerda to'ldiraman?",
             "english": "Where do I top it up?",
+            "russian": "Где её пополнить?",
             "tokens": [
               "Qayerda",
               "to'ldiraman?"
@@ -275,12 +313,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kirishda, chap tomonda.",
-            "english": "At the entrance, on the left."
+            "english": "At the entrance, on the left.",
+            "russian": "У входа, слева."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -290,11 +330,13 @@
       {
         "id": "metro-station.lost-card.broken",
         "description": "The card is broken — buy a token",
+        "descriptionRu": "Карта сломана — купите жетон",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kartam ochmayapti.",
             "english": "My card will not open the gate.",
+            "russian": "Моя карта не открывает турникет.",
             "tokens": [
               "Kartam",
               "ochmayapti."
@@ -303,12 +345,14 @@
           {
             "speaker": "npc",
             "uzbek": "Karta buzilgan. Jeton oling.",
-            "english": "The card is broken. Buy a token."
+            "english": "The card is broken. Buy a token.",
+            "russian": "Карта сломана. Купите жетон."
           },
           {
             "speaker": "user",
             "uzbek": "Jeton qancha?",
             "english": "How much is a token?",
+            "russian": "Сколько стоит жетон?",
             "tokens": [
               "Jeton",
               "qancha?"
@@ -317,12 +361,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ikki ming so'm.",
-            "english": "Two thousand som."
+            "english": "Two thousand som.",
+            "russian": "Две тысячи сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul, rahmat.",
             "english": "Here is the money, thank you.",
+            "russian": "Вот деньги, спасибо.",
             "tokens": [
               "Mana",
               "pul,",
@@ -334,11 +380,13 @@
       {
         "id": "metro-station.lost-card.help",
         "description": "A worker lets you through",
+        "descriptionRu": "Сотрудник пропускает вас",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kartam ishlamayapti. Yordam bering.",
             "english": "My card is not working. Please help.",
+            "russian": "Моя карта не работает. Помогите, пожалуйста.",
             "tokens": [
               "Kartam",
               "ishlamayapti.",
@@ -349,12 +397,14 @@
           {
             "speaker": "npc",
             "uzbek": "Hechqisi yo'q. Men ochaman. O'ting.",
-            "english": "No problem. I will open it. Go through."
+            "english": "No problem. I will open it. Go through.",
+            "russian": "Не проблема. Я открою. Проходите."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -363,18 +413,21 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi yo'l!",
-            "english": "Have a good trip!"
+            "english": "Have a good trip!",
+            "russian": "Счастливого пути!"
           }
         ]
       },
       {
         "id": "metro-station.lost-card.queue",
         "description": "Long queue — use the machine",
+        "descriptionRu": "Длинная очередь — воспользуйтесь автоматом",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Karta to'ldirish qayerda?",
             "english": "Where can I top up my card?",
+            "russian": "Где можно пополнить карту?",
             "tokens": [
               "Karta",
               "to'ldirish",
@@ -384,12 +437,14 @@
           {
             "speaker": "npc",
             "uzbek": "Oynada navbat uzun. Avtomatdan to'ldiring.",
-            "english": "The window queue is long. Use the machine."
+            "english": "The window queue is long. Use the machine.",
+            "russian": "У окошка длинная очередь. Воспользуйтесь автоматом."
           },
           {
             "speaker": "user",
             "uzbek": "Avtomat qayerda?",
             "english": "Where is the machine?",
+            "russian": "Где автомат?",
             "tokens": [
               "Avtomat",
               "qayerda?"
@@ -398,12 +453,14 @@
           {
             "speaker": "npc",
             "uzbek": "O'ng tomonda, devor yonida.",
-            "english": "On the right, by the wall."
+            "english": "On the right, by the wall.",
+            "russian": "Справа, у стены."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]

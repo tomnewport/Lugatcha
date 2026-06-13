@@ -4,23 +4,28 @@
     "theme": "fergana",
     "title": {
       "en": "At the Valley Market",
+      "ru": "На рынке в долине",
       "uz": "Vodiy bozorida"
     },
     "scenario": "You shop at a Fergana Valley market, famous for fruit and crafts.",
+    "scenarioRu": "Вы делаете покупки на рынке Ферганской долины, знаменитом фруктами и ремёслами.",
     "variants": [
       {
         "id": "fergana.valley-market.base",
         "description": "Buying apricots",
+        "descriptionRu": "Покупка абрикосов",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bizda shirin oʻrik bor.",
-            "english": "We have sweet apricots."
+            "english": "We have sweet apricots.",
+            "russian": "У нас есть сладкие абрикосы."
           },
           {
             "speaker": "user",
             "uzbek": "Bir kilo oʻrik, iltimos.",
             "english": "One kilo of apricots, please.",
+            "russian": "Килограмм абрикосов, пожалуйста.",
             "tokens": [
               "Bir",
               "kilo",
@@ -31,12 +36,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, juda mazali.",
-            "english": "Here, very tasty."
+            "english": "Here, very tasty.",
+            "russian": "Вот, очень вкусные."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -46,11 +53,13 @@
       {
         "id": "fergana.valley-market.silk",
         "description": "Asking about atlas silk",
+        "descriptionRu": "Расспросы про шёлк атлас",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu atlas qayerda toʻqilgan?",
             "english": "Where was this atlas silk woven?",
+            "russian": "Где соткан этот атлас?",
             "tokens": [
               "Bu",
               "atlas",
@@ -61,12 +70,14 @@
           {
             "speaker": "npc",
             "uzbek": "Margʻilonda.",
-            "english": "In Margilan."
+            "english": "In Margilan.",
+            "russian": "В Маргилане."
           },
           {
             "speaker": "user",
             "uzbek": "Ranglari chiroyli.",
             "english": "The colours are beautiful.",
+            "russian": "Цвета красивые.",
             "tokens": [
               "Ranglari",
               "chiroyli."
@@ -77,11 +88,13 @@
       {
         "id": "fergana.valley-market.knife",
         "description": "A Chust knife",
+        "descriptionRu": "Чустский нож",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Menga pichoq kerak.",
             "english": "I need a knife.",
+            "russian": "Мне нужен нож.",
             "tokens": [
               "Menga",
               "pichoq",
@@ -91,12 +104,14 @@
           {
             "speaker": "npc",
             "uzbek": "Chust pichogʻi mashhur.",
-            "english": "The Chust knife is famous."
+            "english": "The Chust knife is famous.",
+            "russian": "Чустский нож знаменит."
           },
           {
             "speaker": "user",
             "uzbek": "Bittasini olaman.",
             "english": "I will take one.",
+            "russian": "Я возьму один.",
             "tokens": [
               "Bittasini",
               "olaman."
@@ -107,11 +122,13 @@
       {
         "id": "fergana.valley-market.harvest",
         "description": "Talking about the harvest",
+        "descriptionRu": "Разговор об урожае",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Hosil yaxshimi?",
             "english": "Is the harvest good?",
+            "russian": "Урожай хороший?",
             "tokens": [
               "Hosil",
               "yaxshimi?"
@@ -120,12 +137,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, bu yil moʻl.",
-            "english": "Yes, this year it is plentiful."
+            "english": "Yes, this year it is plentiful.",
+            "russian": "Да, в этом году обильный."
           },
           {
             "speaker": "user",
             "uzbek": "Bu juda yaxshi.",
             "english": "That is very good.",
+            "russian": "Это очень хорошо.",
             "tokens": [
               "Bu",
               "juda",

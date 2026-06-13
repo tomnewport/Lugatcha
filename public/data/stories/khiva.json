@@ -2,13 +2,13 @@
   {
     "id": "khiva.inner-fortress",
     "theme": "khiva",
-    "title": { "en": "Behind the Walls", "uz": "Devorlar ortida" },
+    "title": { "en": "Behind the Walls", "ru": "За стенами", "uz": "Devorlar ortida" },
     "sentences": [
-      { "uzbek": "Xiva kichik va goʻzal shahar.", "english": "Khiva is a small and beautiful city." },
-      { "uzbek": "Baland devorlar shaharni oʻraydi.", "english": "Tall walls surround the city." },
-      { "uzbek": "Biz katta darvozadan kiramiz.", "english": "We enter through the big gate." },
-      { "uzbek": "Ichkarida yogʻoch ustunlar bor.", "english": "Inside there are wooden columns." },
-      { "uzbek": "Tashqarida issiq choʻl yotadi.", "english": "Outside lies the hot desert." }
+      { "uzbek": "Xiva kichik va goʻzal shahar.", "english": "Khiva is a small and beautiful city.", "russian": "Хива — маленький и красивый город." },
+      { "uzbek": "Baland devorlar shaharni oʻraydi.", "english": "Tall walls surround the city.", "russian": "Высокие стены окружают город." },
+      { "uzbek": "Biz katta darvozadan kiramiz.", "english": "We enter through the big gate.", "russian": "Мы входим через большие ворота." },
+      { "uzbek": "Ichkarida yogʻoch ustunlar bor.", "english": "Inside there are wooden columns.", "russian": "Внутри есть деревянные колонны." },
+      { "uzbek": "Tashqarida issiq choʻl yotadi.", "english": "Outside lies the hot desert.", "russian": "Снаружи раскинулась жаркая пустыня." }
     ],
     "glossary": {
       "Xiva": "Khiva",
@@ -32,19 +32,42 @@
       "issiq": "hot",
       "choʻl": "desert",
       "yotadi": "lies"
+    },
+    "glossaryRu": {
+      "Xiva": "Хива",
+      "kichik": "маленький",
+      "va": "и",
+      "goʻzal": "красивый",
+      "shahar": "город",
+      "Baland": "высокий",
+      "devorlar": "стены",
+      "shaharni": "город (винительный)",
+      "oʻraydi": "окружает",
+      "Biz": "мы",
+      "katta": "большой",
+      "darvozadan": "через ворота",
+      "kiramiz": "мы входим",
+      "Ichkarida": "внутри",
+      "yogʻoch": "дерево / деревянный",
+      "ustunlar": "колонны",
+      "bor": "есть / имеется",
+      "Tashqarida": "снаружи",
+      "issiq": "жаркий",
+      "choʻl": "пустыня",
+      "yotadi": "лежит / раскинулась"
     }
   },
   {
     "id": "khiva.on-foot-and-by-taxi",
     "theme": "khiva",
-    "title": { "en": "On Foot and by Taxi", "uz": "Piyoda va taksida" },
+    "title": { "en": "On Foot and by Taxi", "ru": "Пешком и на такси", "uz": "Piyoda va taksida" },
     "sentences": [
-      { "uzbek": "Xiva kichik, koʻp joyga piyoda boramiz.", "english": "Khiva is small, we walk to many places." },
-      { "uzbek": "Ichan qalʼa ichida mashina yoʻq.", "english": "Inside the Ichan Qala there are no cars." },
-      { "uzbek": "Shahardan tashqariga marshrutka qatnaydi.", "english": "Marshrutkas run to outside the city." },
-      { "uzbek": "Men haydovchiga naqd pul toʻlayman.", "english": "I pay the driver cash." },
-      { "uzbek": "Urganchga taksi bilan boramiz.", "english": "We go to Urgench by taxi." },
-      { "uzbek": "Yoʻlni bilmasam, odamlardan soʻrayman.", "english": "If I don't know the way, I ask people." }
+      { "uzbek": "Xiva kichik, koʻp joyga piyoda boramiz.", "english": "Khiva is small, we walk to many places.", "russian": "Хива маленькая, во многие места мы ходим пешком." },
+      { "uzbek": "Ichan qalʼa ichida mashina yoʻq.", "english": "Inside the Ichan Qala there are no cars.", "russian": "Внутри Ичан-Калы нет машин." },
+      { "uzbek": "Shahardan tashqariga marshrutka qatnaydi.", "english": "Marshrutkas run to outside the city.", "russian": "За город ходят маршрутки." },
+      { "uzbek": "Men haydovchiga naqd pul toʻlayman.", "english": "I pay the driver cash.", "russian": "Я плачу водителю наличными." },
+      { "uzbek": "Urganchga taksi bilan boramiz.", "english": "We go to Urgench by taxi.", "russian": "В Ургенч мы едем на такси." },
+      { "uzbek": "Yoʻlni bilmasam, odamlardan soʻrayman.", "english": "If I don't know the way, I ask people.", "russian": "Если я не знаю дороги, я спрашиваю у людей." }
     ],
     "glossary": {
       "Xiva": "Khiva",
@@ -74,6 +97,35 @@
       "bilmasam": "if I don't know",
       "odamlardan": "from people",
       "soʻrayman": "I ask"
+    },
+    "glossaryRu": {
+      "Xiva": "Хива",
+      "kichik": "маленький",
+      "koʻp": "много",
+      "joyga": "в место",
+      "piyoda": "пешком",
+      "boramiz": "мы идём",
+      "Ichan": "Ичан (внутренний)",
+      "qalʼa": "крепость",
+      "ichida": "внутри",
+      "mashina": "машина",
+      "yoʻq": "нет",
+      "Shahardan": "из города",
+      "tashqariga": "наружу / за",
+      "marshrutka": "маршрутка",
+      "qatnaydi": "ходит / курсирует",
+      "Men": "я",
+      "haydovchiga": "водителю",
+      "naqd": "наличные",
+      "pul": "деньги",
+      "toʻlayman": "я плачу",
+      "Urganchga": "в Ургенч",
+      "taksi": "такси",
+      "bilan": "с / на",
+      "Yoʻlni": "дорогу (винительный)",
+      "bilmasam": "если я не знаю",
+      "odamlardan": "у людей",
+      "soʻrayman": "я спрашиваю"
     }
   }
 ]

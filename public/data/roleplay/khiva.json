@@ -4,23 +4,28 @@
     "theme": "khiva",
     "title": {
       "en": "At the City Gate",
+      "ru": "У городских ворот",
       "uz": "Shahar darvozasida"
     },
     "scenario": "You arrive at the walls of Khiva's old town and step inside.",
+    "scenarioRu": "Вы подходите к стенам старого города Хивы и входите внутрь.",
     "variants": [
       {
         "id": "khiva.city-gate.base",
         "description": "Entering the old town",
+        "descriptionRu": "Входим в старый город",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bu Ichan-Qalʼa darvozasi.",
-            "english": "This is the Ichan-Qala gate."
+            "english": "This is the Ichan-Qala gate.",
+            "russian": "Это ворота Ичан-Калы."
           },
           {
             "speaker": "user",
             "uzbek": "Kirish bepulmi?",
             "english": "Is entry free?",
+            "russian": "Вход бесплатный?",
             "tokens": [
               "Kirish",
               "bepulmi?"
@@ -29,12 +34,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yoʻq, chipta kerak.",
-            "english": "No, you need a ticket."
+            "english": "No, you need a ticket.",
+            "russian": "Нет, нужен билет."
           },
           {
             "speaker": "user",
             "uzbek": "Bitta chipta, iltimos.",
             "english": "One ticket, please.",
+            "russian": "Один билет, пожалуйста.",
             "tokens": [
               "Bitta",
               "chipta,",
@@ -46,11 +53,13 @@
       {
         "id": "khiva.city-gate.guide",
         "description": "Hiring a guide",
+        "descriptionRu": "Нанимаем гида",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Menga gid kerak.",
             "english": "I need a guide.",
+            "russian": "Мне нужен гид.",
             "tokens": [
               "Menga",
               "gid",
@@ -60,12 +69,14 @@
           {
             "speaker": "npc",
             "uzbek": "Men sizga yordam beraman.",
-            "english": "I will help you."
+            "english": "I will help you.",
+            "russian": "Я вам помогу."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi, rahmat.",
             "english": "Very good, thank you.",
+            "russian": "Очень хорошо, спасибо.",
             "tokens": [
               "Juda",
               "yaxshi,",
@@ -77,11 +88,13 @@
       {
         "id": "khiva.city-gate.columns",
         "description": "The wooden columns",
+        "descriptionRu": "Деревянные колонны",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu ustunlar yogʻochdanmi?",
             "english": "Are these columns made of wood?",
+            "russian": "Эти колонны из дерева?",
             "tokens": [
               "Bu",
               "ustunlar",
@@ -91,12 +104,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, juda qadimiy.",
-            "english": "Yes, very ancient."
+            "english": "Yes, very ancient.",
+            "russian": "Да, очень древние."
           },
           {
             "speaker": "user",
             "uzbek": "Hayratlanarli.",
             "english": "Astonishing.",
+            "russian": "Поразительно.",
             "tokens": [
               "Hayratlanarli."
             ]
@@ -106,11 +121,13 @@
       {
         "id": "khiva.city-gate.water",
         "description": "The heat outside",
+        "descriptionRu": "Жара на улице",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Iltimos, bir shisha suv.",
             "english": "Please, a bottle of water.",
+            "russian": "Пожалуйста, бутылку воды.",
             "tokens": [
               "Iltimos,",
               "bir",
@@ -121,12 +138,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, oling.",
-            "english": "Here, take it."
+            "english": "Here, take it.",
+            "russian": "Вот, держите."
           },
           {
             "speaker": "user",
             "uzbek": "Tashqarida juda issiq.",
             "english": "It is very hot outside.",
+            "russian": "На улице очень жарко.",
             "tokens": [
               "Tashqarida",
               "juda",
@@ -136,7 +155,8 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, choʻl yaqin.",
-            "english": "Yes, the desert is near."
+            "english": "Yes, the desert is near.",
+            "russian": "Да, пустыня рядом."
           }
         ]
       }

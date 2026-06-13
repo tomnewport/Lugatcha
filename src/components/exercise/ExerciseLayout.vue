@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { EXERCISE_LABELS } from '@/exercises/potluck'
+import { exerciseLabel } from '@/exercises/potluck'
 import type { ExerciseType } from '@/db/types'
 
 defineProps<{
@@ -13,7 +13,7 @@ const emit = defineEmits<{ exit: [] }>()
 <template>
   <div class="exercise-layout">
     <header class="exercise-header">
-      <button class="exit-btn" aria-label="Back to location" type="button" @click="emit('exit')">
+      <button class="exit-btn" :aria-label="$t('common.backToLocation')" type="button" @click="emit('exit')">
         <svg
           viewBox="0 0 16 16"
           fill="none"
@@ -27,7 +27,7 @@ const emit = defineEmits<{ exit: [] }>()
 
       <div class="exercise-header__titles">
         <span class="exercise-header__location">{{ locationName }}</span>
-        <h1 class="exercise-header__title">{{ EXERCISE_LABELS[exercise] }}</h1>
+        <h1 class="exercise-header__title">{{ exerciseLabel(exercise) }}</h1>
       </div>
     </header>
 

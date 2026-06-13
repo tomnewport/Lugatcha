@@ -11,10 +11,12 @@ import { foldTyping } from '@/exercises/test'
 import { normalizeToken } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
 import { speakUzbek, playChime } from '@/audio/audio'
+import { i18n } from '@/i18n'
 import AudioButton from '@/components/AudioButton.vue'
 
 const props = defineProps<{ words: Word[] }>()
 const emit = defineEmits<{ complete: [] }>()
+const t = i18n.global.t
 
 const progress = useProgressStore()
 
@@ -60,11 +62,12 @@ const MODE_TO_TYPE: Record<CountingMode, TestQuestionType> = {
   type: 'type',
 }
 
-const prompt: Record<CountingMode, string> = {
-  read: 'Which number is this?',
-  listen: 'Tap the number you hear',
-  write: 'How do you say this number?',
-  type: 'Type this number in Uzbek',
+/** CountingMode -> i18n key under school2.counting. */
+const PROMPT_KEY: Record<CountingMode, string> = {
+  read: 'whichNumber',
+  listen: 'tapHeard',
+  write: 'howSay',
+  type: 'typeNumber',
 }
 
 async function record(correct: boolean) {
@@ -120,8 +123,8 @@ function optionClass(value: number): string {
 
 <template>
   <div v-if="current" class="counting">
-    <p class="counting__counter">Number {{ index + 1 }} of {{ questions.length }}</p>
-    <p class="counting__prompt">{{ prompt[current.mode] }}</p>
+    <p class="counting__counter">{{ $t('school2.counting.counter', { current: index + 1, total: questions.length }) }}</p>
+    <p class="counting__prompt">{{ t('school2.counting.' + PROMPT_KEY[current.mode]) }}</p>
 
     <!-- The cue: a numeral, an Uzbek reading, or a sound -->
     <div class="counting__cue">
@@ -132,7 +135,7 @@ function optionClass(value: number): string {
         <span class="counting__uzbek" lang="uz">{{ current.uzbek }}</span>
         <AudioButton :text="current.uzbek" />
       </template>
-      <AudioButton v-else :text="current.uzbek" large label="Play the number" />
+      <AudioButton v-else :text="current.uzbek" large :label="$t('audio.playNumber')" />
     </div>
 
     <!-- Digit options (read / listen) -->
@@ -177,8 +180,8 @@ function optionClass(value: number): string {
         spellcheck="false"
         lang="uz"
         :readonly="phase === 'feedback'"
-        placeholder="e.g. yigirma besh"
-        aria-label="Type the number in Uzbek"
+        :placeholder="$t('school2.counting.typePlaceholder')"
+        :aria-label="$t('school2.counting.typeAria')"
       />
       <button
         v-if="phase === 'answering'"
@@ -186,20 +189,20 @@ function optionClass(value: number): string {
         type="submit"
         :disabled="!typed.trim()"
       >
-        Check
+        {{ $t('exercise.token.check') }}
       </button>
     </form>
 
     <div v-if="phase === 'feedback'" class="counting__feedback" aria-live="polite">
       <p :class="isCorrect ? 'counting__verdict--good' : 'counting__verdict--bad'">
-        <template v-if="isCorrect">To'g'ri! 🎉</template>
+        <template v-if="isCorrect">{{ $t('school2.counting.correct') }}</template>
         <template v-else>
           {{ current.value }} =
           <strong lang="uz">{{ numberToUzbek(current.value) }}</strong>
         </template>
       </p>
       <button class="btn btn--primary" type="button" @click="next">
-        {{ isLast ? 'Finish' : 'Next' }}
+        {{ isLast ? $t('common.finish') : $t('common.next') }}
       </button>
     </div>
   </div>

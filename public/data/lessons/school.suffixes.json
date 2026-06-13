@@ -3,21 +3,29 @@
   "order": 1,
   "title": {
     "en": "Stack the Suffixes",
-    "uz": "Qo'shimchalar"
+    "uz": "Qo'shimchalar",
+    "ru": "Складываем суффиксы"
   },
   "blurb": "How Uzbek builds big words from little bricks",
+  "blurbRu": "Как узбекский строит большие слова из маленьких кирпичиков",
   "estimatedMinutes": 3,
   "sections": [
     {
       "heading": "One word, many bricks",
+      "headingRu": "Одно слово, много кирпичиков",
       "body": [
         "English builds meaning with lots of little words: *from my houses* is three of them. Uzbek builds the **same meaning inside one word**, stacking suffixes onto a root like bricks: **uylarimdan**.",
         "Each brick adds exactly one idea, and the order never changes: **root + plural + owner + case**."
+      ],
+      "bodyRu": [
+        "Английский строит смысл из множества маленьких слов: *from my houses* — это сразу три. Узбекский же укладывает **тот же смысл в одно слово**, нанизывая суффиксы на корень, словно кирпичи: **uylarimdan**.",
+        "Каждый кирпичик добавляет ровно одну идею, и порядок никогда не меняется: **корень + множественное число + притяжание + падеж**."
       ],
       "examples": [
         {
           "uzbek": "uylarimdan",
           "english": "from my houses",
+          "russian": "из моих домов",
           "breakdown": [
             "uy",
             "lar",
@@ -29,11 +37,18 @@
             "plural",
             "my",
             "from"
+          ],
+          "glossRu": [
+            "дом",
+            "множ. число",
+            "мой",
+            "из"
           ]
         },
         {
           "uzbek": "kitoblarimda",
           "english": "in my books",
+          "russian": "в моих книгах",
           "breakdown": [
             "kitob",
             "lar",
@@ -45,11 +60,18 @@
             "plural",
             "my",
             "in"
+          ],
+          "glossRu": [
+            "книга",
+            "множ. число",
+            "мой",
+            "в"
           ]
         },
         {
           "uzbek": "do'stlarimga",
           "english": "to my friends",
+          "russian": "моим друзьям",
           "breakdown": [
             "do'st",
             "lar",
@@ -61,19 +83,30 @@
             "plural",
             "my",
             "to"
+          ],
+          "glossRu": [
+            "друг",
+            "множ. число",
+            "мой",
+            "к"
           ]
         }
       ]
     },
     {
       "heading": "Watch a word grow",
+      "headingRu": "Смотрите, как растёт слово",
       "body": [
         "Start with **ish** (work) and grow it one brick at a time. The bricks always click together the same way — Uzbek has far fewer irregular forms than English or French."
+      ],
+      "bodyRu": [
+        "Начните с **ish** (работа) и наращивайте его по одному кирпичику. Кирпичики всегда складываются одинаково — в узбекском гораздо меньше неправильных форм, чем в английском или французском."
       ],
       "examples": [
         {
           "uzbek": "ishchi",
           "english": "worker",
+          "russian": "рабочий",
           "breakdown": [
             "ish",
             "chi"
@@ -81,11 +114,16 @@
           "gloss": [
             "work",
             "one who does"
+          ],
+          "glossRu": [
+            "работа",
+            "тот, кто делает"
           ]
         },
         {
           "uzbek": "ishchilar",
           "english": "workers",
+          "russian": "рабочие",
           "breakdown": [
             "ish",
             "chi",
@@ -95,11 +133,17 @@
             "work",
             "one who does",
             "plural"
+          ],
+          "glossRu": [
+            "работа",
+            "тот, кто делает",
+            "множ. число"
           ]
         },
         {
           "uzbek": "ishchilarimiz",
           "english": "our workers",
+          "russian": "наши рабочие",
           "breakdown": [
             "ish",
             "chi",
@@ -111,20 +155,32 @@
             "one who does",
             "plural",
             "our"
+          ],
+          "glossRu": [
+            "работа",
+            "тот, кто делает",
+            "множ. число",
+            "наш"
           ]
         }
       ]
     },
     {
       "heading": "Why this is good news",
+      "headingRu": "Почему это хорошая новость",
       "body": [
         "Long words look intimidating, but they are towers of regular bricks. Once you can peel a word into its parts, **uylarimdan** stops being noise and starts being house-s-my-from.",
         "Time to stack some bricks yourself."
+      ],
+      "bodyRu": [
+        "Длинные слова выглядят пугающе, но это башни из правильных кирпичиков. Как только вы научитесь разбирать слово на части, **uylarimdan** перестаёт быть шумом и становится «дом-а-мои-из».",
+        "Пора самому сложить несколько кирпичиков."
       ],
       "examples": [
         {
           "uzbek": "mehmonxonadan",
           "english": "from the hotel",
+          "russian": "из гостиницы",
           "breakdown": [
             "mehmon",
             "xona",
@@ -134,11 +190,17 @@
             "guest",
             "room",
             "from"
+          ],
+          "glossRu": [
+            "гость",
+            "помещение",
+            "из"
           ]
         },
         {
           "uzbek": "do'stlarimizga",
           "english": "to our friends",
+          "russian": "нашим друзьям",
           "breakdown": [
             "do'st",
             "lar",
@@ -150,6 +212,12 @@
             "plural",
             "our",
             "to"
+          ],
+          "glossRu": [
+            "друг",
+            "множ. число",
+            "наш",
+            "к"
           ]
         }
       ]
@@ -160,6 +228,7 @@
       "id": "build-uylarim",
       "engine": "build",
       "instruction": "Stack the bricks to build “my houses”",
+      "instructionRu": "Сложите кирпичики, чтобы построить «мои дома»",
       "tokens": [
         "uy",
         "lar",
@@ -171,12 +240,14 @@
       ],
       "joiner": "",
       "audioText": "uylarim",
-      "translation": "uylarim — my houses"
+      "translation": "uylarim — my houses",
+      "translationRu": "uylarim — мои дома"
     },
     {
       "id": "build-uylarimdan",
       "engine": "build",
       "instruction": "Now build “from my houses”",
+      "instructionRu": "Теперь постройте «из моих домов»",
       "tokens": [
         "uy",
         "lar",
@@ -189,25 +260,33 @@
       ],
       "joiner": "",
       "audioText": "uylarimdan",
-      "translation": "uylarimdan — from my houses"
+      "translation": "uylarimdan — from my houses",
+      "translationRu": "uylarimdan — из моих домов"
     },
     {
       "id": "choice-order",
       "engine": "choice",
       "instruction": "Which order do the bricks always follow?",
+      "instructionRu": "В каком порядке всегда следуют кирпичики?",
       "options": [
         {
           "text": "root + plural + owner + case",
+          "textRu": "корень + множественное число + притяжание + падеж",
           "correct": true,
-          "explain": "uy + lar + im + dan: house-s-my-from. Always this order."
+          "explain": "uy + lar + im + dan: house-s-my-from. Always this order.",
+          "explainRu": "uy + lar + im + dan: дом-а-мои-из. Всегда этот порядок."
         },
         {
           "text": "root + case + plural + owner",
-          "explain": "The case brick always comes last."
+          "textRu": "корень + падеж + множественное число + притяжание",
+          "explain": "The case brick always comes last.",
+          "explainRu": "Падежный кирпичик всегда идёт последним."
         },
         {
           "text": "owner + root + plural + case",
-          "explain": "The root always comes first — suffixes only stack on the right."
+          "textRu": "притяжание + корень + множественное число + падеж",
+          "explain": "The root always comes first — suffixes only stack on the right.",
+          "explainRu": "Корень всегда идёт первым — суффиксы наращиваются только справа."
         }
       ]
     },
@@ -215,6 +294,7 @@
       "id": "build-ishchilar",
       "engine": "build",
       "instruction": "Build “workers”",
+      "instructionRu": "Постройте «рабочие»",
       "tokens": [
         "ish",
         "chi",
@@ -226,8 +306,10 @@
       ],
       "joiner": "",
       "audioText": "ishchilar",
-      "translation": "ishchilar — workers"
+      "translation": "ishchilar — workers",
+      "translationRu": "ishchilar — рабочие"
     }
   ],
-  "wrapUp": "Uzbek words are towers of bricks: root first, then plural, then who owns it, then the case. Spot the bricks and even uylarimdan reads itself."
+  "wrapUp": "Uzbek words are towers of bricks: root first, then plural, then who owns it, then the case. Spot the bricks and even uylarimdan reads itself.",
+  "wrapUpRu": "Узбекские слова — это башни из кирпичиков: сначала корень, затем множественное число, затем владелец, затем падеж. Разглядите кирпичики, и даже uylarimdan прочитается само собой."
 }

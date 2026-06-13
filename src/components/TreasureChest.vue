@@ -3,16 +3,19 @@ import { ref, computed } from 'vue'
 import { db, useLiveQuery } from '@/db/useDb'
 import { isWordLearned, isWordPartiallyLearned, passedTypes } from '@/exercises/test'
 import { TEST_QUESTION_TYPES } from '@/db/types'
+import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 
 interface ChestWord {
   id: string
   uzbek: string
   english: string
+  russian?: string
   passed: number
   learnedAt: number
 }
 
+const { gloss } = useContentLang()
 const open = ref(false)
 
 /** Learned and partially-learned words, joined with their text, for the chest. */
@@ -31,6 +34,7 @@ const chest = useLiveQuery<{ learned: ChestWord[]; partial: ChestWord[] }>(async
       id: word.id,
       uzbek: word.uzbek,
       english: word.english,
+      russian: word.russian,
       passed: passedTypes(p).length,
       learnedAt: p.learnedAt ?? 0,
     }
@@ -50,7 +54,7 @@ const totalTypes = TEST_QUESTION_TYPES.length
   <button
     class="chest-btn"
     type="button"
-    :aria-label="`${learnedCount} words learned — open your chest`"
+    :aria-label="$t('chest.openAria', { count: learnedCount })"
     @click="open = true"
   >
     <span class="chest-btn__icon" aria-hidden="true">🧰</span>
@@ -60,38 +64,37 @@ const totalTypes = TEST_QUESTION_TYPES.length
   <Teleport to="body">
     <Transition name="chest-fade">
       <div v-if="open" class="chest-overlay" @click.self="open = false">
-        <div class="chest-panel" role="dialog" aria-label="Learned words">
+        <div class="chest-panel" role="dialog" :aria-label="$t('chest.dialogLabel')">
           <header class="chest-panel__head">
-            <h2 class="chest-panel__title">🏆 Your chest</h2>
-            <button class="chest-panel__close" type="button" aria-label="Close" @click="open = false">
+            <h2 class="chest-panel__title">{{ $t('chest.title') }}</h2>
+            <button class="chest-panel__close" type="button" :aria-label="$t('common.close')" @click="open = false">
               ✕
             </button>
           </header>
 
           <p v-if="learnedCount === 0 && chest.partial.length === 0" class="chest-panel__empty">
-            No words learned yet. Take a Test at any location — pass all three
-            question types for a word and it lands here.
+            {{ $t('chest.empty') }}
           </p>
 
           <section v-if="chest.learned.length" class="chest-section">
-            <h3 class="chest-section__head">Learned · {{ chest.learned.length }}</h3>
+            <h3 class="chest-section__head">{{ $t('chest.learnedSection', { count: chest.learned.length }) }}</h3>
             <ul class="chest-list">
               <li v-for="w in chest.learned" :key="w.id" class="chest-item">
                 <AudioButton :text="w.uzbek" />
                 <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
-                <span class="chest-item__en">{{ w.english }}</span>
+                <span class="chest-item__en">{{ gloss(w) }}</span>
                 <span class="chest-item__badge chest-item__badge--learned" aria-hidden="true">✓</span>
               </li>
             </ul>
           </section>
 
           <section v-if="chest.partial.length" class="chest-section">
-            <h3 class="chest-section__head">In progress · {{ chest.partial.length }}</h3>
+            <h3 class="chest-section__head">{{ $t('chest.partialSection', { count: chest.partial.length }) }}</h3>
             <ul class="chest-list">
               <li v-for="w in chest.partial" :key="w.id" class="chest-item">
                 <AudioButton :text="w.uzbek" />
                 <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
-                <span class="chest-item__en">{{ w.english }}</span>
+                <span class="chest-item__en">{{ gloss(w) }}</span>
                 <span class="chest-item__badge">{{ w.passed }}/{{ totalTypes }}</span>
               </li>
             </ul>

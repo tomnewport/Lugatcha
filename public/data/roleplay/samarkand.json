@@ -4,23 +4,28 @@
     "theme": "samarkand",
     "title": {
       "en": "At the Registan",
+      "ru": "На Регистане",
       "uz": "Registonda"
     },
     "scenario": "A guide shows you around the great Registan square in Samarkand.",
+    "scenarioRu": "Гид показывает вам великую площадь Регистан в Самарканде.",
     "variants": [
       {
         "id": "samarkand.registon-guide.base",
         "description": "Admiring the square",
+        "descriptionRu": "Любуемся площадью",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz! Bu Registon maydoni.",
-            "english": "Welcome! This is the Registan square."
+            "english": "Welcome! This is the Registan square.",
+            "russian": "Добро пожаловать! Это площадь Регистан."
           },
           {
             "speaker": "user",
             "uzbek": "Juda goʻzal! Bu nima?",
             "english": "Very beautiful! What is this?",
+            "russian": "Очень красиво! А что это?",
             "tokens": [
               "Juda",
               "goʻzal!",
@@ -31,12 +36,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bu qadimiy madrasa.",
-            "english": "This is an ancient madrasah."
+            "english": "This is an ancient madrasah.",
+            "russian": "Это древнее медресе."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, ustoz.",
             "english": "Thank you, teacher.",
+            "russian": "Спасибо, учитель.",
             "tokens": [
               "Rahmat,",
               "ustoz."
@@ -47,16 +54,19 @@
       {
         "id": "samarkand.registon-guide.silk",
         "description": "Buying silk",
+        "descriptionRu": "Покупка шёлка",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bu yerda ipak sotamiz.",
-            "english": "We sell silk here."
+            "english": "We sell silk here.",
+            "russian": "Мы здесь продаём шёлк."
           },
           {
             "speaker": "user",
             "uzbek": "Ipak qancha turadi?",
             "english": "How much does the silk cost?",
+            "russian": "Сколько стоит шёлк?",
             "tokens": [
               "Ipak",
               "qancha",
@@ -66,12 +76,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ellik ming soʻm.",
-            "english": "Fifty thousand som."
+            "english": "Fifty thousand som.",
+            "russian": "Пятьдесят тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, men olaman.",
             "english": "Good, I will take it.",
+            "russian": "Хорошо, я возьму.",
             "tokens": [
               "Yaxshi,",
               "men",
@@ -83,11 +95,13 @@
       {
         "id": "samarkand.registon-guide.photo",
         "description": "Asking to take a photo",
+        "descriptionRu": "Просьба сделать фото",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Men rasmga olsam boʻladimi?",
             "english": "May I take a photo?",
+            "russian": "Можно мне сфотографировать?",
             "tokens": [
               "Men",
               "rasmga",
@@ -98,12 +112,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta, marhamat.",
-            "english": "Of course, please do."
+            "english": "Of course, please do.",
+            "russian": "Конечно, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -114,11 +130,13 @@
       {
         "id": "samarkand.registon-guide.way",
         "description": "Finding the mausoleum",
+        "descriptionRu": "Поиск мавзолея",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Maqbara qayerda?",
             "english": "Where is the mausoleum?",
+            "russian": "Где находится мавзолей?",
             "tokens": [
               "Maqbara",
               "qayerda?"
@@ -127,12 +145,14 @@
           {
             "speaker": "npc",
             "uzbek": "U yerda, chap tomonda.",
-            "english": "Over there, on the left."
+            "english": "Over there, on the left.",
+            "russian": "Вон там, слева."
           },
           {
             "speaker": "user",
             "uzbek": "Tushunarli, rahmat.",
             "english": "Understood, thank you.",
+            "russian": "Понятно, спасибо.",
             "tokens": [
               "Tushunarli,",
               "rahmat."

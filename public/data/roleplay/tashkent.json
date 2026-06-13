@@ -4,18 +4,22 @@
     "theme": "tashkent",
     "title": {
       "en": "Around the Capital",
+      "ru": "По столице",
       "uz": "Poytaxt boʻylab"
     },
     "scenario": "You find your way around busy Tashkent and its grand metro.",
+    "scenarioRu": "Вы ориентируетесь в оживлённом Ташкенте и его величественном метро.",
     "variants": [
       {
         "id": "tashkent.finding-the-metro.base",
         "description": "Asking for the metro",
+        "descriptionRu": "Спрашиваем про метро",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, metro qayerda?",
             "english": "Excuse me, where is the metro?",
+            "russian": "Извините, где находится метро?",
             "tokens": [
               "Kechirasiz,",
               "metro",
@@ -25,12 +29,14 @@
           {
             "speaker": "npc",
             "uzbek": "Toʻgʻriga yuring.",
-            "english": "Go straight ahead."
+            "english": "Go straight ahead.",
+            "russian": "Идите прямо."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -40,16 +46,19 @@
       {
         "id": "tashkent.finding-the-metro.ticket",
         "description": "Buying a ticket",
+        "descriptionRu": "Покупка билета",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Qayerga borasiz?",
-            "english": "Where are you going?"
+            "english": "Where are you going?",
+            "russian": "Куда вы едете?"
           },
           {
             "speaker": "user",
             "uzbek": "Chorsu bozoriga.",
             "english": "To the Chorsu bazaar.",
+            "russian": "На базар Чорсу.",
             "tokens": [
               "Chorsu",
               "bozoriga."
@@ -58,12 +67,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bitta chipta, ming soʻm.",
-            "english": "One ticket, one thousand som."
+            "english": "One ticket, one thousand som.",
+            "russian": "Один билет, тысяча сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul.",
             "english": "Here is the money.",
+            "russian": "Вот деньги.",
             "tokens": [
               "Mana",
               "pul."
@@ -74,11 +85,13 @@
       {
         "id": "tashkent.finding-the-metro.market",
         "description": "At the bazaar",
+        "descriptionRu": "На базаре",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu mevalar yangimi?",
             "english": "Is this fruit fresh?",
+            "russian": "Эти фрукты свежие?",
             "tokens": [
               "Bu",
               "mevalar",
@@ -88,12 +101,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, bugun keldi.",
-            "english": "Yes, it arrived today."
+            "english": "Yes, it arrived today.",
+            "russian": "Да, привезли сегодня."
           },
           {
             "speaker": "user",
             "uzbek": "Bir kilo bering.",
             "english": "Give me one kilo.",
+            "russian": "Дайте один килограмм.",
             "tokens": [
               "Bir",
               "kilo",
@@ -105,11 +120,13 @@
       {
         "id": "tashkent.finding-the-metro.lost",
         "description": "Lost in the city",
+        "descriptionRu": "Заблудились в городе",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Men adashdim.",
             "english": "I am lost.",
+            "russian": "Я заблудился.",
             "tokens": [
               "Men",
               "adashdim."
@@ -118,12 +135,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qayerni qidiryapsiz?",
-            "english": "What are you looking for?"
+            "english": "What are you looking for?",
+            "russian": "Что вы ищете?"
           },
           {
             "speaker": "user",
             "uzbek": "Mehmonxonani.",
             "english": "The hotel.",
+            "russian": "Гостиницу.",
             "tokens": [
               "Mehmonxonani."
             ]
@@ -131,7 +150,8 @@
           {
             "speaker": "npc",
             "uzbek": "U zamonaviy bino, yaqin.",
-            "english": "It is the modern building, nearby."
+            "english": "It is the modern building, nearby.",
+            "russian": "Это современное здание, рядом."
           }
         ]
       }

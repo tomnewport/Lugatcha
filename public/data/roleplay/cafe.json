@@ -4,23 +4,28 @@
     "theme": "cafe",
     "title": {
       "en": "Coffee to Go",
+      "ru": "Кофе с собой",
       "uz": "Olib ketishga kofe"
     },
     "scenario": "You want a quick coffee to take with you on a busy morning.",
+    "scenarioRu": "Вам хочется быстро взять кофе с собой в напряжённое утро.",
     "variants": [
       {
         "id": "cafe.order-coffee.base",
         "description": "A simple coffee, no fuss",
+        "descriptionRu": "Простой кофе, без лишних хлопот",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Nima beraman?",
-            "english": "Hello! What can I get you?"
+            "english": "Hello! What can I get you?",
+            "russian": "Здравствуйте! Что вам предложить?"
           },
           {
             "speaker": "user",
             "uzbek": "Bitta kofe, iltimos.",
             "english": "One coffee, please.",
+            "russian": "Один кофе, пожалуйста.",
             "tokens": [
               "Bitta",
               "kofe,",
@@ -30,12 +35,14 @@
           {
             "speaker": "npc",
             "uzbek": "Katta yoki kichik?",
-            "english": "Big or small?"
+            "english": "Big or small?",
+            "russian": "Большой или маленький?"
           },
           {
             "speaker": "user",
             "uzbek": "Katta, olib ketishga.",
             "english": "Big, to take away.",
+            "russian": "Большой, с собой.",
             "tokens": [
               "Katta,",
               "olib",
@@ -45,12 +52,14 @@
           {
             "speaker": "npc",
             "uzbek": "O'n besh ming so'm.",
-            "english": "Fifteen thousand som."
+            "english": "Fifteen thousand som.",
+            "russian": "Пятнадцать тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul. Rahmat!",
             "english": "Here is the money. Thank you!",
+            "russian": "Вот деньги. Спасибо!",
             "tokens": [
               "Mana",
               "pul.",
@@ -62,11 +71,13 @@
       {
         "id": "cafe.order-coffee.milk",
         "description": "You ask for milk",
+        "descriptionRu": "Вы просите молоко",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bitta kofe, sut bilan.",
             "english": "One coffee, with milk.",
+            "russian": "Один кофе, с молоком.",
             "tokens": [
               "Bitta",
               "kofe,",
@@ -77,12 +88,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta. Shakar kerakmi?",
-            "english": "Of course. Do you need sugar?"
+            "english": "Of course. Do you need sugar?",
+            "russian": "Конечно. Сахар нужен?"
           },
           {
             "speaker": "user",
             "uzbek": "Yo'q, rahmat. Shakarsiz.",
             "english": "No, thank you. Without sugar.",
+            "russian": "Нет, спасибо. Без сахара.",
             "tokens": [
               "Yo'q,",
               "rahmat.",
@@ -92,12 +105,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana kofengiz.",
-            "english": "Here is your coffee."
+            "english": "Here is your coffee.",
+            "russian": "Вот ваш кофе."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -107,11 +122,13 @@
       {
         "id": "cafe.order-coffee.no-coffee",
         "description": "The coffee machine is broken",
+        "descriptionRu": "Кофемашина сломана",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bitta kofe, iltimos.",
             "english": "One coffee, please.",
+            "russian": "Один кофе, пожалуйста.",
             "tokens": [
               "Bitta",
               "kofe,",
@@ -121,12 +138,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, kofe mashinasi buzuq.",
-            "english": "Sorry, the coffee machine is broken."
+            "english": "Sorry, the coffee machine is broken.",
+            "russian": "Извините, кофемашина сломалась."
           },
           {
             "speaker": "user",
             "uzbek": "Unda choy bormi?",
             "english": "Then is there tea?",
+            "russian": "Тогда чай есть?",
             "tokens": [
               "Unda",
               "choy",
@@ -136,12 +155,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, ko'k yoki qora choy.",
-            "english": "Yes, green or black tea."
+            "english": "Yes, green or black tea.",
+            "russian": "Да, зелёный или чёрный чай."
           },
           {
             "speaker": "user",
             "uzbek": "Ko'k choy, iltimos.",
             "english": "Green tea, please.",
+            "russian": "Зелёный чай, пожалуйста.",
             "tokens": [
               "Ko'k",
               "choy,",
@@ -153,11 +174,13 @@
       {
         "id": "cafe.order-coffee.cake",
         "description": "You add a slice of cake",
+        "descriptionRu": "Вы добавляете кусок торта",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kofe va bir bo'lak tort.",
             "english": "Coffee and a slice of cake.",
+            "russian": "Кофе и кусок торта.",
             "tokens": [
               "Kofe",
               "va",
@@ -169,12 +192,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi tort? Shokoladli bor.",
-            "english": "Which cake? There is a chocolate one."
+            "english": "Which cake? There is a chocolate one.",
+            "russian": "Какой торт? Есть шоколадный."
           },
           {
             "speaker": "user",
             "uzbek": "Shokoladli, iltimos.",
             "english": "Chocolate, please.",
+            "russian": "Шоколадный, пожалуйста.",
             "tokens": [
               "Shokoladli,",
               "iltimos."
@@ -183,12 +208,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi tanlov! Yigirma besh ming.",
-            "english": "Good choice! Twenty-five thousand."
+            "english": "Good choice! Twenty-five thousand.",
+            "russian": "Хороший выбор! Двадцать пять тысяч."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -198,11 +225,13 @@
       {
         "id": "cafe.order-coffee.cold",
         "description": "You want it iced",
+        "descriptionRu": "Вы хотите со льдом",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Sovuq kofe bormi?",
             "english": "Is there iced coffee?",
+            "russian": "Есть холодный кофе?",
             "tokens": [
               "Sovuq",
               "kofe",
@@ -212,12 +241,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, muzli kofe bor.",
-            "english": "Yes, there is iced coffee."
+            "english": "Yes, there is iced coffee.",
+            "russian": "Да, есть кофе со льдом."
           },
           {
             "speaker": "user",
             "uzbek": "Bitta katta, iltimos.",
             "english": "One big, please.",
+            "russian": "Один большой, пожалуйста.",
             "tokens": [
               "Bitta",
               "katta,",
@@ -227,12 +258,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, sovuq va mazali!",
-            "english": "Here, cold and delicious!"
+            "english": "Here, cold and delicious!",
+            "russian": "Вот, холодный и вкусный!"
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -242,11 +275,13 @@
       {
         "id": "cafe.order-coffee.busy",
         "description": "It is busy — they ask your name",
+        "descriptionRu": "Много народу — у вас спрашивают имя",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bitta kofe va sharbat.",
             "english": "One coffee and a juice.",
+            "russian": "Один кофе и сок.",
             "tokens": [
               "Bitta",
               "kofe",
@@ -257,12 +292,14 @@
           {
             "speaker": "npc",
             "uzbek": "Gavjum. Ismingiz nima?",
-            "english": "It is busy. What is your name?"
+            "english": "It is busy. What is your name?",
+            "russian": "Много народу. Как вас зовут?"
           },
           {
             "speaker": "user",
             "uzbek": "Mening ismim Tom.",
             "english": "My name is Tom.",
+            "russian": "Меня зовут Том.",
             "tokens": [
               "Mening",
               "ismim",
@@ -272,12 +309,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi, Tom. Bir daqiqa kuting.",
-            "english": "Fine, Tom. Wait one minute."
+            "english": "Fine, Tom. Wait one minute.",
+            "russian": "Хорошо, Том. Подождите минутку."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -291,18 +330,22 @@
     "theme": "cafe",
     "title": {
       "en": "A Quick Breakfast",
+      "ru": "Быстрый завтрак",
       "uz": "Tez nonushta"
     },
     "scenario": "You stop for something small to eat before sightseeing.",
+    "scenarioRu": "Вы заходите перекусить чем-нибудь лёгким перед прогулкой по достопримечательностям.",
     "variants": [
       {
         "id": "cafe.breakfast-stop.base",
         "description": "A sandwich and juice",
+        "descriptionRu": "Бутерброд и сок",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Buterbrod va sharbat bormi?",
             "english": "Is there a sandwich and juice?",
+            "russian": "Есть бутерброд и сок?",
             "tokens": [
               "Buterbrod",
               "va",
@@ -313,12 +356,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, pishloqli buterbrod bor.",
-            "english": "Yes, there is a cheese sandwich."
+            "english": "Yes, there is a cheese sandwich.",
+            "russian": "Да, есть бутерброд с сыром."
           },
           {
             "speaker": "user",
             "uzbek": "Bitta, iltimos. Va olma sharbati.",
             "english": "One, please. And apple juice.",
+            "russian": "Один, пожалуйста. И яблочный сок.",
             "tokens": [
               "Bitta,",
               "iltimos.",
@@ -330,12 +375,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. O'n sakkiz ming so'm.",
-            "english": "Fine. Eighteen thousand som."
+            "english": "Fine. Eighteen thousand som.",
+            "russian": "Хорошо. Восемнадцать тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul. Rahmat!",
             "english": "Here is the money. Thank you!",
+            "russian": "Вот деньги. Спасибо!",
             "tokens": [
               "Mana",
               "pul.",
@@ -347,11 +394,13 @@
       {
         "id": "cafe.breakfast-stop.sit",
         "description": "You decide to sit in",
+        "descriptionRu": "Вы решаете остаться в кафе",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu yerda o'tirsam bo'ladimi?",
             "english": "May I sit here?",
+            "russian": "Можно мне здесь сесть?",
             "tokens": [
               "Bu",
               "yerda",
@@ -362,12 +411,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta! Stol bo'sh.",
-            "english": "Of course! The table is free."
+            "english": "Of course! The table is free.",
+            "russian": "Конечно! Стол свободен."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat. Kofe va tort, iltimos.",
             "english": "Thank you. Coffee and cake, please.",
+            "russian": "Спасибо. Кофе и торт, пожалуйста.",
             "tokens": [
               "Rahmat.",
               "Kofe",
@@ -379,12 +430,14 @@
           {
             "speaker": "npc",
             "uzbek": "Hozir olib kelaman.",
-            "english": "I will bring it now."
+            "english": "I will bring it now.",
+            "russian": "Сейчас принесу."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -394,11 +447,13 @@
       {
         "id": "cafe.breakfast-stop.vegetarian",
         "description": "You ask what is meat-free",
+        "descriptionRu": "Вы спрашиваете, что есть без мяса",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Go'shtsiz nima bor?",
             "english": "What is there without meat?",
+            "russian": "Что есть без мяса?",
             "tokens": [
               "Go'shtsiz",
               "nima",
@@ -408,12 +463,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pishloqli yoki tuxumli buterbrod.",
-            "english": "Cheese or egg sandwich."
+            "english": "Cheese or egg sandwich.",
+            "russian": "Бутерброд с сыром или с яйцом."
           },
           {
             "speaker": "user",
             "uzbek": "Tuxumli, iltimos.",
             "english": "Egg, please.",
+            "russian": "С яйцом, пожалуйста.",
             "tokens": [
               "Tuxumli,",
               "iltimos."
@@ -422,12 +479,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana. Yana biror narsa?",
-            "english": "Here you are. Anything else?"
+            "english": "Here you are. Anything else?",
+            "russian": "Вот, пожалуйста. Что-нибудь ещё?"
           },
           {
             "speaker": "user",
             "uzbek": "Yo'q, rahmat.",
             "english": "No, thank you.",
+            "russian": "Нет, спасибо.",
             "tokens": [
               "Yo'q,",
               "rahmat."
@@ -438,11 +497,13 @@
       {
         "id": "cafe.breakfast-stop.wifi",
         "description": "You ask for the wi-fi",
+        "descriptionRu": "Вы спрашиваете про вай-фай",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Wifi bormi?",
             "english": "Is there wi-fi?",
+            "russian": "Вай-фай есть?",
             "tokens": [
               "Wifi",
               "bormi?"
@@ -451,12 +512,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, parol stol ustida.",
-            "english": "Yes, the password is on the table."
+            "english": "Yes, the password is on the table.",
+            "russian": "Да, пароль на столе."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat. Kofe ham, iltimos.",
             "english": "Thank you. Coffee too, please.",
+            "russian": "Спасибо. И кофе тоже, пожалуйста.",
             "tokens": [
               "Rahmat.",
               "Kofe",
@@ -467,12 +530,14 @@
           {
             "speaker": "npc",
             "uzbek": "Hoziroq tayyorlayman.",
-            "english": "I will make it right away."
+            "english": "I will make it right away.",
+            "russian": "Сейчас же приготовлю."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]

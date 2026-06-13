@@ -34,8 +34,8 @@ onUnmounted(stopSpeaking)
   <button
     class="audio-btn"
     :class="{ 'audio-btn--playing': playing, 'audio-btn--large': large, 'audio-btn--slow': nextSlow && !playing }"
-    :aria-label="label ?? `Play audio: ${text}`"
-    :title="nextSlow && !playing ? 'Play slow (0.75×)' : undefined"
+    :aria-label="label ?? $t('audio.play', { text })"
+    :title="nextSlow && !playing ? $t('audio.playSlow') : undefined"
     type="button"
     @click.stop="play"
   >

@@ -4,12 +4,14 @@ import type { Word } from '@/db/types'
 import { pickFlashcardWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
+import { useContentLang } from '@/i18n/content'
 import { speakUzbek } from '@/audio/audio'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 
 const progress = useProgressStore()
+const { gloss } = useContentLang()
 
 const words = ref<Word[]>([])
 const leftOrder = ref<Word[]>([])
@@ -142,14 +144,12 @@ function gradeClass(row: Row): string {
 
 <template>
   <div class="flashcards">
-    <p class="flashcards__instruction">
-      <template v-if="soundMode"
-        >Listen, then pair each <strong>sound</strong> with its English meaning.</template
-      >
-      <template v-else>Pair each <strong>Uzbek</strong> word with its English meaning.</template>
-    </p>
+    <p
+      class="flashcards__instruction"
+      v-html="soundMode ? $t('exercise.flashcards.pairSound') : $t('exercise.flashcards.pairWord')"
+    ></p>
 
-    <p v-if="loading" class="flashcards__loading" aria-live="polite">Loading cards…</p>
+    <p v-if="loading" class="flashcards__loading" aria-live="polite">{{ $t('exercise.flashcards.loading') }}</p>
 
     <TransitionGroup v-else name="match" tag="div" class="flashcards__grid">
       <div v-for="cell in cells" :key="cell.key" class="cell">
@@ -177,18 +177,18 @@ function gradeClass(row: Row): string {
             </svg>
             <span v-else lang="uz">{{ cell.word.uzbek }}</span>
           </template>
-          <span v-else>{{ cell.word.english }}</span>
+          <span v-else>{{ gloss(cell.word) }}</span>
         </button>
       </div>
     </TransitionGroup>
 
     <p v-if="!checked && !loading" class="flashcards__hint">
-      Tap a card on each side to pair it — tap a pair to undo it.
+      {{ $t('exercise.flashcards.hint') }}
     </p>
 
     <p v-if="checked" class="flashcards__score" aria-live="polite">
-      {{ correctCount }} of {{ words.length }} correct
-      <template v-if="correctCount === words.length"> — ajoyib! 🎉</template>
+      {{ $t('exercise.flashcards.score', { correct: correctCount, total: words.length }) }}
+      <template v-if="correctCount === words.length">{{ $t('exercise.flashcards.perfect') }}</template>
     </p>
 
     <div class="flashcards__footer">
@@ -199,10 +199,10 @@ function gradeClass(row: Row): string {
         :disabled="!allPaired"
         @click="check"
       >
-        Check matches
+        {{ $t('exercise.flashcards.checkMatches') }}
       </button>
       <button v-else class="btn btn--primary" type="button" @click="emit('complete')">
-        Continue
+        {{ $t('common.continue') }}
       </button>
     </div>
   </div>

@@ -4,23 +4,28 @@
     "theme": "train-station",
     "title": {
       "en": "A Ticket to Samarkand",
+      "ru": "Билет до Самарканда",
       "uz": "Samarqandga chipta"
     },
     "scenario": "You are at Tashkent station and want to take the fast train to Samarkand.",
+    "scenarioRu": "Вы на вокзале в Ташкенте и хотите поехать на скоростном поезде в Самарканд.",
     "variants": [
       {
         "id": "train-station.buy-ticket.base",
         "description": "A morning ticket, easily bought",
+        "descriptionRu": "Утренний билет, купить легко",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Qayerga chipta kerak?",
-            "english": "Hello! Where do you need a ticket to?"
+            "english": "Hello! Where do you need a ticket to?",
+            "russian": "Здравствуйте! Вам билет куда?"
           },
           {
             "speaker": "user",
             "uzbek": "Samarqandga chipta, iltimos.",
             "english": "A ticket to Samarkand, please.",
+            "russian": "Билет до Самарканда, пожалуйста.",
             "tokens": [
               "Samarqandga",
               "chipta,",
@@ -30,12 +35,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qachon borasiz?",
-            "english": "When are you travelling?"
+            "english": "When are you travelling?",
+            "russian": "Когда вы едете?"
           },
           {
             "speaker": "user",
             "uzbek": "Ertaga ertalab.",
             "english": "Tomorrow morning.",
+            "russian": "Завтра утром.",
             "tokens": [
               "Ertaga",
               "ertalab."
@@ -44,12 +51,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tezyurar poyezd bor. Yetmish ming so'm.",
-            "english": "There is a fast train. Seventy thousand som."
+            "english": "There is a fast train. Seventy thousand som.",
+            "russian": "Есть скоростной поезд. Семьдесят тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, bitta chipta.",
             "english": "Good, one ticket.",
+            "russian": "Хорошо, один билет.",
             "tokens": [
               "Yaxshi,",
               "bitta",
@@ -59,18 +68,21 @@
           {
             "speaker": "npc",
             "uzbek": "Mana chiptangiz. Yaxshi yo'l!",
-            "english": "Here is your ticket. Have a good journey!"
+            "english": "Here is your ticket. Have a good journey!",
+            "russian": "Вот ваш билет. Счастливого пути!"
           }
         ]
       },
       {
         "id": "train-station.buy-ticket.sold-out",
         "description": "The fast train is sold out",
+        "descriptionRu": "Билеты на скоростной поезд распроданы",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Samarqandga chipta, iltimos.",
             "english": "A ticket to Samarkand, please.",
+            "russian": "Билет до Самарканда, пожалуйста.",
             "tokens": [
               "Samarqandga",
               "chipta,",
@@ -80,12 +92,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, tezyurar poyezd to'la.",
-            "english": "Sorry, the fast train is full."
+            "english": "Sorry, the fast train is full.",
+            "russian": "Извините, на скоростной поезд мест нет."
           },
           {
             "speaker": "user",
             "uzbek": "Boshqa poyezd bormi?",
             "english": "Is there another train?",
+            "russian": "Есть другой поезд?",
             "tokens": [
               "Boshqa",
               "poyezd",
@@ -95,12 +109,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, sekin poyezd bor. Soat birda.",
-            "english": "Yes, there is a slow train. At one o'clock."
+            "english": "Yes, there is a slow train. At one o'clock.",
+            "russian": "Да, есть обычный поезд. В час дня."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, shuni olaman.",
             "english": "Fine, I will take that one.",
+            "russian": "Хорошо, возьму его.",
             "tokens": [
               "Yaxshi,",
               "shuni",
@@ -112,11 +128,13 @@
       {
         "id": "train-station.buy-ticket.passport",
         "description": "They need your passport to issue it",
+        "descriptionRu": "Для оформления нужен ваш паспорт",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Samarqandga chipta, iltimos.",
             "english": "A ticket to Samarkand, please.",
+            "russian": "Билет до Самарканда, пожалуйста.",
             "tokens": [
               "Samarqandga",
               "chipta,",
@@ -126,12 +144,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasportingizni bering, iltimos.",
-            "english": "Give me your passport, please."
+            "english": "Give me your passport, please.",
+            "russian": "Дайте ваш паспорт, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim.",
             "english": "Here is my passport.",
+            "russian": "Вот мой паспорт.",
             "tokens": [
               "Mana",
               "pasportim."
@@ -140,12 +160,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat. Mana chiptangiz, o'n birinchi vagon.",
-            "english": "Thank you. Here is your ticket, carriage eleven."
+            "english": "Thank you. Here is your ticket, carriage eleven.",
+            "russian": "Спасибо. Вот ваш билет, одиннадцатый вагон."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -156,11 +178,13 @@
       {
         "id": "train-station.buy-ticket.return",
         "description": "You decide to buy a return",
+        "descriptionRu": "Вы решаете купить билет туда и обратно",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Samarqandga chipta, iltimos.",
             "english": "A ticket to Samarkand, please.",
+            "russian": "Билет до Самарканда, пожалуйста.",
             "tokens": [
               "Samarqandga",
               "chipta,",
@@ -170,12 +194,14 @@
           {
             "speaker": "npc",
             "uzbek": "Faqat borishmi yoki borib-kelish?",
-            "english": "One way only, or return?"
+            "english": "One way only, or return?",
+            "russian": "Только туда или туда и обратно?"
           },
           {
             "speaker": "user",
             "uzbek": "Borib-kelish, iltimos.",
             "english": "Return, please.",
+            "russian": "Туда и обратно, пожалуйста.",
             "tokens": [
               "Borib-kelish,",
               "iltimos."
@@ -184,12 +210,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Yuz qirq ming so'm.",
-            "english": "Fine. One hundred and forty thousand som."
+            "english": "Fine. One hundred and forty thousand som.",
+            "russian": "Хорошо. Сто сорок тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul. Rahmat.",
             "english": "Here is the money. Thank you.",
+            "russian": "Вот деньги. Спасибо.",
             "tokens": [
               "Mana",
               "pul.",
@@ -201,11 +229,13 @@
       {
         "id": "train-station.buy-ticket.window",
         "description": "You ask for a window seat",
+        "descriptionRu": "Вы просите место у окна",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Samarqandga chipta, iltimos. Deraza yoni bormi?",
             "english": "A ticket to Samarkand, please. Is there a window seat?",
+            "russian": "Билет до Самарканда, пожалуйста. Есть место у окна?",
             "tokens": [
               "Samarqandga",
               "chipta,",
@@ -218,12 +248,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir daqiqa... Ha, deraza yoni bor.",
-            "english": "One minute... Yes, there is a window seat."
+            "english": "One minute... Yes, there is a window seat.",
+            "russian": "Минутку... Да, место у окна есть."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi! Rahmat.",
             "english": "Very good! Thank you.",
+            "russian": "Отлично! Спасибо.",
             "tokens": [
               "Juda",
               "yaxshi!",
@@ -233,18 +265,21 @@
           {
             "speaker": "npc",
             "uzbek": "Mana chiptangiz. O'n beshinchi joy.",
-            "english": "Here is your ticket. Seat fifteen."
+            "english": "Here is your ticket. Seat fifteen.",
+            "russian": "Вот ваш билет. Пятнадцатое место."
           }
         ]
       },
       {
         "id": "train-station.buy-ticket.tomorrow",
         "description": "Today is full — tomorrow it is",
+        "descriptionRu": "На сегодня всё занято — значит, завтра",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bugun Samarqandga poyezd bormi?",
             "english": "Is there a train to Samarkand today?",
+            "russian": "Сегодня есть поезд в Самарканд?",
             "tokens": [
               "Bugun",
               "Samarqandga",
@@ -255,12 +290,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bugun hammasi to'la. Ertaga bor.",
-            "english": "Today everything is full. Tomorrow there is one."
+            "english": "Today everything is full. Tomorrow there is one.",
+            "russian": "Сегодня всё занято. Завтра есть."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, ertaga ertalabga.",
             "english": "Fine, for tomorrow morning.",
+            "russian": "Хорошо, на завтра утром.",
             "tokens": [
               "Yaxshi,",
               "ertaga",
@@ -270,12 +307,14 @@
           {
             "speaker": "npc",
             "uzbek": "Soat sakkizda. Mana chiptangiz.",
-            "english": "At eight o'clock. Here is your ticket."
+            "english": "At eight o'clock. Here is your ticket.",
+            "russian": "В восемь часов. Вот ваш билет."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -289,18 +328,22 @@
     "theme": "train-station",
     "title": {
       "en": "Which Platform?",
+      "ru": "Какая платформа?",
       "uz": "Qaysi perron?"
     },
     "scenario": "Your train leaves soon, but you cannot find the right platform.",
+    "scenarioRu": "Ваш поезд скоро отправляется, но вы не можете найти нужную платформу.",
     "variants": [
       {
         "id": "train-station.platform.base",
         "description": "Platform three, straight ahead",
+        "descriptionRu": "Третья платформа, прямо вперёд",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, Samarqand poyezdi qayerda?",
             "english": "Excuse me, where is the Samarkand train?",
+            "russian": "Извините, где поезд на Самарканд?",
             "tokens": [
               "Kechirasiz,",
               "Samarqand",
@@ -311,12 +354,14 @@
           {
             "speaker": "npc",
             "uzbek": "Uchinchi perronda.",
-            "english": "On platform three."
+            "english": "On platform three.",
+            "russian": "На третьей платформе."
           },
           {
             "speaker": "user",
             "uzbek": "Qaysi tomonda?",
             "english": "Which way?",
+            "russian": "В какой стороне?",
             "tokens": [
               "Qaysi",
               "tomonda?"
@@ -325,12 +370,14 @@
           {
             "speaker": "npc",
             "uzbek": "To'g'riga yuring. O'ng tomonda.",
-            "english": "Go straight. On the right."
+            "english": "Go straight. On the right.",
+            "russian": "Идите прямо. Справа."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -340,11 +387,13 @@
       {
         "id": "train-station.platform.changed",
         "description": "The platform has changed",
+        "descriptionRu": "Платформа изменилась",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Samarqand poyezdi uchinchi perrondami?",
             "english": "Is the Samarkand train on platform three?",
+            "russian": "Поезд на Самарканд на третьей платформе?",
             "tokens": [
               "Samarqand",
               "poyezdi",
@@ -355,12 +404,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, perron o'zgardi. Endi beshinchi.",
-            "english": "No, the platform changed. Now it is five."
+            "english": "No, the platform changed. Now it is five.",
+            "russian": "Нет, платформа изменилась. Теперь пятая."
           },
           {
             "speaker": "user",
             "uzbek": "Voy! Rahmat, tez boraman.",
             "english": "Oh! Thank you, I will hurry.",
+            "russian": "Ой! Спасибо, я потороплюсь.",
             "tokens": [
               "Voy!",
               "Rahmat,",
@@ -371,18 +422,21 @@
           {
             "speaker": "npc",
             "uzbek": "Shoshiling, poyezd tez ketadi!",
-            "english": "Hurry, the train leaves soon!"
+            "english": "Hurry, the train leaves soon!",
+            "russian": "Поторопитесь, поезд скоро отправляется!"
           }
         ]
       },
       {
         "id": "train-station.platform.late",
         "description": "You are running late",
+        "descriptionRu": "Вы опаздываете",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Samarqand poyezdi ketdimi?",
             "english": "Has the Samarkand train left?",
+            "russian": "Поезд на Самарканд уже ушёл?",
             "tokens": [
               "Samarqand",
               "poyezdi",
@@ -392,12 +446,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, lekin besh daqiqa qoldi!",
-            "english": "No, but five minutes are left!"
+            "english": "No, but five minutes are left!",
+            "russian": "Нет, но осталось пять минут!"
           },
           {
             "speaker": "user",
             "uzbek": "Qaysi perron?",
             "english": "Which platform?",
+            "russian": "Какая платформа?",
             "tokens": [
               "Qaysi",
               "perron?"
@@ -406,12 +462,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ikkinchi! Yuguring!",
-            "english": "Two! Run!"
+            "english": "Two! Run!",
+            "russian": "Вторая! Бегите!"
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -421,11 +479,13 @@
       {
         "id": "train-station.platform.delayed",
         "description": "Good news — the train is delayed",
+        "descriptionRu": "Хорошая новость — поезд задерживается",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Samarqand poyezdi qachon ketadi?",
             "english": "When does the Samarkand train leave?",
+            "russian": "Когда отправляется поезд на Самарканд?",
             "tokens": [
               "Samarqand",
               "poyezdi",
@@ -436,12 +496,14 @@
           {
             "speaker": "npc",
             "uzbek": "Poyezd kechikyapti. Yarim soat.",
-            "english": "The train is delayed. Half an hour."
+            "english": "The train is delayed. Half an hour.",
+            "russian": "Поезд задерживается. На полчаса."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, vaqtim bor. Choyxona qayerda?",
             "english": "Good, I have time. Where is the teahouse?",
+            "russian": "Хорошо, у меня есть время. Где чайхана?",
             "tokens": [
               "Yaxshi,",
               "vaqtim",
@@ -453,12 +515,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yuqori qavatda.",
-            "english": "On the upper floor."
+            "english": "On the upper floor.",
+            "russian": "На верхнем этаже."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -468,11 +532,13 @@
       {
         "id": "train-station.platform.help-bag",
         "description": "A kind person helps with your bag",
+        "descriptionRu": "Добрый человек помогает с вашей сумкой",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu og'ir sumka! Beshinchi perron qayerda?",
             "english": "This bag is heavy! Where is platform five?",
+            "russian": "Эта сумка тяжёлая! Где пятая платформа?",
             "tokens": [
               "Bu",
               "og'ir",
@@ -485,12 +551,14 @@
           {
             "speaker": "npc",
             "uzbek": "Men yordam beraman. Yuring.",
-            "english": "I will help you. Come."
+            "english": "I will help you. Come.",
+            "russian": "Я вам помогу. Пойдёмте."
           },
           {
             "speaker": "user",
             "uzbek": "Juda mehribonsiz, rahmat!",
             "english": "You are very kind, thank you!",
+            "russian": "Вы очень добры, спасибо!",
             "tokens": [
               "Juda",
               "mehribonsiz,",
@@ -500,7 +568,8 @@
           {
             "speaker": "npc",
             "uzbek": "Arzimaydi. Mana, beshinchi perron.",
-            "english": "You're welcome. Here is platform five."
+            "english": "You're welcome. Here is platform five.",
+            "russian": "Не за что. Вот пятая платформа."
           }
         ]
       }

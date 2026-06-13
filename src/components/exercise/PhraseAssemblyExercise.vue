@@ -3,12 +3,14 @@ import { ref, computed, onMounted } from 'vue'
 import { db } from '@/db'
 import { tokenize, shuffle, buildDecoys, normalizeToken } from '@/exercises/validate'
 import { speakUzbek } from '@/audio/audio'
+import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
+const { pick } = useContentLang()
 
 type PromptMode = 'english' | 'uzbek-to-english' | 'audio'
 
@@ -41,11 +43,12 @@ onMounted(async () => {
         const key = normalizeToken(turn.uzbek)
         if (seen.has(key)) continue
         seen.add(key)
+        const translation = pick(turn.english, turn.russian)
         userPhrases.push({
           uzbek: turn.uzbek,
-          english: turn.english,
+          english: translation,
           tokens: turn.tokens ?? tokenize(turn.uzbek),
-          englishTokens: tokenize(turn.english),
+          englishTokens: tokenize(translation),
         })
       }
     }
@@ -90,25 +93,25 @@ function next() {
 
 <template>
   <div class="phrase">
-    <p v-if="loading" class="phrase__loading" aria-live="polite">Loading phrases…</p>
+    <p v-if="loading" class="phrase__loading" aria-live="polite">{{ $t('exercise.phrase.loading') }}</p>
 
     <template v-else-if="current">
-      <p class="phrase__counter">Phrase {{ index + 1 }} of {{ phrases.length }}</p>
+      <p class="phrase__counter">{{ $t('exercise.phrase.counter', { current: index + 1, total: phrases.length }) }}</p>
 
       <div class="phrase__prompt">
         <template v-if="current.mode === 'english'">
-          <span class="phrase__prompt-label">Build this in Uzbek:</span>
+          <span class="phrase__prompt-label">{{ $t('exercise.phrase.buildUzbek') }}</span>
           <p class="phrase__prompt-text">{{ current.english }}</p>
         </template>
         <template v-else-if="current.mode === 'uzbek-to-english'">
-          <span class="phrase__prompt-label">Translate into English:</span>
+          <span class="phrase__prompt-label">{{ $t('exercise.phrase.translate') }}</span>
           <p class="phrase__prompt-text">
             <UzbekSentence :uzbek="current.uzbek" />
           </p>
         </template>
         <template v-else>
-          <span class="phrase__prompt-label">Listen, then build what you hear:</span>
-          <AudioButton :text="current.uzbek" large label="Play the phrase" />
+          <span class="phrase__prompt-label">{{ $t('exercise.phrase.listenBuild') }}</span>
+          <AudioButton :text="current.uzbek" large :label="$t('audio.playPhrase')" />
         </template>
       </div>
 
@@ -127,16 +130,16 @@ function next() {
         </p>
         <p class="phrase__solution-en">{{ current.english }}</p>
         <button class="btn btn--primary" type="button" @click="next">
-          {{ isLast ? 'Finish' : 'Next phrase' }}
+          {{ isLast ? $t('exercise.phrase.finish') : $t('exercise.phrase.nextPhrase') }}
         </button>
       </div>
     </template>
 
     <div v-else class="phrase__empty">
       <p class="phrase__loading">
-        No phrases for this location yet — they'll arrive in a content update.
+        {{ $t('exercise.phrase.empty') }}
       </p>
-      <button class="btn btn--primary" type="button" @click="emit('complete')">Continue</button>
+      <button class="btn btn--primary" type="button" @click="emit('complete')">{{ $t('common.continue') }}</button>
     </div>
   </div>
 </template>

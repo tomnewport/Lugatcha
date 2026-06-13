@@ -3,21 +3,29 @@
   "order": 2,
   "title": {
     "en": "The Verb Is Shy",
-    "uz": "Fe'l oxirida"
+    "uz": "Fe'l oxirida",
+    "ru": "Глагол застенчив"
   },
   "blurb": "Why the action always hides at the end",
+  "blurbRu": "Почему действие всегда прячется в конце",
   "estimatedMinutes": 2,
   "sections": [
     {
       "heading": "The verb hides at the end",
+      "headingRu": "Глагол прячется в конце",
       "body": [
         "The Uzbek verb is shy: it always hides at the **end of the sentence**. The pattern is Subject – Object – **Verb**.",
         "**Men non yedim** is literally “I bread ate”. It feels strange for a day or two — then your brain flips, and English starts sounding backwards."
+      ],
+      "bodyRu": [
+        "Узбекский глагол застенчив: он всегда прячется в **конце предложения**. Схема такая: подлежащее – дополнение – **глагол**.",
+        "**Men non yedim** буквально означает «я хлеб съел». День-другой это кажется странным — а потом мозг перестраивается, и уже английский начинает звучать задом наперёд."
       ],
       "examples": [
         {
           "uzbek": "Men non yedim",
           "english": "I ate bread",
+          "russian": "Я съел хлеб",
           "breakdown": [
             "Men",
             "non",
@@ -27,11 +35,17 @@
             "I",
             "bread",
             "ate"
+          ],
+          "glossRu": [
+            "я",
+            "хлеб",
+            "съел"
           ]
         },
         {
           "uzbek": "Men choy ichdim",
           "english": "I drank tea",
+          "russian": "Я выпил чай",
           "breakdown": [
             "Men",
             "choy",
@@ -41,11 +55,17 @@
             "I",
             "tea",
             "drank"
+          ],
+          "glossRu": [
+            "я",
+            "чай",
+            "выпил"
           ]
         },
         {
           "uzbek": "U kitob o'qidi",
           "english": "She/he read a book",
+          "russian": "Он/она прочитал(а) книгу",
           "breakdown": [
             "U",
             "kitob",
@@ -55,24 +75,36 @@
             "she/he",
             "book",
             "read"
+          ],
+          "glossRu": [
+            "он/она",
+            "книга",
+            "прочитал(а)"
           ]
         }
       ]
     },
     {
       "heading": "Everything points the same way",
+      "headingRu": "Всё указывает в одну сторону",
       "body": [
         "Uzbek is consistently **head-final**: describing things come before the thing described. Adjectives before nouns (**katta shahar** — big city), owners before what they own, and the little relation words come **after** the noun: **men bilan** — “me with”.",
         "One more tip: the word just before the verb carries the spotlight. But verb-last is always the safe default."
       ],
+      "bodyRu": [
+        "Узбекский последовательно **левоветвящийся**: то, что описывает, идёт перед тем, что описывается. Прилагательные перед существительными (**katta shahar** — большой город), владельцы перед тем, чем владеют, а маленькие служебные слова идут **после** существительного: **men bilan** — «мной с».",
+        "Ещё один совет: слово прямо перед глаголом несёт на себе главный акцент. Но «глагол в конце» — это всегда надёжный вариант по умолчанию."
+      ],
       "examples": [
         {
           "uzbek": "katta shahar",
-          "english": "a big city"
+          "english": "a big city",
+          "russian": "большой город"
         },
         {
           "uzbek": "men bilan",
-          "english": "with me (literally: me with)"
+          "english": "with me (literally: me with)",
+          "russian": "со мной (буквально: мной с)"
         }
       ]
     }
@@ -82,6 +114,7 @@
       "id": "build-bread",
       "engine": "build",
       "instruction": "Arrange the words: “I ate bread”",
+      "instructionRu": "Расставьте слова: «Я съел хлеб»",
       "tokens": [
         "Men",
         "non",
@@ -91,12 +124,14 @@
         "choy"
       ],
       "audioText": "Men non yedim",
-      "translation": "I ate bread."
+      "translation": "I ate bread.",
+      "translationRu": "Я съел хлеб."
     },
     {
       "id": "build-tea",
       "engine": "build",
       "instruction": "Arrange: “I drink tea”",
+      "instructionRu": "Расставьте: «Я пью чай»",
       "tokens": [
         "Men",
         "choy",
@@ -106,28 +141,37 @@
         "non"
       ],
       "audioText": "Men choy ichaman",
-      "translation": "I drink tea."
+      "translation": "I drink tea.",
+      "translationRu": "Я пью чай."
     },
     {
       "id": "choice-natural",
       "engine": "choice",
       "instruction": "Which one sounds natural to an Uzbek ear?",
+      "instructionRu": "Какой вариант звучит естественно для узбекского уха?",
       "options": [
         {
           "text": "Men non yedim",
+          "textRu": "Men non yedim",
           "correct": true,
-          "explain": "Verb at the end — always."
+          "explain": "Verb at the end — always.",
+          "explainRu": "Глагол в конце — всегда."
         },
         {
           "text": "Men yedim non",
-          "explain": "The verb has wandered into the middle — it belongs at the end."
+          "textRu": "Men yedim non",
+          "explain": "The verb has wandered into the middle — it belongs at the end.",
+          "explainRu": "Глагол забрёл в середину — его место в конце."
         },
         {
           "text": "Yedim men non",
-          "explain": "The verb goes last, not first."
+          "textRu": "Yedim men non",
+          "explain": "The verb goes last, not first.",
+          "explainRu": "Глагол идёт последним, а не первым."
         }
       ]
     }
   ],
-  "wrapUp": "Subject, then object, then — at the very end — the verb. Park the action at the end of the sentence and you'll sound right."
+  "wrapUp": "Subject, then object, then — at the very end — the verb. Park the action at the end of the sentence and you'll sound right.",
+  "wrapUpRu": "Сначала подлежащее, потом дополнение, а в самом конце — глагол. Поставьте действие в конец предложения, и вы будете звучать правильно."
 }

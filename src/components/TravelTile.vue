@@ -6,7 +6,7 @@ const router = useRouter()
 
 <template>
   <!-- The Travel Agency: a map of Uzbekistan you explore place by place -->
-  <button class="tile" aria-label="Travel Agency" @click="router.push('/travel')">
+  <button class="tile" :aria-label="$t('travel.title')" @click="router.push('/travel')">
     <div class="tile__icon-wrap" aria-hidden="true">
       <!-- Map pin over a little globe -->
       <svg class="tile__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -14,8 +14,8 @@ const router = useRouter()
         <circle cx="12" cy="8" r="2.4" fill="currentColor" stroke="none" />
       </svg>
     </div>
-    <span class="tile__name">Travel Agency</span>
-    <span class="tile__name-uz" lang="uz">Sayohat</span>
+    <span class="tile__name">{{ $t('travel.title') }}</span>
+    <span class="tile__name-uz" lang="uz">{{ $t('travel.tileSubtitle') }}</span>
   </button>
 </template>
 

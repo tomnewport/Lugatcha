@@ -4,32 +4,39 @@
     "theme": "metro-station",
     "title": {
       "en": "Underground Palaces",
+      "ru": "Подземные дворцы",
       "uz": "Yer osti saroylari"
     },
     "sentences": [
       {
         "uzbek": "Toshkent metrosi juda chiroyli.",
-        "english": "The Tashkent metro is very beautiful."
+        "english": "The Tashkent metro is very beautiful.",
+        "russian": "Ташкентское метро очень красивое."
       },
       {
         "uzbek": "Har bir bekat boshqacha.",
-        "english": "Every station is different."
+        "english": "Every station is different.",
+        "russian": "Каждая станция особенная."
       },
       {
         "uzbek": "Devorlarda rang-barang sopol bor.",
-        "english": "On the walls there are colourful ceramics."
+        "english": "On the walls there are colourful ceramics.",
+        "russian": "На стенах есть разноцветная керамика."
       },
       {
         "uzbek": "Bir bekat saroy kabi edi.",
-        "english": "One station was like a palace."
+        "english": "One station was like a palace.",
+        "russian": "Одна станция была похожа на дворец."
       },
       {
         "uzbek": "Men uzoq qarab turdim.",
-        "english": "I stood and looked for a long time."
+        "english": "I stood and looked for a long time.",
+        "russian": "Я долго стоял и смотрел."
       },
       {
         "uzbek": "Bu yer osti san'at muzeyi!",
-        "english": "This is an underground art museum!"
+        "english": "This is an underground art museum!",
+        "russian": "Это подземный музей искусства!"
       }
     ],
     "glossary": {
@@ -57,6 +64,32 @@
       "Har": "every",
       "yer": "ground / place",
       "osti": "underneath / under"
+    },
+    "glossaryRu": {
+      "Toshkent": "Ташкент",
+      "metrosi": "метро (его)",
+      "juda": "очень",
+      "chiroyli": "красивый",
+      "bekat": "станция",
+      "boshqacha": "другой / особенный",
+      "Devorlarda": "на стенах",
+      "rang-barang": "разноцветный",
+      "sopol": "керамика",
+      "bor": "есть",
+      "Bir": "один",
+      "saroy": "дворец",
+      "kabi": "как",
+      "edi": "была",
+      "Men": "я",
+      "uzoq": "долго",
+      "qarab": "глядя",
+      "turdim": "я стоял",
+      "Bu": "это",
+      "san'at": "искусство",
+      "muzeyi": "музей (чего-то)",
+      "Har": "каждый",
+      "yer": "земля / место",
+      "osti": "снизу / под"
     }
   },
   {
@@ -64,32 +97,39 @@
     "theme": "metro-station",
     "title": {
       "en": "Rush Hour",
+      "ru": "Час пик",
       "uz": "Tig'iz vaqt"
     },
     "sentences": [
       {
         "uzbek": "Ertalab metro juda gavjum edi.",
-        "english": "In the morning the metro was very crowded."
+        "english": "In the morning the metro was very crowded.",
+        "russian": "Утром метро было очень переполнено."
       },
       {
         "uzbek": "Men poyezdni kutdim.",
-        "english": "I waited for the train."
+        "english": "I waited for the train.",
+        "russian": "Я ждал поезд."
       },
       {
         "uzbek": "Hamma ishga shoshardi.",
-        "english": "Everyone was hurrying to work."
+        "english": "Everyone was hurrying to work.",
+        "russian": "Все спешили на работу."
       },
       {
         "uzbek": "Bir keksa ayolga joy berdim.",
-        "english": "I gave my seat to an old woman."
+        "english": "I gave my seat to an old woman.",
+        "russian": "Я уступил место пожилой женщине."
       },
       {
         "uzbek": "U menga rahmat aytdi.",
-        "english": "She thanked me."
+        "english": "She thanked me.",
+        "russian": "Она поблагодарила меня."
       },
       {
         "uzbek": "Kichik yaxshilik kun boshini yoritadi.",
-        "english": "A small kindness brightens the start of a day."
+        "english": "A small kindness brightens the start of a day.",
+        "russian": "Маленькая доброта озаряет начало дня."
       }
     ],
     "glossary": {
@@ -118,6 +158,33 @@
       "kun": "day",
       "boshini": "its beginning (object)",
       "yoritadi": "brightens"
+    },
+    "glossaryRu": {
+      "Ertalab": "утром",
+      "metro": "метро",
+      "juda": "очень",
+      "gavjum": "переполненный",
+      "edi": "было",
+      "Men": "я",
+      "poyezdni": "поезд (винительный)",
+      "kutdim": "я ждал",
+      "Hamma": "все",
+      "ishga": "на работу",
+      "shoshardi": "спешил",
+      "Bir": "один / а",
+      "keksa": "пожилой",
+      "ayolga": "женщине",
+      "joy": "место",
+      "berdim": "я уступил / дал",
+      "U": "она",
+      "menga": "мне",
+      "rahmat": "спасибо",
+      "aytdi": "сказала",
+      "Kichik": "маленький",
+      "yaxshilik": "доброта (yaxshi + -lik)",
+      "kun": "день",
+      "boshini": "его начало (винительный)",
+      "yoritadi": "озаряет"
     }
   }
 ]
