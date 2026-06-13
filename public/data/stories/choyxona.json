@@ -4,32 +4,39 @@
     "theme": "choyxona",
     "title": {
       "en": "Under the Grapevine",
+      "ru": "Под виноградной лозой",
       "uz": "Tok ostida"
     },
     "sentences": [
       {
         "uzbek": "Choyxona bog'ida tok bor edi.",
-        "english": "In the teahouse garden there was a grapevine."
+        "english": "In the teahouse garden there was a grapevine.",
+        "russian": "В саду чайханы росла виноградная лоза."
       },
       {
         "uzbek": "Men so'rida o'tirdim.",
-        "english": "I sat on the platform."
+        "english": "I sat on the platform.",
+        "russian": "Я сидел на топчане."
       },
       {
         "uzbek": "Bir keksa odam menga choy quydi.",
-        "english": "An old man poured me tea."
+        "english": "An old man poured me tea.",
+        "russian": "Старик налил мне чаю."
       },
       {
         "uzbek": "Biz uzoq suhbatlashdik.",
-        "english": "We talked for a long time."
+        "english": "We talked for a long time.",
+        "russian": "Мы долго беседовали."
       },
       {
         "uzbek": "U menga shahar haqida gapirdi.",
-        "english": "He told me about the city."
+        "english": "He told me about the city.",
+        "russian": "Он рассказал мне о городе."
       },
       {
         "uzbek": "Bu yerda begona odam yo'q.",
-        "english": "Here there are no strangers."
+        "english": "Here there are no strangers.",
+        "russian": "Здесь нет чужих."
       }
     ],
     "glossary": {
@@ -58,6 +65,33 @@
       "yo'q": "there is not",
       "Bu": "this",
       "yerda": "at (a place)"
+    },
+    "glossaryRu": {
+      "Choyxona": "чайхана",
+      "bog'ida": "в саду (чего-либо)",
+      "tok": "виноградная лоза",
+      "bor": "была / имелась",
+      "edi": "было",
+      "Men": "я",
+      "so'rida": "на топчане (приподнятый помост для чая)",
+      "o'tirdim": "я сидел",
+      "Bir": "один / некий",
+      "keksa": "старый",
+      "odam": "человек / мужчина",
+      "menga": "мне",
+      "choy": "чай",
+      "quydi": "налил",
+      "Biz": "мы",
+      "uzoq": "долго",
+      "suhbatlashdik": "мы беседовали",
+      "U": "он",
+      "shahar": "город",
+      "haqida": "о / про",
+      "gapirdi": "говорил / рассказал",
+      "begona": "чужой / посторонний",
+      "yo'q": "нет / не имеется",
+      "Bu": "это",
+      "yerda": "здесь / в (месте)"
     }
   },
   {
@@ -65,32 +99,39 @@
     "theme": "choyxona",
     "title": {
       "en": "A Guest is a Blessing",
+      "ru": "Гость — это благословение",
       "uz": "Mehmon — tabarruk"
     },
     "sentences": [
       {
         "uzbek": "Men choyxonaga yolg'iz kirdim.",
-        "english": "I went into the teahouse alone."
+        "english": "I went into the teahouse alone.",
+        "russian": "Я зашёл в чайхану один."
       },
       {
         "uzbek": "Bir oila meni dasturxonga taklif qildi.",
-        "english": "A family invited me to their table."
+        "english": "A family invited me to their table.",
+        "russian": "Одна семья пригласила меня за свой стол."
       },
       {
         "uzbek": "Ular non va osh berdi.",
-        "english": "They gave me bread and plov."
+        "english": "They gave me bread and plov.",
+        "russian": "Они угостили меня хлебом и пловом."
       },
       {
         "uzbek": "Men pul taklif qildim, lekin ular kulishdi.",
-        "english": "I offered money, but they laughed."
+        "english": "I offered money, but they laughed.",
+        "russian": "Я предложил деньги, но они засмеялись."
       },
       {
         "uzbek": "\"Mehmon — Xudoning sovg'asi,\" dedilar.",
-        "english": "\"A guest is God's gift,\" they said."
+        "english": "\"A guest is God's gift,\" they said.",
+        "russian": "«Гость — это дар Божий», — сказали они."
       },
       {
         "uzbek": "Men bu kunni hech qachon unutmayman.",
-        "english": "I will never forget this day."
+        "english": "I will never forget this day.",
+        "russian": "Я никогда не забуду этот день."
       }
     ],
     "glossary": {
@@ -122,6 +163,36 @@
       "qachon": "when",
       "unutmayman": "I will not forget",
       "hech": "never (with qachon)"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "choyxonaga": "в чайхану",
+      "yolg'iz": "один / в одиночестве",
+      "kirdim": "я вошёл",
+      "Bir": "один / некий",
+      "oila": "семья",
+      "meni": "меня (объект)",
+      "dasturxonga": "к столу (дастархану)",
+      "taklif": "приглашение (taklif qildi = пригласил)",
+      "qildi": "сделал",
+      "Ular": "они",
+      "non": "хлеб",
+      "va": "и",
+      "osh": "плов",
+      "berdi": "дал / угостил",
+      "pul": "деньги",
+      "qildim": "я сделал (предложил)",
+      "lekin": "но",
+      "kulishdi": "они засмеялись",
+      "Mehmon": "гость",
+      "Xudoning": "Божий",
+      "sovg'asi": "дар (чего-либо)",
+      "dedilar": "они сказали",
+      "bu": "это",
+      "kunni": "день (объект)",
+      "qachon": "когда",
+      "unutmayman": "я не забуду",
+      "hech": "никогда (с qachon)"
     }
   }
 ]

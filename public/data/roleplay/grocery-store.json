@@ -4,23 +4,28 @@
     "theme": "grocery-store",
     "title": {
       "en": "A Few Groceries",
+      "ru": "Немного продуктов",
       "uz": "Bir oz xarid"
     },
     "scenario": "You pop into a small shop for some breakfast things.",
+    "scenarioRu": "Вы заглядываете в маленький магазин за продуктами к завтраку.",
     "variants": [
       {
         "id": "grocery-store.shopping.base",
         "description": "Bread, milk, and eggs",
+        "descriptionRu": "Хлеб, молоко и яйца",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Nima kerak?",
-            "english": "Hello! What do you need?"
+            "english": "Hello! What do you need?",
+            "russian": "Здравствуйте! Что вам нужно?"
           },
           {
             "speaker": "user",
             "uzbek": "Non, sut va tuxum kerak.",
             "english": "I need bread, milk, and eggs.",
+            "russian": "Мне нужны хлеб, молоко и яйца.",
             "tokens": [
               "Non,",
               "sut",
@@ -32,12 +37,14 @@
           {
             "speaker": "npc",
             "uzbek": "Nechta tuxum?",
-            "english": "How many eggs?"
+            "english": "How many eggs?",
+            "russian": "Сколько яиц?"
           },
           {
             "speaker": "user",
             "uzbek": "O'nta, iltimos.",
             "english": "Ten, please.",
+            "russian": "Десять, пожалуйста.",
             "tokens": [
               "O'nta,",
               "iltimos."
@@ -46,12 +53,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana. Yigirma ming so'm bo'ldi.",
-            "english": "Here you are. That is twenty thousand som."
+            "english": "Here you are. That is twenty thousand som.",
+            "russian": "Вот. С вас двадцать тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul. Rahmat!",
             "english": "Here is the money. Thank you!",
+            "russian": "Вот деньги. Спасибо!",
             "tokens": [
               "Mana",
               "pul.",
@@ -63,11 +72,13 @@
       {
         "id": "grocery-store.shopping.no-milk",
         "description": "The milk has sold out",
+        "descriptionRu": "Молоко закончилось",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Sut bormi?",
             "english": "Is there milk?",
+            "russian": "Молоко есть?",
             "tokens": [
               "Sut",
               "bormi?"
@@ -76,12 +87,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, sut tugadi.",
-            "english": "Sorry, the milk has run out."
+            "english": "Sorry, the milk has run out.",
+            "russian": "Извините, молоко закончилось."
           },
           {
             "speaker": "user",
             "uzbek": "Qachon keladi?",
             "english": "When will it come?",
+            "russian": "Когда будет?",
             "tokens": [
               "Qachon",
               "keladi?"
@@ -90,12 +103,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ertalab keladi. Pishloq bor.",
-            "english": "It comes in the morning. There is cheese."
+            "english": "It comes in the morning. There is cheese.",
+            "russian": "Привезут утром. Есть сыр."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, pishloq olaman.",
             "english": "Fine, I will take cheese.",
+            "russian": "Хорошо, возьму сыр.",
             "tokens": [
               "Yaxshi,",
               "pishloq",
@@ -107,11 +122,13 @@
       {
         "id": "grocery-store.shopping.fruit",
         "description": "You weigh some fruit",
+        "descriptionRu": "Вы взвешиваете фрукты",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Olma qancha?",
             "english": "How much are the apples?",
+            "russian": "Почём яблоки?",
             "tokens": [
               "Olma",
               "qancha?"
@@ -120,12 +137,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kilosi o'n ming so'm.",
-            "english": "Ten thousand som a kilo."
+            "english": "Ten thousand som a kilo.",
+            "russian": "Десять тысяч сумов за килограмм."
           },
           {
             "speaker": "user",
             "uzbek": "Ikki kilo, iltimos. Pishganmi?",
             "english": "Two kilos, please. Are they ripe?",
+            "russian": "Два килограмма, пожалуйста. Они спелые?",
             "tokens": [
               "Ikki",
               "kilo,",
@@ -136,12 +155,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, juda pishgan va shirin.",
-            "english": "Yes, very ripe and sweet."
+            "english": "Yes, very ripe and sweet.",
+            "russian": "Да, очень спелые и сладкие."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -151,11 +172,13 @@
       {
         "id": "grocery-store.shopping.bag",
         "description": "You need a bag",
+        "descriptionRu": "Вам нужен пакет",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Paket bormi?",
             "english": "Is there a bag?",
+            "russian": "Пакет есть?",
             "tokens": [
               "Paket",
               "bormi?"
@@ -164,12 +187,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, bor. Bir ming so'm.",
-            "english": "Yes, there is. One thousand som."
+            "english": "Yes, there is. One thousand som.",
+            "russian": "Да, есть. Одна тысяча сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mayli, bitta paket.",
             "english": "Okay, one bag.",
+            "russian": "Ладно, один пакет.",
             "tokens": [
               "Mayli,",
               "bitta",
@@ -179,18 +204,21 @@
           {
             "speaker": "npc",
             "uzbek": "Mana. Rahmat!",
-            "english": "Here you are. Thank you!"
+            "english": "Here you are. Thank you!",
+            "russian": "Вот. Спасибо!"
           }
         ]
       },
       {
         "id": "grocery-store.shopping.no-change",
         "description": "No change for the big note",
+        "descriptionRu": "Нет сдачи с крупной купюры",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Mana yuz ming so'm.",
             "english": "Here is one hundred thousand som.",
+            "russian": "Вот сто тысяч сумов.",
             "tokens": [
               "Mana",
               "yuz",
@@ -201,12 +229,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mayda pul bormi? Qaytim kam.",
-            "english": "Do you have change? I have little."
+            "english": "Do you have change? I have little.",
+            "russian": "У вас есть помельче? Сдачи мало."
           },
           {
             "speaker": "user",
             "uzbek": "Bir daqiqa... mana o'n ming.",
             "english": "One minute... here is ten thousand.",
+            "russian": "Минутку... вот десять тысяч.",
             "tokens": [
               "Bir",
               "daqiqa...",
@@ -218,12 +248,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Endi yaxshi.",
-            "english": "Thank you! Now it is fine."
+            "english": "Thank you! Now it is fine.",
+            "russian": "Спасибо! Теперь хорошо."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, xayr!",
             "english": "Thank you, goodbye!",
+            "russian": "Спасибо, до свидания!",
             "tokens": [
               "Rahmat,",
               "xayr!"
@@ -238,18 +270,22 @@
     "theme": "grocery-store",
     "title": {
       "en": "Water for the Road",
+      "ru": "Вода в дорогу",
       "uz": "Yo'lga suv"
     },
     "scenario": "Before a long bus ride you grab water and a snack.",
+    "scenarioRu": "Перед долгой поездкой на автобусе вы берёте воду и перекус.",
     "variants": [
       {
         "id": "grocery-store.water-snacks.base",
         "description": "Water and bread, quickly",
+        "descriptionRu": "Вода и хлеб, по-быстрому",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Ikkita suv va non, iltimos.",
             "english": "Two waters and bread, please.",
+            "russian": "Две воды и хлеб, пожалуйста.",
             "tokens": [
               "Ikkita",
               "suv",
@@ -261,12 +297,14 @@
           {
             "speaker": "npc",
             "uzbek": "Katta suv yoki kichik?",
-            "english": "Big water or small?"
+            "english": "Big water or small?",
+            "russian": "Большую воду или маленькую?"
           },
           {
             "speaker": "user",
             "uzbek": "Katta, iltimos.",
             "english": "Big, please.",
+            "russian": "Большую, пожалуйста.",
             "tokens": [
               "Katta,",
               "iltimos."
@@ -275,12 +313,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana. O'n ming so'm.",
-            "english": "Here you are. Ten thousand som."
+            "english": "Here you are. Ten thousand som.",
+            "russian": "Вот. Десять тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -290,11 +330,13 @@
       {
         "id": "grocery-store.water-snacks.cold",
         "description": "You want it cold",
+        "descriptionRu": "Вы хотите холодную",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Sovuq suv bormi?",
             "english": "Is there cold water?",
+            "russian": "Холодная вода есть?",
             "tokens": [
               "Sovuq",
               "suv",
@@ -304,12 +346,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, muzlatgichda bor.",
-            "english": "Yes, there is some in the fridge."
+            "english": "Yes, there is some in the fridge.",
+            "russian": "Да, есть в холодильнике."
           },
           {
             "speaker": "user",
             "uzbek": "Ikkita sovuq suv, iltimos.",
             "english": "Two cold waters, please.",
+            "russian": "Две холодные воды, пожалуйста.",
             "tokens": [
               "Ikkita",
               "sovuq",
@@ -320,12 +364,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, sovuq.",
-            "english": "Here you are, cold."
+            "english": "Here you are, cold.",
+            "russian": "Вот, холодная."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -335,11 +381,13 @@
       {
         "id": "grocery-store.water-snacks.fruit",
         "description": "You add fruit for the road",
+        "descriptionRu": "Вы добавляете фрукты в дорогу",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Yo'lga meva bormi?",
             "english": "Is there fruit for the road?",
+            "russian": "Есть фрукты в дорогу?",
             "tokens": [
               "Yo'lga",
               "meva",
@@ -349,12 +397,14 @@
           {
             "speaker": "npc",
             "uzbek": "Olma va banan bor.",
-            "english": "There are apples and bananas."
+            "english": "There are apples and bananas.",
+            "russian": "Есть яблоки и бананы."
           },
           {
             "speaker": "user",
             "uzbek": "To'rtta olma, iltimos.",
             "english": "Four apples, please.",
+            "russian": "Четыре яблока, пожалуйста.",
             "tokens": [
               "To'rtta",
               "olma,",
@@ -364,12 +414,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, yangi olma. Rahmat!",
-            "english": "Here, fresh apples. Thank you!"
+            "english": "Here, fresh apples. Thank you!",
+            "russian": "Вот, свежие яблоки. Спасибо!"
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -379,16 +431,19 @@
       {
         "id": "grocery-store.water-snacks.closed-soon",
         "description": "The shop closes in a minute",
+        "descriptionRu": "Магазин закрывается через минуту",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Tez bo'ling, biz yopilamiz!",
-            "english": "Be quick, we are closing!"
+            "english": "Be quick, we are closing!",
+            "russian": "Побыстрее, мы закрываемся!"
           },
           {
             "speaker": "user",
             "uzbek": "Faqat suv. Tez!",
             "english": "Just water. Quick!",
+            "russian": "Только воду. Быстро!",
             "tokens": [
               "Faqat",
               "suv.",
@@ -398,12 +453,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana suv. Besh ming.",
-            "english": "Here is water. Five thousand."
+            "english": "Here is water. Five thousand.",
+            "russian": "Вот вода. Пять тысяч."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul, rahmat!",
             "english": "Here is the money, thank you!",
+            "russian": "Вот деньги, спасибо!",
             "tokens": [
               "Mana",
               "pul,",

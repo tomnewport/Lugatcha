@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import type { Word } from '@/db/types'
 import { speakUzbek } from '@/audio/audio'
+import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 
@@ -13,6 +14,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ answered: [correct: boolean] }>()
+const { gloss } = useContentLang()
+
+/** The correct answer in the learner's base language. */
+const answer = computed(() => gloss(props.word))
 
 const query = ref('')
 const picked = ref<string | null>(null)
@@ -31,17 +36,17 @@ const filtered = computed(() => {
 function choose(option: string) {
   if (answered.value) return
   picked.value = option
-  emit('answered', option === props.word.english)
+  emit('answered', option === answer.value)
 }
 
 /** After answering, collapse to just the chosen answer and (if wrong) the right one. */
 const revealed = computed(() =>
-  answered.value ? [...new Set([picked.value!, props.word.english])] : filtered.value,
+  answered.value ? [...new Set([picked.value!, answer.value])] : filtered.value,
 )
 
 function optionClass(option: string): string {
   if (!answered.value) return ''
-  if (option === props.word.english) return 'option--correct'
+  if (option === answer.value) return 'option--correct'
   if (option === picked.value) return 'option--wrong'
   return 'option--muted'
 }
@@ -50,11 +55,11 @@ function optionClass(option: string): string {
 <template>
   <div class="choice-q">
     <p class="choice-q__instruction">
-      {{ mode === 'listen' ? 'Listen, then choose the meaning' : 'Choose the meaning' }}
+      {{ mode === 'listen' ? $t('exercise.choice.listenChoose') : $t('exercise.choice.choose') }}
     </p>
 
     <div class="choice-q__prompt">
-      <AudioButton v-if="mode === 'listen'" :text="word.uzbek" large label="Play the word" />
+      <AudioButton v-if="mode === 'listen'" :text="word.uzbek" large :label="$t('audio.playSound')" />
       <p v-else class="choice-q__uzbek">
         <UzbekSentence :uzbek="word.uzbek" />
       </p>
@@ -66,12 +71,12 @@ function optionClass(option: string): string {
       class="choice-q__search"
       type="text"
       inputmode="search"
-      placeholder="Search the answers…"
-      aria-label="Search answers"
+      :placeholder="$t('exercise.choice.searchPlaceholder')"
+      :aria-label="$t('exercise.choice.searchLabel')"
     />
 
-    <p v-if="answered" class="choice-q__result" :class="picked === word.english ? 'is-right' : 'is-wrong'">
-      {{ picked === word.english ? '✓ Correct' : `✗ Answer: ${word.english}` }}
+    <p v-if="answered" class="choice-q__result" :class="picked === answer ? 'is-right' : 'is-wrong'">
+      {{ picked === answer ? $t('exercise.choice.correct') : $t('exercise.choice.answer', { answer }) }}
     </p>
 
     <div class="choice-q__options" role="listbox">
@@ -86,7 +91,7 @@ function optionClass(option: string): string {
       >
         {{ option }}
       </button>
-      <p v-if="!answered && filtered.length === 0" class="choice-q__empty">No matches.</p>
+      <p v-if="!answered && filtered.length === 0" class="choice-q__empty">{{ $t('exercise.choice.noMatches') }}</p>
     </div>
   </div>
 </template>

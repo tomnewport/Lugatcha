@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { loadTravelPlaces, loadVisitedPlaces, TRAVEL_RESET_AT } from '@/db/travel'
 import type { TravelPlace, UzbekMap } from '@/db/types'
+import { useContentLang } from '@/i18n/content'
 
 const base = import.meta.env.BASE_URL
 const router = useRouter()
+const { name, pick } = useContentLang()
 
 const places = ref<TravelPlace[]>([])
 const geo = ref<UzbekMap | null>(null)
@@ -116,26 +118,26 @@ function tapPin(place: TravelPlace) {
 
 <template>
   <main class="travel">
-    <button class="back-btn" aria-label="Back to city map" type="button" @click="router.push('/')">
+    <button class="back-btn" :aria-label="$t('common.backToCity')" type="button" @click="router.push('/')">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      City
+      {{ $t('common.city') }}
     </button>
 
     <header class="travel-header">
-      <h1 class="travel-header__title">🧳 Travel Agency</h1>
-      <p class="travel-header__subtitle" lang="uz">Sayohat agentligi</p>
+      <h1 class="travel-header__title">🧳 {{ $t('travel.title') }}</h1>
+      <p class="travel-header__subtitle" lang="uz">{{ $t('travel.subtitle') }}</p>
       <p class="travel-header__blurb">
-        Tap a place on the map to read about it and practise its words.
+        {{ $t('travel.blurb') }}
         <template v-if="remainingToReset > 0 && visited.length > 0">
-          Visit {{ remainingToReset }} more to refresh the map.
+          {{ $t('travel.refresh', { count: remainingToReset }) }}
         </template>
       </p>
     </header>
 
     <div class="map-wrap">
-      <svg class="map" :viewBox="viewBox" role="group" aria-label="Map of Uzbekistan">
+      <svg class="map" :viewBox="viewBox" role="group" :aria-label="$t('travel.mapLabel')">
         <defs>
           <radialGradient id="pin" cx="38%" cy="30%" r="75%">
             <stop offset="0%" stop-color="#e9905f" />
@@ -185,7 +187,7 @@ function tapPin(place: TravelPlace) {
           :transform="`translate(${pin.x} ${pin.y})`"
           role="button"
           tabindex="0"
-          :aria-label="isDisabled(pin.place.id) ? `${pin.place.name.en} (visited)` : pin.place.name.en"
+          :aria-label="isDisabled(pin.place.id) ? $t('travel.visited', { name: name(pin.place.name) }) : name(pin.place.name)"
           @click="tapPin(pin.place)"
           @keydown.enter.prevent="tapPin(pin.place)"
         >
@@ -211,8 +213,8 @@ function tapPin(place: TravelPlace) {
           </g>
 
           <g v-if="selectedId === pin.place.id" class="pin__label">
-            <rect :x="-pin.place.name.en.length * 4.4 - 8" y="-74" :width="pin.place.name.en.length * 8.8 + 16" height="22" rx="11" fill="#1a1a1a" />
-            <text x="0" y="-59" text-anchor="middle" class="pin__label-text">{{ pin.place.name.en }}</text>
+            <rect :x="-name(pin.place.name).length * 4.4 - 8" y="-74" :width="name(pin.place.name).length * 8.8 + 16" height="22" rx="11" fill="#1a1a1a" />
+            <text x="0" y="-59" text-anchor="middle" class="pin__label-text">{{ name(pin.place.name) }}</text>
           </g>
         </g>
       </svg>
@@ -223,14 +225,14 @@ function tapPin(place: TravelPlace) {
       <div v-if="selected" class="place-card">
         <div class="place-card__head">
           <div>
-            <h2 class="place-card__name">{{ selected.name.en }}</h2>
+            <h2 class="place-card__name">{{ name(selected.name) }}</h2>
             <p class="place-card__name-uz" lang="uz">{{ selected.name.uz }}</p>
           </div>
-          <button class="place-card__close" type="button" aria-label="Close" @click="selectedId = null">✕</button>
+          <button class="place-card__close" type="button" :aria-label="$t('common.close')" @click="selectedId = null">✕</button>
         </div>
-        <p class="place-card__teaser">{{ selected.article[0] }}</p>
+        <p class="place-card__teaser">{{ pick(selected.article[0], selected.articleRu?.[0]) }}</p>
         <button class="btn btn--primary" type="button" @click="router.push(`/travel/${selected.id}`)">
-          Read &amp; practise
+          {{ $t('travel.readPractise') }}
         </button>
       </div>
     </Transition>

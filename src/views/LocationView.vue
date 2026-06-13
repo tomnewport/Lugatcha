@@ -11,6 +11,7 @@ import {
   type LocationStats,
 } from '@/exercises/potluck'
 import { useProgressStore } from '@/stores/progress'
+import { useContentLang } from '@/i18n/content'
 import { playChime } from '@/audio/audio'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
@@ -26,6 +27,7 @@ const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 const route = useRoute()
 const router = useRouter()
 const progressStore = useProgressStore()
+const { name } = useContentLang()
 
 const location = ref<Location | null>(null)
 const activeExercise = ref<ExerciseType | null>(null)
@@ -110,7 +112,7 @@ function exitExercise() {
   <ExerciseLayout
     v-if="location && activeExercise"
     :exercise="activeExercise"
-    :location-name="location.name.en"
+    :location-name="name(location.name)"
     @exit="exitExercise"
   >
     <component
@@ -123,17 +125,17 @@ function exitExercise() {
 
   <!-- Fallback: nothing available at this location -->
   <main v-else-if="location && stats && potluck.every(a => a.state === 'locked')" class="location-view">
-    <button class="back-btn" aria-label="Back to city map" type="button" @click="router.push('/')">
+    <button class="back-btn" :aria-label="$t('common.backToCity')" type="button" @click="router.push('/')">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      City
+      {{ $t('common.city') }}
     </button>
     <div class="location-body">
-      <h1 class="location-name">{{ location.name.en }}</h1>
+      <h1 class="location-name">{{ name(location.name) }}</h1>
       <p class="location-name-uz" lang="uz">{{ location.name.uz }}</p>
       <p class="nothing-here">
-        Nothing new to do here yet — meet more words at other locations first.
+        {{ $t('location.nothingNew') }}
       </p>
       <p class="nothing-hint" v-if="potluck.find(a => a.state === 'locked' && a.hint)">
         {{ potluck.find(a => a.state === 'locked' && a.hint)?.hint }}
@@ -143,7 +145,7 @@ function exitExercise() {
 
   <!-- Loading -->
   <main v-else class="location-view">
-    <p class="loading" aria-live="polite">Loading…</p>
+    <p class="loading" aria-live="polite">{{ $t('common.loading') }}</p>
   </main>
 </template>
 

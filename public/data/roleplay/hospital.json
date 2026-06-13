@@ -4,23 +4,28 @@
     "theme": "hospital",
     "title": {
       "en": "Seeing the Doctor",
+      "ru": "На приёме у врача",
       "uz": "Shifokor qabulida"
     },
     "scenario": "Your head has been aching since the morning. You visit the clinic.",
+    "scenarioRu": "У вас с утра болит голова. Вы идёте в поликлинику.",
     "variants": [
       {
         "id": "hospital.seeing-doctor.base",
         "description": "A simple check and some medicine",
+        "descriptionRu": "Простой осмотр и немного лекарств",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Nima bezovta qilyapti?",
-            "english": "Hello! What is bothering you?"
+            "english": "Hello! What is bothering you?",
+            "russian": "Здравствуйте! Что вас беспокоит?"
           },
           {
             "speaker": "user",
             "uzbek": "Boshim og'riyapti.",
             "english": "My head aches.",
+            "russian": "У меня болит голова.",
             "tokens": [
               "Boshim",
               "og'riyapti."
@@ -29,12 +34,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qachondan beri?",
-            "english": "Since when?"
+            "english": "Since when?",
+            "russian": "С какого времени?"
           },
           {
             "speaker": "user",
             "uzbek": "Ertalabdan beri.",
             "english": "Since the morning.",
+            "russian": "С самого утра.",
             "tokens": [
               "Ertalabdan",
               "beri."
@@ -43,12 +50,14 @@
           {
             "speaker": "npc",
             "uzbek": "Sizga dori yozaman. Suv ko'p iching.",
-            "english": "I will prescribe you medicine. Drink plenty of water."
+            "english": "I will prescribe you medicine. Drink plenty of water.",
+            "russian": "Я выпишу вам лекарство. Пейте побольше воды."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, shifokor!",
             "english": "Thank you, doctor!",
+            "russian": "Спасибо, доктор!",
             "tokens": [
               "Rahmat,",
               "shifokor!"
@@ -59,16 +68,19 @@
       {
         "id": "hospital.seeing-doctor.insurance",
         "description": "They ask for your insurance and passport",
+        "descriptionRu": "У вас спрашивают страховку и паспорт",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Sug'urtangiz bormi?",
-            "english": "Do you have insurance?"
+            "english": "Do you have insurance?",
+            "russian": "У вас есть страховка?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, mana sug'urta va pasport.",
             "english": "Yes, here are my insurance and passport.",
+            "russian": "Да, вот страховка и паспорт.",
             "tokens": [
               "Ha,",
               "mana",
@@ -80,12 +92,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat. Shifokor sizni kutyapti.",
-            "english": "Thank you. The doctor is waiting for you."
+            "english": "Thank you. The doctor is waiting for you.",
+            "russian": "Спасибо. Врач вас ждёт."
           },
           {
             "speaker": "user",
             "uzbek": "Qaysi xonaga boraman?",
             "english": "Which room do I go to?",
+            "russian": "В какой кабинет мне идти?",
             "tokens": [
               "Qaysi",
               "xonaga",
@@ -95,23 +109,27 @@
           {
             "speaker": "npc",
             "uzbek": "Beshinchi xona, ikkinchi qavat.",
-            "english": "Room five, second floor."
+            "english": "Room five, second floor.",
+            "russian": "Кабинет пять, второй этаж."
           }
         ]
       },
       {
         "id": "hospital.seeing-doctor.queue",
         "description": "There is a queue — take a number",
+        "descriptionRu": "Есть очередь — возьмите номерок",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Navbat bor. Raqam oling, iltimos.",
-            "english": "There is a queue. Take a number, please."
+            "english": "There is a queue. Take a number, please.",
+            "russian": "Есть очередь. Возьмите номерок, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Qancha kutaman?",
             "english": "How long will I wait?",
+            "russian": "Сколько мне ждать?",
             "tokens": [
               "Qancha",
               "kutaman?"
@@ -120,12 +138,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yigirma daqiqa, taxminan.",
-            "english": "About twenty minutes."
+            "english": "About twenty minutes.",
+            "russian": "Примерно двадцать минут."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, kutaman.",
             "english": "Fine, I will wait.",
+            "russian": "Хорошо, подожду.",
             "tokens": [
               "Yaxshi,",
               "kutaman."
@@ -134,18 +154,21 @@
           {
             "speaker": "npc",
             "uzbek": "O'tiring. Choy bor.",
-            "english": "Sit down. There is tea."
+            "english": "Sit down. There is tea.",
+            "russian": "Присаживайтесь. Есть чай."
           }
         ]
       },
       {
         "id": "hospital.seeing-doctor.fever",
         "description": "It turns out you have a fever",
+        "descriptionRu": "Оказывается, у вас температура",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "O'zimni yomon his qilyapman.",
             "english": "I feel unwell.",
+            "russian": "Я плохо себя чувствую.",
             "tokens": [
               "O'zimni",
               "yomon",
@@ -156,12 +179,14 @@
           {
             "speaker": "npc",
             "uzbek": "Isitmangizni o'lchaymiz... Isitmangiz bor.",
-            "english": "We will take your temperature... You have a fever."
+            "english": "We will take your temperature... You have a fever.",
+            "russian": "Измерим вам температуру... У вас температура."
           },
           {
             "speaker": "user",
             "uzbek": "Bu jiddiymi?",
             "english": "Is it serious?",
+            "russian": "Это серьёзно?",
             "tokens": [
               "Bu",
               "jiddiymi?"
@@ -170,12 +195,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, shamollash. Dam oling va issiq choy iching.",
-            "english": "No, a cold. Rest and drink hot tea."
+            "english": "No, a cold. Rest and drink hot tea.",
+            "russian": "Нет, это простуда. Отдыхайте и пейте горячий чай."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, shifokor.",
             "english": "Thank you, doctor.",
+            "russian": "Спасибо, доктор.",
             "tokens": [
               "Rahmat,",
               "shifokor."
@@ -186,16 +213,19 @@
       {
         "id": "hospital.seeing-doctor.stomach",
         "description": "It is your stomach, not your head",
+        "descriptionRu": "Болит живот, а не голова",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Nima bezovta qilyapti?",
-            "english": "What is bothering you?"
+            "english": "What is bothering you?",
+            "russian": "Что вас беспокоит?"
           },
           {
             "speaker": "user",
             "uzbek": "Qornim og'riyapti.",
             "english": "My stomach aches.",
+            "russian": "У меня болит живот.",
             "tokens": [
               "Qornim",
               "og'riyapti."
@@ -204,12 +234,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bugun nima yedingiz?",
-            "english": "What did you eat today?"
+            "english": "What did you eat today?",
+            "russian": "Что вы сегодня ели?"
           },
           {
             "speaker": "user",
             "uzbek": "Bozorda somsa yedim.",
             "english": "I ate samsa at the bazaar.",
+            "russian": "Я ел самсу на базаре.",
             "tokens": [
               "Bozorda",
               "somsa",
@@ -219,12 +251,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tushunaman. Bu dori yordam beradi.",
-            "english": "I see. This medicine will help."
+            "english": "I see. This medicine will help.",
+            "russian": "Понятно. Это лекарство поможет."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -235,11 +269,13 @@
       {
         "id": "hospital.seeing-doctor.dentist",
         "description": "Wrong door — you need the dentist",
+        "descriptionRu": "Не та дверь — вам нужен зубной врач",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Tishim og'riyapti.",
             "english": "My tooth aches.",
+            "russian": "У меня болит зуб.",
             "tokens": [
               "Tishim",
               "og'riyapti."
@@ -248,12 +284,14 @@
           {
             "speaker": "npc",
             "uzbek": "Sizga tish shifokori kerak.",
-            "english": "You need the dentist."
+            "english": "You need the dentist.",
+            "russian": "Вам нужен зубной врач."
           },
           {
             "speaker": "user",
             "uzbek": "U qayerda?",
             "english": "Where is that?",
+            "russian": "А где это?",
             "tokens": [
               "U",
               "qayerda?"
@@ -262,12 +300,14 @@
           {
             "speaker": "npc",
             "uzbek": "Uchinchi qavatda, chap tomonda.",
-            "english": "On the third floor, on the left."
+            "english": "On the third floor, on the left.",
+            "russian": "На третьем этаже, слева."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -281,23 +321,28 @@
     "theme": "hospital",
     "title": {
       "en": "At the Pharmacy",
+      "ru": "В аптеке",
       "uz": "Dorixonada"
     },
     "scenario": "The doctor has written you a prescription. Now to the pharmacy across the street.",
+    "scenarioRu": "Врач выписал вам рецепт. Теперь в аптеку через дорогу.",
     "variants": [
       {
         "id": "hospital.pharmacy.base",
         "description": "They have everything you need",
+        "descriptionRu": "У них есть всё, что вам нужно",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Nima kerak?",
-            "english": "Hello! What do you need?"
+            "english": "Hello! What do you need?",
+            "russian": "Здравствуйте! Что вам нужно?"
           },
           {
             "speaker": "user",
             "uzbek": "Mana retsept. Bu dori bormi?",
             "english": "Here is the prescription. Do you have this medicine?",
+            "russian": "Вот рецепт. У вас есть это лекарство?",
             "tokens": [
               "Mana",
               "retsept.",
@@ -309,12 +354,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, bor. Kuniga ikki marta iching.",
-            "english": "Yes, we do. Take it twice a day."
+            "english": "Yes, we do. Take it twice a day.",
+            "russian": "Да, есть. Принимайте два раза в день."
           },
           {
             "speaker": "user",
             "uzbek": "Qancha turadi?",
             "english": "How much does it cost?",
+            "russian": "Сколько это стоит?",
             "tokens": [
               "Qancha",
               "turadi?"
@@ -323,12 +370,14 @@
           {
             "speaker": "npc",
             "uzbek": "O'n besh ming so'm.",
-            "english": "Fifteen thousand som."
+            "english": "Fifteen thousand som.",
+            "russian": "Пятнадцать тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana, rahmat.",
             "english": "Here you are, thank you.",
+            "russian": "Вот, пожалуйста, спасибо.",
             "tokens": [
               "Mana,",
               "rahmat."
@@ -339,11 +388,13 @@
       {
         "id": "hospital.pharmacy.prescription",
         "description": "This one needs a prescription",
+        "descriptionRu": "На это нужен рецепт",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Menga bu dori kerak.",
             "english": "I need this medicine.",
+            "russian": "Мне нужно это лекарство.",
             "tokens": [
               "Menga",
               "bu",
@@ -354,12 +405,14 @@
           {
             "speaker": "npc",
             "uzbek": "Buning uchun retsept kerak.",
-            "english": "You need a prescription for this."
+            "english": "You need a prescription for this.",
+            "russian": "На это нужен рецепт."
           },
           {
             "speaker": "user",
             "uzbek": "Retseptim yo'q. Nima qilaman?",
             "english": "I have no prescription. What do I do?",
+            "russian": "У меня нет рецепта. Что мне делать?",
             "tokens": [
               "Retseptim",
               "yo'q.",
@@ -370,12 +423,14 @@
           {
             "speaker": "npc",
             "uzbek": "Shifokorga boring. U yozib beradi.",
-            "english": "Go to the doctor. They will write one."
+            "english": "Go to the doctor. They will write one.",
+            "russian": "Сходите к врачу. Он его выпишет."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
             "english": "Fine, thank you.",
+            "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",
               "rahmat."
@@ -386,11 +441,13 @@
       {
         "id": "hospital.pharmacy.sold-out",
         "description": "The medicine has run out",
+        "descriptionRu": "Лекарство закончилось",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu dori bormi?",
             "english": "Do you have this medicine?",
+            "russian": "У вас есть это лекарство?",
             "tokens": [
               "Bu",
               "dori",
@@ -400,12 +457,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, tugadi. Ertaga keladi.",
-            "english": "Sorry, it has run out. It arrives tomorrow."
+            "english": "Sorry, it has run out. It arrives tomorrow.",
+            "russian": "Извините, оно закончилось. Завтра привезут."
           },
           {
             "speaker": "user",
             "uzbek": "Boshqa dorixona yaqinmi?",
             "english": "Is there another pharmacy near?",
+            "russian": "Поблизости есть другая аптека?",
             "tokens": [
               "Boshqa",
               "dorixona",
@@ -415,12 +474,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, bozor yonida bor.",
-            "english": "Yes, there is one by the bazaar."
+            "english": "Yes, there is one by the bazaar.",
+            "russian": "Да, есть рядом с базаром."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, u yerga boraman.",
             "english": "Thank you, I will go there.",
+            "russian": "Спасибо, я туда схожу.",
             "tokens": [
               "Rahmat,",
               "u",
@@ -433,16 +494,19 @@
       {
         "id": "hospital.pharmacy.cheaper",
         "description": "You ask for a cheaper version",
+        "descriptionRu": "Вы просите вариант подешевле",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bu dori yigirma ming so'm.",
-            "english": "This medicine is twenty thousand som."
+            "english": "This medicine is twenty thousand som.",
+            "russian": "Это лекарство стоит двадцать тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Arzonroq dori bormi?",
             "english": "Is there a cheaper medicine?",
+            "russian": "Есть лекарство подешевле?",
             "tokens": [
               "Arzonroq",
               "dori",
@@ -452,12 +516,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, mana bu sakkiz ming. Xuddi shunday.",
-            "english": "Yes, this one is eight thousand. It is the same."
+            "english": "Yes, this one is eight thousand. It is the same.",
+            "russian": "Да, вот это восемь тысяч. Точно такое же."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi, shuni olaman.",
             "english": "Very good, I will take that one.",
+            "russian": "Отлично, возьму его.",
             "tokens": [
               "Juda",
               "yaxshi,",
@@ -468,23 +534,27 @@
           {
             "speaker": "npc",
             "uzbek": "Sog' bo'ling!",
-            "english": "Stay healthy!"
+            "english": "Stay healthy!",
+            "russian": "Будьте здоровы!"
           }
         ]
       },
       {
         "id": "hospital.pharmacy.lunch",
         "description": "Closed for lunch — there is a night pharmacy",
+        "descriptionRu": "Закрыто на обед — есть ночная аптека",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, tushlikka yopilamiz.",
-            "english": "Sorry, we are closing for lunch."
+            "english": "Sorry, we are closing for lunch.",
+            "russian": "Извините, мы закрываемся на обед."
           },
           {
             "speaker": "user",
             "uzbek": "Menga dori juda kerak!",
             "english": "I really need medicine!",
+            "russian": "Мне очень нужно лекарство!",
             "tokens": [
               "Menga",
               "dori",
@@ -495,12 +565,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tungi dorixona doim ochiq. Maydon yonida.",
-            "english": "The night pharmacy is always open. By the square."
+            "english": "The night pharmacy is always open. By the square.",
+            "russian": "Ночная аптека всегда открыта. Рядом с площадью."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat! U yerga boraman.",
             "english": "Thank you! I will go there.",
+            "russian": "Спасибо! Я туда пойду.",
             "tokens": [
               "Rahmat!",
               "U",

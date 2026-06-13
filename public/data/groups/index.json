@@ -4,39 +4,47 @@
     "order": 1,
     "title": {
       "en": "Numbers",
-      "uz": "Sonlar"
+      "uz": "Sonlar",
+      "ru": "Числа"
     },
     "icon": "🔢",
-    "blurb": "Count to a thousand with a dozen building blocks"
+    "blurb": "Count to a thousand with a dozen building blocks",
+    "blurbRu": "Считайте до тысячи с помощью десятка строительных блоков"
   },
   {
     "id": "colours",
     "order": 2,
     "title": {
       "en": "Colours",
-      "uz": "Ranglar"
+      "uz": "Ranglar",
+      "ru": "Цвета"
     },
     "icon": "🎨",
-    "blurb": "Name the colours — and meet the famous ko'k"
+    "blurb": "Name the colours — and meet the famous ko'k",
+    "blurbRu": "Называйте цвета — и познакомьтесь со знаменитым ko'k"
   },
   {
     "id": "animals",
     "order": 3,
     "title": {
       "en": "Animals",
-      "uz": "Hayvonlar"
+      "uz": "Hayvonlar",
+      "ru": "Животные"
     },
     "icon": "🐫",
-    "blurb": "From the loyal it to the desert tuya"
+    "blurb": "From the loyal it to the desert tuya",
+    "blurbRu": "От верного it до пустынного tuya"
   },
   {
     "id": "foods",
     "order": 4,
     "title": {
       "en": "Foods",
-      "uz": "Taomlar"
+      "uz": "Taomlar",
+      "ru": "Еда"
     },
     "icon": "🍲",
-    "blurb": "Plov, soups and the colours of the bazaar"
+    "blurb": "Plov, soups and the colours of the bazaar",
+    "blurbRu": "Плов, супы и краски базара"
   }
 ]

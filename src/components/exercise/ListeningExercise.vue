@@ -3,15 +3,17 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { db } from '@/db'
 import { normalizeToken, shuffle, tokenize } from '@/exercises/validate'
 import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
+const { pick } = useContentLang()
 
 interface Phrase {
   uzbek: string
-  english: string
+  translation: string
 }
 
 const PHRASES_PER_SESSION = 5
@@ -30,7 +32,7 @@ onMounted(async () => {
         const key = normalizeToken(turn.uzbek)
         if (seen.has(key)) continue
         seen.add(key)
-        pool.push({ uzbek: turn.uzbek, english: turn.english })
+        pool.push({ uzbek: turn.uzbek, translation: pick(turn.english, turn.russian) })
       }
     }
   }
@@ -62,34 +64,34 @@ function next() {
 
 <template>
   <div class="listening">
-    <p v-if="loading" class="listening__loading" aria-live="polite">Loading phrases…</p>
+    <p v-if="loading" class="listening__loading" aria-live="polite">{{ $t('exercise.listening.loading') }}</p>
 
     <template v-else-if="current">
-      <p class="listening__counter">Phrase {{ index + 1 }} of {{ phrases.length }}</p>
+      <p class="listening__counter">{{ $t('exercise.listening.counter', { current: index + 1, total: phrases.length }) }}</p>
       <p class="listening__instruction">
-        Just listen — no quiz. Play it as many times as you like.
+        {{ $t('exercise.listening.justListen') }}
       </p>
 
       <div class="listening__card">
-        <AudioButton :text="current.uzbek" large label="Play the phrase" />
+        <AudioButton :text="current.uzbek" large :label="$t('audio.playPhrase')" />
         <p class="listening__uzbek">
           <UzbekSentence :uzbek="current.uzbek" />
         </p>
-        <p class="listening__english">{{ current.english }}</p>
+        <p class="listening__english">{{ current.translation }}</p>
       </div>
 
       <div class="listening__footer">
         <button class="btn btn--primary" type="button" @click="next">
-          {{ isLast ? 'Finish' : 'Next phrase' }}
+          {{ isLast ? $t('exercise.listening.finish') : $t('exercise.listening.nextPhrase') }}
         </button>
       </div>
     </template>
 
     <div v-else class="listening__empty">
       <p class="listening__loading">
-        No phrases for this location yet — they'll arrive in a content update.
+        {{ $t('exercise.listening.empty') }}
       </p>
-      <button class="btn btn--primary" type="button" @click="emit('complete')">Continue</button>
+      <button class="btn btn--primary" type="button" @click="emit('complete')">{{ $t('common.continue') }}</button>
     </div>
   </div>
 </template>

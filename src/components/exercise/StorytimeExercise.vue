@@ -6,9 +6,11 @@ import { tokenize, buildDecoys, contentWords, normalizeToken, shuffle } from '@/
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
+import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
+const { base, name, gloss, pick } = useContentLang()
 
 const story = ref<Story | null>(null)
 const index = ref(0)
@@ -29,29 +31,34 @@ onMounted(async () => {
   story.value = found ?? null
   const map = new Map<string, string>()
   for (const word of allWords) {
-    map.set(normalizeToken(word.uzbek), word.english)
+    map.set(normalizeToken(word.uzbek), gloss(word))
     for (const inflection of word.inflections ?? []) {
-      if (!map.has(normalizeToken(inflection))) map.set(normalizeToken(inflection), word.english)
+      if (!map.has(normalizeToken(inflection))) map.set(normalizeToken(inflection), gloss(word))
     }
   }
   // Story-specific glosses win over dictionary entries
-  for (const [surface, gloss] of Object.entries(found?.glossary ?? {})) {
-    map.set(normalizeToken(surface), gloss)
+  for (const [surface, glossEn] of Object.entries(found?.glossary ?? {})) {
+    const glossRu = base.value === 'ru' ? found?.glossaryRu?.[surface] : undefined
+    map.set(normalizeToken(surface), glossRu ?? glossEn)
   }
   glossary.value = map
   loading.value = false
 })
 
 const sentence = computed(() => story.value?.sentences[index.value])
-const englishTokens = computed(() => (sentence.value ? tokenize(sentence.value.english) : []))
+/** The sentence translation in the learner's base language (English or Russian). */
+const sentenceTranslation = computed(() =>
+  sentence.value ? pick(sentence.value.english, sentence.value.russian) : '',
+)
+const englishTokens = computed(() => (sentence.value ? tokenize(sentenceTranslation.value) : []))
 const isLast = computed(() => !!story.value && index.value >= story.value.sentences.length - 1)
 
-/** English content words from the rest of the story, used as decoys. */
+/** Content words from the rest of the story (base language), used as decoys. */
 const decoys = computed(() => {
   if (!story.value || !sentence.value) return []
   const pool = story.value.sentences
     .filter((_, i) => i !== index.value)
-    .flatMap((s) => contentWords(tokenize(s.english)))
+    .flatMap((s) => contentWords(tokenize(pick(s.english, s.russian))))
   return buildDecoys(englishTokens.value, pool, 3)
 })
 
@@ -72,20 +79,20 @@ function next() {
 
 <template>
   <div class="story">
-    <p v-if="loading" class="story__loading" aria-live="polite">Loading story…</p>
+    <p v-if="loading" class="story__loading" aria-live="polite">{{ $t('exercise.storytime.loading') }}</p>
 
     <div v-else-if="!story" class="story__empty">
       <p class="story__loading">
-        No story for this location yet — it'll arrive in a content update.
+        {{ $t('exercise.storytime.empty') }}
       </p>
-      <button class="btn btn--primary" type="button" @click="emit('complete')">Continue</button>
+      <button class="btn btn--primary" type="button" @click="emit('complete')">{{ $t('common.continue') }}</button>
     </div>
 
     <!-- Bilingual replay -->
     <template v-else-if="replayMode">
-      <h2 class="story__title">{{ story.title.en }}</h2>
+      <h2 class="story__title">{{ name(story.title) }}</h2>
       <p class="story__title-uz" lang="uz">{{ story.title.uz }}</p>
-      <p class="story__replay-note">The whole story — listen again any time.</p>
+      <p class="story__replay-note">{{ $t('exercise.storytime.replayNote') }}</p>
 
       <ol class="replay-list">
         <li v-for="(s, i) in story.sentences" :key="i" class="replay-item">
@@ -93,31 +100,31 @@ function next() {
             <p class="replay-item__uzbek">
               <UzbekSentence :uzbek="s.uzbek" :glossary="glossary" />
             </p>
-            <p class="replay-item__english">{{ s.english }}</p>
+            <p class="replay-item__english">{{ pick(s.english, s.russian) }}</p>
           </div>
           <AudioButton :text="s.uzbek" />
         </li>
       </ol>
 
       <button class="btn btn--primary story__finish" type="button" @click="emit('complete')">
-        Finish story
+        {{ $t('exercise.storytime.finishStory') }}
       </button>
     </template>
 
     <!-- Sentence by sentence -->
     <template v-else-if="sentence">
-      <h2 class="story__title">{{ story.title.en }}</h2>
-      <p class="story__counter">Sentence {{ index + 1 }} of {{ story.sentences.length }}</p>
+      <h2 class="story__title">{{ name(story.title) }}</h2>
+      <p class="story__counter">{{ $t('exercise.storytime.counter', { current: index + 1, total: story.sentences.length }) }}</p>
 
       <div class="sentence-card">
         <p class="sentence-card__uzbek">
           <UzbekSentence :uzbek="sentence.uzbek" :glossary="glossary" />
         </p>
-        <AudioButton :text="sentence.uzbek" label="Play the sentence" />
-        <p class="sentence-card__hint">Tap any word you don't know.</p>
+        <AudioButton :text="sentence.uzbek" :label="$t('audio.playSentence')" />
+        <p class="sentence-card__hint">{{ $t('exercise.storytime.tapHint') }}</p>
       </div>
 
-      <p class="story__task">Now build the English translation:</p>
+      <p class="story__task">{{ $t('exercise.storytime.buildTranslation') }}</p>
 
       <TokenAssembly
         :key="index"
@@ -128,9 +135,9 @@ function next() {
       />
 
       <div v-if="solved" class="story__solution">
-        <p class="story__solution-text">{{ sentence.english }}</p>
+        <p class="story__solution-text">{{ sentenceTranslation }}</p>
         <button class="btn btn--primary" type="button" @click="next">
-          {{ isLast ? 'Read the whole story' : 'Next sentence' }}
+          {{ isLast ? $t('exercise.storytime.readWhole') : $t('exercise.storytime.nextSentence') }}
         </button>
       </div>
     </template>

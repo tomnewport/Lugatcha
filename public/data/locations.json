@@ -3,7 +3,8 @@
     "id": "police-station",
     "name": {
       "en": "Police Station",
-      "uz": "Politsiya"
+      "uz": "Politsiya",
+      "ru": "Полицейский участок"
     },
     "icon": "police-station",
     "gridRow": 1,
@@ -13,7 +14,8 @@
     "id": "public-square",
     "name": {
       "en": "Public Square",
-      "uz": "Shahar maydoni"
+      "uz": "Shahar maydoni",
+      "ru": "Городская площадь"
     },
     "icon": "public-square",
     "gridRow": 1,
@@ -23,7 +25,8 @@
     "id": "hospital",
     "name": {
       "en": "Hospital",
-      "uz": "Kasalxona"
+      "uz": "Kasalxona",
+      "ru": "Больница"
     },
     "icon": "hospital",
     "gridRow": 1,
@@ -33,7 +36,8 @@
     "id": "hotel",
     "name": {
       "en": "Hotel",
-      "uz": "Mehmonxona"
+      "uz": "Mehmonxona",
+      "ru": "Гостиница"
     },
     "icon": "hotel",
     "gridRow": 1,
@@ -43,7 +47,8 @@
     "id": "museum",
     "name": {
       "en": "Museum",
-      "uz": "Muzey"
+      "uz": "Muzey",
+      "ru": "Музей"
     },
     "icon": "museum",
     "gridRow": 2,
@@ -53,7 +58,8 @@
     "id": "train-station",
     "name": {
       "en": "Train Station",
-      "uz": "Vokzal"
+      "uz": "Vokzal",
+      "ru": "Железнодорожный вокзал"
     },
     "icon": "train-station",
     "gridRow": 2,
@@ -63,7 +69,8 @@
     "id": "metro-station",
     "name": {
       "en": "Metro Station",
-      "uz": "Metro bekati"
+      "uz": "Metro bekati",
+      "ru": "Станция метро"
     },
     "icon": "metro-station",
     "gridRow": 2,
@@ -73,7 +80,8 @@
     "id": "bus-stop",
     "name": {
       "en": "Bus Stop",
-      "uz": "Avtobus bekati"
+      "uz": "Avtobus bekati",
+      "ru": "Автобусная остановка"
     },
     "icon": "bus-stop",
     "gridRow": 2,
@@ -83,7 +91,8 @@
     "id": "gift-shop",
     "name": {
       "en": "Gift Shop",
-      "uz": "Sovg'a do'koni"
+      "uz": "Sovg'a do'koni",
+      "ru": "Магазин подарков"
     },
     "icon": "gift-shop",
     "gridRow": 3,
@@ -93,7 +102,8 @@
     "id": "grocery-store",
     "name": {
       "en": "Grocery Store",
-      "uz": "Oziq-ovqat do'koni"
+      "uz": "Oziq-ovqat do'koni",
+      "ru": "Продуктовый магазин"
     },
     "icon": "grocery-store",
     "gridRow": 3,
@@ -103,7 +113,8 @@
     "id": "library",
     "name": {
       "en": "Library",
-      "uz": "Kutubxona"
+      "uz": "Kutubxona",
+      "ru": "Библиотека"
     },
     "icon": "library",
     "gridRow": 3,
@@ -113,7 +124,8 @@
     "id": "restaurant",
     "name": {
       "en": "Restaurant",
-      "uz": "Restoran"
+      "uz": "Restoran",
+      "ru": "Ресторан"
     },
     "icon": "restaurant",
     "gridRow": 3,
@@ -123,7 +135,8 @@
     "id": "cafe",
     "name": {
       "en": "Café",
-      "uz": "Kafe"
+      "uz": "Kafe",
+      "ru": "Кафе"
     },
     "icon": "cafe",
     "gridRow": 4,
@@ -133,7 +146,8 @@
     "id": "choyxona",
     "name": {
       "en": "Choyxona",
-      "uz": "Choyxona"
+      "uz": "Choyxona",
+      "ru": "Чайхана"
     },
     "icon": "choyxona",
     "gridRow": 4,
@@ -143,7 +157,8 @@
     "id": "bank",
     "name": {
       "en": "Bank",
-      "uz": "Bank"
+      "uz": "Bank",
+      "ru": "Банк"
     },
     "icon": "bank",
     "gridRow": 4,
@@ -153,7 +168,8 @@
     "id": "mountain-park",
     "name": {
       "en": "Mountain Park",
-      "uz": "Tog' bog'i"
+      "uz": "Tog' bog'i",
+      "ru": "Горный парк"
     },
     "icon": "mountain-park",
     "gridRow": 4,
@@ -163,7 +179,8 @@
     "id": "airport",
     "name": {
       "en": "Airport",
-      "uz": "Aeroport"
+      "uz": "Aeroport",
+      "ru": "Аэропорт"
     },
     "icon": "airport",
     "gridRow": 5,
@@ -173,7 +190,8 @@
     "id": "school",
     "name": {
       "en": "Language School",
-      "uz": "Til maktabi"
+      "uz": "Til maktabi",
+      "ru": "Языковая школа"
     },
     "icon": "school",
     "gridRow": 5,
@@ -183,7 +201,8 @@
     "id": "travel",
     "name": {
       "en": "Travel Agency",
-      "uz": "Sayohat agentligi"
+      "uz": "Sayohat agentligi",
+      "ru": "Турагентство"
     },
     "icon": "travel",
     "gridRow": 5,

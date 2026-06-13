@@ -2,6 +2,7 @@
 import { ref, computed, provide } from 'vue'
 import UzbekWord from '@/components/UzbekWord.vue'
 import { tokenize, normalizeToken } from '@/exercises/validate'
+import { i18n } from '@/i18n'
 
 const props = defineProps<{
   uzbek: string
@@ -25,7 +26,7 @@ function meaningFor(token: string): string | undefined {
   for (const [stem, gloss] of props.glossary) {
     if (stem.length >= 3 && stem.length > bestStem.length && norm.startsWith(stem)) {
       bestStem = stem
-      bestGloss = `${gloss} (+ suffix)`
+      bestGloss = `${gloss} ${i18n.global.t('exercise.suffix')}`
     }
   }
   return bestGloss

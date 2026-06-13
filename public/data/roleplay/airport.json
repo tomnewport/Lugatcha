@@ -4,23 +4,28 @@
     "theme": "airport",
     "title": {
       "en": "At Customs",
+      "ru": "На таможне",
       "uz": "Bojxonada"
     },
     "scenario": "You have just landed at Tashkent International Airport and are going through customs. The officer is checking your passport and asking about your visit.",
+    "scenarioRu": "Вы только что приземлились в международном аэропорту Ташкента и проходите таможню. Сотрудник проверяет ваш паспорт и расспрашивает о цели визита.",
     "variants": [
       {
         "id": "airport.customs.base",
         "description": "Standard customs check — everything goes smoothly",
+        "descriptionRu": "Обычная таможенная проверка — всё проходит гладко",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Pasportingizni ko'rsating, iltimos.",
-            "english": "Hello! Please show your passport."
+            "english": "Hello! Please show your passport.",
+            "russian": "Здравствуйте! Покажите, пожалуйста, ваш паспорт."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim.",
             "english": "Here is my passport.",
+            "russian": "Вот мой паспорт.",
             "tokens": [
               "Mana",
               "pasportim."
@@ -29,12 +34,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat. Qayerdan kelasiz?",
-            "english": "Thank you. Where are you from?"
+            "english": "Thank you. Where are you from?",
+            "russian": "Спасибо. Откуда вы приехали?"
           },
           {
             "speaker": "user",
             "uzbek": "Men Buyuk Britaniyadan kelaman.",
             "english": "I am from the United Kingdom.",
+            "russian": "Я из Великобритании.",
             "tokens": [
               "Men",
               "Buyuk",
@@ -45,12 +52,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tashrif maqsadingiz nima?",
-            "english": "What is the purpose of your visit?"
+            "english": "What is the purpose of your visit?",
+            "russian": "Какова цель вашего визита?"
           },
           {
             "speaker": "user",
             "uzbek": "Men turist sifatida kelganman.",
             "english": "I have come as a tourist.",
+            "russian": "Я приехал как турист.",
             "tokens": [
               "Men",
               "turist",
@@ -61,23 +70,27 @@
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz O'zbekistonga!",
-            "english": "Welcome to Uzbekistan!"
+            "english": "Welcome to Uzbekistan!",
+            "russian": "Добро пожаловать в Узбекистан!"
           }
         ]
       },
       {
         "id": "airport.customs.length-of-stay",
         "description": "The officer asks how long you plan to stay",
+        "descriptionRu": "Сотрудник спрашивает, как долго вы планируете остаться",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Pasportingizni ko'rsating, iltimos.",
-            "english": "Hello! Please show your passport."
+            "english": "Hello! Please show your passport.",
+            "russian": "Здравствуйте! Покажите, пожалуйста, ваш паспорт."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim.",
             "english": "Here is my passport.",
+            "russian": "Вот мой паспорт.",
             "tokens": [
               "Mana",
               "pasportim."
@@ -86,12 +99,14 @@
           {
             "speaker": "npc",
             "uzbek": "Necha kun qolmoqchisiz?",
-            "english": "How many days are you planning to stay?"
+            "english": "How many days are you planning to stay?",
+            "russian": "Сколько дней вы планируете остаться?"
           },
           {
             "speaker": "user",
             "uzbek": "Men o'n kun qolmoqchiman.",
             "english": "I plan to stay for ten days.",
+            "russian": "Я планирую остаться на десять дней.",
             "tokens": [
               "Men",
               "o'n",
@@ -102,23 +117,27 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Xush kelibsiz O'zbekistonga!",
-            "english": "Good. Welcome to Uzbekistan!"
+            "english": "Good. Welcome to Uzbekistan!",
+            "russian": "Хорошо. Добро пожаловать в Узбекистан!"
           }
         ]
       },
       {
         "id": "airport.customs.purpose",
         "description": "The officer asks the purpose of your visit",
+        "descriptionRu": "Сотрудник спрашивает о цели вашего визита",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Pasportingizni ko'rsating.",
-            "english": "Hello! Show your passport."
+            "english": "Hello! Show your passport.",
+            "russian": "Здравствуйте! Покажите ваш паспорт."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim.",
             "english": "Here is my passport.",
+            "russian": "Вот мой паспорт.",
             "tokens": [
               "Mana",
               "pasportim."
@@ -127,12 +146,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tashrif maqsadingiz nima?",
-            "english": "What is the purpose of your visit?"
+            "english": "What is the purpose of your visit?",
+            "russian": "Какова цель вашего визита?"
           },
           {
             "speaker": "user",
             "uzbek": "Men turist sifatida keldim.",
             "english": "I came as a tourist.",
+            "russian": "Я приехал как турист.",
             "tokens": [
               "Men",
               "turist",
@@ -143,12 +164,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qancha vaqt qolasiz?",
-            "english": "How long are you staying?"
+            "english": "How long are you staying?",
+            "russian": "Как надолго вы остаётесь?"
           },
           {
             "speaker": "user",
             "uzbek": "Ikki hafta qolaman.",
             "english": "I am staying two weeks.",
+            "russian": "Я остаюсь на две недели.",
             "tokens": [
               "Ikki",
               "hafta",
@@ -158,23 +181,27 @@
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz O'zbekistonga!",
-            "english": "Welcome to Uzbekistan!"
+            "english": "Welcome to Uzbekistan!",
+            "russian": "Добро пожаловать в Узбекистан!"
           }
         ]
       },
       {
         "id": "airport.customs.declare",
         "description": "You are asked if you have anything to declare",
+        "descriptionRu": "Вас спрашивают, есть ли у вас что-либо для декларирования",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Deklaratsiya qiladigan narsangiz bormi?",
-            "english": "Do you have anything to declare?"
+            "english": "Do you have anything to declare?",
+            "russian": "У вас есть что-нибудь для декларирования?"
           },
           {
             "speaker": "user",
             "uzbek": "Yo'q, faqat shaxsiy narsalar.",
             "english": "No, only personal things.",
+            "russian": "Нет, только личные вещи.",
             "tokens": [
               "Yo'q,",
               "faqat",
@@ -185,12 +212,14 @@
           {
             "speaker": "npc",
             "uzbek": "Naqd pul qancha?",
-            "english": "How much cash do you have?"
+            "english": "How much cash do you have?",
+            "russian": "Сколько у вас наличных?"
           },
           {
             "speaker": "user",
             "uzbek": "Ikki yuz dollar.",
             "english": "Two hundred dollars.",
+            "russian": "Двести долларов.",
             "tokens": [
               "Ikki",
               "yuz",
@@ -200,23 +229,27 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Xush kelibsiz!",
-            "english": "Fine. Welcome!"
+            "english": "Fine. Welcome!",
+            "russian": "Хорошо. Добро пожаловать!"
           }
         ]
       },
       {
         "id": "airport.customs.hotel",
         "description": "The officer asks where you will stay",
+        "descriptionRu": "Сотрудник спрашивает, где вы остановитесь",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Qayerda turasiz?",
-            "english": "Where are you staying?"
+            "english": "Where are you staying?",
+            "russian": "Где вы остановитесь?"
           },
           {
             "speaker": "user",
             "uzbek": "Men mehmonxonada turaman.",
             "english": "I am staying at a hotel.",
+            "russian": "Я остановлюсь в гостинице.",
             "tokens": [
               "Men",
               "mehmonxonada",
@@ -226,12 +259,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi shaharda?",
-            "english": "In which city?"
+            "english": "In which city?",
+            "russian": "В каком городе?"
           },
           {
             "speaker": "user",
             "uzbek": "Toshkentda va Samarqandda.",
             "english": "In Tashkent and Samarkand.",
+            "russian": "В Ташкенте и Самарканде.",
             "tokens": [
               "Toshkentda",
               "va",
@@ -241,23 +276,27 @@
           {
             "speaker": "npc",
             "uzbek": "Ajoyib shaharlar! Yaxshi sayohat!",
-            "english": "Wonderful cities! Have a good trip!"
+            "english": "Wonderful cities! Have a good trip!",
+            "russian": "Замечательные города! Хорошего путешествия!"
           }
         ]
       },
       {
         "id": "airport.customs.bag-check",
         "description": "They want to check your bag",
+        "descriptionRu": "Они хотят проверить вашу сумку",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Sumkangizni ochib bering, iltimos.",
-            "english": "Please open your bag."
+            "english": "Please open your bag.",
+            "russian": "Откройте, пожалуйста, вашу сумку."
           },
           {
             "speaker": "user",
             "uzbek": "Albatta, mana.",
             "english": "Of course, here.",
+            "russian": "Конечно, вот.",
             "tokens": [
               "Albatta,",
               "mana."
@@ -266,12 +305,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bu nima?",
-            "english": "What is this?"
+            "english": "What is this?",
+            "russian": "Что это?"
           },
           {
             "speaker": "user",
             "uzbek": "Bu sovg'a, choy.",
             "english": "This is a gift, tea.",
+            "russian": "Это подарок, чай.",
             "tokens": [
               "Bu",
               "sovg'a,",
@@ -281,7 +322,8 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi, rahmat. O'tishingiz mumkin.",
-            "english": "Fine, thank you. You may go through."
+            "english": "Fine, thank you. You may go through.",
+            "russian": "Хорошо, спасибо. Можете проходить."
           }
         ]
       }
@@ -292,23 +334,28 @@
     "theme": "airport",
     "title": {
       "en": "The Missing Suitcase",
+      "ru": "Пропавший чемодан",
       "uz": "Yo'qolgan jomadon"
     },
     "scenario": "Your flight has landed, but your suitcase has not appeared on the belt. You go to the lost luggage desk.",
+    "scenarioRu": "Ваш рейс приземлился, но ваш чемодан не появился на ленте. Вы идёте к стойке потерянного багажа.",
     "variants": [
       {
         "id": "airport.lost-luggage.base",
         "description": "The suitcase turns up on the next trolley",
+        "descriptionRu": "Чемодан находится на следующей тележке",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Sizga qanday yordam beray?",
-            "english": "Hello! How can I help you?"
+            "english": "Hello! How can I help you?",
+            "russian": "Здравствуйте! Чем я могу вам помочь?"
           },
           {
             "speaker": "user",
             "uzbek": "Bagajim kelmadi.",
             "english": "My luggage did not arrive.",
+            "russian": "Мой багаж не прибыл.",
             "tokens": [
               "Bagajim",
               "kelmadi."
@@ -317,12 +364,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi parvoz bilan keldingiz?",
-            "english": "Which flight did you arrive on?"
+            "english": "Which flight did you arrive on?",
+            "russian": "Каким рейсом вы прилетели?"
           },
           {
             "speaker": "user",
             "uzbek": "Men Istanbuldan keldim.",
             "english": "I came from Istanbul.",
+            "russian": "Я прилетел из Стамбула.",
             "tokens": [
               "Men",
               "Istanbuldan",
@@ -332,12 +381,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir daqiqa kuting, iltimos... Mana, jomadoningiz keldi!",
-            "english": "Wait one minute, please... Here, your suitcase has arrived!"
+            "english": "Wait one minute, please... Here, your suitcase has arrived!",
+            "russian": "Подождите минутку, пожалуйста... Вот, ваш чемодан прибыл!"
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -346,23 +397,27 @@
           {
             "speaker": "npc",
             "uzbek": "Arzimaydi. Yaxshi sayohat!",
-            "english": "You're welcome. Have a good trip!"
+            "english": "You're welcome. Have a good trip!",
+            "russian": "Не за что. Хорошего путешествия!"
           }
         ]
       },
       {
         "id": "airport.lost-luggage.form",
         "description": "You must fill in a form — and they need your passport",
+        "descriptionRu": "Вам нужно заполнить бланк — и им нужен ваш паспорт",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Sizga qanday yordam beray?",
-            "english": "Hello! How can I help you?"
+            "english": "Hello! How can I help you?",
+            "russian": "Здравствуйте! Чем я могу вам помочь?"
           },
           {
             "speaker": "user",
             "uzbek": "Bagajim kelmadi.",
             "english": "My luggage did not arrive.",
+            "russian": "Мой багаж не прибыл.",
             "tokens": [
               "Bagajim",
               "kelmadi."
@@ -371,12 +426,14 @@
           {
             "speaker": "npc",
             "uzbek": "Formani to'ldiring, iltimos. Pasportingiz bormi?",
-            "english": "Fill in the form, please. Do you have your passport?"
+            "english": "Fill in the form, please. Do you have your passport?",
+            "russian": "Заполните бланк, пожалуйста. У вас есть паспорт?"
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim.",
             "english": "Here is my passport.",
+            "russian": "Вот мой паспорт.",
             "tokens": [
               "Mana",
               "pasportim."
@@ -385,12 +442,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat. Jomadoningiz qanday rangda?",
-            "english": "Thank you. What colour is your suitcase?"
+            "english": "Thank you. What colour is your suitcase?",
+            "russian": "Спасибо. Какого цвета ваш чемодан?"
           },
           {
             "speaker": "user",
             "uzbek": "Katta va qora.",
             "english": "Big and black.",
+            "russian": "Большой и чёрный.",
             "tokens": [
               "Katta",
               "va",
@@ -400,23 +459,27 @@
           {
             "speaker": "npc",
             "uzbek": "Topamiz. Telefon raqamingizni yozing.",
-            "english": "We will find it. Write down your phone number."
+            "english": "We will find it. Write down your phone number.",
+            "russian": "Мы его найдём. Запишите ваш номер телефона."
           }
         ]
       },
       {
         "id": "airport.lost-luggage.wrong-city",
         "description": "The suitcase flew to the wrong city",
+        "descriptionRu": "Чемодан улетел не в тот город",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, jomadoningiz Samarqandga ketdi.",
-            "english": "Sorry, your suitcase went to Samarkand."
+            "english": "Sorry, your suitcase went to Samarkand.",
+            "russian": "Извините, ваш чемодан улетел в Самарканд."
           },
           {
             "speaker": "user",
             "uzbek": "Samarqandga? Qachon keladi?",
             "english": "To Samarkand? When will it arrive?",
+            "russian": "В Самарканд? Когда он прибудет?",
             "tokens": [
               "Samarqandga?",
               "Qachon",
@@ -426,12 +489,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ertaga keladi. Mehmonxonangizga olib boramiz.",
-            "english": "It arrives tomorrow. We will bring it to your hotel."
+            "english": "It arrives tomorrow. We will bring it to your hotel.",
+            "russian": "Он прибудет завтра. Мы доставим его в вашу гостиницу."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
             "english": "Good, thank you.",
+            "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",
               "rahmat."
@@ -440,23 +505,27 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz va xush kelibsiz!",
-            "english": "Our apologies — and welcome!"
+            "english": "Our apologies — and welcome!",
+            "russian": "Приносим извинения — и добро пожаловать!"
           }
         ]
       },
       {
         "id": "airport.lost-luggage.tomorrow",
         "description": "It arrives on tomorrow’s flight",
+        "descriptionRu": "Он прибудет завтрашним рейсом",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Jomadoningiz ertagagi parvozda keladi.",
-            "english": "Your suitcase arrives on tomorrow's flight."
+            "english": "Your suitcase arrives on tomorrow's flight.",
+            "russian": "Ваш чемодан прибудет завтрашним рейсом."
           },
           {
             "speaker": "user",
             "uzbek": "Mehmonxonaga olib kelasizmi?",
             "english": "Will you bring it to the hotel?",
+            "russian": "Вы доставите его в гостиницу?",
             "tokens": [
               "Mehmonxonaga",
               "olib",
@@ -466,12 +535,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, albatta. Manzilni yozing, iltimos.",
-            "english": "Yes, of course. Write the address, please."
+            "english": "Yes, of course. Write the address, please.",
+            "russian": "Да, конечно. Напишите адрес, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Mana manzil. Rahmat.",
             "english": "Here is the address. Thank you.",
+            "russian": "Вот адрес. Спасибо.",
             "tokens": [
               "Mana",
               "manzil.",
@@ -481,23 +552,27 @@
           {
             "speaker": "npc",
             "uzbek": "Arzimaydi. Kechirasiz!",
-            "english": "You're welcome. Our apologies!"
+            "english": "You're welcome. Our apologies!",
+            "russian": "Не за что. Приносим извинения!"
           }
         ]
       },
       {
         "id": "airport.lost-luggage.describe",
         "description": "They ask you to describe the bag",
+        "descriptionRu": "Вас просят описать сумку",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Jomadoningiz qanday?",
-            "english": "What is your suitcase like?"
+            "english": "What is your suitcase like?",
+            "russian": "Как выглядит ваш чемодан?"
           },
           {
             "speaker": "user",
             "uzbek": "Kichik va ko'k.",
             "english": "Small and blue.",
+            "russian": "Маленький и синий.",
             "tokens": [
               "Kichik",
               "va",
@@ -507,12 +582,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ichida nima bor?",
-            "english": "What is inside it?"
+            "english": "What is inside it?",
+            "russian": "Что внутри него?"
           },
           {
             "speaker": "user",
             "uzbek": "Kiyimlar va kitoblar.",
             "english": "Clothes and books.",
+            "russian": "Одежда и книги.",
             "tokens": [
               "Kiyimlar",
               "va",
@@ -522,12 +599,14 @@
           {
             "speaker": "npc",
             "uzbek": "Topdik! Mana jomadoningiz.",
-            "english": "We found it! Here is your suitcase."
+            "english": "We found it! Here is your suitcase.",
+            "russian": "Мы его нашли! Вот ваш чемодан."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi! Rahmat!",
             "english": "Very good! Thank you!",
+            "russian": "Очень хорошо! Спасибо!",
             "tokens": [
               "Juda",
               "yaxshi!",
@@ -539,16 +618,19 @@
       {
         "id": "airport.lost-luggage.lunch",
         "description": "The desk is closing for lunch",
+        "descriptionRu": "Стойка закрывается на обед",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, biz tushlikka yopilamiz.",
-            "english": "Sorry, we are closing for lunch."
+            "english": "Sorry, we are closing for lunch.",
+            "russian": "Извините, мы закрываемся на обед."
           },
           {
             "speaker": "user",
             "uzbek": "Qachon ochilasiz?",
             "english": "When do you open?",
+            "russian": "Когда вы откроетесь?",
             "tokens": [
               "Qachon",
               "ochilasiz?"
@@ -557,12 +639,14 @@
           {
             "speaker": "npc",
             "uzbek": "Soat ikkida. Kechirasiz.",
-            "english": "At two o'clock. Sorry."
+            "english": "At two o'clock. Sorry.",
+            "russian": "В два часа. Извините."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, soat ikkida kelaman.",
             "english": "Fine, I will come at two o'clock.",
+            "russian": "Хорошо, я приду в два часа.",
             "tokens": [
               "Yaxshi,",
               "soat",
@@ -573,7 +657,8 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat. Tez orada yordam beramiz.",
-            "english": "Thank you. We will help you soon."
+            "english": "Thank you. We will help you soon.",
+            "russian": "Спасибо. Мы скоро вам поможем."
           }
         ]
       }

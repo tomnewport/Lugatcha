@@ -4,32 +4,39 @@
     "theme": "public-square",
     "title": {
       "en": "Evening in the Square",
+      "ru": "Вечер на площади",
       "uz": "Maydonda oqshom"
     },
     "sentences": [
       {
         "uzbek": "Oqshomda men maydonga bordim.",
-        "english": "In the evening I went to the square."
+        "english": "In the evening I went to the square.",
+        "russian": "Вечером я пошёл на площадь."
       },
       {
         "uzbek": "Favvora yonida bolalar o'ynadi.",
-        "english": "Children played by the fountain."
+        "english": "Children played by the fountain.",
+        "russian": "Дети играли у фонтана."
       },
       {
         "uzbek": "Oilalar muzqaymoq yedi.",
-        "english": "Families ate ice cream."
+        "english": "Families ate ice cream.",
+        "russian": "Семьи ели мороженое."
       },
       {
         "uzbek": "Men haykal yonida o'tirdim.",
-        "english": "I sat by the statue."
+        "english": "I sat by the statue.",
+        "russian": "Я сел у памятника."
       },
       {
         "uzbek": "Havo iliq va yoqimli edi.",
-        "english": "The air was warm and pleasant."
+        "english": "The air was warm and pleasant.",
+        "russian": "Воздух был тёплым и приятным."
       },
       {
         "uzbek": "Bu shahar oqshomda juda chiroyli.",
-        "english": "This city is very beautiful in the evening."
+        "english": "This city is very beautiful in the evening.",
+        "russian": "Этот город вечером очень красив."
       }
     ],
     "glossary": {
@@ -53,6 +60,28 @@
       "juda": "very",
       "chiroyli": "beautiful",
       "va": "and"
+    },
+    "glossaryRu": {
+      "Oqshomda": "вечером",
+      "men": "я",
+      "maydonga": "на площадь",
+      "bordim": "я пошёл",
+      "yonida": "рядом с / у",
+      "bolalar": "дети",
+      "o'ynadi": "играли",
+      "Oilalar": "семьи",
+      "muzqaymoq": "мороженое",
+      "yedi": "ели",
+      "o'tirdim": "я сел",
+      "Havo": "воздух / погода",
+      "iliq": "тёплый",
+      "yoqimli": "приятный",
+      "edi": "был",
+      "Bu": "этот",
+      "shahar": "город",
+      "juda": "очень",
+      "chiroyli": "красивый",
+      "va": "и"
     }
   },
   {
@@ -60,32 +89,39 @@
     "theme": "public-square",
     "title": {
       "en": "Finding the Bazaar",
+      "ru": "Поиск базара",
       "uz": "Bozorni topish"
     },
     "sentences": [
       {
         "uzbek": "Men bozorni izladim.",
-        "english": "I was looking for the bazaar."
+        "english": "I was looking for the bazaar.",
+        "russian": "Я искал базар."
       },
       {
         "uzbek": "Bir kishidan yo'l so'radim.",
-        "english": "I asked a person the way."
+        "english": "I asked a person the way.",
+        "russian": "Я спросил дорогу у одного человека."
       },
       {
         "uzbek": "U chap tomonni ko'rsatdi.",
-        "english": "He pointed to the left side."
+        "english": "He pointed to the left side.",
+        "russian": "Он указал на левую сторону."
       },
       {
         "uzbek": "Men to'g'riga yurdim, keyin chapga.",
-        "english": "I walked straight, then left."
+        "english": "I walked straight, then left.",
+        "russian": "Я шёл прямо, затем налево."
       },
       {
         "uzbek": "Bozor masjid yonida edi.",
-        "english": "The bazaar was next to the mosque."
+        "english": "The bazaar was next to the mosque.",
+        "russian": "Базар был рядом с мечетью."
       },
       {
         "uzbek": "U katta va rang-barang edi!",
-        "english": "It was big and colourful!"
+        "english": "It was big and colourful!",
+        "russian": "Он был большим и разноцветным!"
       }
     ],
     "glossary": {
@@ -110,6 +146,29 @@
       "katta": "big",
       "rang-barang": "colourful",
       "va": "and"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "bozorni": "базар (объект)",
+      "izladim": "я искал",
+      "Bir": "один / некий",
+      "kishidan": "у человека",
+      "yo'l": "дорога",
+      "so'radim": "я спросил",
+      "U": "он / оно",
+      "chap": "левый",
+      "tomonni": "сторону (объект)",
+      "ko'rsatdi": "указал / показал",
+      "to'g'riga": "прямо вперёд",
+      "yurdim": "я шёл",
+      "keyin": "затем",
+      "chapga": "налево",
+      "masjid": "мечеть",
+      "yonida": "рядом с",
+      "edi": "был",
+      "katta": "большой",
+      "rang-barang": "разноцветный",
+      "va": "и"
     }
   }
 ]

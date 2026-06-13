@@ -3,41 +3,56 @@
   "order": 3,
   "title": {
     "en": "Animals",
-    "uz": "Hayvonlar"
+    "uz": "Hayvonlar",
+    "ru": "Животные"
   },
   "icon": "🐫",
   "blurb": "From the loyal it to the desert tuya",
+  "blurbRu": "От верного it до пустынного tuya",
   "article": [
     {
       "heading": "No he, no she",
+      "headingRu": "Ни «он», ни «она»",
       "body": [
         "Uzbek has **no grammatical gender** — one word covers a male or female animal, and the pronoun **u** means \"he\", \"she\" and \"it\" all at once. So *it* is simply \"dog\", whether it is a he or a she.",
         "The general word for animal is **hayvon**; farm and pack animals together are **mol**."
       ],
+      "bodyRu": [
+        "В узбекском языке **нет грамматического рода** — одно слово обозначает и самца, и самку, а местоимение **u** означает сразу «он», «она» и «оно». Так что *it* — это просто «собака», будь то самец или самка.",
+        "Общее слово для животного — **hayvon**; домашний и вьючный скот вместе называют **mol**."
+      ],
       "examples": [
         {
           "uzbek": "bu it",
-          "english": "this dog"
+          "english": "this dog",
+          "russian": "эта собака"
         },
         {
           "uzbek": "oq mushuk",
-          "english": "a white cat"
+          "english": "a white cat",
+          "russian": "белая кошка"
         }
       ]
     },
     {
       "heading": "Animals of the Silk Road",
+      "headingRu": "Животные Шёлкового пути",
       "body": [
         "Some animals carry real cultural weight. The **tuya** (camel) was the engine of the Silk Road caravans, and the **ot** (horse) is woven through Central Asian life, from games to feasts. Out on the steppe you will still meet flocks of **qo'y** (sheep) and **echki** (goats), watched over by a working **it**."
+      ],
+      "bodyRu": [
+        "Некоторые животные имеют большое культурное значение. **tuya** (верблюд) был двигателем караванов Шёлкового пути, а **ot** (конь) вплетён в жизнь Центральной Азии — от игр до пиров. В степи и сегодня можно встретить отары **qo'y** (овец) и **echki** (коз), которых сторожит рабочий **it**."
       ],
       "examples": [
         {
           "uzbek": "tuya",
-          "english": "camel — the ship of the desert"
+          "english": "camel — the ship of the desert",
+          "russian": "верблюд — корабль пустыни"
         },
         {
           "uzbek": "ot",
-          "english": "horse"
+          "english": "horse",
+          "russian": "конь"
         }
       ]
     }
@@ -47,6 +62,7 @@
       "id": "core.animal-dog",
       "uzbek": "it",
       "english": "dog",
+      "russian": "собака",
       "theme": "core",
       "group": "animals",
       "level": 2
@@ -55,6 +71,7 @@
       "id": "core.animal-cat",
       "uzbek": "mushuk",
       "english": "cat",
+      "russian": "кошка",
       "theme": "core",
       "group": "animals",
       "level": 2
@@ -63,6 +80,7 @@
       "id": "core.animal-horse",
       "uzbek": "ot",
       "english": "horse",
+      "russian": "конь",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -71,6 +89,7 @@
       "id": "core.animal-donkey",
       "uzbek": "eshak",
       "english": "donkey",
+      "russian": "осёл",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -79,6 +98,7 @@
       "id": "core.animal-camel",
       "uzbek": "tuya",
       "english": "camel",
+      "russian": "верблюд",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -87,6 +107,7 @@
       "id": "core.animal-sheep",
       "uzbek": "qo'y",
       "english": "sheep",
+      "russian": "овца",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -95,6 +116,7 @@
       "id": "core.animal-goat",
       "uzbek": "echki",
       "english": "goat",
+      "russian": "коза",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -103,6 +125,7 @@
       "id": "core.animal-cow",
       "uzbek": "sigir",
       "english": "cow",
+      "russian": "корова",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -111,6 +134,7 @@
       "id": "core.animal-chicken",
       "uzbek": "tovuq",
       "english": "chicken",
+      "russian": "курица",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -119,6 +143,7 @@
       "id": "core.animal-bird",
       "uzbek": "qush",
       "english": "bird",
+      "russian": "птица",
       "theme": "core",
       "group": "animals",
       "level": 3
@@ -127,6 +152,7 @@
       "id": "core.animal-snake",
       "uzbek": "ilon",
       "english": "snake",
+      "russian": "змея",
       "theme": "core",
       "group": "animals",
       "level": 3

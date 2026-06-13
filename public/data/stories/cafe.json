@@ -4,32 +4,39 @@
     "theme": "cafe",
     "title": {
       "en": "Morning Coffee",
+      "ru": "Утренний кофе",
       "uz": "Ertalabki kofe"
     },
     "sentences": [
       {
         "uzbek": "Har ertalab men kafega boraman.",
-        "english": "Every morning I go to the cafe."
+        "english": "Every morning I go to the cafe.",
+        "russian": "Каждое утро я хожу в кафе."
       },
       {
         "uzbek": "Men bitta katta kofe buyuraman.",
-        "english": "I order one big coffee."
+        "english": "I order one big coffee.",
+        "russian": "Я заказываю один большой кофе."
       },
       {
         "uzbek": "Ofitsiant meni taniydi.",
-        "english": "The waiter knows me."
+        "english": "The waiter knows me.",
+        "russian": "Официант меня знает."
       },
       {
         "uzbek": "Men deraza yonida o'tiraman.",
-        "english": "I sit by the window."
+        "english": "I sit by the window.",
+        "russian": "Я сижу у окна."
       },
       {
         "uzbek": "Ko'chada odamlar ishga ketadi.",
-        "english": "On the street people go to work."
+        "english": "On the street people go to work.",
+        "russian": "На улице люди идут на работу."
       },
       {
         "uzbek": "Bu mening sevimli vaqtim.",
-        "english": "This is my favourite time."
+        "english": "This is my favourite time.",
+        "russian": "Это моё любимое время."
       }
     ],
     "glossary": {
@@ -57,6 +64,32 @@
       "mening": "my",
       "sevimli": "favourite",
       "vaqtim": "my time"
+    },
+    "glossaryRu": {
+      "Har": "каждый",
+      "ertalab": "утро",
+      "men": "я",
+      "kafega": "в кафе",
+      "boraman": "я иду",
+      "Men": "я",
+      "bitta": "один",
+      "katta": "большой",
+      "kofe": "кофе",
+      "buyuraman": "я заказываю",
+      "Ofitsiant": "официант",
+      "meni": "меня (объект)",
+      "taniydi": "знает / узнаёт",
+      "deraza": "окно",
+      "yonida": "у / рядом с",
+      "o'tiraman": "я сижу",
+      "Ko'chada": "на улице",
+      "odamlar": "люди",
+      "ishga": "на работу",
+      "ketadi": "идут",
+      "Bu": "это",
+      "mening": "мой",
+      "sevimli": "любимое",
+      "vaqtim": "моё время"
     }
   },
   {
@@ -64,32 +97,39 @@
     "theme": "cafe",
     "title": {
       "en": "A Rainy Afternoon",
+      "ru": "Дождливый день",
       "uz": "Yomg'irli kun"
     },
     "sentences": [
       {
         "uzbek": "Tashqarida yomg'ir yog'di.",
-        "english": "Outside it rained."
+        "english": "Outside it rained.",
+        "russian": "На улице шёл дождь."
       },
       {
         "uzbek": "Men issiq kafega kirdim.",
-        "english": "I went into a warm cafe."
+        "english": "I went into a warm cafe.",
+        "russian": "Я зашёл в тёплое кафе."
       },
       {
         "uzbek": "Issiq choy va tort buyurdim.",
-        "english": "I ordered hot tea and cake."
+        "english": "I ordered hot tea and cake.",
+        "russian": "Я заказал горячий чай и торт."
       },
       {
         "uzbek": "Men kitob o'qidim va dam oldim.",
-        "english": "I read a book and rested."
+        "english": "I read a book and rested.",
+        "russian": "Я читал книгу и отдыхал."
       },
       {
         "uzbek": "Yomg'ir deraza oynasiga urildi.",
-        "english": "The rain knocked on the window pane."
+        "english": "The rain knocked on the window pane.",
+        "russian": "Дождь стучал по оконному стеклу."
       },
       {
         "uzbek": "Bu juda tinch va yoqimli edi.",
-        "english": "It was very peaceful and pleasant."
+        "english": "It was very peaceful and pleasant.",
+        "russian": "Это было очень спокойно и приятно."
       }
     ],
     "glossary": {
@@ -116,6 +156,31 @@
       "tinch": "peaceful",
       "yoqimli": "pleasant",
       "edi": "was"
+    },
+    "glossaryRu": {
+      "Tashqarida": "снаружи / на улице",
+      "yomg'ir": "дождь",
+      "yog'di": "шёл / выпал",
+      "Men": "я",
+      "issiq": "тёплый / горячий",
+      "kafega": "в кафе",
+      "kirdim": "я вошёл",
+      "choy": "чай",
+      "va": "и",
+      "tort": "торт",
+      "buyurdim": "я заказал",
+      "kitob": "книга",
+      "o'qidim": "я читал",
+      "dam": "отдых (dam oldim = отдыхал)",
+      "oldim": "я взял",
+      "deraza": "окно",
+      "oynasiga": "по его стеклу",
+      "urildi": "стучал / ударял",
+      "Bu": "это / оно",
+      "juda": "очень",
+      "tinch": "спокойный",
+      "yoqimli": "приятный",
+      "edi": "было"
     }
   }
 ]

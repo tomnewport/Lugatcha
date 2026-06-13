@@ -2,7 +2,11 @@ export interface Word {
   id: string // stable slug, e.g. "airport.passport"
   uzbek: string
   english: string
+  /** Russian gloss; falls back to `english` when absent. */
+  russian?: string
   usageNotes?: string
+  /** Russian usage notes; falls back to `usageNotes` when absent. */
+  usageNotesRu?: string
   inflections?: string[]
   theme: string // location id or 'core'
   /** 1 = essential, 2 = useful, 3 = nice-to-have. Intro serves level 1 first. */
@@ -21,35 +25,45 @@ export interface Word {
 export interface StorySentence {
   uzbek: string
   english: string
+  /** Russian translation; falls back to `english` when absent. */
+  russian?: string
 }
 
 export interface Story {
   id: string
   theme: string
-  title: { en: string; uz: string }
+  title: { en: string; uz: string; ru?: string }
   sentences: StorySentence[]
   /** Per-story word glosses (surface form -> English) for tooltip lookups. */
   glossary?: Record<string, string>
+  /** Per-story word glosses in Russian; falls back to `glossary` per key. */
+  glossaryRu?: Record<string, string>
 }
 
 export interface RoleplayTurn {
   speaker: 'user' | 'npc'
   uzbek: string
   english: string
+  /** Russian translation; falls back to `english` when absent. */
+  russian?: string
   tokens?: string[] // pre-tokenized Uzbek words for phrase-assembly
 }
 
 export interface RoleplayVariant {
   id: string
   description: string
+  /** Russian description; falls back to `description` when absent. */
+  descriptionRu?: string
   turns: RoleplayTurn[]
 }
 
 export interface Roleplay {
   id: string
   theme: string
-  title: { en: string; uz: string }
+  title: { en: string; uz: string; ru?: string }
   scenario: string
+  /** Russian scenario; falls back to `scenario` when absent. */
+  scenarioRu?: string
   variants: RoleplayVariant[]
 }
 
@@ -100,22 +114,34 @@ export type ExerciseType =
 export interface LessonExample {
   uzbek: string
   english: string
+  /** Russian translation; falls back to `english` when absent. */
+  russian?: string
   /** Morpheme split for the agglutination visual, e.g. ["uy","lar","im"] */
   breakdown?: string[]
   /** Per-morpheme gloss aligned to breakdown, e.g. ["house","PLURAL","my"] */
   gloss?: string[]
+  /** Russian per-morpheme gloss; falls back to `gloss` when absent. */
+  glossRu?: string[]
 }
 
 export interface LessonSection {
   heading?: string
+  /** Russian heading; falls back to `heading` when absent. */
+  headingRu?: string
   body: string[] // paragraphs; **bold** is supported
+  /** Russian paragraphs; falls back to `body` when absent. */
+  bodyRu?: string[]
   examples?: LessonExample[]
 }
 
 export interface LessonChoiceOption {
   text: string
+  /** Russian option text; falls back to `text` when absent. */
+  textRu?: string
   correct?: boolean
   explain?: string
+  /** Russian explanation; falls back to `explain` when absent. */
+  explainRu?: string
 }
 
 /**
@@ -127,7 +153,11 @@ export interface LessonExercise {
   id: string
   engine: 'choice' | 'build'
   instruction: string
+  /** Russian instruction; falls back to `instruction` when absent. */
+  instructionRu?: string
   prompt?: string
+  /** Russian prompt; falls back to `prompt` when absent. */
+  promptRu?: string
   /** Uzbek text spoken as the prompt (sound-led exercises). */
   promptUzbek?: string
   /** choice engine */
@@ -140,13 +170,17 @@ export interface LessonExercise {
   /** Spoken aloud (and shown) once solved. */
   audioText?: string
   translation?: string
+  /** Russian translation; falls back to `translation` when absent. */
+  translationRu?: string
 }
 
 export interface LessonMeta {
   id: string
   order: number
-  title: { en: string; uz?: string }
+  title: { en: string; uz?: string; ru?: string }
   blurb: string
+  /** Russian blurb; falls back to `blurb` when absent. */
+  blurbRu?: string
   estimatedMinutes: number
   prerequisites?: string[]
 }
@@ -155,6 +189,8 @@ export interface Lesson extends LessonMeta {
   sections: LessonSection[]
   exercises: LessonExercise[]
   wrapUp: string
+  /** Russian wrap-up; falls back to `wrapUp` when absent. */
+  wrapUpRu?: string
 }
 
 export interface LessonProgress {
@@ -177,10 +213,12 @@ export interface LessonProgress {
 export interface VocabGroupMeta {
   id: string
   order: number
-  title: { en: string; uz: string }
+  title: { en: string; uz: string; ru?: string }
   /** Emoji shown on the School card. */
   icon: string
   blurb: string
+  /** Russian blurb; falls back to `blurb` when absent. */
+  blurbRu?: string
 }
 
 export interface VocabGroup extends VocabGroupMeta {
@@ -196,7 +234,7 @@ export interface VocabGroup extends VocabGroupMeta {
 // Static config — not stored in IndexedDB, read from locations.yaml at startup
 export interface Location {
   id: string
-  name: { en: string; uz: string }
+  name: { en: string; uz: string; ru?: string }
   icon: string
   gridRow: number
   gridCol: number
@@ -211,11 +249,13 @@ export interface Location {
  */
 export interface TravelPlace {
   id: string
-  name: { en: string; uz: string }
+  name: { en: string; uz: string; ru?: string }
   /** Real-world location, projected onto the map at render time. */
   lat: number
   lon: number
   article: string[]
+  /** Russian article paragraphs; falls back to `article` when absent. */
+  articleRu?: string[]
   words: Word[]
 }
 

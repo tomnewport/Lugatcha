@@ -1,6 +1,7 @@
 import type { ExerciseType, LocationProgress } from '@/db/types'
 import type { LugatchaDB } from '@/db/LugatchaDB'
 import { isWordKnown } from '@/db/useDb'
+import { i18n } from '@/i18n'
 
 export const ACTIVITY_ORDER: ExerciseType[] = [
   'intro',
@@ -12,24 +13,25 @@ export const ACTIVITY_ORDER: ExerciseType[] = [
   'test',
 ]
 
-export const EXERCISE_LABELS: Record<ExerciseType, string> = {
-  intro: 'New Words',
-  flashcards: 'Matching',
-  listening: 'Listening',
-  'phrase-assembly': 'Phrase Assembly',
-  roleplay: 'Roleplay',
-  storytime: 'Storytime',
-  test: 'Test',
+/** Maps the kebab-case ExerciseType to its camelCase i18n key segment. */
+const EXERCISE_KEY: Record<ExerciseType, string> = {
+  intro: 'intro',
+  flashcards: 'flashcards',
+  listening: 'listening',
+  'phrase-assembly': 'phraseAssembly',
+  roleplay: 'roleplay',
+  storytime: 'storytime',
+  test: 'test',
 }
 
-export const EXERCISE_DESCRIPTIONS: Record<ExerciseType, string> = {
-  intro: 'Meet five new words and hear them spoken',
-  flashcards: 'Match Uzbek and English pairs',
-  listening: 'Hear real phrases with their meaning',
-  'phrase-assembly': 'Build phrases from a word bank',
-  roleplay: 'Hold a conversation, turn by turn',
-  storytime: 'Read a short story and translate it',
-  test: 'Prove you know five words to learn them',
+/** Localized short label for an exercise (reactive when used in a template). */
+export function exerciseLabel(type: ExerciseType): string {
+  return i18n.global.t(`exercise.labels.${EXERCISE_KEY[type]}`)
+}
+
+/** Localized one-line description for an exercise. */
+export function exerciseDescription(type: ExerciseType): string {
+  return i18n.global.t(`exercise.descriptions.${EXERCISE_KEY[type]}`)
 }
 
 /** Seen-word thresholds that bring each activity to the table. */
@@ -72,7 +74,7 @@ export function buildPotluck(stats: LocationStats): Activity[] {
   const needed = (type: ExerciseType) => Math.min(UNLOCK_AT[type], stats.totalWords)
   const moreWords = (type: ExerciseType) => {
     const missing = needed(type) - stats.seenWords
-    return `Meet ${missing} more ${missing === 1 ? 'word' : 'words'} to unlock`
+    return i18n.global.t('potluck.unlock', { count: missing }, missing)
   }
 
   return ACTIVITY_ORDER.map((type): Activity => {
@@ -80,7 +82,7 @@ export function buildPotluck(stats: LocationStats): Activity[] {
 
     if (type === 'intro') {
       if (stats.seenWords >= stats.totalWords && stats.totalWords > 0) {
-        return { ...base, state: 'locked', hint: "You've met every word here" }
+        return { ...base, state: 'locked', hint: i18n.global.t('potluck.metAll') }
       }
       return { ...base, state: 'available' }
     }

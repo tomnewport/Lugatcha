@@ -3,6 +3,7 @@
     "id": "hospital.doctor",
     "uzbek": "shifokor",
     "english": "doctor",
+    "russian": "врач",
     "theme": "hospital",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "hospital.medicine",
     "uzbek": "dori",
     "english": "medicine",
+    "russian": "лекарство",
     "theme": "hospital",
     "level": 1
   },
@@ -17,22 +19,27 @@
     "id": "hospital.pharmacy",
     "uzbek": "dorixona",
     "english": "pharmacy",
+    "russian": "аптека",
     "theme": "hospital",
     "level": 1,
-    "usageNotes": "dori + -xona: the place for medicine."
+    "usageNotes": "dori + -xona: the place for medicine.",
+    "usageNotesRu": "dori + -xona: место для лекарств."
   },
   {
     "id": "hospital.pain",
     "uzbek": "og'riq",
     "english": "pain",
+    "russian": "боль",
     "theme": "hospital",
     "level": 1,
-    "usageNotes": "Boshim og'riyapti — my head hurts."
+    "usageNotes": "Boshim og'riyapti — my head hurts.",
+    "usageNotesRu": "Boshim og'riyapti — у меня болит голова."
   },
   {
     "id": "hospital.head",
     "uzbek": "bosh",
     "english": "head",
+    "russian": "голова",
     "theme": "hospital",
     "level": 1
   },
@@ -40,6 +47,7 @@
     "id": "hospital.stomach",
     "uzbek": "qorin",
     "english": "stomach",
+    "russian": "живот",
     "theme": "hospital",
     "level": 1
   },
@@ -47,6 +55,7 @@
     "id": "hospital.sick",
     "uzbek": "kasal",
     "english": "sick / ill",
+    "russian": "больной",
     "theme": "hospital",
     "level": 1
   },
@@ -54,6 +63,7 @@
     "id": "hospital.fever",
     "uzbek": "isitma",
     "english": "fever",
+    "russian": "температура",
     "theme": "hospital",
     "level": 2
   },
@@ -61,6 +71,7 @@
     "id": "hospital.tooth",
     "uzbek": "tish",
     "english": "tooth",
+    "russian": "зуб",
     "theme": "hospital",
     "level": 2
   },
@@ -68,6 +79,7 @@
     "id": "hospital.queue",
     "uzbek": "navbat",
     "english": "queue / turn",
+    "russian": "очередь",
     "theme": "hospital",
     "level": 2
   },
@@ -75,6 +87,7 @@
     "id": "hospital.prescription",
     "uzbek": "retsept",
     "english": "prescription",
+    "russian": "рецепт",
     "theme": "hospital",
     "level": 2
   },
@@ -82,14 +95,17 @@
     "id": "hospital.cold-illness",
     "uzbek": "shamollash",
     "english": "a cold (illness)",
+    "russian": "простуда",
     "theme": "hospital",
     "level": 2,
-    "usageNotes": "Shamolladim — I caught a cold."
+    "usageNotes": "Shamolladim — I caught a cold.",
+    "usageNotesRu": "Shamolladim — я простудился."
   },
   {
     "id": "hospital.insurance",
     "uzbek": "sug'urta",
     "english": "insurance",
+    "russian": "страховка",
     "theme": "hospital",
     "level": 3
   }

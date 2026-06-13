@@ -4,9 +4,11 @@ import type { LessonExercise } from '@/db/types'
 import { shuffle } from '@/exercises/validate'
 import AudioButton from '@/components/AudioButton.vue'
 import { playChime } from '@/audio/audio'
+import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{ exercise: LessonExercise }>()
 const emit = defineEmits<{ done: [passed: boolean] }>()
+const { pick: pickText } = useContentLang()
 
 const options = ref(shuffle(props.exercise.options ?? []))
 const picked = ref<number | null>(null)
@@ -19,7 +21,8 @@ const solved = computed(
 )
 const feedback = computed(() => {
   if (picked.value === null) return null
-  return options.value[picked.value]?.explain ?? null
+  const opt = options.value[picked.value]
+  return opt?.explain ? pickText(opt.explain, opt.explainRu) : null
 })
 
 function pick(i: number) {
@@ -47,15 +50,15 @@ function finish() {
 
 <template>
   <div class="choice">
-    <p class="choice__instruction">{{ exercise.instruction }}</p>
+    <p class="choice__instruction">{{ pickText(exercise.instruction, exercise.instructionRu) }}</p>
 
     <div v-if="exercise.prompt || exercise.promptUzbek" class="choice__prompt">
-      <p v-if="exercise.prompt" class="choice__prompt-text">{{ exercise.prompt }}</p>
+      <p v-if="exercise.prompt" class="choice__prompt-text">{{ pickText(exercise.prompt, exercise.promptRu) }}</p>
       <AudioButton
         v-if="exercise.promptUzbek"
         :text="exercise.promptUzbek"
         large
-        label="Play the sound"
+        :label="$t('audio.playSound')"
       />
     </div>
 
@@ -69,7 +72,7 @@ function finish() {
         :disabled="solved && i !== correctIndex && picked !== i"
         @click="pick(i)"
       >
-        {{ option.text }}
+        {{ pickText(option.text, option.textRu) }}
       </button>
     </div>
 
@@ -80,12 +83,12 @@ function finish() {
       aria-live="polite"
     >
       <template v-if="revealed && !options[picked ?? -1]?.correct">
-        The answer is “{{ options[correctIndex]?.text }}”.
+        {{ $t('school2.answerIs', { answer: pickText(options[correctIndex]?.text ?? '', options[correctIndex]?.textRu) }) }}
       </template>
       {{ feedback ?? '' }}
     </p>
 
-    <button v-if="solved" class="btn btn--primary" type="button" @click="finish">Continue</button>
+    <button v-if="solved" class="btn btn--primary" type="button" @click="finish">{{ $t('common.continue') }}</button>
   </div>
 </template>
 

@@ -2,12 +2,16 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLiveQuery, db } from '@/db/useDb'
-import { loadLessonIndex, lessonState, missingPrerequisites } from '@/db/lessons'
+import { loadLessonIndex, lessonState } from '@/db/lessons'
 import { loadGroupIndex } from '@/db/groups'
 import { isWordLearned } from '@/exercises/test'
+import { useContentLang } from '@/i18n/content'
+import { i18n } from '@/i18n'
 import type { LessonMeta, LessonProgress, VocabGroupMeta } from '@/db/types'
 
 const router = useRouter()
+const t = i18n.global.t
+const { name, pick } = useContentLang()
 const lessons = ref<LessonMeta[]>([])
 const groups = ref<VocabGroupMeta[]>([])
 
@@ -60,14 +64,19 @@ function open(meta: LessonMeta) {
 }
 
 function prereqHint(meta: LessonMeta): string {
-  const missing = missingPrerequisites(meta, lessons.value, progressMap.value)
-  return `Finish ${missing.join(' and ')} first`
+  const missing = (meta.prerequisites ?? [])
+    .filter((id) => !progressMap.value.get(id)?.completedAt)
+    .map((id) => {
+      const m = lessons.value.find((x) => x.id === id)
+      return m ? name(m.title) : id
+    })
+  return t('school.prereq', { names: missing.join(', ') })
 }
 </script>
 
 <template>
   <main class="school">
-    <button class="back-btn" aria-label="Back to city map" type="button" @click="router.push('/')">
+    <button class="back-btn" :aria-label="$t('common.backToCity')" type="button" @click="router.push('/')">
       <svg
         viewBox="0 0 16 16"
         fill="none"
@@ -77,17 +86,17 @@ function prereqHint(meta: LessonMeta): string {
       >
         <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      City
+      {{ $t('common.city') }}
     </button>
 
     <header class="school-header">
-      <h1 class="school-header__title">🏫 Language School</h1>
-      <p class="school-header__subtitle" lang="uz">Til maktabi</p>
+      <h1 class="school-header__title">🏫 {{ $t('school.title') }}</h1>
+      <p class="school-header__subtitle" lang="uz">{{ $t('school.subtitle') }}</p>
       <p class="school-header__blurb">
-        The big ideas that make Uzbek click — short lessons, each with a little game.
+        {{ $t('school.blurb') }}
       </p>
       <p v-if="lessons.length" class="school-header__progress">
-        {{ doneCount }} of {{ lessons.length }} lessons mastered
+        {{ $t('school.mastered', { done: doneCount, total: lessons.length }) }}
       </p>
     </header>
 
@@ -123,23 +132,23 @@ function prereqHint(meta: LessonMeta): string {
             <span v-else>{{ meta.order }}</span>
           </span>
           <span class="lesson-card__text">
-            <span class="lesson-card__title">{{ meta.title.en }}</span>
-            <span class="lesson-card__blurb">{{ meta.blurb }}</span>
+            <span class="lesson-card__title">{{ name(meta.title) }}</span>
+            <span class="lesson-card__blurb">{{ pick(meta.blurb, meta.blurbRu) }}</span>
             <span v-if="lessonState(meta, progressMap) === 'locked'" class="lesson-card__hint">
               {{ prereqHint(meta) }}
             </span>
           </span>
-          <span class="lesson-card__minutes">~{{ meta.estimatedMinutes }} min</span>
+          <span class="lesson-card__minutes">{{ $t('school.minutes', { count: meta.estimatedMinutes }) }}</span>
         </button>
       </li>
     </ol>
 
-    <p v-else class="school-loading" aria-live="polite">Loading lessons…</p>
+    <p v-else class="school-loading" aria-live="polite">{{ $t('school.loadingLessons') }}</p>
 
     <section v-if="groups.length" class="groups">
-      <h2 class="groups__heading">Vocabulary sets</h2>
+      <h2 class="groups__heading">{{ $t('school.vocabSets') }}</h2>
       <p class="groups__intro">
-        Learn a whole family of words at once — read the story, then take the test.
+        {{ $t('school.vocabSetsDesc') }}
       </p>
       <ul class="group-list">
         <li v-for="group in groups" :key="group.id">
@@ -150,8 +159,8 @@ function prereqHint(meta: LessonMeta): string {
           >
             <span class="group-card__icon" aria-hidden="true">{{ group.icon }}</span>
             <span class="group-card__text">
-              <span class="group-card__title">{{ group.title.en }}</span>
-              <span class="group-card__blurb">{{ group.blurb }}</span>
+              <span class="group-card__title">{{ name(group.title) }}</span>
+              <span class="group-card__blurb">{{ pick(group.blurb, group.blurbRu) }}</span>
             </span>
             <span v-if="groupProgress(group.id)" class="group-card__count">
               {{ groupProgress(group.id) }}

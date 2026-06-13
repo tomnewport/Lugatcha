@@ -8,6 +8,7 @@
  */
 import { reactive } from 'vue'
 import type { App } from 'vue'
+import { i18n } from '@/i18n'
 
 const REPO_ISSUES_URL = 'https://github.com/tomnewport/Lugatcha/issues/new'
 const MAX_TOASTS = 3
@@ -35,7 +36,7 @@ let nextId = 1
 export function captureError(source: string, error: unknown, context?: string): void {
   try {
     const err = error instanceof Error ? error : new Error(String(error))
-    const message = [err.message || 'Unknown error', context].filter(Boolean).join(' — ')
+    const message = [err.message || i18n.global.t('errors.unknown'), context].filter(Boolean).join(' — ')
 
     const existing = capturedErrors.find((e) => e.message === message)
     if (existing) {

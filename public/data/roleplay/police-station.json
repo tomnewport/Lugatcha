@@ -4,23 +4,28 @@
     "theme": "police-station",
     "title": {
       "en": "The Lost Wallet",
+      "ru": "Потерянный кошелёк",
       "uz": "Yo'qolgan hamyon"
     },
     "scenario": "Your wallet has disappeared somewhere between the bazaar and your hotel. You go to the police station for help.",
+    "scenarioRu": "Ваш кошелёк исчез где-то между базаром и гостиницей. Вы идёте в полицейский участок за помощью.",
     "variants": [
       {
         "id": "police-station.lost-wallet.base",
         "description": "Good news — someone handed it in",
+        "descriptionRu": "Хорошая новость — кто-то его сдал",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Qanday muammo bor?",
-            "english": "Hello! What is the problem?"
+            "english": "Hello! What is the problem?",
+            "russian": "Здравствуйте! Что у вас случилось?"
           },
           {
             "speaker": "user",
             "uzbek": "Hamyonim yo'qoldi.",
             "english": "My wallet is lost.",
+            "russian": "Я потерял кошелёк.",
             "tokens": [
               "Hamyonim",
               "yo'qoldi."
@@ -29,12 +34,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qanday hamyon? Qanday rangda?",
-            "english": "What kind of wallet? What colour?"
+            "english": "What kind of wallet? What colour?",
+            "russian": "Какой кошелёк? Какого цвета?"
           },
           {
             "speaker": "user",
             "uzbek": "Kichik va qora.",
             "english": "Small and black.",
+            "russian": "Маленький и чёрный.",
             "tokens": [
               "Kichik",
               "va",
@@ -44,12 +51,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir daqiqa... Mana bu hamyonmi?",
-            "english": "One minute... Is it this wallet?"
+            "english": "One minute... Is it this wallet?",
+            "russian": "Минутку... Это этот кошелёк?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, bu mening hamyonim! Katta rahmat!",
             "english": "Yes, that is my wallet! Thank you very much!",
+            "russian": "Да, это мой кошелёк! Большое спасибо!",
             "tokens": [
               "Ha,",
               "bu",
@@ -62,18 +71,21 @@
           {
             "speaker": "npc",
             "uzbek": "Arzimaydi. Ehtiyot bo'ling!",
-            "english": "You're welcome. Take care!"
+            "english": "You're welcome. Take care!",
+            "russian": "Не за что. Берегите себя!"
           }
         ]
       },
       {
         "id": "police-station.lost-wallet.passport",
         "description": "You need your passport to file the report",
+        "descriptionRu": "Для заявления нужен ваш паспорт",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Hamyonim yo'qoldi.",
             "english": "My wallet is lost.",
+            "russian": "Я потерял кошелёк.",
             "tokens": [
               "Hamyonim",
               "yo'qoldi."
@@ -82,12 +94,14 @@
           {
             "speaker": "npc",
             "uzbek": "Formani to'ldiramiz. Pasportingiz bormi?",
-            "english": "We will fill in a form. Do you have your passport?"
+            "english": "We will fill in a form. Do you have your passport?",
+            "russian": "Мы заполним бланк. У вас есть паспорт?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, mana pasportim.",
             "english": "Yes, here is my passport.",
+            "russian": "Да, вот мой паспорт.",
             "tokens": [
               "Ha,",
               "mana",
@@ -97,12 +111,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat. Qayerda yo'qoldi?",
-            "english": "Thank you. Where was it lost?"
+            "english": "Thank you. Where was it lost?",
+            "russian": "Спасибо. Где он потерялся?"
           },
           {
             "speaker": "user",
             "uzbek": "Bozorda, menimcha.",
             "english": "At the bazaar, I think.",
+            "russian": "На базаре, кажется.",
             "tokens": [
               "Bozorda,",
               "menimcha."
@@ -111,23 +127,27 @@
           {
             "speaker": "npc",
             "uzbek": "Yozdim. Telefon raqamingizni qoldiring.",
-            "english": "Noted. Leave your phone number."
+            "english": "Noted. Leave your phone number.",
+            "russian": "Записал. Оставьте ваш номер телефона."
           }
         ]
       },
       {
         "id": "police-station.lost-wallet.lunch",
         "description": "The office is closed for lunch",
+        "descriptionRu": "Офис закрыт на обед",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, tushlikka yopiqmiz.",
-            "english": "Sorry, we are closed for lunch."
+            "english": "Sorry, we are closed for lunch.",
+            "russian": "Извините, у нас обеденный перерыв."
           },
           {
             "speaker": "user",
             "uzbek": "Qachon ochilasiz?",
             "english": "When do you open?",
+            "russian": "Когда вы откроетесь?",
             "tokens": [
               "Qachon",
               "ochilasiz?"
@@ -136,12 +156,14 @@
           {
             "speaker": "npc",
             "uzbek": "Soat ikkida ochilamiz.",
-            "english": "We open at two o'clock."
+            "english": "We open at two o'clock.",
+            "russian": "Мы открываемся в два часа."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, soat ikkida kelaman.",
             "english": "Fine, I will come at two o'clock.",
+            "russian": "Хорошо, я приду в два часа.",
             "tokens": [
               "Yaxshi,",
               "soat",
@@ -152,18 +174,21 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat. Keyin yordam beramiz.",
-            "english": "Thank you. We will help you then."
+            "english": "Thank you. We will help you then.",
+            "russian": "Спасибо. Тогда мы вам поможем."
           }
         ]
       },
       {
         "id": "police-station.lost-wallet.hotel",
         "description": "The wallet was at your hotel all along",
+        "descriptionRu": "Кошелёк всё это время был в гостинице",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Hamyonim yo'qoldi.",
             "english": "My wallet is lost.",
+            "russian": "Я потерял кошелёк.",
             "tokens": [
               "Hamyonim",
               "yo'qoldi."
@@ -172,12 +197,14 @@
           {
             "speaker": "npc",
             "uzbek": "Avval mehmonxonangizga telefon qiling.",
-            "english": "First, telephone your hotel."
+            "english": "First, telephone your hotel.",
+            "russian": "Сначала позвоните в свою гостиницу."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi fikr. Bir daqiqa.",
             "english": "Good idea. One minute.",
+            "russian": "Хорошая мысль. Минутку.",
             "tokens": [
               "Yaxshi",
               "fikr.",
@@ -188,12 +215,14 @@
           {
             "speaker": "npc",
             "uzbek": "Nima dedilar?",
-            "english": "What did they say?"
+            "english": "What did they say?",
+            "russian": "Что они сказали?"
           },
           {
             "speaker": "user",
             "uzbek": "Hamyonim xonamda! Kechirasiz!",
             "english": "My wallet is in my room! Sorry!",
+            "russian": "Мой кошелёк в номере! Извините!",
             "tokens": [
               "Hamyonim",
               "xonamda!",
@@ -203,18 +232,21 @@
           {
             "speaker": "npc",
             "uzbek": "Hechqisi yo'q! Yaxshi kun!",
-            "english": "No problem! Have a good day!"
+            "english": "No problem! Have a good day!",
+            "russian": "Ничего страшного! Хорошего дня!"
           }
         ]
       },
       {
         "id": "police-station.lost-wallet.bag",
         "description": "Actually it is your whole bag that is missing",
+        "descriptionRu": "На самом деле пропала вся ваша сумка",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Sumkam yo'qoldi.",
             "english": "My bag is lost.",
+            "russian": "Я потерял сумку.",
             "tokens": [
               "Sumkam",
               "yo'qoldi."
@@ -223,12 +255,14 @@
           {
             "speaker": "npc",
             "uzbek": "Sumkada nima bor edi?",
-            "english": "What was in the bag?"
+            "english": "What was in the bag?",
+            "russian": "Что было в сумке?"
           },
           {
             "speaker": "user",
             "uzbek": "Hamyon, telefon va hujjatlar.",
             "english": "A wallet, a phone, and documents.",
+            "russian": "Кошелёк, телефон и документы.",
             "tokens": [
               "Hamyon,",
               "telefon",
@@ -239,12 +273,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tushunaman. Formani to'ldiring, iltimos.",
-            "english": "I understand. Fill in the form, please."
+            "english": "I understand. Fill in the form, please.",
+            "russian": "Понимаю. Заполните бланк, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Yordamingiz uchun rahmat.",
             "english": "Thank you for your help.",
+            "russian": "Спасибо за вашу помощь.",
             "tokens": [
               "Yordamingiz",
               "uchun",
@@ -254,23 +290,27 @@
           {
             "speaker": "npc",
             "uzbek": "Topsak, telefon qilamiz.",
-            "english": "If we find it, we will telephone you."
+            "english": "If we find it, we will telephone you.",
+            "russian": "Если найдём, мы вам позвоним."
           }
         ]
       },
       {
         "id": "police-station.lost-wallet.address",
         "description": "They need your hotel address for the report",
+        "descriptionRu": "Для заявления им нужен адрес вашей гостиницы",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Qayerda turibsiz? Manzilni ayting.",
-            "english": "Where are you staying? Tell me the address."
+            "english": "Where are you staying? Tell me the address.",
+            "russian": "Где вы остановились? Назовите адрес."
           },
           {
             "speaker": "user",
             "uzbek": "Men mehmonxonada turibman.",
             "english": "I am staying at a hotel.",
+            "russian": "Я остановился в гостинице.",
             "tokens": [
               "Men",
               "mehmonxonada",
@@ -280,12 +320,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi ko'chada?",
-            "english": "On which street?"
+            "english": "On which street?",
+            "russian": "На какой улице?"
           },
           {
             "speaker": "user",
             "uzbek": "Navoiy ko'chasida.",
             "english": "On Navoiy street.",
+            "russian": "На улице Навои.",
             "tokens": [
               "Navoiy",
               "ko'chasida."
@@ -294,12 +336,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yozdim. Topsak, xabar beramiz.",
-            "english": "Noted. If we find it, we will let you know."
+            "english": "Noted. If we find it, we will let you know.",
+            "russian": "Записал. Если найдём, сообщим вам."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -314,23 +358,28 @@
     "theme": "police-station",
     "title": {
       "en": "Tourist Registration",
+      "ru": "Регистрация туриста",
       "uz": "Turistik ro'yxat"
     },
     "scenario": "You are staying with friends, so you must register your visit at the local office.",
+    "scenarioRu": "Вы остановились у друзей, поэтому должны зарегистрировать своё пребывание в местном отделении.",
     "variants": [
       {
         "id": "police-station.registration.base",
         "description": "Five minutes of paperwork and you are done",
+        "descriptionRu": "Пять минут с бумагами — и всё готово",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Qanday yordam beray?",
-            "english": "Hello! How can I help?"
+            "english": "Hello! How can I help?",
+            "russian": "Здравствуйте! Чем могу помочь?"
           },
           {
             "speaker": "user",
             "uzbek": "Menga ro'yxatga olish kerak.",
             "english": "I need registration.",
+            "russian": "Мне нужна регистрация.",
             "tokens": [
               "Menga",
               "ro'yxatga",
@@ -341,12 +390,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasportingizni bering, iltimos.",
-            "english": "Give me your passport, please."
+            "english": "Give me your passport, please.",
+            "russian": "Дайте ваш паспорт, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pasportim va viza.",
             "english": "Here is my passport and visa.",
+            "russian": "Вот мой паспорт и виза.",
             "tokens": [
               "Mana",
               "pasportim",
@@ -357,12 +408,14 @@
           {
             "speaker": "npc",
             "uzbek": "Necha kun turasiz?",
-            "english": "How many days are you staying?"
+            "english": "How many days are you staying?",
+            "russian": "Сколько дней вы пробудете?"
           },
           {
             "speaker": "user",
             "uzbek": "O'n kun.",
             "english": "Ten days.",
+            "russian": "Десять дней.",
             "tokens": [
               "O'n",
               "kun."
@@ -371,18 +424,21 @@
           {
             "speaker": "npc",
             "uzbek": "Tayyor! Mana hujjatingiz.",
-            "english": "Done! Here is your document."
+            "english": "Done! Here is your document.",
+            "russian": "Готово! Вот ваш документ."
           }
         ]
       },
       {
         "id": "police-station.registration.address",
         "description": "You must bring the host address",
+        "descriptionRu": "Вы должны принести адрес принимающей стороны",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Menga ro'yxatga olish kerak.",
             "english": "I need registration.",
+            "russian": "Мне нужна регистрация.",
             "tokens": [
               "Menga",
               "ro'yxatga",
@@ -393,12 +449,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi manzilda turasiz?",
-            "english": "At which address are you staying?"
+            "english": "At which address are you staying?",
+            "russian": "По какому адресу вы проживаете?"
           },
           {
             "speaker": "user",
             "uzbek": "Do'stimning uyida.",
             "english": "At my friend's house.",
+            "russian": "В доме моего друга.",
             "tokens": [
               "Do'stimning",
               "uyida."
@@ -407,12 +465,14 @@
           {
             "speaker": "npc",
             "uzbek": "Manzilni yozma ravishda keltiring.",
-            "english": "Bring the address in writing."
+            "english": "Bring the address in writing.",
+            "russian": "Принесите адрес в письменном виде."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, ertaga kelaman.",
             "english": "Fine, I will come tomorrow.",
+            "russian": "Хорошо, я приду завтра.",
             "tokens": [
               "Yaxshi,",
               "ertaga",
@@ -424,16 +484,19 @@
       {
         "id": "police-station.registration.passport-missing",
         "description": "Your passport is back at the house",
+        "descriptionRu": "Ваш паспорт остался дома",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Pasportingizni bering, iltimos.",
-            "english": "Give me your passport, please."
+            "english": "Give me your passport, please.",
+            "russian": "Дайте ваш паспорт, пожалуйста."
           },
           {
             "speaker": "user",
             "uzbek": "Voy, pasportim uyda qoldi!",
             "english": "Oh no, my passport stayed at the house!",
+            "russian": "Ой, мой паспорт остался дома!",
             "tokens": [
               "Voy,",
               "pasportim",
@@ -444,12 +507,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasportsiz ro'yxatga olmaymiz.",
-            "english": "We cannot register you without a passport."
+            "english": "We cannot register you without a passport.",
+            "russian": "Без паспорта мы вас не зарегистрируем."
           },
           {
             "speaker": "user",
             "uzbek": "Tushunaman. Hozir olib kelaman.",
             "english": "I understand. I will fetch it now.",
+            "russian": "Понимаю. Сейчас я его принесу.",
             "tokens": [
               "Tushunaman.",
               "Hozir",
@@ -460,23 +525,27 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi, kutamiz.",
-            "english": "Fine, we will wait."
+            "english": "Fine, we will wait.",
+            "russian": "Хорошо, мы подождём."
           }
         ]
       },
       {
         "id": "police-station.registration.lunch",
         "description": "Closed for lunch — come back at two",
+        "descriptionRu": "Закрыто на обед — возвращайтесь в два",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, tushlikka yopiqmiz.",
-            "english": "Sorry, we are closed for lunch."
+            "english": "Sorry, we are closed for lunch.",
+            "russian": "Извините, у нас обеденный перерыв."
           },
           {
             "speaker": "user",
             "uzbek": "Soat nechada ochilasiz?",
             "english": "At what time do you open?",
+            "russian": "В котором часу вы открываетесь?",
             "tokens": [
               "Soat",
               "nechada",
@@ -486,12 +555,14 @@
           {
             "speaker": "npc",
             "uzbek": "Soat ikkida.",
-            "english": "At two o'clock."
+            "english": "At two o'clock.",
+            "russian": "В два часа."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, keyin kelaman.",
             "english": "Thank you, I will come later.",
+            "russian": "Спасибо, я приду позже.",
             "tokens": [
               "Rahmat,",
               "keyin",
@@ -503,16 +574,19 @@
       {
         "id": "police-station.registration.copy",
         "description": "They need a copy of your visa",
+        "descriptionRu": "Им нужна копия вашей визы",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Vizangizning nusxasi kerak.",
-            "english": "We need a copy of your visa."
+            "english": "We need a copy of your visa.",
+            "russian": "Нам нужна копия вашей визы."
           },
           {
             "speaker": "user",
             "uzbek": "Nusxa qayerda qilaman?",
             "english": "Where do I make a copy?",
+            "russian": "Где мне сделать копию?",
             "tokens": [
               "Nusxa",
               "qayerda",
@@ -522,12 +596,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yonimizdagi do'konda.",
-            "english": "At the shop next to us."
+            "english": "At the shop next to us.",
+            "russian": "В магазине рядом с нами."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, besh daqiqada kelaman.",
             "english": "Fine, I will be back in five minutes.",
+            "russian": "Хорошо, я вернусь через пять минут.",
             "tokens": [
               "Yaxshi,",
               "besh",
@@ -538,7 +614,8 @@
           {
             "speaker": "npc",
             "uzbek": "Kutamiz.",
-            "english": "We will wait."
+            "english": "We will wait.",
+            "russian": "Мы подождём."
           }
         ]
       }

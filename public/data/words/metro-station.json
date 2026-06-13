@@ -3,6 +3,7 @@
     "id": "metro-station.metro",
     "uzbek": "metro",
     "english": "metro / underground",
+    "russian": "метро",
     "theme": "metro-station",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "metro-station.station-stop",
     "uzbek": "bekat",
     "english": "station / stop",
+    "russian": "станция / остановка",
     "theme": "metro-station",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "metro-station.card",
     "uzbek": "karta",
     "english": "travel card",
+    "russian": "проездной",
     "theme": "metro-station",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "metro-station.entrance",
     "uzbek": "kirish",
     "english": "entrance",
+    "russian": "вход",
     "theme": "metro-station",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "metro-station.exit",
     "uzbek": "chiqish",
     "english": "exit",
+    "russian": "выход",
     "theme": "metro-station",
     "level": 1
   },
@@ -38,6 +43,7 @@
     "id": "metro-station.line",
     "uzbek": "yo'nalish",
     "english": "line / route",
+    "russian": "линия / маршрут",
     "theme": "metro-station",
     "level": 2
   },
@@ -45,6 +51,7 @@
     "id": "metro-station.transfer",
     "uzbek": "o'tish",
     "english": "transfer / change",
+    "russian": "пересадка",
     "theme": "metro-station",
     "level": 2
   },
@@ -52,6 +59,7 @@
     "id": "metro-station.next",
     "uzbek": "keyingi",
     "english": "next",
+    "russian": "следующий",
     "theme": "metro-station",
     "level": 2
   },
@@ -59,6 +67,7 @@
     "id": "metro-station.how-many-stops",
     "uzbek": "necha bekat",
     "english": "how many stops",
+    "russian": "сколько остановок",
     "theme": "metro-station",
     "level": 2
   },
@@ -66,6 +75,7 @@
     "id": "metro-station.centre",
     "uzbek": "markaz",
     "english": "centre",
+    "russian": "центр",
     "theme": "metro-station",
     "level": 2
   },
@@ -73,6 +83,7 @@
     "id": "metro-station.underground",
     "uzbek": "yer osti",
     "english": "underground",
+    "russian": "под землёй",
     "theme": "metro-station",
     "level": 3
   },
@@ -80,6 +91,7 @@
     "id": "metro-station.crowded",
     "uzbek": "gavjum",
     "english": "crowded",
+    "russian": "многолюдный",
     "theme": "metro-station",
     "level": 3
   }

@@ -4,9 +4,11 @@ import type { LessonExercise } from '@/db/types'
 import { speakUzbek, playChime } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from '@/components/exercise/TokenAssembly.vue'
+import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{ exercise: LessonExercise }>()
 const emit = defineEmits<{ done: [passed: boolean] }>()
+const { pick } = useContentLang()
 
 const result = ref<AssemblyResult | null>(null)
 
@@ -28,8 +30,8 @@ function finish() {
 
 <template>
   <div class="build">
-    <p class="build__instruction">{{ exercise.instruction }}</p>
-    <p v-if="exercise.prompt" class="build__prompt">{{ exercise.prompt }}</p>
+    <p class="build__instruction">{{ pick(exercise.instruction, exercise.instructionRu) }}</p>
+    <p v-if="exercise.prompt" class="build__prompt">{{ pick(exercise.prompt, exercise.promptRu) }}</p>
 
     <TokenAssembly
       :tokens="exercise.tokens ?? []"
@@ -43,8 +45,8 @@ function finish() {
         {{ assembled }}
         <AudioButton :text="spoken" />
       </p>
-      <p v-if="exercise.translation" class="build__solution-en">{{ exercise.translation }}</p>
-      <button class="btn btn--primary" type="button" @click="finish">Continue</button>
+      <p v-if="exercise.translation" class="build__solution-en">{{ pick(exercise.translation, exercise.translationRu) }}</p>
+      <button class="btn btn--primary" type="button" @click="finish">{{ $t('common.continue') }}</button>
     </div>
   </div>
 </template>

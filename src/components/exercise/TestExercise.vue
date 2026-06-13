@@ -4,6 +4,7 @@ import { db, useLiveQuery } from '@/db/useDb'
 import { loadTestData, loadPoolTestData } from '@/exercises/words'
 import { buildTest, selectTestWords, type TestQuestion } from '@/exercises/test'
 import { useProgressStore } from '@/stores/progress'
+import { useContentLang } from '@/i18n/content'
 import type { Word } from '@/db/types'
 import TestChoiceQuestion from './TestChoiceQuestion.vue'
 import TestTypeQuestion from './TestTypeQuestion.vue'
@@ -14,6 +15,7 @@ const emit = defineEmits<{ complete: [] }>()
 const props = defineProps<{ locationId?: string; pool?: Word[] }>()
 
 const progress = useProgressStore()
+const { gloss } = useContentLang()
 
 const questions = ref<TestQuestion[]>([])
 const index = ref(0)
@@ -21,7 +23,7 @@ const loading = ref(true)
 const phase = ref<'answering' | 'feedback'>('answering')
 
 /** A just-learned word to celebrate before moving on. */
-const celebrate = ref<{ uzbek: string; english: string } | null>(null)
+const celebrate = ref<{ uzbek: string; meaning: string } | null>(null)
 const confettiKey = ref(0)
 
 /** Live count of learned words so the celebration shows it ticking up. */
@@ -48,7 +50,7 @@ async function onAnswered(correct: boolean) {
   const { word, type } = current.value
   const outcome = await progress.recordTestResult(word.id, type, correct)
   if (outcome.newlyLearned) {
-    celebrate.value = { uzbek: word.uzbek, english: word.english }
+    celebrate.value = { uzbek: word.uzbek, meaning: gloss(word) }
     confettiKey.value++
   }
 }
@@ -66,10 +68,10 @@ function next() {
 
 <template>
   <div class="test">
-    <p v-if="loading" class="test__loading" aria-live="polite">Preparing your test…</p>
+    <p v-if="loading" class="test__loading" aria-live="polite">{{ $t('exercise.test.preparing') }}</p>
 
     <template v-else-if="current">
-      <p class="test__counter">Question {{ index + 1 }} of {{ questions.length }}</p>
+      <p class="test__counter">{{ $t('exercise.test.counter', { current: index + 1, total: questions.length }) }}</p>
 
       <TestTypeQuestion
         v-if="current.type === 'type'"
@@ -90,21 +92,21 @@ function next() {
         <div v-if="celebrate" class="test__celebrate" aria-live="polite">
           <span class="test__celebrate-icon" aria-hidden="true">🏆</span>
           <span class="test__celebrate-word" lang="uz">{{ celebrate.uzbek }}</span>
-          <span class="test__celebrate-en">{{ celebrate.english }} — learned!</span>
-          <span class="test__celebrate-count">{{ learnedCount }} learned</span>
+          <span class="test__celebrate-en">{{ $t('exercise.test.learned', { word: celebrate.meaning }) }}</span>
+          <span class="test__celebrate-count">{{ $t('exercise.test.learnedCount', { count: learnedCount }) }}</span>
         </div>
       </Transition>
 
       <div v-if="phase === 'feedback'" class="test__footer">
         <button class="btn btn--primary" type="button" @click="next">
-          {{ isLast ? 'Finish test' : 'Next question' }}
+          {{ isLast ? $t('exercise.test.finishTest') : $t('exercise.test.nextQuestion') }}
         </button>
       </div>
     </template>
 
     <div v-else class="test__empty">
-      <p class="test__loading">Meet a few more words before testing here.</p>
-      <button class="btn btn--primary" type="button" @click="emit('complete')">Continue</button>
+      <p class="test__loading">{{ $t('exercise.test.empty') }}</p>
+      <button class="btn btn--primary" type="button" @click="emit('complete')">{{ $t('common.continue') }}</button>
     </div>
 
     <ConfettiBurst v-if="celebrate" :key="confettiKey" @done="() => {}" />

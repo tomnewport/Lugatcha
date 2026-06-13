@@ -3,6 +3,7 @@
     "id": "museum.museum",
     "uzbek": "muzey",
     "english": "museum",
+    "russian": "музей",
     "theme": "museum",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "museum.history",
     "uzbek": "tarix",
     "english": "history",
+    "russian": "история",
     "theme": "museum",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "museum.old",
     "uzbek": "eski",
     "english": "old",
+    "russian": "старый",
     "theme": "museum",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "museum.picture",
     "uzbek": "rasm",
     "english": "picture / painting",
+    "russian": "картина",
     "theme": "museum",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "museum.beautiful",
     "uzbek": "chiroyli",
     "english": "beautiful",
+    "russian": "красивый",
     "theme": "museum",
     "level": 1
   },
@@ -38,6 +43,7 @@
     "id": "museum.hall",
     "uzbek": "zal",
     "english": "hall",
+    "russian": "зал",
     "theme": "museum",
     "level": 2
   },
@@ -45,6 +51,7 @@
     "id": "museum.tour",
     "uzbek": "ekskursiya",
     "english": "tour / excursion",
+    "russian": "экскурсия",
     "theme": "museum",
     "level": 2
   },
@@ -52,6 +59,7 @@
     "id": "museum.student",
     "uzbek": "talaba",
     "english": "student",
+    "russian": "студент",
     "theme": "museum",
     "level": 2
   },
@@ -59,6 +67,7 @@
     "id": "museum.discount",
     "uzbek": "chegirma",
     "english": "discount",
+    "russian": "скидка",
     "theme": "museum",
     "level": 2
   },
@@ -66,6 +75,7 @@
     "id": "museum.opening-hours",
     "uzbek": "ish vaqti",
     "english": "opening hours",
+    "russian": "часы работы",
     "theme": "museum",
     "level": 2
   },
@@ -73,6 +83,7 @@
     "id": "museum.art",
     "uzbek": "san'at",
     "english": "art",
+    "russian": "искусство",
     "theme": "museum",
     "level": 2
   },
@@ -80,6 +91,7 @@
     "id": "museum.ceramics",
     "uzbek": "sopol",
     "english": "ceramics / pottery",
+    "russian": "керамика",
     "theme": "museum",
     "level": 3
   },
@@ -87,8 +99,10 @@
     "id": "museum.silk",
     "uzbek": "ipak",
     "english": "silk",
+    "russian": "шёлк",
     "theme": "museum",
     "level": 3,
-    "usageNotes": "The Silk Road — Buyuk ipak yo'li."
+    "usageNotes": "The Silk Road — Buyuk ipak yo'li.",
+    "usageNotesRu": "Великий шёлковый путь — Buyuk ipak yo'li."
   }
 ]

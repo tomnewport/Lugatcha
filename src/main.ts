@@ -4,13 +4,20 @@ import App from './App.vue'
 import router from './router'
 import { db, ensureSeeded } from './db'
 import { installErrorHandlers, captureError } from './errors/reporter'
+import { i18n, setI18nLocale } from './i18n'
+import { useSettingsStore } from './stores/settings'
 import './assets/main.css'
 
 const app = createApp(App)
 
 installErrorHandlers(app)
-app.use(createPinia())
+const pinia = createPinia()
+app.use(pinia)
+app.use(i18n)
 app.use(router)
+
+// Apply the saved learning language to the interface before the first render.
+setI18nLocale(useSettingsStore(pinia).baseLanguage)
 
 app.mount('#app')
 

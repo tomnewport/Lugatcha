@@ -18,7 +18,7 @@ const props = withDefaults(
     mode?: 'strict' | 'loose'
     checkLabel?: string
   }>(),
-  { decoys: () => [], mode: 'strict', checkLabel: 'Check' },
+  { decoys: () => [], mode: 'strict', checkLabel: '' },
 )
 
 const emit = defineEmits<{ result: [AssemblyResult] }>()
@@ -97,7 +97,7 @@ function reveal() {
         'assembly__answer--wrong': feedback === 'wrong',
         'assembly__answer--correct': feedback === 'correct',
       }"
-      aria-label="Your answer"
+      :aria-label="$t('exercise.token.answerLabel')"
     >
       <TransitionGroup name="tile">
         <button
@@ -115,10 +115,10 @@ function reveal() {
           {{ tile.text }}
         </button>
       </TransitionGroup>
-      <span v-if="answer.length === 0" class="assembly__hint">Tap words to build your answer</span>
+      <span v-if="answer.length === 0" class="assembly__hint">{{ $t('exercise.token.tapToBuild') }}</span>
     </div>
 
-    <div class="assembly__bank" aria-label="Word bank">
+    <div class="assembly__bank" :aria-label="$t('exercise.token.bankLabel')">
       <TransitionGroup name="tile">
         <button
           v-for="tile in bank"
@@ -138,25 +138,25 @@ function reveal() {
       class="assembly__feedback assembly__feedback--wrong"
       aria-live="polite"
     >
-      Not quite — try again.
+      {{ $t('exercise.token.wrong') }}
     </p>
     <p
       v-else-if="feedback === 'correct'"
       class="assembly__feedback assembly__feedback--correct"
       aria-live="polite"
     >
-      To'g'ri! Correct!
+      {{ $t('exercise.token.correct') }}
     </p>
     <p v-else-if="feedback === 'revealed'" class="assembly__feedback" aria-live="polite">
-      Here's the answer — it will come back around.
+      {{ $t('exercise.token.revealed') }}
     </p>
 
     <div v-if="!settled" class="assembly__actions">
       <button class="btn btn--primary" type="button" :disabled="answer.length === 0" @click="check">
-        {{ checkLabel }}
+        {{ checkLabel || $t('exercise.token.check') }}
       </button>
       <button v-if="showReveal" class="btn btn--ghost" type="button" @click="reveal">
-        Show answer
+        {{ $t('exercise.token.showAnswer') }}
       </button>
     </div>
   </div>

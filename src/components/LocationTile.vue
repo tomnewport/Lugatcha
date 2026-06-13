@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Location, LocationProgress } from '@/db/types'
 import { useSettingsStore } from '@/stores/settings'
+import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{
   location: Location
@@ -16,12 +17,15 @@ const props = defineProps<{
 
 const router = useRouter()
 const settings = useSettingsStore()
+const { name } = useContentLang()
 
+/** The non-Uzbek label, in the learner's base language (English or Russian). */
+const baseName = computed(() => name(props.location.name))
 const primaryName = computed(() =>
-  settings.labelLanguage === 'uz' ? props.location.name.uz : props.location.name.en,
+  settings.labelLanguage === 'uz' ? props.location.name.uz : baseName.value,
 )
 const secondaryName = computed(() =>
-  settings.labelLanguage === 'uz' ? props.location.name.en : props.location.name.uz,
+  settings.labelLanguage === 'uz' ? baseName.value : props.location.name.uz,
 )
 
 const RADIUS = 18
@@ -57,7 +61,7 @@ function navigate() {
       'tile--complete': isComplete,
     }"
     :disabled="locked"
-    :aria-label="`${location.name.en}${locked ? ', locked' : ''}`"
+    :aria-label="`${baseName}${locked ? ', ' + $t('common.locked') : ''}`"
     @click="navigate"
   >
     <div class="tile__ring-wrap" aria-hidden="true">
@@ -120,7 +124,7 @@ function navigate() {
 
       <!-- Exercise emoji chip or initial letter -->
       <span v-else class="tile__icon tile__icon--letter" aria-hidden="true">
-        {{ exerciseEmoji ?? location.name.en.charAt(0) }}
+        {{ exerciseEmoji ?? baseName.charAt(0) }}
       </span>
     </div>
 

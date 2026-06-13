@@ -3,9 +3,11 @@
   "order": 6,
   "title": {
     "en": "Two Alphabets",
-    "uz": "Ikki alifbo"
+    "uz": "Ikki alifbo",
+    "ru": "Два алфавита"
   },
   "blurb": "Read both sides of the street: Latin and Cyrillic",
+  "blurbRu": "Читайте обе стороны улицы: латиницу и кириллицу",
   "estimatedMinutes": 3,
   "prerequisites": [
     "school.sounds"
@@ -13,39 +15,54 @@
   "sections": [
     {
       "heading": "One language, two scripts",
+      "headingRu": "Один язык, две письменности",
       "body": [
         "Uzbek is written in **two alphabets at once**: official **Latin** on new signs, schoolbooks and branding; **Cyrillic** on older signs, books and much of the internet. To read Uzbekistan, you need to recognise both.",
         "The good news: they map onto each other almost letter for letter. Learn a handful of special letters and you can convert mechanically."
       ],
+      "bodyRu": [
+        "Узбекский пишут **сразу двумя алфавитами**: официальной **латиницей** на новых вывесках, в учебниках и брендинге; **кириллицей** на старых вывесках, в книгах и большей части интернета. Чтобы читать Узбекистан, нужно узнавать оба.",
+        "Хорошая новость: они соответствуют друг другу почти буква в букву. Выучите горстку особых букв — и сможете переводить механически."
+      ],
       "examples": [
         {
           "uzbek": "Toshkent",
-          "english": "Тошкент in Cyrillic — Tashkent"
+          "english": "Тошкент in Cyrillic — Tashkent",
+          "russian": "Тошкент на кириллице — Ташкент"
         },
         {
           "uzbek": "choy",
-          "english": "чой in Cyrillic — tea"
+          "english": "чой in Cyrillic — tea",
+          "russian": "чой на кириллице — чай"
         }
       ]
     },
     {
       "heading": "The four special Cyrillic letters",
+      "headingRu": "Четыре особые буквы кириллицы",
       "body": [
         "Four Cyrillic letters carry the special Uzbek sounds: **Ў** = o' (Ўзбекистон = O'zbekiston), **Қ** = q (Самарқанд = Samarqand), **Ғ** = g', and **Ҳ** = h.",
         "Careful with the lookalike: plain **Х** is Latin **x** (the “kh” sound), while tailed **Ҳ** is plain h. Also handy: **Ш** = sh, **Ч** = ch, **Й** = y."
       ],
+      "bodyRu": [
+        "Четыре буквы кириллицы несут особые узбекские звуки: **Ў** = o' (Ўзбекистон = O'zbekiston), **Қ** = q (Самарқанд = Samarqand), **Ғ** = g' и **Ҳ** = h.",
+        "Осторожно с похожими буквами: простая **Х** — это латинская **x** (звук «х»), а **Ҳ** с хвостиком — это простое h. Ещё пригодится: **Ш** = sh, **Ч** = ch, **Й** = y."
+      ],
       "examples": [
         {
           "uzbek": "O'zbekiston",
-          "english": "Ўзбекистон in Cyrillic"
+          "english": "Ўзбекистон in Cyrillic",
+          "russian": "Ўзбекистон на кириллице"
         },
         {
           "uzbek": "Samarqand",
-          "english": "Самарқанд in Cyrillic — tailed Қ is the deep q"
+          "english": "Самарқанд in Cyrillic — tailed Қ is the deep q",
+          "russian": "Самарқанд на кириллице — Қ с хвостиком это глубокое q"
         },
         {
           "uzbek": "halol",
-          "english": "ҳалол in Cyrillic — tailed Ҳ is plain h (not kh)"
+          "english": "ҳалол in Cyrillic — tailed Ҳ is plain h (not kh)",
+          "russian": "ҳалол на кириллице — Ҳ с хвостиком это простое h (не «х»)"
         }
       ]
     }
@@ -55,20 +72,28 @@
       "id": "choice-toshkent",
       "engine": "choice",
       "instruction": "This Cyrillic sign says…",
+      "instructionRu": "На этой кириллической вывеске написано…",
       "prompt": "Тошкент",
+      "promptRu": "Тошкент",
       "options": [
         {
           "text": "Toshkent",
+          "textRu": "Toshkent",
           "correct": true,
-          "explain": "Т-о-ш-к-е-н-т, letter for letter — Ш is sh."
+          "explain": "Т-о-ш-к-е-н-т, letter for letter — Ш is sh.",
+          "explainRu": "Т-о-ш-к-е-н-т, буква в букву — Ш это sh."
         },
         {
           "text": "Tochkent",
-          "explain": "Ш maps to sh, not ch (that would be Ч)."
+          "textRu": "Tochkent",
+          "explain": "Ш maps to sh, not ch (that would be Ч).",
+          "explainRu": "Ш соответствует sh, а не ch (это была бы Ч)."
         },
         {
           "text": "Toshkient",
-          "explain": "Close — but there's no extra i. Е here is just e."
+          "textRu": "Toshkient",
+          "explain": "Close — but there's no extra i. Е here is just e.",
+          "explainRu": "Близко — но лишней i нет. Е здесь это просто e."
         }
       ]
     },
@@ -76,20 +101,28 @@
       "id": "choice-choy",
       "engine": "choice",
       "instruction": "And this menu line?",
+      "instructionRu": "А эта строка в меню?",
       "prompt": "чой",
+      "promptRu": "чой",
       "options": [
         {
           "text": "choy — tea!",
+          "textRu": "choy — чай!",
           "correct": true,
-          "explain": "ч = ch, о = o, й = y."
+          "explain": "ч = ch, о = o, й = y.",
+          "explainRu": "ч = ch, о = o, й = y."
         },
         {
           "text": "coy",
-          "explain": "ч is ch, never a bare c."
+          "textRu": "coy",
+          "explain": "ч is ch, never a bare c.",
+          "explainRu": "ч это ch, а не голая c."
         },
         {
           "text": "shoy",
-          "explain": "sh would be ш — this is ч, ch."
+          "textRu": "shoy",
+          "explain": "sh would be ш — this is ч, ch.",
+          "explainRu": "sh было бы ш — а это ч, ch."
         }
       ]
     },
@@ -97,20 +130,28 @@
       "id": "choice-samarqand",
       "engine": "choice",
       "instruction": "Decode the city:",
+      "instructionRu": "Расшифруйте город:",
       "prompt": "Самарқанд",
+      "promptRu": "Самарқанд",
       "options": [
         {
           "text": "Samarqand",
+          "textRu": "Samarqand",
           "correct": true,
-          "explain": "Tailed Қ is the deep q — Uzbek keeps it distinct from k."
+          "explain": "Tailed Қ is the deep q — Uzbek keeps it distinct from k.",
+          "explainRu": "Қ с хвостиком это глубокое q — узбекский отличает его от k."
         },
         {
           "text": "Samarkand",
-          "explain": "So close! But Қ (with the tail) maps to q, not k."
+          "textRu": "Samarkand",
+          "explain": "So close! But Қ (with the tail) maps to q, not k.",
+          "explainRu": "Так близко! Но Қ (с хвостиком) соответствует q, а не k."
         },
         {
           "text": "Samarxand",
-          "explain": "x would be Х — this is Қ, the deep q."
+          "textRu": "Samarxand",
+          "explain": "x would be Х — this is Қ, the deep q.",
+          "explainRu": "x было бы Х — а это Қ, глубокое q."
         }
       ]
     },
@@ -118,26 +159,36 @@
       "id": "choice-gh",
       "engine": "choice",
       "instruction": "Which Cyrillic letter writes the gargled g' sound?",
+      "instructionRu": "Какая буква кириллицы передаёт грассирующий звук g'?",
       "options": [
         {
           "text": "Ғ",
+          "textRu": "Ғ",
           "correct": true,
-          "explain": "Ғ with the bar = g'. Tails and bars mark the Uzbek specials."
+          "explain": "Ғ with the bar = g'. Tails and bars mark the Uzbek specials.",
+          "explainRu": "Ғ с чёрточкой = g'. Хвостики и чёрточки отмечают особые узбекские буквы."
         },
         {
           "text": "Г",
-          "explain": "Plain Г is a plain g."
+          "textRu": "Г",
+          "explain": "Plain Г is a plain g.",
+          "explainRu": "Простая Г это простое g."
         },
         {
           "text": "Қ",
-          "explain": "Қ is the deep q — g''s voiceless cousin."
+          "textRu": "Қ",
+          "explain": "Қ is the deep q — g''s voiceless cousin.",
+          "explainRu": "Қ это глубокое q — глухой родственник g'."
         },
         {
           "text": "Ҳ",
-          "explain": "Ҳ is plain h."
+          "textRu": "Ҳ",
+          "explain": "Ҳ is plain h.",
+          "explainRu": "Ҳ это простое h."
         }
       ]
     }
   ],
-  "wrapUp": "Latin for the new, Cyrillic for the old — and a four-letter cheat code: Ў=o', Қ=q, Ғ=g', Ҳ=h. You can now read both sides of the street."
+  "wrapUp": "Latin for the new, Cyrillic for the old — and a four-letter cheat code: Ў=o', Қ=q, Ғ=g', Ҳ=h. You can now read both sides of the street.",
+  "wrapUpRu": "Латиница для нового, кириллица для старого — и шпаргалка из четырёх букв: Ў=o', Қ=q, Ғ=g', Ҳ=h. Теперь вы можете читать обе стороны улицы."
 }

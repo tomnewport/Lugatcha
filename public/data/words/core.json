@@ -3,6 +3,7 @@
     "id": "core.hello",
     "uzbek": "Salom",
     "english": "Hello",
+    "russian": "Здравствуйте",
     "theme": "core",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "core.thank-you",
     "uzbek": "Rahmat",
     "english": "Thank you",
+    "russian": "Спасибо",
     "theme": "core",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "core.please",
     "uzbek": "Iltimos",
     "english": "Please",
+    "russian": "Пожалуйста",
     "theme": "core",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "core.yes",
     "uzbek": "Ha",
     "english": "Yes",
+    "russian": "Да",
     "theme": "core",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "core.no",
     "uzbek": "Yo'q",
     "english": "No",
+    "russian": "Нет",
     "theme": "core",
     "level": 1
   },
@@ -38,14 +43,17 @@
     "id": "core.excuse-me",
     "uzbek": "Kechirasiz",
     "english": "Excuse me",
+    "russian": "Извините",
     "theme": "core",
     "usageNotes": "Polite form used to get attention or apologise.",
+    "usageNotesRu": "Вежливая форма, чтобы привлечь внимание или извиниться.",
     "level": 1
   },
   {
     "id": "core.goodbye",
     "uzbek": "Xayr",
     "english": "Goodbye",
+    "russian": "До свидания",
     "theme": "core",
     "level": 1
   },
@@ -53,14 +61,17 @@
     "id": "core.i-dont-understand",
     "uzbek": "Tushunmayapman",
     "english": "I don't understand",
+    "russian": "Я не понимаю",
     "theme": "core",
     "usageNotes": "Say this when you need someone to repeat or rephrase.",
+    "usageNotesRu": "Скажите это, когда нужно, чтобы кто-то повторил или перефразировал.",
     "level": 1
   },
   {
     "id": "core.do-you-speak-english",
     "uzbek": "Siz inglizcha gapirasizmi?",
     "english": "Do you speak English?",
+    "russian": "Вы говорите по-английски?",
     "theme": "core",
     "level": 2
   },
@@ -68,38 +79,47 @@
     "id": "core.where-is",
     "uzbek": "... qayerda?",
     "english": "Where is ...?",
+    "russian": "Где ...?",
     "theme": "core",
     "usageNotes": "Place the location name before qayerda.",
+    "usageNotesRu": "Поставьте название места перед qayerda.",
     "level": 1
   },
   {
     "id": "core.need",
     "uzbek": "kerak",
     "english": "need / necessary",
+    "russian": "нужно / необходимо",
     "theme": "core",
     "level": 1,
-    "usageNotes": "Menga suv kerak — I need water (literally: to-me water necessary)."
+    "usageNotes": "Menga suv kerak — I need water (literally: to-me water necessary).",
+    "usageNotesRu": "Menga suv kerak — Мне нужна вода (буквально: мне вода нужна)."
   },
   {
     "id": "core.there-is",
     "uzbek": "bor",
     "english": "there is / have",
+    "russian": "есть / иметься",
     "theme": "core",
     "level": 1,
-    "usageNotes": "Choy bormi? Bor! — Is there tea? There is! The opposite is yo'q."
+    "usageNotes": "Choy bormi? Bor! — Is there tea? There is! The opposite is yo'q.",
+    "usageNotesRu": "Choy bormi? Bor! — Есть чай? Есть! Противоположность — yo'q."
   },
   {
     "id": "core.how-much",
     "uzbek": "qancha",
     "english": "how much / how many",
+    "russian": "сколько",
     "theme": "core",
     "level": 1,
-    "usageNotes": "Bu qancha turadi? — How much does this cost?"
+    "usageNotes": "Bu qancha turadi? — How much does this cost?",
+    "usageNotesRu": "Bu qancha turadi? — Сколько это стоит?"
   },
   {
     "id": "core.money",
     "uzbek": "pul",
     "english": "money",
+    "russian": "деньги",
     "theme": "core",
     "level": 1
   },
@@ -107,14 +127,17 @@
     "id": "core.som",
     "uzbek": "so'm",
     "english": "som (Uzbek currency)",
+    "russian": "сум (узбекская валюта)",
     "theme": "core",
     "level": 1,
-    "usageNotes": "Prices are usually in thousands: o'n ming so'm = 10,000 som."
+    "usageNotes": "Prices are usually in thousands: o'n ming so'm = 10,000 som.",
+    "usageNotesRu": "Цены обычно указываются в тысячах: o'n ming so'm = 10 000 сумов."
   },
   {
     "id": "core.open",
     "uzbek": "ochiq",
     "english": "open",
+    "russian": "открыто",
     "theme": "core",
     "level": 1
   },
@@ -122,6 +145,7 @@
     "id": "core.closed",
     "uzbek": "yopiq",
     "english": "closed",
+    "russian": "закрыто",
     "theme": "core",
     "level": 1
   },
@@ -129,6 +153,7 @@
     "id": "core.good",
     "uzbek": "yaxshi",
     "english": "good",
+    "russian": "хорошо",
     "theme": "core",
     "level": 1
   },
@@ -136,6 +161,7 @@
     "id": "core.now",
     "uzbek": "hozir",
     "english": "now",
+    "russian": "сейчас",
     "theme": "core",
     "level": 2
   },
@@ -143,6 +169,7 @@
     "id": "core.today",
     "uzbek": "bugun",
     "english": "today",
+    "russian": "сегодня",
     "theme": "core",
     "level": 2
   },
@@ -150,6 +177,7 @@
     "id": "core.tomorrow",
     "uzbek": "ertaga",
     "english": "tomorrow",
+    "russian": "завтра",
     "theme": "core",
     "level": 2
   },
@@ -157,6 +185,7 @@
     "id": "core.big",
     "uzbek": "katta",
     "english": "big",
+    "russian": "большой",
     "theme": "core",
     "level": 2
   },
@@ -164,6 +193,7 @@
     "id": "core.small",
     "uzbek": "kichik",
     "english": "small",
+    "russian": "маленький",
     "theme": "core",
     "level": 2
   },
@@ -171,14 +201,17 @@
     "id": "core.hour-clock",
     "uzbek": "soat",
     "english": "hour / o'clock",
+    "russian": "час / время",
     "theme": "core",
     "level": 2,
-    "usageNotes": "Soat nechada? — At what time? Soat ikkida — at two o'clock."
+    "usageNotes": "Soat nechada? — At what time? Soat ikkida — at two o'clock.",
+    "usageNotesRu": "Soat nechada? — Во сколько? Soat ikkida — в два часа."
   },
   {
     "id": "core.when",
     "uzbek": "qachon",
     "english": "when",
+    "russian": "когда",
     "theme": "core",
     "level": 2
   }

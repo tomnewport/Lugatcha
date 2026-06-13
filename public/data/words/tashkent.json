@@ -3,6 +3,7 @@
     "id": "tashkent.katta",
     "uzbek": "katta",
     "english": "big",
+    "russian": "большой",
     "theme": "tashkent",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "tashkent.shahar",
     "uzbek": "shahar",
     "english": "city",
+    "russian": "город",
     "theme": "tashkent",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "tashkent.odam",
     "uzbek": "odam",
     "english": "person",
+    "russian": "человек",
     "theme": "tashkent",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "tashkent.meva",
     "uzbek": "meva",
     "english": "fruit",
+    "russian": "фрукты",
     "theme": "tashkent",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "tashkent.kocha",
     "uzbek": "koʻcha",
     "english": "street",
+    "russian": "улица",
     "theme": "tashkent",
     "level": 1
   },
@@ -38,6 +43,7 @@
     "id": "tashkent.avtobus",
     "uzbek": "avtobus",
     "english": "bus",
+    "russian": "автобус",
     "theme": "tashkent",
     "level": 1
   },
@@ -45,6 +51,7 @@
     "id": "tashkent.dokon",
     "uzbek": "doʻkon",
     "english": "shop",
+    "russian": "магазин",
     "theme": "tashkent",
     "level": 1
   },
@@ -52,6 +59,7 @@
     "id": "tashkent.toza",
     "uzbek": "toza",
     "english": "clean",
+    "russian": "чистый",
     "theme": "tashkent",
     "level": 2
   },
@@ -59,6 +67,7 @@
     "id": "tashkent.ish",
     "uzbek": "ish",
     "english": "work",
+    "russian": "работа",
     "theme": "tashkent",
     "level": 2
   },
@@ -66,6 +75,7 @@
     "id": "tashkent.bino",
     "uzbek": "bino",
     "english": "building",
+    "russian": "здание",
     "theme": "tashkent",
     "level": 2
   },
@@ -73,6 +83,7 @@
     "id": "tashkent.mehmonxona",
     "uzbek": "mehmonxona",
     "english": "hotel",
+    "russian": "гостиница",
     "theme": "tashkent",
     "level": 2
   }

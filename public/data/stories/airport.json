@@ -4,28 +4,34 @@
     "theme": "airport",
     "title": {
       "en": "Arrival in Tashkent",
+      "ru": "Прибытие в Ташкент",
       "uz": "Toshkentga kelish"
     },
     "sentences": [
       {
         "uzbek": "Men Toshkent aeroportiga keldim.",
-        "english": "I arrived at Tashkent airport."
+        "english": "I arrived at Tashkent airport.",
+        "russian": "Я прилетел в ташкентский аэропорт."
       },
       {
         "uzbek": "Men pasport nazoratiga bordim.",
-        "english": "I went to passport control."
+        "english": "I went to passport control.",
+        "russian": "Я подошёл к паспортному контролю."
       },
       {
         "uzbek": "Xodim mening pasportimni tekshirdi.",
-        "english": "The officer checked my passport."
+        "english": "The officer checked my passport.",
+        "russian": "Сотрудник проверил мой паспорт."
       },
       {
         "uzbek": "Men bagajimni oldim.",
-        "english": "I collected my luggage."
+        "english": "I collected my luggage.",
+        "russian": "Я забрал свой багаж."
       },
       {
         "uzbek": "Tashqarida quyosh charaqlab turardi.",
-        "english": "Outside, the sun was shining brightly."
+        "english": "Outside, the sun was shining brightly.",
+        "russian": "На улице ярко светило солнце."
       }
     ],
     "glossary": {
@@ -46,6 +52,25 @@
       "quyosh": "sun",
       "charaqlab": "shining brightly",
       "turardi": "was (kept on being)"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "Toshkent": "Ташкент",
+      "aeroportiga": "в аэропорт (aeroport + -ga)",
+      "keldim": "я прибыл, я пришёл",
+      "pasport": "паспорт",
+      "nazoratiga": "к контролю (nazorat + -ga)",
+      "bordim": "я пошёл",
+      "Xodim": "сотрудник, служащий",
+      "mening": "мой",
+      "pasportimni": "мой паспорт (pasport + -im + -ni)",
+      "tekshirdi": "проверил",
+      "bagajimni": "мой багаж (bagaj + -im + -ni)",
+      "oldim": "я взял, я забрал",
+      "Tashqarida": "снаружи, на улице",
+      "quyosh": "солнце",
+      "charaqlab": "ярко сияя",
+      "turardi": "было (продолжалось)"
     }
   },
   {
@@ -53,32 +78,39 @@
     "theme": "airport",
     "title": {
       "en": "Flying Home",
+      "ru": "Полёт домой",
       "uz": "Uyga uchish"
     },
     "sentences": [
       {
         "uzbek": "Bugun men uyga uchaman.",
-        "english": "Today I fly home."
+        "english": "Today I fly home.",
+        "russian": "Сегодня я лечу домой."
       },
       {
         "uzbek": "Men taksida aeroportga bordim.",
-        "english": "I went to the airport by taxi."
+        "english": "I went to the airport by taxi.",
+        "russian": "Я поехал в аэропорт на такси."
       },
       {
         "uzbek": "Chipta va pasportimni berdim.",
-        "english": "I gave my ticket and passport."
+        "english": "I gave my ticket and passport.",
+        "russian": "Я отдал свой билет и паспорт."
       },
       {
         "uzbek": "Bagajim katta edi.",
-        "english": "My luggage was big."
+        "english": "My luggage was big.",
+        "russian": "Мой багаж был большим."
       },
       {
         "uzbek": "Men do'stlarimga sovg'alar oldim.",
-        "english": "I bought gifts for my friends."
+        "english": "I bought gifts for my friends.",
+        "russian": "Я купил подарки для своих друзей."
       },
       {
         "uzbek": "Xayr, O'zbekiston! Men yana kelaman.",
-        "english": "Goodbye, Uzbekistan! I will come again."
+        "english": "Goodbye, Uzbekistan! I will come again.",
+        "russian": "Прощай, Узбекистан! Я ещё вернусь."
       }
     ],
     "glossary": {
@@ -103,6 +135,29 @@
       "va": "and",
       "Chipta": "ticket",
       "O'zbekiston": "Uzbekistan"
+    },
+    "glossaryRu": {
+      "Bugun": "сегодня",
+      "men": "я",
+      "uyga": "домой (uy + -ga, в)",
+      "uchaman": "я лечу",
+      "taksida": "на такси (taksi + -da)",
+      "aeroportga": "в аэропорт",
+      "bordim": "я поехал",
+      "pasportimni": "мой паспорт (дополнение)",
+      "berdim": "я отдал",
+      "Bagajim": "мой багаж",
+      "katta": "большой",
+      "edi": "был",
+      "do'stlarimga": "моим друзьям",
+      "sovg'alar": "подарки",
+      "oldim": "я купил / взял",
+      "Xayr": "прощай",
+      "yana": "снова",
+      "kelaman": "я вернусь",
+      "va": "и",
+      "Chipta": "билет",
+      "O'zbekiston": "Узбекистан"
     }
   }
 ]

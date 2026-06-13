@@ -4,23 +4,28 @@
     "theme": "library",
     "title": {
       "en": "A Book to Learn From",
+      "ru": "Книга для учёбы",
       "uz": "O'rganish uchun kitob"
     },
     "scenario": "You want a simple book to practise your Uzbek. The librarian is happy to help.",
+    "scenarioRu": "Вы хотите простую книгу, чтобы попрактиковать узбекский. Библиотекарь рад помочь.",
     "variants": [
       {
         "id": "library.find-book.base",
         "description": "A children's book is perfect",
+        "descriptionRu": "Детская книга — то, что нужно",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Yordam bera olamanmi?",
-            "english": "Hello! Can I help you?"
+            "english": "Hello! Can I help you?",
+            "russian": "Здравствуйте! Могу я вам помочь?"
           },
           {
             "speaker": "user",
             "uzbek": "Men o'zbek tilini o'rganyapman.",
             "english": "I am learning Uzbek.",
+            "russian": "Я учу узбекский язык.",
             "tokens": [
               "Men",
               "o'zbek",
@@ -31,12 +36,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ajoyib! Oson kitob kerakmi?",
-            "english": "Wonderful! Do you need an easy book?"
+            "english": "Wonderful! Do you need an easy book?",
+            "russian": "Замечательно! Вам нужна лёгкая книга?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, oson kitob, iltimos.",
             "english": "Yes, an easy book, please.",
+            "russian": "Да, лёгкую книгу, пожалуйста.",
             "tokens": [
               "Ha,",
               "oson",
@@ -47,12 +54,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana bolalar kitobi. Rasmlari bor.",
-            "english": "Here is a children's book. It has pictures."
+            "english": "Here is a children's book. It has pictures.",
+            "russian": "Вот детская книга. В ней есть картинки."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi! Rahmat!",
             "english": "Very good! Thank you!",
+            "russian": "Очень хорошо! Спасибо!",
             "tokens": [
               "Juda",
               "yaxshi!",
@@ -64,11 +73,13 @@
       {
         "id": "library.find-book.card",
         "description": "You need a library card",
+        "descriptionRu": "Вам нужен читательский билет",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu kitobni olsam bo'ladimi?",
             "english": "May I borrow this book?",
+            "russian": "Можно взять эту книгу?",
             "tokens": [
               "Bu",
               "kitobni",
@@ -79,12 +90,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kutubxona kartangiz bormi?",
-            "english": "Do you have a library card?"
+            "english": "Do you have a library card?",
+            "russian": "У вас есть читательский билет?"
           },
           {
             "speaker": "user",
             "uzbek": "Yo'q. Qanday olaman?",
             "english": "No. How do I get one?",
+            "russian": "Нет. Как мне его получить?",
             "tokens": [
               "Yo'q.",
               "Qanday",
@@ -94,12 +107,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pasportingiz bilan ro'yxatdan o'ting.",
-            "english": "Register with your passport."
+            "english": "Register with your passport.",
+            "russian": "Зарегистрируйтесь по паспорту."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
             "english": "Fine, thank you.",
+            "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",
               "rahmat."
@@ -110,11 +125,13 @@
       {
         "id": "library.find-book.quiet",
         "description": "You are asked to be quiet",
+        "descriptionRu": "Вас просят соблюдать тишину",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, lug'at qayerda?",
             "english": "Excuse me, where is the dictionary?",
+            "russian": "Извините, где словарь?",
             "tokens": [
               "Kechirasiz,",
               "lug'at",
@@ -124,12 +141,14 @@
           {
             "speaker": "npc",
             "uzbek": "Sekinroq, iltimos. Bu yer jim.",
-            "english": "More quietly, please. This place is quiet."
+            "english": "More quietly, please. This place is quiet.",
+            "russian": "Потише, пожалуйста. Здесь соблюдают тишину."
           },
           {
             "speaker": "user",
             "uzbek": "Kechirasiz!",
             "english": "Sorry!",
+            "russian": "Извините!",
             "tokens": [
               "Kechirasiz!"
             ]
@@ -137,12 +156,14 @@
           {
             "speaker": "npc",
             "uzbek": "Lug'at anavi tokchada.",
-            "english": "The dictionary is on that shelf."
+            "english": "The dictionary is on that shelf.",
+            "russian": "Словарь вон на той полке."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat.",
             "english": "Thank you.",
+            "russian": "Спасибо.",
             "tokens": [
               "Rahmat."
             ]
@@ -152,11 +173,13 @@
       {
         "id": "library.find-book.english",
         "description": "You ask for an English book",
+        "descriptionRu": "Вы спрашиваете книгу на английском",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Inglizcha kitob bormi?",
             "english": "Is there an English book?",
+            "russian": "Есть книга на английском?",
             "tokens": [
               "Inglizcha",
               "kitob",
@@ -166,12 +189,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, ikkinchi qavatda.",
-            "english": "Yes, on the second floor."
+            "english": "Yes, on the second floor.",
+            "russian": "Да, на втором этаже."
           },
           {
             "speaker": "user",
             "uzbek": "O'zbekcha-inglizcha lug'at ham bormi?",
             "english": "Is there an Uzbek-English dictionary too?",
+            "russian": "А есть узбекско-английский словарь?",
             "tokens": [
               "O'zbekcha-inglizcha",
               "lug'at",
@@ -182,12 +207,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta. Men ko'rsataman.",
-            "english": "Of course. I will show you."
+            "english": "Of course. I will show you.",
+            "russian": "Конечно. Я покажу."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -198,11 +225,13 @@
       {
         "id": "library.find-book.newspaper",
         "description": "You want to read a newspaper",
+        "descriptionRu": "Вы хотите почитать газету",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bugungi gazeta bormi?",
             "english": "Is there today's newspaper?",
+            "russian": "Есть сегодняшняя газета?",
             "tokens": [
               "Bugungi",
               "gazeta",
@@ -212,12 +241,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, mana. O'qish zali u yerda.",
-            "english": "Yes, here. The reading hall is there."
+            "english": "Yes, here. The reading hall is there.",
+            "russian": "Да, вот. Читальный зал вон там."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat. Jim joymi?",
             "english": "Thank you. Is it a quiet place?",
+            "russian": "Спасибо. Там тихо?",
             "tokens": [
               "Rahmat.",
               "Jim",
@@ -227,7 +258,8 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, juda jim. Yaxshi o'qing!",
-            "english": "Yes, very quiet. Read well!"
+            "english": "Yes, very quiet. Read well!",
+            "russian": "Да, очень тихо. Приятного чтения!"
           }
         ]
       }
@@ -238,23 +270,28 @@
     "theme": "library",
     "title": {
       "en": "Learning New Words",
+      "ru": "Учим новые слова",
       "uz": "Yangi so'zlar"
     },
     "scenario": "You strike up a quiet conversation with a student about learning Uzbek.",
+    "scenarioRu": "Вы тихонько заводите разговор со студентом об изучении узбекского.",
     "variants": [
       {
         "id": "library.learning-words.base",
         "description": "A friendly word swap",
+        "descriptionRu": "Дружеский обмен словами",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Siz o'zbekcha o'rganyapsizmi?",
-            "english": "Are you learning Uzbek?"
+            "english": "Are you learning Uzbek?",
+            "russian": "Вы учите узбекский?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, lekin qiyin.",
             "english": "Yes, but it is difficult.",
+            "russian": "Да, но это трудно.",
             "tokens": [
               "Ha,",
               "lekin",
@@ -264,12 +301,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi so'z qiyin?",
-            "english": "Which word is difficult?"
+            "english": "Which word is difficult?",
+            "russian": "Какое слово трудное?"
           },
           {
             "speaker": "user",
             "uzbek": "\"Kutubxona\" qiyin so'z!",
             "english": "\"Library\" is a difficult word!",
+            "russian": "«Kutubxona» — трудное слово!",
             "tokens": [
               "\"Kutubxona\"",
               "qiyin",
@@ -279,12 +318,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha-ha! Kitob + xona. Oson!",
-            "english": "Ha-ha! Book + place. Easy!"
+            "english": "Ha-ha! Book + place. Easy!",
+            "russian": "Ха-ха! Книга + место. Легко!"
           },
           {
             "speaker": "user",
             "uzbek": "Endi tushundim! Rahmat!",
             "english": "Now I understand! Thank you!",
+            "russian": "Теперь понятно! Спасибо!",
             "tokens": [
               "Endi",
               "tushundim!",
@@ -296,11 +337,13 @@
       {
         "id": "library.learning-words.help",
         "description": "They offer to help you practise",
+        "descriptionRu": "Вам предлагают помочь с практикой",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Men o'zbekcha gapirishni xohlayman.",
             "english": "I want to speak Uzbek.",
+            "russian": "Я хочу говорить по-узбекски.",
             "tokens": [
               "Men",
               "o'zbekcha",
@@ -311,12 +354,14 @@
           {
             "speaker": "npc",
             "uzbek": "Men yordam beraman. Har kuni keling.",
-            "english": "I will help you. Come every day."
+            "english": "I will help you. Come every day.",
+            "russian": "Я помогу. Приходите каждый день."
           },
           {
             "speaker": "user",
             "uzbek": "Rostdanmi? Katta rahmat!",
             "english": "Really? Thank you very much!",
+            "russian": "Правда? Большое спасибо!",
             "tokens": [
               "Rostdanmi?",
               "Katta",
@@ -326,12 +371,14 @@
           {
             "speaker": "npc",
             "uzbek": "Birga o'qiymiz. Til — bu ko'prik.",
-            "english": "We will study together. Language is a bridge."
+            "english": "We will study together. Language is a bridge.",
+            "russian": "Будем заниматься вместе. Язык — это мост."
           },
           {
             "speaker": "user",
             "uzbek": "Juda chiroyli so'z!",
             "english": "A very beautiful saying!",
+            "russian": "Очень красивые слова!",
             "tokens": [
               "Juda",
               "chiroyli",
@@ -343,16 +390,19 @@
       {
         "id": "library.learning-words.name",
         "description": "You exchange names",
+        "descriptionRu": "Вы знакомитесь по именам",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Ismingiz nima?",
-            "english": "What is your name?"
+            "english": "What is your name?",
+            "russian": "Как вас зовут?"
           },
           {
             "speaker": "user",
             "uzbek": "Mening ismim Tom. Sizniki-chi?",
             "english": "My name is Tom. And yours?",
+            "russian": "Меня зовут Том. А вас?",
             "tokens": [
               "Mening",
               "ismim",
@@ -363,12 +413,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mening ismim Dilnoza. Tanishganimdan xursandman.",
-            "english": "My name is Dilnoza. Pleased to meet you."
+            "english": "My name is Dilnoza. Pleased to meet you.",
+            "russian": "Меня зовут Дилноза. Приятно познакомиться."
           },
           {
             "speaker": "user",
             "uzbek": "Men ham! Tanishganimdan xursandman.",
             "english": "Me too! Pleased to meet you.",
+            "russian": "Мне тоже! Приятно познакомиться.",
             "tokens": [
               "Men",
               "ham!",
@@ -379,23 +431,27 @@
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz, Tom!",
-            "english": "Welcome, Tom!"
+            "english": "Welcome, Tom!",
+            "russian": "Добро пожаловать, Том!"
           }
         ]
       },
       {
         "id": "library.learning-words.book-gift",
         "description": "They lend you their favourite book",
+        "descriptionRu": "Вам дают почитать любимую книгу",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bu mening sevimli hikoyam.",
-            "english": "This is my favourite story."
+            "english": "This is my favourite story.",
+            "russian": "Это мой любимый рассказ."
           },
           {
             "speaker": "user",
             "uzbek": "O'qiy olamanmi?",
             "english": "May I read it?",
+            "russian": "Можно мне почитать?",
             "tokens": [
               "O'qiy",
               "olamanmi?"
@@ -404,12 +460,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta! Oling. Oson va chiroyli.",
-            "english": "Of course! Take it. Easy and beautiful."
+            "english": "Of course! Take it. Easy and beautiful.",
+            "russian": "Конечно! Берите. Лёгкий и красивый."
           },
           {
             "speaker": "user",
             "uzbek": "Juda mehribonsiz. Rahmat!",
             "english": "You are very kind. Thank you!",
+            "russian": "Вы очень добры. Спасибо!",
             "tokens": [
               "Juda",
               "mehribonsiz.",
@@ -419,7 +477,8 @@
           {
             "speaker": "npc",
             "uzbek": "Yoqsa, menga ayting!",
-            "english": "If you like it, tell me!"
+            "english": "If you like it, tell me!",
+            "russian": "Если понравится, скажите мне!"
           }
         ]
       }

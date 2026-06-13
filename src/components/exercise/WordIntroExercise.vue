@@ -4,6 +4,7 @@ import type { Word } from '@/db/types'
 import { pickIntroWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
+import { useContentLang } from '@/i18n/content'
 import { db } from '@/db/useDb'
 import { speakUzbek } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
@@ -16,6 +17,7 @@ const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 
 const progress = useProgressStore()
+const { gloss, pick } = useContentLang()
 const words = ref<Word[]>([])
 const loading = ref(true)
 const step = ref<Step>('listen')
@@ -60,10 +62,10 @@ function buildQuiz() {
     const others = words.value.filter((w) => w.id !== word.id)
     const distractors = shuffle(others)
       .slice(0, 3)
-      .map((w) => ({ text: w.english, correct: false }))
+      .map((w) => ({ text: gloss(w), correct: false }))
     return {
       word,
-      options: shuffle([{ text: word.english, correct: true }, ...distractors]),
+      options: shuffle([{ text: gloss(word), correct: true }, ...distractors]),
     }
   })
   quizIndex.value = 0
@@ -227,7 +229,7 @@ async function advanceFromMatch() {
 
 interface Phrase {
   uzbek: string
-  english: string
+  translation: string
 }
 
 const phrases = ref<Phrase[]>([])
@@ -243,7 +245,7 @@ async function loadPhrases() {
   for (const rp of roleplays) {
     for (const variant of rp.variants) {
       for (const turn of variant.turns) {
-        pool.push({ uzbek: turn.uzbek, english: turn.english })
+        pool.push({ uzbek: turn.uzbek, translation: pick(turn.english, turn.russian) })
       }
     }
   }
@@ -251,7 +253,7 @@ async function loadPhrases() {
     const stories = await db.stories.where('theme').equals(props.locationId).toArray()
     for (const story of stories) {
       for (const sentence of story.sentences) {
-        pool.push({ uzbek: sentence.uzbek, english: sentence.english })
+        pool.push({ uzbek: sentence.uzbek, translation: pick(sentence.english, sentence.russian) })
       }
     }
   }
@@ -283,13 +285,11 @@ async function finish() {
 
 <template>
   <div class="intro">
-    <p v-if="loading" class="intro__loading" aria-live="polite">Loading words…</p>
+    <p v-if="loading" class="intro__loading" aria-live="polite">{{ $t('intro.loadingWords') }}</p>
 
     <!-- ── Step 1: Listen ─────────────────────────────────────────────────── -->
     <template v-else-if="step === 'listen'">
-      <p class="intro__instruction">
-        Tap <strong>each speaker</strong> to hear the word before continuing.
-      </p>
+      <p class="intro__instruction" v-html="$t('intro.listenInstruction')"></p>
 
       <ul class="intro__cards">
         <li
@@ -300,9 +300,9 @@ async function finish() {
         >
           <AudioButton :text="word.uzbek" @played="markHeard(word.id)" />
           <div class="word-card__text">
-            <UzbekWord class="word-card__uzbek" :word="word.uzbek" :meaning="word.english" />
-            <span class="word-card__english">{{ word.english }}</span>
-            <span v-if="word.usageNotes" class="word-card__notes">{{ word.usageNotes }}</span>
+            <UzbekWord class="word-card__uzbek" :word="word.uzbek" :meaning="gloss(word)" />
+            <span class="word-card__english">{{ gloss(word) }}</span>
+            <span v-if="word.usageNotes" class="word-card__notes">{{ pick(word.usageNotes, word.usageNotesRu) }}</span>
           </div>
           <svg
             v-if="heard.has(word.id)"
@@ -325,15 +325,15 @@ async function finish() {
           :disabled="!allHeard"
           @click="advanceFromListen"
         >
-          Continue
+          {{ $t('common.continue') }}
         </button>
       </div>
     </template>
 
     <!-- ── Step 2: Quiz ───────────────────────────────────────────────────── -->
     <template v-else-if="step === 'quiz' && currentQuestion">
-      <p class="intro__step-label">Word {{ quizIndex + 1 }} of {{ quizQuestions.length }}</p>
-      <p class="intro__instruction">What does this word mean?</p>
+      <p class="intro__step-label">{{ $t('intro.wordCounter', { current: quizIndex + 1, total: quizQuestions.length }) }}</p>
+      <p class="intro__instruction">{{ $t('intro.quizPrompt') }}</p>
 
       <div class="quiz-card">
         <AudioButton :text="currentQuestion.word.uzbek" />
@@ -362,14 +362,14 @@ async function finish() {
 
       <div v-if="quizRevealed" class="intro__footer">
         <button class="btn btn--primary" type="button" @click="nextQuestion">
-          {{ isLastQuestion ? 'Continue to matching' : 'Next word' }}
+          {{ isLastQuestion ? $t('intro.continueToMatching') : $t('intro.nextWord') }}
         </button>
       </div>
     </template>
 
     <!-- ── Step 3: Matching ───────────────────────────────────────────────── -->
     <template v-else-if="step === 'match'">
-      <p class="intro__instruction">Pair each Uzbek word with its English meaning.</p>
+      <p class="intro__instruction">{{ $t('intro.matchInstruction') }}</p>
 
       <TransitionGroup name="match-move" tag="div" class="match-grid">
         <div v-for="cell in matchCells" :key="cell.key" class="match-cell">
@@ -395,18 +395,18 @@ async function finish() {
             @click="matchTap(cell.kind as 'left' | 'right', cell.word)"
           >
             <span v-if="cell.kind === 'left'" lang="uz">{{ cell.word.uzbek }}</span>
-            <span v-else>{{ cell.word.english }}</span>
+            <span v-else>{{ gloss(cell.word) }}</span>
           </button>
         </div>
       </TransitionGroup>
 
       <p v-if="!matchChecked" class="intro__hint">
-        Tap a card on each side to pair — tap a paired card to undo.
+        {{ $t('intro.matchHint') }}
       </p>
 
       <p v-if="matchChecked" class="intro__score" aria-live="polite">
-        {{ matchCorrectCount }} of {{ words.length }} correct
-        <template v-if="matchCorrectCount === words.length"> — ajoyib! 🎉</template>
+        {{ $t('intro.matchScore', { correct: matchCorrectCount, total: words.length }) }}
+        <template v-if="matchCorrectCount === words.length">{{ $t('intro.matchPerfect') }}</template>
       </p>
 
       <div class="intro__footer">
@@ -417,7 +417,7 @@ async function finish() {
           :disabled="!matchAllPaired"
           @click="checkMatch"
         >
-          Check matches
+          {{ $t('intro.checkMatches') }}
         </button>
         <template v-else>
           <button
@@ -426,10 +426,10 @@ async function finish() {
             type="button"
             @click="retryMatch"
           >
-            Try again
+            {{ $t('intro.tryAgain') }}
           </button>
           <button class="btn btn--primary" type="button" @click="advanceFromMatch">
-            Continue
+            {{ $t('common.continue') }}
           </button>
         </template>
       </div>
@@ -437,35 +437,35 @@ async function finish() {
 
     <!-- ── Step 4: Phrases ────────────────────────────────────────────────── -->
     <template v-else-if="step === 'phrases'">
-      <p v-if="phrasesLoading" class="intro__loading" aria-live="polite">Loading phrases…</p>
+      <p v-if="phrasesLoading" class="intro__loading" aria-live="polite">{{ $t('intro.loadingPhrases') }}</p>
 
       <template v-else-if="currentPhrase">
-        <p class="intro__step-label">Phrase {{ phraseIndex + 1 }} of {{ phrases.length }}</p>
+        <p class="intro__step-label">{{ $t('intro.phraseCounter', { current: phraseIndex + 1, total: phrases.length }) }}</p>
         <p class="intro__instruction">
-          Listen and read. Tap any word to hear it or see its structure.
+          {{ $t('intro.phraseInstruction') }}
         </p>
 
         <div class="phrase-card">
-          <AudioButton :text="currentPhrase.uzbek" large label="Play phrase" />
+          <AudioButton :text="currentPhrase.uzbek" large :label="$t('audio.playPhrase')" />
           <p class="phrase-card__uzbek">
             <UzbekSentence :uzbek="currentPhrase.uzbek" />
           </p>
           <div class="phrase-card__translation">
-            <span class="phrase-card__translation-label">Translation</span>
-            <p class="phrase-card__english">{{ currentPhrase.english }}</p>
+            <span class="phrase-card__translation-label">{{ $t('intro.translationLabel') }}</span>
+            <p class="phrase-card__english">{{ currentPhrase.translation }}</p>
           </div>
         </div>
 
         <div class="intro__footer">
           <button class="btn btn--primary" type="button" @click="nextPhrase">
-            {{ isLastPhrase ? 'Finish' : 'Next phrase' }}
+            {{ isLastPhrase ? $t('common.finish') : $t('exercise.phrase.nextPhrase') }}
           </button>
         </div>
       </template>
 
       <div v-else class="intro__footer">
-        <p class="intro__hint">No phrases available for this location yet.</p>
-        <button class="btn btn--primary" type="button" @click="finish">Finish</button>
+        <p class="intro__hint">{{ $t('intro.noPhrases') }}</p>
+        <button class="btn btn--primary" type="button" @click="finish">{{ $t('common.finish') }}</button>
       </div>
     </template>
   </div>

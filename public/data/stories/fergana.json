@@ -2,13 +2,13 @@
   {
     "id": "fergana.green-valley",
     "theme": "fergana",
-    "title": { "en": "The Green Valley", "uz": "Yashil vodiy" },
+    "title": { "en": "The Green Valley", "ru": "Зелёная долина", "uz": "Yashil vodiy" },
     "sentences": [
-      { "uzbek": "Fargʻona yashil vodiy.", "english": "Fergana is a green valley." },
-      { "uzbek": "Dalalarda paxta oʻsadi.", "english": "Cotton grows in the fields." },
-      { "uzbek": "Bogʻlarda shirin meva bor.", "english": "There is sweet fruit in the orchards." },
-      { "uzbek": "Margʻilonda atlas toʻqiladi.", "english": "Atlas silk is woven in Margilan." },
-      { "uzbek": "Kuzda dehqonlar hosil yigʻadi.", "english": "In autumn the farmers gather the harvest." }
+      { "uzbek": "Fargʻona yashil vodiy.", "english": "Fergana is a green valley.", "russian": "Фергана — зелёная долина." },
+      { "uzbek": "Dalalarda paxta oʻsadi.", "english": "Cotton grows in the fields.", "russian": "На полях растёт хлопок." },
+      { "uzbek": "Bogʻlarda shirin meva bor.", "english": "There is sweet fruit in the orchards.", "russian": "В садах есть сладкие фрукты." },
+      { "uzbek": "Margʻilonda atlas toʻqiladi.", "english": "Atlas silk is woven in Margilan.", "russian": "В Маргилане ткут атласный шёлк." },
+      { "uzbek": "Kuzda dehqonlar hosil yigʻadi.", "english": "In autumn the farmers gather the harvest.", "russian": "Осенью земледельцы собирают урожай." }
     ],
     "glossary": {
       "Fargʻona": "Fergana",
@@ -28,6 +28,25 @@
       "dehqonlar": "farmers",
       "hosil": "harvest",
       "yigʻadi": "gathers"
+    },
+    "glossaryRu": {
+      "Fargʻona": "Фергана",
+      "yashil": "зелёный",
+      "vodiy": "долина",
+      "Dalalarda": "на полях",
+      "paxta": "хлопок",
+      "oʻsadi": "растёт",
+      "Bogʻlarda": "в садах",
+      "shirin": "сладкий",
+      "meva": "фрукты",
+      "bor": "есть / имеется",
+      "Margʻilonda": "в Маргилане",
+      "atlas": "атласный шёлк",
+      "toʻqiladi": "ткётся",
+      "Kuzda": "осенью",
+      "dehqonlar": "земледельцы",
+      "hosil": "урожай",
+      "yigʻadi": "собирает"
     }
   }
 ]

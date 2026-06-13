@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSettingsStore, type LabelLanguage } from '@/stores/settings'
+import { useSettingsStore, type LabelLanguage, type BaseLanguage } from '@/stores/settings'
 import { useProgressStore } from '@/stores/progress'
 import { getAudioManifest, type AudioManifest } from '@/audio/audio'
 import { useAudioDownload } from '@/audio/offline'
@@ -40,6 +40,10 @@ function setLanguage(lang: LabelLanguage) {
   settings.setLabelLanguage(lang)
 }
 
+function setBaseLanguage(lang: BaseLanguage) {
+  settings.setBaseLanguage(lang)
+}
+
 async function resetProgress() {
   await progress.resetAllProgress()
   confirmingReset.value = false
@@ -50,7 +54,7 @@ async function resetProgress() {
 
 <template>
   <main class="settings">
-    <button class="back-btn" aria-label="Back to city map" type="button" @click="router.push('/')">
+    <button class="back-btn" :aria-label="$t('common.backToCity')" type="button" @click="router.push('/')">
       <svg
         viewBox="0 0 16 16"
         fill="none"
@@ -60,15 +64,42 @@ async function resetProgress() {
       >
         <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
-      City
+      {{ $t('common.city') }}
     </button>
 
-    <h1 class="settings__title">Settings</h1>
+    <h1 class="settings__title">{{ $t('settings.title') }}</h1>
 
     <section class="settings-card">
-      <h2 class="settings-card__title">Tile labels</h2>
-      <p class="settings-card__desc">Which language leads on the city map?</p>
-      <div class="lang-toggle" role="radiogroup" aria-label="Label language">
+      <h2 class="settings-card__title">{{ $t('settings.learningLanguage.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.learningLanguage.desc') }}</p>
+      <div class="lang-toggle" role="radiogroup" :aria-label="$t('settings.learningLanguage.groupLabel')">
+        <button
+          class="lang-toggle__btn"
+          :class="{ 'lang-toggle__btn--active': settings.baseLanguage === 'en' }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.baseLanguage === 'en'"
+          @click="setBaseLanguage('en')"
+        >
+          {{ $t('settings.learningLanguage.english') }}
+        </button>
+        <button
+          class="lang-toggle__btn"
+          :class="{ 'lang-toggle__btn--active': settings.baseLanguage === 'ru' }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.baseLanguage === 'ru'"
+          @click="setBaseLanguage('ru')"
+        >
+          {{ $t('settings.learningLanguage.russian') }}
+        </button>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.tileLabels.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.tileLabels.desc') }}</p>
+      <div class="lang-toggle" role="radiogroup" :aria-label="$t('settings.tileLabels.groupLabel')">
         <button
           class="lang-toggle__btn"
           :class="{ 'lang-toggle__btn--active': settings.labelLanguage === 'en' }"
@@ -77,7 +108,7 @@ async function resetProgress() {
           :aria-checked="settings.labelLanguage === 'en'"
           @click="setLanguage('en')"
         >
-          English first
+          {{ $t('settings.tileLabels.baseFirst') }}
         </button>
         <button
           class="lang-toggle__btn"
@@ -87,20 +118,19 @@ async function resetProgress() {
           :aria-checked="settings.labelLanguage === 'uz'"
           @click="setLanguage('uz')"
         >
-          O'zbekcha birinchi
+          {{ $t('settings.tileLabels.uzbekFirst') }}
         </button>
       </div>
     </section>
 
     <section class="settings-card">
-      <h2 class="settings-card__title">Audio</h2>
+      <h2 class="settings-card__title">{{ $t('settings.audio.title') }}</h2>
       <template v-if="!audioChecked">
-        <p class="settings-card__desc">Checking for downloadable audio…</p>
+        <p class="settings-card__desc">{{ $t('settings.audio.checking') }}</p>
       </template>
       <template v-else-if="audioManifest">
         <p class="settings-card__desc">
-          {{ audioTotal }} recordings. Download them all so every word and phrase plays offline —
-          you can pause and resume anytime.
+          {{ $t('settings.audio.summary', { count: audioTotal }) }}
         </p>
 
         <div
@@ -114,7 +144,7 @@ async function resetProgress() {
           <div class="dl-bar__fill" :style="{ width: `${audioPercent}%` }" />
         </div>
         <p v-if="audioStatus !== 'idle'" class="settings-card__desc">
-          {{ audioDone }} / {{ audioTotal }} ({{ audioPercent }}%)
+          {{ $t('settings.audio.progress', { done: audioDone, total: audioTotal, percent: audioPercent }) }}
         </p>
 
         <div class="dl-actions">
@@ -125,7 +155,7 @@ async function resetProgress() {
             :disabled="audioStatus === 'done'"
             @click="startAudio()"
           >
-            {{ audioStatus === 'done' ? 'All downloaded ✓' : 'Download all audio' }}
+            {{ audioStatus === 'done' ? $t('settings.audio.allDownloaded') : $t('settings.audio.downloadAll') }}
           </button>
           <button
             v-else-if="audioStatus === 'running'"
@@ -133,33 +163,31 @@ async function resetProgress() {
             type="button"
             @click="pauseAudio()"
           >
-            Pause
+            {{ $t('settings.audio.pause') }}
           </button>
           <button v-else class="btn btn--primary" type="button" @click="resumeAudio()">
-            {{ audioStatus === 'error' ? 'Retry' : 'Resume' }}
+            {{ audioStatus === 'error' ? $t('settings.audio.retry') : $t('settings.audio.resume') }}
           </button>
         </div>
 
         <p v-if="audioStatus === 'error'" class="settings-card__note settings-card__note--error">
-          Stopped at an error ({{ audioErrorMsg }}). Resume to retry — progress is kept.
+          {{ $t('settings.audio.error', { message: audioErrorMsg }) }}
         </p>
         <p v-else-if="audioStatus === 'done'" class="settings-card__note">
-          All {{ audioTotal }} recordings cached for offline use. ✓
+          {{ $t('settings.audio.done', { count: audioTotal }) }}
         </p>
       </template>
       <template v-else>
         <p class="settings-card__desc">
-          No prebuilt recordings are bundled yet, so Lugʻatcha uses your device's speech synthesis
-          to read Uzbek aloud. Quality varies by device; recordings will arrive with a future update
-          and download automatically.
+          {{ $t('settings.audio.none') }}
         </p>
       </template>
     </section>
 
     <section class="settings-card">
-      <h2 class="settings-card__title">Progress</h2>
+      <h2 class="settings-card__title">{{ $t('settings.progress.title') }}</h2>
       <p class="settings-card__desc">
-        Wipes every seen word, flashcard result, and completed exercise on this device.
+        {{ $t('settings.progress.desc') }}
       </p>
       <button
         v-if="!confirmingReset"
@@ -167,18 +195,18 @@ async function resetProgress() {
         type="button"
         @click="confirmingReset = true"
       >
-        Reset all progress…
+        {{ $t('settings.progress.reset') }}
       </button>
       <div v-else class="reset-confirm">
-        <p class="reset-confirm__msg">Are you sure? This can't be undone.</p>
+        <p class="reset-confirm__msg">{{ $t('settings.progress.confirm') }}</p>
         <div class="reset-confirm__actions">
-          <button class="btn btn--danger" type="button" @click="resetProgress">Yes, reset</button>
+          <button class="btn btn--danger" type="button" @click="resetProgress">{{ $t('settings.progress.confirmYes') }}</button>
           <button class="btn btn--ghost" type="button" @click="confirmingReset = false">
-            Cancel
+            {{ $t('common.cancel') }}
           </button>
         </div>
       </div>
-      <p v-if="resetDone" class="settings-card__note" aria-live="polite">Progress reset. ✓</p>
+      <p v-if="resetDone" class="settings-card__note" aria-live="polite">{{ $t('settings.progress.done') }}</p>
     </section>
   </main>
 </template>

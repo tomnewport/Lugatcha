@@ -2,13 +2,13 @@
   {
     "id": "samarkand.silk-road",
     "theme": "samarkand",
-    "title": { "en": "Jewel of the Silk Road", "uz": "Ipak yoʻli durdonasi" },
+    "title": { "en": "Jewel of the Silk Road", "ru": "Жемчужина Шёлкового пути", "uz": "Ipak yoʻli durdonasi" },
     "sentences": [
-      { "uzbek": "Samarqand juda qadimiy shahar.", "english": "Samarkand is a very ancient city." },
-      { "uzbek": "Registon maydoni juda goʻzal.", "english": "The Registan square is very beautiful." },
-      { "uzbek": "Men koʻk gumbazlarni koʻraman.", "english": "I see the blue domes." },
-      { "uzbek": "Ulugʻbek bu yerda rasadxona qurgan.", "english": "Ulugbek built an observatory here." },
-      { "uzbek": "Sayyohlar ipak sotib oladi.", "english": "Tourists buy silk." }
+      { "uzbek": "Samarqand juda qadimiy shahar.", "english": "Samarkand is a very ancient city.", "russian": "Самарканд — очень древний город." },
+      { "uzbek": "Registon maydoni juda goʻzal.", "english": "The Registan square is very beautiful.", "russian": "Площадь Регистан очень красива." },
+      { "uzbek": "Men koʻk gumbazlarni koʻraman.", "english": "I see the blue domes.", "russian": "Я вижу голубые купола." },
+      { "uzbek": "Ulugʻbek bu yerda rasadxona qurgan.", "english": "Ulugbek built an observatory here.", "russian": "Улугбек построил здесь обсерваторию." },
+      { "uzbek": "Sayyohlar ipak sotib oladi.", "english": "Tourists buy silk.", "russian": "Туристы покупают шёлк." }
     ],
     "glossary": {
       "Samarqand": "Samarkand",
@@ -31,19 +31,41 @@
       "ipak": "silk",
       "sotib": "buy",
       "oladi": "takes / buys"
+    },
+    "glossaryRu": {
+      "Samarqand": "Самарканд",
+      "juda": "очень",
+      "qadimiy": "древний",
+      "shahar": "город",
+      "Registon": "Регистан",
+      "maydoni": "площадь",
+      "goʻzal": "красивый",
+      "Men": "я",
+      "koʻk": "голубой",
+      "gumbazlarni": "купола",
+      "koʻraman": "я вижу",
+      "Ulugʻbek": "Улугбек",
+      "bu": "этот",
+      "yerda": "здесь",
+      "rasadxona": "обсерватория",
+      "qurgan": "построил",
+      "Sayyohlar": "туристы",
+      "ipak": "шёлк",
+      "sotib": "покупать",
+      "oladi": "берёт / покупает"
     }
   },
   {
     "id": "samarkand.by-bus",
     "theme": "samarkand",
-    "title": { "en": "Around Samarkand by Bus", "uz": "Samarqand boʻylab avtobusda" },
+    "title": { "en": "Around Samarkand by Bus", "ru": "По Самарканду на автобусе", "uz": "Samarqand boʻylab avtobusda" },
     "sentences": [
-      { "uzbek": "Samarqandda avtobus va marshrutka yuradi.", "english": "In Samarkand buses and marshrutkas run." },
-      { "uzbek": "Marshrutka kichik, lekin tez.", "english": "The marshrutka is small, but fast." },
-      { "uzbek": "Men haydovchiga naqd pul beraman.", "english": "I give the driver cash." },
-      { "uzbek": "Registonga borish uchun avtobusga chiqaman.", "english": "To get to the Registan I get on the bus." },
-      { "uzbek": "Bekatda odamlar navbatda turadi.", "english": "At the stop people stand in a queue." },
-      { "uzbek": "Taksi qimmat, lekin qulay.", "english": "A taxi is expensive, but convenient." }
+      { "uzbek": "Samarqandda avtobus va marshrutka yuradi.", "english": "In Samarkand buses and marshrutkas run.", "russian": "В Самарканде ходят автобусы и маршрутки." },
+      { "uzbek": "Marshrutka kichik, lekin tez.", "english": "The marshrutka is small, but fast.", "russian": "Маршрутка маленькая, но быстрая." },
+      { "uzbek": "Men haydovchiga naqd pul beraman.", "english": "I give the driver cash.", "russian": "Я даю водителю наличные деньги." },
+      { "uzbek": "Registonga borish uchun avtobusga chiqaman.", "english": "To get to the Registan I get on the bus.", "russian": "Чтобы добраться до Регистана, я сажусь в автобус." },
+      { "uzbek": "Bekatda odamlar navbatda turadi.", "english": "At the stop people stand in a queue.", "russian": "На остановке люди стоят в очереди." },
+      { "uzbek": "Taksi qimmat, lekin qulay.", "english": "A taxi is expensive, but convenient.", "russian": "Такси дорогое, но удобное." }
     ],
     "glossary": {
       "Samarqandda": "in Samarkand",
@@ -71,6 +93,33 @@
       "Taksi": "taxi",
       "qimmat": "expensive",
       "qulay": "convenient"
+    },
+    "glossaryRu": {
+      "Samarqandda": "в Самарканде",
+      "avtobus": "автобус",
+      "va": "и",
+      "marshrutka": "маршрутка",
+      "yuradi": "ходит / едет",
+      "kichik": "маленький",
+      "lekin": "но",
+      "tez": "быстрый",
+      "Men": "я",
+      "haydovchiga": "водителю",
+      "naqd": "наличные",
+      "pul": "деньги",
+      "beraman": "я даю",
+      "Registonga": "до Регистана",
+      "borish": "поездка / идти",
+      "uchun": "чтобы",
+      "avtobusga": "в автобус",
+      "chiqaman": "я сажусь",
+      "Bekatda": "на остановке",
+      "odamlar": "люди",
+      "navbatda": "в очереди",
+      "turadi": "стоит",
+      "Taksi": "такси",
+      "qimmat": "дорогой",
+      "qulay": "удобный"
     }
   }
 ]
