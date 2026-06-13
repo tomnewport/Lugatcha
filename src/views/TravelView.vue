@@ -244,7 +244,7 @@ function tapPin(place: TravelPlace) {
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding: 1rem 1rem 2rem;
+  padding: 1rem 1rem 4rem;
   gap: 1rem;
   background: var(--color-bg);
 }
