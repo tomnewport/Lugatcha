@@ -17,10 +17,16 @@ const STORAGE_KEY = 'lugatcha.settings'
 interface PersistedSettings {
   baseLanguage: BaseLanguage
   labelLanguage: LabelLanguage
+  /** False until the learner has picked their language in the first-run modal. */
+  languageChosen: boolean
 }
 
 function load(): PersistedSettings {
-  const defaults: PersistedSettings = { baseLanguage: 'en', labelLanguage: 'en' }
+  const defaults: PersistedSettings = {
+    baseLanguage: 'en',
+    labelLanguage: 'en',
+    languageChosen: false,
+  }
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) return { ...defaults, ...(JSON.parse(raw) as Partial<PersistedSettings>) }
@@ -44,13 +50,25 @@ export const useSettingsStore = defineStore('settings', {
     setBaseLanguage(lang: BaseLanguage) {
       this.baseLanguage = lang
       setI18nLocale(lang)
-      save({ baseLanguage: lang, labelLanguage: this.labelLanguage })
+      this.persist()
       // Morpheme glosses are language-specific and cached — rebuild them.
       void import('@/exercises/deagglutination').then((m) => m.rebuildBreakdownIndex())
     },
+    /** First-run choice: pick the base language and dismiss the welcome modal. */
+    chooseLanguage(lang: BaseLanguage) {
+      this.languageChosen = true
+      this.setBaseLanguage(lang)
+    },
     setLabelLanguage(lang: LabelLanguage) {
       this.labelLanguage = lang
-      save({ baseLanguage: this.baseLanguage, labelLanguage: lang })
+      this.persist()
+    },
+    persist() {
+      save({
+        baseLanguage: this.baseLanguage,
+        labelLanguage: this.labelLanguage,
+        languageChosen: this.languageChosen,
+      })
     },
   },
 })
