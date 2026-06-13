@@ -14,7 +14,7 @@ import { capturedErrors, dismissError, buildIssueUrl } from '@/errors/reporter'
     <div v-for="error in capturedErrors" :key="error.id" class="toast">
       <div class="toast__body">
         <p class="toast__title">
-          Something went wrong
+          {{ $t('errors.title') }}
           <span v-if="error.count > 1" class="toast__count">×{{ error.count }}</span>
         </p>
         <p class="toast__message">{{ error.message }}</p>
@@ -26,12 +26,12 @@ import { capturedErrors, dismissError, buildIssueUrl } from '@/errors/reporter'
           target="_blank"
           rel="noopener noreferrer"
         >
-          Report
+          {{ $t('errors.report') }}
         </a>
         <button
           class="toast__dismiss"
           type="button"
-          aria-label="Dismiss error"
+          :aria-label="$t('errors.dismiss')"
           @click="dismissError(error.id)"
         >
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">

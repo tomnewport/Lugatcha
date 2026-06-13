@@ -4,32 +4,39 @@
     "theme": "hotel",
     "title": {
       "en": "Arriving in Samarkand",
+      "ru": "Прибытие в Самарканд",
       "uz": "Samarqandga kelish"
     },
     "sentences": [
       {
         "uzbek": "Men Samarqandga uzoq safar qilib keldim.",
-        "english": "I arrived in Samarkand after a long journey."
+        "english": "I arrived in Samarkand after a long journey.",
+        "russian": "Я приехал в Самарканд после долгого путешествия."
       },
       {
         "uzbek": "Men mehmonxona resepsheniga bordim.",
-        "english": "I went to the hotel reception."
+        "english": "I went to the hotel reception.",
+        "russian": "Я подошёл к стойке регистрации в гостинице."
       },
       {
         "uzbek": "Mening bronim bor edi.",
-        "english": "I had a reservation."
+        "english": "I had a reservation.",
+        "russian": "У меня была бронь."
       },
       {
         "uzbek": "Resepshenist menga kalit berdi.",
-        "english": "The receptionist gave me a key."
+        "english": "The receptionist gave me a key.",
+        "russian": "Администратор дал мне ключ."
       },
       {
         "uzbek": "Mening xonam to'rtinchi qavatda edi.",
-        "english": "My room was on the fourth floor."
+        "english": "My room was on the fourth floor.",
+        "russian": "Мой номер был на четвёртом этаже."
       },
       {
         "uzbek": "Derazadan buyuk Registon maydoni ko'rinardi.",
-        "english": "From the window the great Registan square was visible."
+        "english": "From the window the great Registan square was visible.",
+        "russian": "Из окна была видна великая площадь Регистан."
       }
     ],
     "glossary": {
@@ -58,6 +65,33 @@
       "Registon": "Registan",
       "maydoni": "square",
       "ko'rinardi": "was visible"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "Samarqandga": "в Самарканд",
+      "uzoq": "долгий, далёкий",
+      "safar": "путешествие",
+      "qilib": "делая, совершая (safar qilib = совершив путешествие)",
+      "keldim": "я приехал",
+      "mehmonxona": "гостиница",
+      "resepsheniga": "к стойке регистрации",
+      "bordim": "я пошёл",
+      "Mening": "мой",
+      "bronim": "моя бронь (bron + -im)",
+      "bor": "есть, иметься",
+      "edi": "было",
+      "Resepshenist": "администратор",
+      "menga": "мне",
+      "kalit": "ключ",
+      "berdi": "дал",
+      "xonam": "мой номер (xona + -m)",
+      "to'rtinchi": "четвёртый",
+      "qavatda": "на этаже (qavat + -da)",
+      "Derazadan": "из окна (deraza + -dan)",
+      "buyuk": "великий",
+      "Registon": "Регистан",
+      "maydoni": "площадь",
+      "ko'rinardi": "была видна"
     }
   },
   {
@@ -65,32 +99,39 @@
     "theme": "hotel",
     "title": {
       "en": "Breakfast on the Terrace",
+      "ru": "Завтрак на террасе",
       "uz": "Ayvonda nonushta"
     },
     "sentences": [
       {
         "uzbek": "Ertalab men nonushtaga tushdim.",
-        "english": "In the morning I went down to breakfast."
+        "english": "In the morning I went down to breakfast.",
+        "russian": "Утром я спустился к завтраку."
       },
       {
         "uzbek": "Ayvonda kichik stol topdim.",
-        "english": "I found a small table on the terrace."
+        "english": "I found a small table on the terrace.",
+        "russian": "На террасе я нашёл маленький столик."
       },
       {
         "uzbek": "Non, qaymoq va choy keldi.",
-        "english": "Bread, cream, and tea came."
+        "english": "Bread, cream, and tea came.",
+        "russian": "Принесли хлеб, сливки и чай."
       },
       {
         "uzbek": "Quyosh tog'lar ustida edi.",
-        "english": "The sun was over the mountains."
+        "english": "The sun was over the mountains.",
+        "russian": "Солнце стояло над горами."
       },
       {
         "uzbek": "Bu juda chiroyli manzara edi.",
-        "english": "It was a very beautiful view."
+        "english": "It was a very beautiful view.",
+        "russian": "Это был очень красивый вид."
       },
       {
         "uzbek": "Men sekin nonushta qildim.",
-        "english": "I ate my breakfast slowly."
+        "english": "I ate my breakfast slowly.",
+        "russian": "Я не спеша позавтракал."
       }
     ],
     "glossary": {
@@ -113,6 +154,27 @@
       "Bu": "this",
       "juda": "very",
       "va": "and"
+    },
+    "glossaryRu": {
+      "Ertalab": "утром",
+      "men": "я",
+      "nonushtaga": "к завтраку",
+      "tushdim": "я спустился",
+      "Ayvonda": "на террасе",
+      "topdim": "я нашёл",
+      "qaymoq": "сливки (каймак)",
+      "keldi": "пришёл / принесли",
+      "Quyosh": "солнце",
+      "tog'lar": "горы",
+      "ustida": "наверху / над",
+      "edi": "было",
+      "chiroyli": "красивый",
+      "manzara": "вид",
+      "sekin": "медленно",
+      "qildim": "я сделал (nonushta qildim = я позавтракал)",
+      "Bu": "это",
+      "juda": "очень",
+      "va": "и"
     }
   }
 ]

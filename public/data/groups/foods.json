@@ -3,41 +3,56 @@
   "order": 4,
   "title": {
     "en": "Foods",
-    "uz": "Taomlar"
+    "uz": "Taomlar",
+    "ru": "Еда"
   },
   "icon": "🍲",
   "blurb": "Plov, soups and the colours of the bazaar",
+  "blurbRu": "Плов, супы и краски базара",
   "article": [
     {
       "heading": "A cuisine built around the dasturxon",
+      "headingRu": "Кухня, построенная вокруг dasturxon",
       "body": [
         "Meals gather around the **dasturxon**, the spread of food laid out for guests. At its heart is **palov** (also called *osh*) — rice with carrots, onion and meat, cooked in a great cast-iron *qozon*. Around it come hand-folded **manti** (steamed dumplings), pulled-noodle **lag'mon**, and hearty **sho'rva** soup.",
         "Uzbek hospitality is generous to a fault: expect your plate to be refilled before it is ever empty."
       ],
+      "bodyRu": [
+        "Трапеза собирается вокруг **dasturxon** — накрытого для гостей стола с угощениями. В его центре — **palov** (также называемый *osh*): рис с морковью, луком и мясом, приготовленный в большом чугунном *qozon*. Рядом с ним — слепленные вручную **manti** (паровые пельмени), тянутая лапша **lag'mon** и сытный суп **sho'rva**.",
+        "Узбекское гостеприимство щедро до крайности: будьте готовы к тому, что вашу тарелку наполнят снова, прежде чем она опустеет."
+      ],
       "examples": [
         {
           "uzbek": "palov",
-          "english": "plov — the national dish"
+          "english": "plov — the national dish",
+          "russian": "плов — национальное блюдо"
         },
         {
           "uzbek": "manti yaxshi",
-          "english": "the manti is good"
+          "english": "the manti is good",
+          "russian": "манты вкусные"
         }
       ]
     },
     {
       "heading": "Colours of the bazaar",
+      "headingRu": "Краски базара",
       "body": [
         "The markets overflow with produce. Look for **anor** (pomegranate), **qovun** (melon) — Uzbek melons are legendary — and **tarvuz** (watermelon), piled in fragrant pyramids. Cooking starts from **sabzi** (carrot), **piyoz** (onion) and **kartoshka** (potato), and a touch of **asal** (honey) sweetens the tea."
+      ],
+      "bodyRu": [
+        "Рынки переполнены продуктами. Ищите **anor** (гранат), **qovun** (дыню) — узбекские дыни легендарны — и **tarvuz** (арбуз), сложенные в ароматные пирамиды. Готовка начинается с **sabzi** (моркови), **piyoz** (лука) и **kartoshka** (картофеля), а капля **asal** (мёда) подслащивает чай."
       ],
       "examples": [
         {
           "uzbek": "qovun shirin",
-          "english": "the melon is sweet"
+          "english": "the melon is sweet",
+          "russian": "дыня сладкая"
         },
         {
           "uzbek": "bir kilo anor",
-          "english": "one kilo of pomegranates"
+          "english": "one kilo of pomegranates",
+          "russian": "один килограмм гранатов"
         }
       ]
     }
@@ -47,15 +62,18 @@
       "id": "core.food-plov",
       "uzbek": "palov",
       "english": "plov",
+      "russian": "плов",
       "theme": "core",
       "group": "foods",
       "level": 2,
-      "usageNotes": "Also called osh — rice, carrots, onion and meat. The national dish."
+      "usageNotes": "Also called osh — rice, carrots, onion and meat. The national dish.",
+      "usageNotesRu": "Также называется osh — рис, морковь, лук и мясо. Национальное блюдо."
     },
     {
       "id": "core.food-manti",
       "uzbek": "manti",
       "english": "manti (steamed dumplings)",
+      "russian": "манты (паровые пельмени)",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -64,6 +82,7 @@
       "id": "core.food-lagman",
       "uzbek": "lag'mon",
       "english": "lagman (pulled noodles)",
+      "russian": "лагман (тянутая лапша)",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -72,6 +91,7 @@
       "id": "core.food-shorva",
       "uzbek": "sho'rva",
       "english": "soup",
+      "russian": "суп",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -80,6 +100,7 @@
       "id": "core.food-carrot",
       "uzbek": "sabzi",
       "english": "carrot",
+      "russian": "морковь",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -88,6 +109,7 @@
       "id": "core.food-onion",
       "uzbek": "piyoz",
       "english": "onion",
+      "russian": "лук",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -96,6 +118,7 @@
       "id": "core.food-potato",
       "uzbek": "kartoshka",
       "english": "potato",
+      "russian": "картофель",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -104,6 +127,7 @@
       "id": "core.food-pomegranate",
       "uzbek": "anor",
       "english": "pomegranate",
+      "russian": "гранат",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -112,6 +136,7 @@
       "id": "core.food-melon",
       "uzbek": "qovun",
       "english": "melon",
+      "russian": "дыня",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -120,6 +145,7 @@
       "id": "core.food-watermelon",
       "uzbek": "tarvuz",
       "english": "watermelon",
+      "russian": "арбуз",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -128,6 +154,7 @@
       "id": "core.food-honey",
       "uzbek": "asal",
       "english": "honey",
+      "russian": "мёд",
       "theme": "core",
       "group": "foods",
       "level": 3
@@ -136,6 +163,7 @@
       "id": "core.food-sweets",
       "uzbek": "shirinlik",
       "english": "sweets",
+      "russian": "сладости",
       "theme": "core",
       "group": "foods",
       "level": 3

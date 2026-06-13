@@ -2,8 +2,10 @@
 import { computed } from 'vue'
 import type { LessonSection } from '@/db/types'
 import AudioButton from '@/components/AudioButton.vue'
+import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{ section: LessonSection; visitCount?: number }>()
+const { pick, pickArray } = useContentLang()
 
 /** Tiny formatter: escape HTML, then **bold**. Lesson data is first-party. */
 function renderBody(paragraph: string): string {
@@ -11,35 +13,43 @@ function renderBody(paragraph: string): string {
   return escaped.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
 }
 
+/** Body paragraphs in the learner's base language. */
+const body = computed(() => pickArray(props.section.body, props.section.bodyRu))
+
 /** Picks one example per visit, cycling through all of them. */
 const example = computed(() => {
   const examples = props.section.examples
   if (!examples?.length) return null
   return examples[(props.visitCount ?? 0) % examples.length]
 })
+
+/** Per-morpheme gloss for the current example, in the base language. */
+const exampleGloss = computed(() =>
+  example.value?.gloss ? pickArray(example.value.gloss, example.value.glossRu) : undefined,
+)
 </script>
 
 <template>
   <div class="section">
-    <h2 v-if="section.heading" class="section__heading">{{ section.heading }}</h2>
+    <h2 v-if="section.heading" class="section__heading">{{ pick(section.heading, section.headingRu) }}</h2>
     <!-- eslint-disable-next-line vue/no-v-html — first-party lesson data, escaped above -->
-    <p v-for="(para, i) in section.body" :key="i" class="section__para" v-html="renderBody(para)" />
+    <p v-for="(para, i) in body" :key="i" class="section__para" v-html="renderBody(para)" />
 
     <ul v-if="example" class="examples">
       <li class="example">
         <div class="example__row">
           <div class="example__text">
             <span class="example__uzbek" lang="uz">{{ example.uzbek }}</span>
-            <span class="example__english">{{ example.english }}</span>
+            <span class="example__english">{{ pick(example.english, example.russian) }}</span>
           </div>
           <AudioButton :text="example.uzbek" />
         </div>
-        <div v-if="example.breakdown" class="example__breakdown" aria-label="Word breakdown">
+        <div v-if="example.breakdown" class="example__breakdown" :aria-label="$t('exercise.breakdownLabel')">
           <template v-for="(part, j) in example.breakdown" :key="j">
             <span v-if="j > 0" class="example__plus" aria-hidden="true">+</span>
             <span class="morpheme">
               <span class="morpheme__part" lang="uz">{{ part }}</span>
-              <span v-if="example.gloss?.[j]" class="morpheme__gloss">{{ example.gloss[j] }}</span>
+              <span v-if="exampleGloss?.[j]" class="morpheme__gloss">{{ exampleGloss[j] }}</span>
             </span>
           </template>
         </div>

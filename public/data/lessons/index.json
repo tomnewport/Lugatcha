@@ -4,9 +4,11 @@
     "order": 1,
     "title": {
       "en": "Stack the Suffixes",
-      "uz": "Qo'shimchalar"
+      "uz": "Qo'shimchalar",
+      "ru": "Складываем суффиксы"
     },
     "blurb": "How Uzbek builds big words from little bricks",
+    "blurbRu": "Как узбекский строит большие слова из маленьких кирпичиков",
     "estimatedMinutes": 3
   },
   {
@@ -14,9 +16,11 @@
     "order": 2,
     "title": {
       "en": "The Verb Is Shy",
-      "uz": "Fe'l oxirida"
+      "uz": "Fe'l oxirida",
+      "ru": "Глагол застенчив"
     },
     "blurb": "Why the action always hides at the end",
+    "blurbRu": "Почему действие всегда прячется в конце",
     "estimatedMinutes": 2
   },
   {
@@ -24,9 +28,11 @@
     "order": 3,
     "title": {
       "en": "To, At, From",
-      "uz": "Kelishiklar"
+      "uz": "Kelishiklar",
+      "ru": "В, у, из"
     },
     "blurb": "Three endings that replace all your prepositions",
+    "blurbRu": "Три окончания, заменяющие все ваши предлоги",
     "estimatedMinutes": 3,
     "prerequisites": [
       "school.suffixes"
@@ -37,9 +43,11 @@
     "order": 4,
     "title": {
       "en": "sen vs siz",
-      "uz": "Sen va siz"
+      "uz": "Sen va siz",
+      "ru": "sen против siz"
     },
     "blurb": "Politeness is baked into the grammar",
+    "blurbRu": "Вежливость встроена в саму грамматику",
     "estimatedMinutes": 2
   },
   {
@@ -47,9 +55,11 @@
     "order": 5,
     "title": {
       "en": "The Throaty Sounds",
-      "uz": "Tovushlar"
+      "uz": "Tovushlar",
+      "ru": "Горловые звуки"
     },
     "blurb": "q, g', x and o' — made further back than English goes",
+    "blurbRu": "q, g', x и o' — произносятся глубже, чем привык английский",
     "estimatedMinutes": 3
   },
   {
@@ -57,9 +67,11 @@
     "order": 6,
     "title": {
       "en": "Two Alphabets",
-      "uz": "Ikki alifbo"
+      "uz": "Ikki alifbo",
+      "ru": "Два алфавита"
     },
     "blurb": "Read both sides of the street: Latin and Cyrillic",
+    "blurbRu": "Читайте обе стороны улицы: латиницу и кириллицу",
     "estimatedMinutes": 3,
     "prerequisites": [
       "school.sounds"
@@ -70,9 +82,11 @@
     "order": 7,
     "title": {
       "en": "Do You Have It?",
-      "uz": "Bor va yo'q"
+      "uz": "Bor va yo'q",
+      "ru": "У вас это есть?"
     },
     "blurb": "Uzbek has no “to have” — things simply exist",
+    "blurbRu": "В узбекском нет глагола «иметь» — вещи просто существуют",
     "estimatedMinutes": 2,
     "prerequisites": [
       "school.cases"
@@ -83,9 +97,11 @@
     "order": 8,
     "title": {
       "en": "The Word Factory",
-      "uz": "So'z fabrikasi"
+      "uz": "So'z fabrikasi",
+      "ru": "Фабрика слов"
     },
     "blurb": "Four suffixes that multiply every word you learn",
+    "blurbRu": "Четыре суффикса, которые умножают каждое выученное слово",
     "estimatedMinutes": 3,
     "prerequisites": [
       "school.suffixes"

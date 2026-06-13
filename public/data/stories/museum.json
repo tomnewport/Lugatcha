@@ -4,32 +4,39 @@
     "theme": "museum",
     "title": {
       "en": "The Old Map",
+      "ru": "Старая карта",
       "uz": "Eski xarita"
     },
     "sentences": [
       {
         "uzbek": "Muzeyda men eski xaritani ko'rdim.",
-        "english": "In the museum I saw an old map."
+        "english": "In the museum I saw an old map.",
+        "russian": "В музее я увидел старую карту."
       },
       {
         "uzbek": "Unda Buyuk ipak yo'li bor edi.",
-        "english": "The Great Silk Road was on it."
+        "english": "The Great Silk Road was on it.",
+        "russian": "На ней был Великий шёлковый путь."
       },
       {
         "uzbek": "Karvonlar Samarqandga bordi.",
-        "english": "Caravans went to Samarkand."
+        "english": "Caravans went to Samarkand.",
+        "russian": "Караваны шли в Самарканд."
       },
       {
         "uzbek": "Ular ipak va sopol olib keldi.",
-        "english": "They brought silk and ceramics."
+        "english": "They brought silk and ceramics.",
+        "russian": "Они привозили шёлк и керамику."
       },
       {
         "uzbek": "Men xaritaga uzoq qaradim.",
-        "english": "I looked at the map for a long time."
+        "english": "I looked at the map for a long time.",
+        "russian": "Я долго смотрел на карту."
       },
       {
         "uzbek": "Tarix shu yerda, juda yaqin edi.",
-        "english": "History was right here, very near."
+        "english": "History was right here, very near.",
+        "russian": "История была прямо здесь, совсем рядом."
       }
     ],
     "glossary": {
@@ -59,6 +66,34 @@
       "ipak": "silk",
       "shu": "this very",
       "yerda": "at (a place)"
+    },
+    "glossaryRu": {
+      "Muzeyda": "в музее",
+      "men": "я",
+      "eski": "старый",
+      "xaritani": "карту (объект)",
+      "ko'rdim": "я увидел",
+      "Unda": "на ней",
+      "Buyuk": "великий",
+      "yo'li": "путь (чего-либо)",
+      "bor": "был",
+      "edi": "был",
+      "Karvonlar": "караваны",
+      "Samarqandga": "в Самарканд",
+      "bordi": "шёл",
+      "Ular": "они",
+      "olib": "беря (olib keldi = привёз)",
+      "keldi": "пришёл",
+      "xaritaga": "на карту",
+      "uzoq": "долго / далеко",
+      "qaradim": "я смотрел",
+      "Tarix": "история",
+      "juda": "очень",
+      "yaqin": "близко",
+      "va": "и",
+      "ipak": "шёлк",
+      "shu": "именно этот",
+      "yerda": "здесь (в месте)"
     }
   },
   {
@@ -66,32 +101,39 @@
     "theme": "museum",
     "title": {
       "en": "The Master's House",
+      "ru": "Дом мастера",
       "uz": "Usta uyi"
     },
     "sentences": [
       {
         "uzbek": "Bu muzey eski usta uyi edi.",
-        "english": "This museum was an old master's house."
+        "english": "This museum was an old master's house.",
+        "russian": "Этот музей был домом старого мастера."
       },
       {
         "uzbek": "Usta chiroyli sopol idishlar yasadi.",
-        "english": "The master made beautiful ceramic dishes."
+        "english": "The master made beautiful ceramic dishes.",
+        "russian": "Мастер делал красивую керамическую посуду."
       },
       {
         "uzbek": "Hovlida katta tut daraxti bor.",
-        "english": "In the courtyard there is a big mulberry tree."
+        "english": "In the courtyard there is a big mulberry tree.",
+        "russian": "Во дворе растёт большое тутовое дерево."
       },
       {
         "uzbek": "Men ko'k piyolani ko'rdim.",
-        "english": "I saw a blue tea bowl."
+        "english": "I saw a blue tea bowl.",
+        "russian": "Я увидел синюю пиалу."
       },
       {
         "uzbek": "U yuz yoshda, lekin yangi kabi.",
-        "english": "It is a hundred years old, but like new."
+        "english": "It is a hundred years old, but like new.",
+        "russian": "Ей сто лет, но она как новая."
       },
       {
         "uzbek": "San'at hech qachon qarimaydi.",
-        "english": "Art never grows old."
+        "english": "Art never grows old.",
+        "russian": "Искусство никогда не стареет."
       }
     ],
     "glossary": {
@@ -124,6 +166,37 @@
       "qarimaydi": "does not grow old",
       "hech": "never (with qachon)",
       "qachon": "when"
+    },
+    "glossaryRu": {
+      "Bu": "этот",
+      "muzey": "музей",
+      "eski": "старый",
+      "usta": "мастер / ремесленник",
+      "uyi": "дом (чей-либо)",
+      "edi": "был",
+      "chiroyli": "красивый",
+      "sopol": "керамический",
+      "idishlar": "посуда",
+      "yasadi": "делал",
+      "Hovlida": "во дворе",
+      "katta": "большой",
+      "tut": "тутовый",
+      "daraxti": "дерево",
+      "bor": "есть",
+      "Men": "я",
+      "ko'k": "синий",
+      "piyolani": "пиалу (объект)",
+      "ko'rdim": "я увидел",
+      "U": "она",
+      "yuz": "сто",
+      "yoshda": "лет от роду",
+      "lekin": "но",
+      "yangi": "новый",
+      "kabi": "как",
+      "San'at": "искусство",
+      "qarimaydi": "не стареет",
+      "hech": "никогда (с qachon)",
+      "qachon": "когда"
     }
   }
 ]

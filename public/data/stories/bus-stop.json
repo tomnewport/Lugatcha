@@ -4,32 +4,39 @@
     "theme": "bus-stop",
     "title": {
       "en": "The Road to the Village",
+      "ru": "Дорога в деревню",
       "uz": "Qishloqqa yo'l"
     },
     "sentences": [
       {
         "uzbek": "Men kichik qishloqqa bordim.",
-        "english": "I went to a small village."
+        "english": "I went to a small village.",
+        "russian": "Я поехал в маленькую деревню."
       },
       {
         "uzbek": "Bekatda uzoq kutdim.",
-        "english": "I waited a long time at the stop."
+        "english": "I waited a long time at the stop.",
+        "russian": "Я долго ждал на остановке."
       },
       {
         "uzbek": "Nihoyat eski avtobus keldi.",
-        "english": "At last an old bus came."
+        "english": "At last an old bus came.",
+        "russian": "Наконец приехал старый автобус."
       },
       {
         "uzbek": "Haydovchi kulib salom berdi.",
-        "english": "The driver smiled and greeted me."
+        "english": "The driver smiled and greeted me.",
+        "russian": "Водитель улыбнулся и поздоровался."
       },
       {
         "uzbek": "Yo'lda paxta dalalari bor edi.",
-        "english": "On the road there were cotton fields."
+        "english": "On the road there were cotton fields.",
+        "russian": "Вдоль дороги были хлопковые поля."
       },
       {
         "uzbek": "Qishloq tinch va go'zal edi.",
-        "english": "The village was quiet and lovely."
+        "english": "The village was quiet and lovely.",
+        "russian": "Деревня была тихой и красивой."
       }
     ],
     "glossary": {
@@ -57,6 +64,32 @@
       "tinch": "quiet",
       "go'zal": "lovely / beautiful",
       "va": "and"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "kichik": "маленький",
+      "qishloqqa": "в деревню",
+      "bordim": "я поехал",
+      "Bekatda": "на остановке",
+      "uzoq": "долго",
+      "kutdim": "я ждал",
+      "Nihoyat": "наконец",
+      "eski": "старый",
+      "avtobus": "автобус",
+      "keldi": "приехал",
+      "Haydovchi": "водитель",
+      "kulib": "улыбаясь",
+      "salom": "приветствие",
+      "berdi": "дал (salom berdi = поздоровался)",
+      "Yo'lda": "на дороге",
+      "paxta": "хлопок",
+      "dalalari": "поля (чего-то)",
+      "bor": "были",
+      "edi": "был",
+      "Qishloq": "деревня",
+      "tinch": "тихий",
+      "go'zal": "красивый, прекрасный",
+      "va": "и"
     }
   },
   {
@@ -64,32 +97,39 @@
     "theme": "bus-stop",
     "title": {
       "en": "The Helpful Driver",
+      "ru": "Добрый водитель",
       "uz": "Mehribon haydovchi"
     },
     "sentences": [
       {
         "uzbek": "Men qaysi bekatda tushishni bilmadim.",
-        "english": "I did not know which stop to get off at."
+        "english": "I did not know which stop to get off at.",
+        "russian": "Я не знал, на какой остановке мне выходить."
       },
       {
         "uzbek": "Haydovchiga manzilni aytdim.",
-        "english": "I told the driver the address."
+        "english": "I told the driver the address.",
+        "russian": "Я назвал водителю адрес."
       },
       {
         "uzbek": "U \"men aytaman\" dedi.",
-        "english": "He said, \"I will tell you.\""
+        "english": "He said, \"I will tell you.\"",
+        "russian": "Он сказал: «Я тебе подскажу»."
       },
       {
         "uzbek": "Bekatga kelganda, u menga aytdi.",
-        "english": "When we reached the stop, he told me."
+        "english": "When we reached the stop, he told me.",
+        "russian": "Когда мы доехали до остановки, он сказал мне."
       },
       {
         "uzbek": "Men tushdim va rahmat aytdim.",
-        "english": "I got off and said thank you."
+        "english": "I got off and said thank you.",
+        "russian": "Я вышел и поблагодарил."
       },
       {
         "uzbek": "Bu yerda hamma yordam beradi.",
-        "english": "Here everyone helps."
+        "english": "Here everyone helps.",
+        "russian": "Здесь все помогают."
       }
     ],
     "glossary": {
@@ -117,6 +157,32 @@
       "beradi": "gives",
       "Bu": "this",
       "yerda": "at / in (a place)"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "qaysi": "какой / который",
+      "bekatda": "на остановке",
+      "tushishni": "выход, сходить (дополнение)",
+      "bilmadim": "я не знал",
+      "Haydovchiga": "водителю",
+      "manzilni": "адрес (дополнение)",
+      "aytdim": "я сказал",
+      "U": "он",
+      "men": "я",
+      "aytaman": "я скажу, я подскажу",
+      "dedi": "сказал",
+      "Bekatga": "до остановки",
+      "kelganda": "когда (мы) доехали",
+      "menga": "мне",
+      "aytdi": "сказал",
+      "tushdim": "я вышел",
+      "va": "и",
+      "rahmat": "спасибо",
+      "hamma": "все",
+      "yordam": "помощь",
+      "beradi": "даёт, оказывает",
+      "Bu": "это, этот",
+      "yerda": "в / на (месте)"
     }
   }
 ]

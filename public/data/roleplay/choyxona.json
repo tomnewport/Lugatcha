@@ -4,23 +4,28 @@
     "theme": "choyxona",
     "title": {
       "en": "Making a Friend",
+      "ru": "Как завести друга",
       "uz": "Do'st orttirish"
     },
     "scenario": "At a traditional teahouse, a friendly man at the next table starts a conversation.",
+    "scenarioRu": "В традиционной чайхане приветливый мужчина за соседним столиком заводит разговор.",
     "variants": [
       {
         "id": "choyxona.making-friends.base",
         "description": "A warm welcome and shared tea",
+        "descriptionRu": "Тёплый приём и совместное чаепитие",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz! Bu yerga o'tiring.",
-            "english": "Welcome! Sit here."
+            "english": "Welcome! Sit here.",
+            "russian": "Добро пожаловать! Садитесь сюда."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat! Mehribonsiz.",
             "english": "Thank you! You are kind.",
+            "russian": "Спасибо! Вы очень добры.",
             "tokens": [
               "Rahmat!",
               "Mehribonsiz."
@@ -29,12 +34,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qayerdan keldingiz?",
-            "english": "Where are you from?"
+            "english": "Where are you from?",
+            "russian": "Откуда вы приехали?"
           },
           {
             "speaker": "user",
             "uzbek": "Men Angliyadan keldim.",
             "english": "I came from England.",
+            "russian": "Я приехал из Англии.",
             "tokens": [
               "Men",
               "Angliyadan",
@@ -44,12 +51,14 @@
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz O'zbekistonga! Choy iching.",
-            "english": "Welcome to Uzbekistan! Have some tea."
+            "english": "Welcome to Uzbekistan! Have some tea.",
+            "russian": "Добро пожаловать в Узбекистан! Выпейте чаю."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -60,16 +69,19 @@
       {
         "id": "choyxona.making-friends.name",
         "description": "You exchange names",
+        "descriptionRu": "Вы знакомитесь и называете имена",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Mening ismim Bobur. Sizniki-chi?",
-            "english": "My name is Bobur. And yours?"
+            "english": "My name is Bobur. And yours?",
+            "russian": "Меня зовут Бобур. А вас?"
           },
           {
             "speaker": "user",
             "uzbek": "Mening ismim Tom.",
             "english": "My name is Tom.",
+            "russian": "Меня зовут Том.",
             "tokens": [
               "Mening",
               "ismim",
@@ -79,12 +91,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tanishganimdan xursandman, Tom!",
-            "english": "Pleased to meet you, Tom!"
+            "english": "Pleased to meet you, Tom!",
+            "russian": "Рад познакомиться, Том!"
           },
           {
             "speaker": "user",
             "uzbek": "Men ham xursandman.",
             "english": "I am pleased too.",
+            "russian": "Я тоже рад.",
             "tokens": [
               "Men",
               "ham",
@@ -94,23 +108,27 @@
           {
             "speaker": "npc",
             "uzbek": "Endi biz do'stmiz!",
-            "english": "Now we are friends!"
+            "english": "Now we are friends!",
+            "russian": "Теперь мы друзья!"
           }
         ]
       },
       {
         "id": "choyxona.making-friends.food",
         "description": "They insist you try the samsa",
+        "descriptionRu": "Они настаивают, чтобы вы попробовали самсу",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Somsa yedingizmi? Juda mazali!",
-            "english": "Have you eaten samsa? Very tasty!"
+            "english": "Have you eaten samsa? Very tasty!",
+            "russian": "Вы пробовали самсу? Очень вкусно!"
           },
           {
             "speaker": "user",
             "uzbek": "Hali yo'q. Ko'rsataolasizmi?",
             "english": "Not yet. Can you show me?",
+            "russian": "Ещё нет. Можете показать?",
             "tokens": [
               "Hali",
               "yo'q.",
@@ -120,12 +138,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, oling. Mehmon — bu tabarruk.",
-            "english": "Here, take it. A guest is a blessing."
+            "english": "Here, take it. A guest is a blessing.",
+            "russian": "Вот, берите. Гость — это благословение."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat! Juda mazali!",
             "english": "Thank you! Very tasty!",
+            "russian": "Спасибо! Очень вкусно!",
             "tokens": [
               "Rahmat!",
               "Juda",
@@ -135,23 +155,27 @@
           {
             "speaker": "npc",
             "uzbek": "Yana oling! Uyalmang.",
-            "english": "Take more! Do not be shy."
+            "english": "Take more! Do not be shy.",
+            "russian": "Берите ещё! Не стесняйтесь."
           }
         ]
       },
       {
         "id": "choyxona.making-friends.family",
         "description": "They ask about your family",
+        "descriptionRu": "Они расспрашивают о вашей семье",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Oilangiz bormi?",
-            "english": "Do you have a family?"
+            "english": "Do you have a family?",
+            "russian": "У вас есть семья?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, oilam Angliyada.",
             "english": "Yes, my family is in England.",
+            "russian": "Да, моя семья в Англии.",
             "tokens": [
               "Ha,",
               "oilam",
@@ -161,12 +185,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ularni sog'inasizmi?",
-            "english": "Do you miss them?"
+            "english": "Do you miss them?",
+            "russian": "Вы скучаете по ним?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, lekin bu yer go'zal.",
             "english": "Yes, but this place is lovely.",
+            "russian": "Да, но здесь так красиво.",
             "tokens": [
               "Ha,",
               "lekin",
@@ -178,23 +204,27 @@
           {
             "speaker": "npc",
             "uzbek": "O'zbekistonda hamma sizga do'st!",
-            "english": "In Uzbekistan everyone is your friend!"
+            "english": "In Uzbekistan everyone is your friend!",
+            "russian": "В Узбекистане все вам друзья!"
           }
         ]
       },
       {
         "id": "choyxona.making-friends.invite",
         "description": "They invite you home",
+        "descriptionRu": "Они приглашают вас к себе домой",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Ertaga biznikiga keling! Osh bor.",
-            "english": "Come to our house tomorrow! There is plov."
+            "english": "Come to our house tomorrow! There is plov.",
+            "russian": "Приходите к нам завтра! Будет плов."
           },
           {
             "speaker": "user",
             "uzbek": "Rostdanmi? Bu katta sharaf.",
             "english": "Really? This is a great honour.",
+            "russian": "Правда? Это большая честь.",
             "tokens": [
               "Rostdanmi?",
               "Bu",
@@ -205,12 +235,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta! Mehmon — Xudoning sovg'asi.",
-            "english": "Of course! A guest is God's gift."
+            "english": "Of course! A guest is God's gift.",
+            "russian": "Конечно! Гость — это дар Божий."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat! Albatta kelaman.",
             "english": "Thank you very much! I will certainly come.",
+            "russian": "Большое спасибо! Я обязательно приду.",
             "tokens": [
               "Katta",
               "rahmat!",
@@ -221,7 +253,8 @@
           {
             "speaker": "npc",
             "uzbek": "Juda yaxshi! Kutamiz.",
-            "english": "Very good! We will wait for you."
+            "english": "Very good! We will wait for you.",
+            "russian": "Очень хорошо! Будем ждать вас."
           }
         ]
       }
@@ -232,23 +265,28 @@
     "theme": "choyxona",
     "title": {
       "en": "A Pot of Tea",
+      "ru": "Чайник чая",
       "uz": "Bir choynak choy"
     },
     "scenario": "You settle in at the choyxona and order tea the traditional way.",
+    "scenarioRu": "Вы устраиваетесь в чайхане и заказываете чай по традиции.",
     "variants": [
       {
         "id": "choyxona.ordering-tea.base",
         "description": "Green tea and a quiet seat",
+        "descriptionRu": "Зелёный чай и тихое местечко",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz! Nima xohlaysiz?",
-            "english": "Welcome! What would you like?"
+            "english": "Welcome! What would you like?",
+            "russian": "Добро пожаловать! Что желаете?"
           },
           {
             "speaker": "user",
             "uzbek": "Bir choynak ko'k choy, iltimos.",
             "english": "A pot of green tea, please.",
+            "russian": "Чайник зелёного чая, пожалуйста.",
             "tokens": [
               "Bir",
               "choynak",
@@ -260,12 +298,14 @@
           {
             "speaker": "npc",
             "uzbek": "Somsa ham olasizmi?",
-            "english": "Will you have samsa too?"
+            "english": "Will you have samsa too?",
+            "russian": "Самсу тоже будете?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, ikkita somsa.",
             "english": "Yes, two samsas.",
+            "russian": "Да, две самсы.",
             "tokens": [
               "Ha,",
               "ikkita",
@@ -275,12 +315,14 @@
           {
             "speaker": "npc",
             "uzbek": "Hozir olib kelaman. O'tiring.",
-            "english": "I will bring it now. Sit down."
+            "english": "I will bring it now. Sit down.",
+            "russian": "Сейчас принесу. Садитесь."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -290,11 +332,13 @@
       {
         "id": "choyxona.ordering-tea.black",
         "description": "You prefer black tea",
+        "descriptionRu": "Вы предпочитаете чёрный чай",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Qora choy bormi?",
             "english": "Is there black tea?",
+            "russian": "Чёрный чай есть?",
             "tokens": [
               "Qora",
               "choy",
@@ -304,12 +348,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta. Shakar bilanmi?",
-            "english": "Of course. With sugar?"
+            "english": "Of course. With sugar?",
+            "russian": "Конечно. С сахаром?"
           },
           {
             "speaker": "user",
             "uzbek": "Yo'q, rahmat. Shakarsiz.",
             "english": "No, thank you. Without sugar.",
+            "russian": "Нет, спасибо. Без сахара.",
             "tokens": [
               "Yo'q,",
               "rahmat.",
@@ -319,12 +365,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana choyingiz.",
-            "english": "Here is your tea."
+            "english": "Here is your tea.",
+            "russian": "Вот ваш чай."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -334,11 +382,13 @@
       {
         "id": "choyxona.ordering-tea.outside",
         "description": "You ask to sit on the platform",
+        "descriptionRu": "Вы просите место на сури (топчане)",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Tashqarida o'tirsam bo'ladimi?",
             "english": "May I sit outside?",
+            "russian": "Можно мне сесть на улице?",
             "tokens": [
               "Tashqarida",
               "o'tirsam",
@@ -348,12 +398,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta! So'rida joy bor.",
-            "english": "Of course! There is room on the platform."
+            "english": "Of course! There is room on the platform.",
+            "russian": "Конечно! На сури есть место."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi. Bog' chiroyli.",
             "english": "Very good. The garden is beautiful.",
+            "russian": "Очень хорошо. Сад красивый.",
             "tokens": [
               "Juda",
               "yaxshi.",
@@ -364,12 +416,14 @@
           {
             "speaker": "npc",
             "uzbek": "Choyni o'sha yerga olib kelaman.",
-            "english": "I will bring the tea there."
+            "english": "I will bring the tea there.",
+            "russian": "Я принесу чай туда."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -379,16 +433,19 @@
       {
         "id": "choyxona.ordering-tea.busy",
         "description": "You share a table with a stranger",
+        "descriptionRu": "Вы делите столик с незнакомцем",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, hamma stol band. Birga o'tiramizmi?",
-            "english": "Sorry, all tables are full. Shall we sit together?"
+            "english": "Sorry, all tables are full. Shall we sit together?",
+            "russian": "Извините, все столики заняты. Сядем вместе?"
           },
           {
             "speaker": "user",
             "uzbek": "Albatta, marhamat!",
             "english": "Of course, please do!",
+            "russian": "Конечно, пожалуйста!",
             "tokens": [
               "Albatta,",
               "marhamat!"
@@ -397,12 +454,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Siz turistmisiz?",
-            "english": "Thank you! Are you a tourist?"
+            "english": "Thank you! Are you a tourist?",
+            "russian": "Спасибо! Вы турист?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, va bu choyxona juda yoqdi.",
             "english": "Yes, and I like this teahouse very much.",
+            "russian": "Да, и эта чайхана мне очень понравилась.",
             "tokens": [
               "Ha,",
               "va",
@@ -415,7 +474,8 @@
           {
             "speaker": "npc",
             "uzbek": "Bu yer eng yaxshisi!",
-            "english": "This place is the best!"
+            "english": "This place is the best!",
+            "russian": "Это место самое лучшее!"
           }
         ]
       }

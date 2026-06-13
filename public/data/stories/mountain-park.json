@@ -4,32 +4,39 @@
     "theme": "mountain-park",
     "title": {
       "en": "To the Summit",
+      "ru": "К вершине",
       "uz": "Cho'qqiga"
     },
     "sentences": [
       {
         "uzbek": "Erta tongda men tog'ga chiqdim.",
-        "english": "Early in the morning I climbed the mountain."
+        "english": "Early in the morning I climbed the mountain.",
+        "russian": "Ранним утром я поднялся в гору."
       },
       {
         "uzbek": "So'qmoq tik va tor edi.",
-        "english": "The path was steep and narrow."
+        "english": "The path was steep and narrow.",
+        "russian": "Тропа была крутой и узкой."
       },
       {
         "uzbek": "Daryo toshlar ustidan oqardi.",
-        "english": "The river flowed over the stones."
+        "english": "The river flowed over the stones.",
+        "russian": "Река текла по камням."
       },
       {
         "uzbek": "Cho'qqida shamol sovuq edi.",
-        "english": "At the summit the wind was cold."
+        "english": "At the summit the wind was cold.",
+        "russian": "На вершине ветер был холодным."
       },
       {
         "uzbek": "Pastda butun shahar ko'rinardi.",
-        "english": "Below, the whole city was visible."
+        "english": "Below, the whole city was visible.",
+        "russian": "Внизу был виден весь город."
       },
       {
         "uzbek": "Bu manzara mehnatga arziydi!",
-        "english": "This view is worth the effort!"
+        "english": "This view is worth the effort!",
+        "russian": "Этот вид стоит затраченных усилий!"
       }
     ],
     "glossary": {
@@ -58,6 +65,33 @@
       "manzara": "view",
       "mehnatga": "the effort (to)",
       "arziydi": "is worth"
+    },
+    "glossaryRu": {
+      "Erta": "ранний",
+      "tongda": "на рассвете",
+      "men": "я",
+      "tog'ga": "в гору (вверх)",
+      "chiqdim": "я поднялся",
+      "So'qmoq": "тропа",
+      "tik": "крутой",
+      "va": "и",
+      "tor": "узкий",
+      "edi": "был",
+      "Daryo": "река",
+      "toshlar": "камни",
+      "ustidan": "по / над",
+      "oqardi": "текла",
+      "Cho'qqida": "на вершине",
+      "shamol": "ветер",
+      "sovuq": "холодный",
+      "Pastda": "внизу",
+      "butun": "весь",
+      "shahar": "город",
+      "ko'rinardi": "был виден",
+      "Bu": "это",
+      "manzara": "вид",
+      "mehnatga": "усилия (за)",
+      "arziydi": "стоит"
     }
   },
   {
@@ -65,32 +99,39 @@
     "theme": "mountain-park",
     "title": {
       "en": "Tea on the Mountain",
+      "ru": "Чай в горах",
       "uz": "Tog'da choy"
     },
     "sentences": [
       {
         "uzbek": "Tog'da kichik choyxona bor edi.",
-        "english": "On the mountain there was a small teahouse."
+        "english": "On the mountain there was a small teahouse.",
+        "russian": "В горах была маленькая чайхана."
       },
       {
         "uzbek": "Men charchadim va o'tirdim.",
-        "english": "I was tired and sat down."
+        "english": "I was tired and sat down.",
+        "russian": "Я устал и сел."
       },
       {
         "uzbek": "Bir cho'pon menga choy taklif qildi.",
-        "english": "A shepherd offered me tea."
+        "english": "A shepherd offered me tea.",
+        "russian": "Один пастух предложил мне чай."
       },
       {
         "uzbek": "Biz toza havoda choy ichdik.",
-        "english": "We drank tea in the fresh air."
+        "english": "We drank tea in the fresh air.",
+        "russian": "Мы пили чай на свежем воздухе."
       },
       {
         "uzbek": "Osmon ko'm-ko'k va tiniq edi.",
-        "english": "The sky was deep blue and clear."
+        "english": "The sky was deep blue and clear.",
+        "russian": "Небо было ярко-синим и ясным."
       },
       {
         "uzbek": "Men bu tinchlikni unutmayman.",
-        "english": "I will not forget this peace."
+        "english": "I will not forget this peace.",
+        "russian": "Я не забуду этот покой."
       }
     ],
     "glossary": {
@@ -119,6 +160,33 @@
       "bu": "this",
       "tinchlikni": "the peace (object)",
       "unutmayman": "I will not forget"
+    },
+    "glossaryRu": {
+      "Tog'da": "в горах",
+      "kichik": "маленький",
+      "choyxona": "чайхана",
+      "bor": "была",
+      "edi": "было",
+      "Men": "я",
+      "charchadim": "я устал",
+      "va": "и",
+      "o'tirdim": "я сел",
+      "Bir": "один / а",
+      "cho'pon": "пастух",
+      "menga": "мне",
+      "choy": "чай",
+      "taklif": "предложение (taklif qildi = предложил)",
+      "qildi": "сделал",
+      "Biz": "мы",
+      "toza": "свежий / чистый",
+      "havoda": "на воздухе",
+      "ichdik": "мы пили",
+      "Osmon": "небо",
+      "ko'm-ko'k": "ярко-синий",
+      "tiniq": "ясный",
+      "bu": "этот",
+      "tinchlikni": "покой (винительный)",
+      "unutmayman": "я не забуду"
     }
   }
 ]

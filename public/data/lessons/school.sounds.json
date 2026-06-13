@@ -3,50 +3,68 @@
   "order": 5,
   "title": {
     "en": "The Throaty Sounds",
-    "uz": "Tovushlar"
+    "uz": "Tovushlar",
+    "ru": "Горловые звуки"
   },
   "blurb": "q, g', x and o' — made further back than English goes",
+  "blurbRu": "q, g', x и o' — произносятся глубже, чем привык английский",
   "estimatedMinutes": 3,
   "sections": [
     {
       "heading": "Four sounds English doesn't have",
+      "headingRu": "Четыре звука, которых нет в английском",
       "body": [
         "Most of Uzbek is friendly to an English mouth — no tones, no clicks, and you say what you see. Four letters need real practice: **q**, **g'**, **x** and the vowel **o'**. All of them live further back in the throat than English ever goes.",
         "**q** is a deep “k” from where you'd gargle (Samar**q**and). **g'** is a gargled “gh”, like a French r (tog' — mountain). **x** is the ch in Scottish *loch* (ya**x**shi — good). **o'** is a rounded vowel like British *more*, clipped short (o'zbek)."
       ],
+      "bodyRu": [
+        "Бо́льшая часть узбекского дружелюбна к английскому рту — нет тонов, нет щёлкающих звуков, и читается как пишется. Четыре буквы требуют настоящей практики: **q**, **g'**, **x** и гласная **o'**. Все они живут глубже в горле, чем заходит английский.",
+        "**q** — это глубокое «к» оттуда, где полощут горло (Samar**q**and). **g'** — это «грассирующее» «гх», как французское r (tog' — гора). **x** — это «х» в шотландском *loch* (ya**x**shi — хорошо). **o'** — это огублённая гласная, как в британском *more*, но коротко (o'zbek)."
+      ],
       "examples": [
         {
           "uzbek": "Samarqand",
-          "english": "Samarkand — feel the deep q"
+          "english": "Samarkand — feel the deep q",
+          "russian": "Самарканд — почувствуйте глубокое q"
         },
         {
           "uzbek": "tog'",
-          "english": "mountain — the gargled g' at the end"
+          "english": "mountain — the gargled g' at the end",
+          "russian": "гора — грассирующее g' в конце"
         },
         {
           "uzbek": "yaxshi",
-          "english": "good — x like Scottish loch"
+          "english": "good — x like Scottish loch",
+          "russian": "хорошо — x как в шотландском loch"
         },
         {
           "uzbek": "o'zbek",
-          "english": "Uzbek — the o' vowel itself"
+          "english": "Uzbek — the o' vowel itself",
+          "russian": "узбекский — сама гласная o'"
         }
       ]
     },
     {
       "heading": "They change meaning",
+      "headingRu": "Они меняют значение",
       "body": [
         "These aren't accents on familiar sounds — they're **different letters** that change the word. *bor* means “there is”; *bo'r* means “chalk”. Collapse q into k or x into h and you may be saying something else entirely.",
         "Two habits help most: keep every vowel **full and clear** (no English mumbling), and aim q, g' and x at the very back of your throat."
       ],
+      "bodyRu": [
+        "Это не значки над знакомыми звуками — это **отдельные буквы**, которые меняют слово. *bor* значит «есть, имеется»; *bo'r* значит «мел». Сведите q к k или x к h — и вы можете сказать совсем другое.",
+        "Больше всего помогают две привычки: произносите каждую гласную **полно и чётко** (без английского бормотания) и направляйте q, g' и x в самую глубину горла."
+      ],
       "examples": [
         {
           "uzbek": "bor",
-          "english": "there is"
+          "english": "there is",
+          "russian": "есть, имеется"
         },
         {
           "uzbek": "bo'r",
-          "english": "chalk — a different word!"
+          "english": "chalk — a different word!",
+          "russian": "мел — совсем другое слово!"
         }
       ]
     }
@@ -56,19 +74,26 @@
       "id": "choice-x",
       "engine": "choice",
       "instruction": "The “kh” sound in yaxshi (like Scottish loch) is written with which letter?",
+      "instructionRu": "Звук «х» в yaxshi (как в шотландском loch) пишется какой буквой?",
       "options": [
         {
           "text": "x",
+          "textRu": "x",
           "correct": true,
-          "explain": "x is always “kh” — never “ks” or “z”."
+          "explain": "x is always “kh” — never “ks” or “z”.",
+          "explainRu": "x — это всегда «х», никогда не «кс» и не «з»."
         },
         {
           "text": "h",
-          "explain": "h is a plain breathy English h — a different letter."
+          "textRu": "h",
+          "explain": "h is a plain breathy English h — a different letter.",
+          "explainRu": "h — это простое придыхательное английское h, другая буква."
         },
         {
           "text": "k",
-          "explain": "k is a normal front k. The loch sound is x."
+          "textRu": "k",
+          "explain": "k is a normal front k. The loch sound is x.",
+          "explainRu": "k — это обычное переднее «к». Звук из loch — это x."
         }
       ]
     },
@@ -76,19 +101,26 @@
       "id": "choice-q",
       "engine": "choice",
       "instruction": "Which letter makes the deep, back-of-the-throat “k” in Samarqand?",
+      "instructionRu": "Какая буква даёт глубокое, заднеязычное «к» в Samarqand?",
       "options": [
         {
           "text": "q",
+          "textRu": "q",
           "correct": true,
-          "explain": "q is uvular — as far back as you can manage."
+          "explain": "q is uvular — as far back as you can manage.",
+          "explainRu": "q — увулярный звук, как можно глубже в горле."
         },
         {
           "text": "k",
-          "explain": "k is the ordinary front k — q sits much deeper."
+          "textRu": "k",
+          "explain": "k is the ordinary front k — q sits much deeper.",
+          "explainRu": "k — обычное переднее «к», а q сидит гораздо глубже."
         },
         {
           "text": "g'",
-          "explain": "g' is the voiced gargle — q's noisy cousin."
+          "textRu": "g'",
+          "explain": "g' is the voiced gargle — q's noisy cousin.",
+          "explainRu": "g' — это звонкое грассирование, шумный родственник q."
         }
       ]
     },
@@ -96,20 +128,27 @@
       "id": "choice-togh",
       "engine": "choice",
       "instruction": "Listen to tog' (mountain). The final g' sound is…",
+      "instructionRu": "Послушайте tog' (гора). Конечный звук g' — это…",
       "promptUzbek": "tog'",
       "options": [
         {
           "text": "a gargled “gh”, like a French r",
+          "textRu": "грассирующее «гх», как французское r",
           "correct": true,
-          "explain": "Exactly — a continuous guttural sound, not a hard stop."
+          "explain": "Exactly — a continuous guttural sound, not a hard stop.",
+          "explainRu": "Именно — непрерывный гортанный звук, а не резкий смычный."
         },
         {
           "text": "a hard English g",
-          "explain": "A hard g is plain g. g' keeps the air flowing — it gargles."
+          "textRu": "твёрдое английское g",
+          "explain": "A hard g is plain g. g' keeps the air flowing — it gargles.",
+          "explainRu": "Твёрдое «г» — это обычное g. g' держит поток воздуха — оно грассирует."
         },
         {
           "text": "silent",
-          "explain": "Nothing is silent in Uzbek — every letter speaks."
+          "textRu": "немое",
+          "explain": "Nothing is silent in Uzbek — every letter speaks.",
+          "explainRu": "В узбекском нет немых букв — говорит каждая буква."
         }
       ]
     },
@@ -117,18 +156,24 @@
       "id": "choice-bor",
       "engine": "choice",
       "instruction": "bor and bo'r…",
+      "instructionRu": "bor и bo'r…",
       "options": [
         {
           "text": "are two different words — the vowel matters",
+          "textRu": "это два разных слова — гласная важна",
           "correct": true,
-          "explain": "bor = “there is”, bo'r = “chalk”. o and o' are separate letters."
+          "explain": "bor = “there is”, bo'r = “chalk”. o and o' are separate letters.",
+          "explainRu": "bor = «есть», bo'r = «мел». o и o' — это разные буквы."
         },
         {
           "text": "are the same word, spelled two ways",
-          "explain": "Tempting, but no — o' is its own vowel, and it changes the meaning."
+          "textRu": "это одно слово, написанное двумя способами",
+          "explain": "Tempting, but no — o' is its own vowel, and it changes the meaning.",
+          "explainRu": "Заманчиво, но нет — o' это самостоятельная гласная, и она меняет значение."
         }
       ]
     }
   ],
-  "wrapUp": "q, g', x and o' are real letters with real jobs. Aim for the back of your throat and Samarqand, tog' and yaxshi will come out right."
+  "wrapUp": "q, g', x and o' are real letters with real jobs. Aim for the back of your throat and Samarqand, tog' and yaxshi will come out right.",
+  "wrapUpRu": "q, g', x и o' — это настоящие буквы с настоящими ролями. Целься в глубину горла, и Samarqand, tog' и yaxshi прозвучат правильно."
 }

@@ -3,6 +3,7 @@
     "id": "gift-shop.gift",
     "uzbek": "sovg'a",
     "english": "gift",
+    "russian": "подарок",
     "theme": "gift-shop",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "gift-shop.how-much",
     "uzbek": "qancha",
     "english": "how much",
+    "russian": "сколько",
     "theme": "gift-shop",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "gift-shop.expensive",
     "uzbek": "qimmat",
     "english": "expensive",
+    "russian": "дорогой",
     "theme": "gift-shop",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "gift-shop.cheap",
     "uzbek": "arzon",
     "english": "cheap",
+    "russian": "дешёвый",
     "theme": "gift-shop",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "gift-shop.buy",
     "uzbek": "sotib olish",
     "english": "to buy",
+    "russian": "купить",
     "theme": "gift-shop",
     "level": 1
   },
@@ -38,14 +43,17 @@
     "id": "gift-shop.discount",
     "uzbek": "chegirma",
     "english": "discount",
+    "russian": "скидка",
     "theme": "gift-shop",
     "level": 1,
-    "usageNotes": "Chegirma bormi? — Is there a discount? Polite bargaining is normal."
+    "usageNotes": "Chegirma bormi? — Is there a discount? Polite bargaining is normal.",
+    "usageNotesRu": "Chegirma bormi? — Есть ли скидка? Вежливый торг — это нормально."
   },
   {
     "id": "gift-shop.ceramics",
     "uzbek": "sopol",
     "english": "ceramics",
+    "russian": "керамика",
     "theme": "gift-shop",
     "level": 2
   },
@@ -53,6 +61,7 @@
     "id": "gift-shop.scarf",
     "uzbek": "ro'mol",
     "english": "scarf / headscarf",
+    "russian": "платок",
     "theme": "gift-shop",
     "level": 2
   },
@@ -60,6 +69,7 @@
     "id": "gift-shop.silk",
     "uzbek": "ipak",
     "english": "silk",
+    "russian": "шёлк",
     "theme": "gift-shop",
     "level": 2
   },
@@ -67,6 +77,7 @@
     "id": "gift-shop.colour",
     "uzbek": "rang",
     "english": "colour",
+    "russian": "цвет",
     "theme": "gift-shop",
     "level": 2
   },
@@ -74,6 +85,7 @@
     "id": "gift-shop.magnet",
     "uzbek": "magnit",
     "english": "fridge magnet",
+    "russian": "магнит на холодильник",
     "theme": "gift-shop",
     "level": 2
   },
@@ -81,6 +93,7 @@
     "id": "gift-shop.handmade",
     "uzbek": "qo'lda ishlangan",
     "english": "handmade",
+    "russian": "ручная работа",
     "theme": "gift-shop",
     "level": 3
   },
@@ -88,6 +101,7 @@
     "id": "gift-shop.change-money",
     "uzbek": "qaytim",
     "english": "change (money back)",
+    "russian": "сдача",
     "theme": "gift-shop",
     "level": 3
   }

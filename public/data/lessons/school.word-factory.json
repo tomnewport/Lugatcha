@@ -3,9 +3,11 @@
   "order": 8,
   "title": {
     "en": "The Word Factory",
-    "uz": "So'z fabrikasi"
+    "uz": "So'z fabrikasi",
+    "ru": "Фабрика слов"
   },
   "blurb": "Four suffixes that multiply every word you learn",
+  "blurbRu": "Четыре суффикса, которые умножают каждое выученное слово",
   "estimatedMinutes": 3,
   "prerequisites": [
     "school.suffixes"
@@ -13,13 +15,18 @@
   "sections": [
     {
       "heading": "Four bricks that multiply your vocabulary",
+      "headingRu": "Четыре кирпичика, умножающие ваш словарный запас",
       "body": [
         "A few suffixes build new words so predictably that every word you learn becomes a whole family. **-chi** makes the person who does it. **-li** means having it. **-siz** means without it. **-lik** makes the abstract idea of it."
+      ],
+      "bodyRu": [
+        "Несколько суффиксов строят новые слова так предсказуемо, что каждое выученное слово становится целой семьёй. **-chi** образует того, кто это делает. **-li** означает «обладающий этим». **-siz** означает «без этого». **-lik** образует отвлечённое понятие об этом."
       ],
       "examples": [
         {
           "uzbek": "futbolchi",
           "english": "footballer",
+          "russian": "футболист",
           "breakdown": [
             "futbol",
             "chi"
@@ -27,11 +34,16 @@
           "gloss": [
             "football",
             "person who does"
+          ],
+          "glossRu": [
+            "футбол",
+            "тот, кто делает"
           ]
         },
         {
           "uzbek": "aqlli",
           "english": "clever — “having mind”",
+          "russian": "умный — «обладающий умом»",
           "breakdown": [
             "aql",
             "li"
@@ -39,11 +51,16 @@
           "gloss": [
             "mind",
             "having"
+          ],
+          "glossRu": [
+            "ум",
+            "обладающий"
           ]
         },
         {
           "uzbek": "uysiz",
           "english": "homeless — “house-less”",
+          "russian": "бездомный — «без дома»",
           "breakdown": [
             "uy",
             "siz"
@@ -51,11 +68,16 @@
           "gloss": [
             "house",
             "without"
+          ],
+          "glossRu": [
+            "дом",
+            "без"
           ]
         },
         {
           "uzbek": "do'stlik",
           "english": "friendship",
+          "russian": "дружба",
           "breakdown": [
             "do'st",
             "lik"
@@ -63,20 +85,30 @@
           "gloss": [
             "friend",
             "-ness / -ship"
+          ],
+          "glossRu": [
+            "друг",
+            "-ство (отвлечённое понятие)"
           ]
         }
       ]
     },
     {
       "heading": "Bonus brick: -xona",
+      "headingRu": "Бонусный кирпичик: -xona",
       "body": [
         "Borrowed from Persian: **-xona** means “the place for it”. *kasal* (sick) makes **kasalxona** — hospital. *osh* (plov) makes **oshxona** — kitchen. And *choy* makes **choyxona** — the teahouse waiting for you on the city map.",
         "Spot these bricks on signs and half the street names of Tashkent decode themselves."
+      ],
+      "bodyRu": [
+        "Заимствовано из персидского: **-xona** означает «место для этого». *kasal* (больной) даёт **kasalxona** — больница. *osh* (плов) даёт **oshxona** — кухня. А *choy* даёт **choyxona** — чайхана, что ждёт вас на карте города.",
+        "Замечайте эти кирпичики на вывесках — и половина названий улиц Ташкента расшифруется сама собой."
       ],
       "examples": [
         {
           "uzbek": "choyxona",
           "english": "teahouse — “tea-place”",
+          "russian": "чайхана — «место для чая»",
           "breakdown": [
             "choy",
             "xona"
@@ -84,11 +116,16 @@
           "gloss": [
             "tea",
             "place for"
+          ],
+          "glossRu": [
+            "чай",
+            "место для"
           ]
         },
         {
           "uzbek": "kasalxona",
           "english": "hospital — “sick-place”",
+          "russian": "больница — «место для больных»",
           "breakdown": [
             "kasal",
             "xona"
@@ -96,6 +133,10 @@
           "gloss": [
             "sick",
             "place for"
+          ],
+          "glossRu": [
+            "больной",
+            "место для"
           ]
         }
       ]
@@ -106,19 +147,26 @@
       "id": "choice-worker",
       "engine": "choice",
       "instruction": "ish means “work”. So a worker is…",
+      "instructionRu": "ish означает «работа». Значит, рабочий — это…",
       "options": [
         {
           "text": "ishchi",
+          "textRu": "ishchi",
           "correct": true,
-          "explain": "-chi makes the doer: work → worker."
+          "explain": "-chi makes the doer: work → worker.",
+          "explainRu": "-chi образует деятеля: работа → рабочий."
         },
         {
           "text": "ishli",
-          "explain": "-li means “having” — that would be something like “having work”."
+          "textRu": "ishli",
+          "explain": "-li means “having” — that would be something like “having work”.",
+          "explainRu": "-li означает «обладающий» — это было бы что-то вроде «имеющий работу»."
         },
         {
           "text": "ishsiz",
-          "explain": "-siz means “without” — ishsiz is jobless, the opposite!"
+          "textRu": "ishsiz",
+          "explain": "-siz means “without” — ishsiz is jobless, the opposite!",
+          "explainRu": "-siz означает «без» — ishsiz это безработный, противоположность!"
         }
       ]
     },
@@ -126,6 +174,7 @@
       "id": "build-friendship",
       "engine": "build",
       "instruction": "Build “friendship” from do'st (friend)",
+      "instructionRu": "Постройте «дружбу» из do'st (друг)",
       "tokens": [
         "do'st",
         "lik"
@@ -136,25 +185,33 @@
       ],
       "joiner": "",
       "audioText": "do'stlik",
-      "translation": "do'stlik — friendship"
+      "translation": "do'stlik — friendship",
+      "translationRu": "do'stlik — дружба"
     },
     {
       "id": "choice-sugarfree",
       "engine": "choice",
       "instruction": "shakar means “sugar”. Tea without sugar is choy…",
+      "instructionRu": "shakar означает «сахар». Чай без сахара — это choy…",
       "options": [
         {
           "text": "shakarsiz",
+          "textRu": "shakarsiz",
           "correct": true,
-          "explain": "-siz: without sugar. Useful at every choyxona."
+          "explain": "-siz: without sugar. Useful at every choyxona.",
+          "explainRu": "-siz: без сахара. Пригодится в любой choyxona."
         },
         {
           "text": "shakarli",
-          "explain": "-li means WITH sugar — the sweet opposite."
+          "textRu": "shakarli",
+          "explain": "-li means WITH sugar — the sweet opposite.",
+          "explainRu": "-li означает С сахаром — сладкая противоположность."
         },
         {
           "text": "shakarchi",
-          "explain": "-chi makes a person — a sugar-seller!"
+          "textRu": "shakarchi",
+          "explain": "-chi makes a person — a sugar-seller!",
+          "explainRu": "-chi образует человека — продавца сахара!"
         }
       ]
     },
@@ -162,6 +219,7 @@
       "id": "build-teahouse",
       "engine": "build",
       "instruction": "Build “teahouse” — the place for tea",
+      "instructionRu": "Постройте «чайхану» — место для чая",
       "tokens": [
         "choy",
         "xona"
@@ -172,8 +230,10 @@
       ],
       "joiner": "",
       "audioText": "choyxona",
-      "translation": "choyxona — teahouse"
+      "translation": "choyxona — teahouse",
+      "translationRu": "choyxona — чайхана"
     }
   ],
-  "wrapUp": "-chi makes the person, -li makes “with”, -siz makes “without”, -lik makes the idea, and -xona makes the place. One root, a whole word family."
+  "wrapUp": "-chi makes the person, -li makes “with”, -siz makes “without”, -lik makes the idea, and -xona makes the place. One root, a whole word family.",
+  "wrapUpRu": "-chi образует человека, -li образует «с», -siz образует «без», -lik образует понятие, а -xona образует место. Один корень — целая семья слов."
 }

@@ -161,7 +161,7 @@ const chipMap = computed(() => {
   <main class="home">
     <TreasureChest />
 
-    <RouterLink class="settings-link" to="/settings" :aria-label="audioReady ? 'Settings' : 'Settings — audio not yet downloaded'">
+    <RouterLink class="settings-link" to="/settings" :aria-label="audioReady ? $t('home.settings') : $t('home.settingsAudioPending')">
       <svg
         viewBox="0 0 24 24"
         fill="none"
@@ -206,15 +206,15 @@ const chipMap = computed(() => {
         </svg>
       </div>
       <h1 class="home-header__title">Lugʻatcha</h1>
-      <p class="home-header__subtitle">O'zbekcha o'rganamiz</p>
+      <p class="home-header__subtitle" lang="uz">{{ $t('home.subtitle') }}</p>
     </header>
 
     <div v-if="showBanner" class="audio-banner">
       <div class="audio-banner__body">
-        <p class="audio-banner__text">Download audio for the best experience — words and phrases spoken by a native-quality Uzbek voice.</p>
-        <button class="btn btn--primary audio-banner__btn" type="button" @click="router.push('/settings')">Download audio</button>
+        <p class="audio-banner__text">{{ $t('home.audioBanner') }}</p>
+        <button class="btn btn--primary audio-banner__btn" type="button" @click="router.push('/settings')">{{ $t('home.downloadAudio') }}</button>
       </div>
-      <button class="audio-banner__close" type="button" aria-label="Dismiss" @click="dismissBanner">✕</button>
+      <button class="audio-banner__close" type="button" :aria-label="$t('home.dismiss')" @click="dismissBanner">✕</button>
     </div>
 
     <div v-if="sortedLocations.length" class="city-grid" role="list">
@@ -249,7 +249,7 @@ const chipMap = computed(() => {
       </template>
     </div>
 
-    <p v-else class="home-loading" aria-live="polite">Loading city…</p>
+    <p v-else class="home-loading" aria-live="polite">{{ $t('home.loadingCity') }}</p>
   </main>
 </template>
 

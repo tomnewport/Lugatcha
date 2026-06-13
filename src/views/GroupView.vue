@@ -4,12 +4,14 @@ import { useRoute, useRouter } from 'vue-router'
 import { loadGroup, learnedInGroup } from '@/db/groups'
 import { useLiveQuery, db } from '@/db/useDb'
 import type { VocabGroup, WordProgress } from '@/db/types'
+import { useContentLang } from '@/i18n/content'
 import GroupReview from '@/components/school/GroupReview.vue'
 import CountingQuiz from '@/components/school/CountingQuiz.vue'
 import TestExercise from '@/components/exercise/TestExercise.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { name, pick } = useContentLang()
 
 const group = ref<VocabGroup | null>(null)
 const missing = ref(false)
@@ -48,52 +50,50 @@ function back() {
 <template>
   <div class="group">
     <header class="group-header">
-      <button class="exit-btn" aria-label="Back" type="button" @click="back">
+      <button class="exit-btn" :aria-label="$t('common.back')" type="button" @click="back">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
       <div class="group-header__titles">
-        <span class="group-header__school">Vocabulary set</span>
-        <h1 class="group-header__title">{{ group?.title.en ?? 'Vocabulary' }}</h1>
+        <span class="group-header__school">{{ $t('group.breadcrumb') }}</span>
+        <h1 class="group-header__title">{{ group ? name(group.title) : $t('group.fallbackTitle') }}</h1>
       </div>
       <span v-if="group" class="group-header__icon" aria-hidden="true">{{ group.icon }}</span>
     </header>
 
     <div class="group-body">
       <p v-if="missing" class="group-loading">
-        Set not found.
+        {{ $t('group.notFound') }}
         <button class="btn btn--ghost" type="button" @click="router.push('/school')">
-          Back to the School
+          {{ $t('group.backToSchool') }}
         </button>
       </p>
-      <p v-else-if="!group" class="group-loading" aria-live="polite">Loading…</p>
+      <p v-else-if="!group" class="group-loading" aria-live="polite">{{ $t('common.loading') }}</p>
 
       <!-- Menu: pick review or test -->
       <template v-else-if="stage === 'menu'">
         <div class="hero">
           <span class="hero__icon" aria-hidden="true">{{ group.icon }}</span>
           <p class="hero__uz" lang="uz">{{ group.title.uz }}</p>
-          <p class="hero__blurb">{{ group.blurb }}</p>
-          <p class="hero__progress">{{ learnedCount }} of {{ total }} words learned</p>
+          <p class="hero__blurb">{{ pick(group.blurb, group.blurbRu) }}</p>
+          <p class="hero__progress">{{ $t('group.learned', { learned: learnedCount, total }) }}</p>
         </div>
 
         <div class="actions">
           <button class="action action--review" type="button" @click="stage = 'review'">
             <span class="action__emoji" aria-hidden="true">📖</span>
             <span class="action__text">
-              <span class="action__title">Review</span>
-              <span class="action__sub">Read about them, then meet the words</span>
+              <span class="action__title">{{ $t('group.review') }}</span>
+              <span class="action__sub">{{ $t('group.reviewDesc') }}</span>
             </span>
           </button>
           <button class="action action--test" type="button" @click="stage = 'test'">
             <span class="action__emoji" aria-hidden="true">{{ group.quiz === 'counting' ? '🧮' : '🎯' }}</span>
             <span class="action__text">
-              <span class="action__title">{{ group.quiz === 'counting' ? 'Counting quiz' : 'Test' }}</span>
+              <span class="action__title">{{ group.quiz === 'counting' ? $t('group.countingQuiz') : $t('group.test') }}</span>
               <span class="action__sub">{{
-                group.quiz === 'counting'
-                  ? 'Read, hear and type the numbers'
-                  : 'Prove you know them'
+                group.quiz === 'counting' ? $t('group.countingDesc') : $t('group.testDesc')
               }}</span>
             </span>
           </button>

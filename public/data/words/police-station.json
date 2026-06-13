@@ -3,6 +3,7 @@
     "id": "police-station.police",
     "uzbek": "politsiya",
     "english": "police",
+    "russian": "полиция",
     "theme": "police-station",
     "level": 1
   },
@@ -10,14 +11,17 @@
     "id": "police-station.help",
     "uzbek": "yordam",
     "english": "help",
+    "russian": "помощь",
     "theme": "police-station",
     "level": 1,
-    "usageNotes": "Yordam bering! — Help me!"
+    "usageNotes": "Yordam bering! — Help me!",
+    "usageNotesRu": "Yordam bering! — Помогите!"
   },
   {
     "id": "police-station.document",
     "uzbek": "hujjat",
     "english": "document",
+    "russian": "документ",
     "theme": "police-station",
     "level": 1
   },
@@ -25,6 +29,7 @@
     "id": "police-station.wallet",
     "uzbek": "hamyon",
     "english": "wallet",
+    "russian": "кошелёк",
     "theme": "police-station",
     "level": 1
   },
@@ -32,6 +37,7 @@
     "id": "police-station.bag",
     "uzbek": "sumka",
     "english": "bag",
+    "russian": "сумка",
     "theme": "police-station",
     "level": 1
   },
@@ -39,6 +45,7 @@
     "id": "police-station.phone",
     "uzbek": "telefon",
     "english": "telephone",
+    "russian": "телефон",
     "theme": "police-station",
     "level": 1
   },
@@ -46,14 +53,17 @@
     "id": "police-station.lost",
     "uzbek": "yo'qoldi",
     "english": "got lost / went missing",
+    "russian": "потерялся / пропал",
     "theme": "police-station",
     "level": 1,
-    "usageNotes": "Hamyonim yo'qoldi — my wallet is lost."
+    "usageNotes": "Hamyonim yo'qoldi — my wallet is lost.",
+    "usageNotesRu": "Hamyonim yo'qoldi — мой кошелёк потерялся."
   },
   {
     "id": "police-station.problem",
     "uzbek": "muammo",
     "english": "problem",
+    "russian": "проблема",
     "theme": "police-station",
     "level": 2
   },
@@ -61,6 +71,7 @@
     "id": "police-station.address",
     "uzbek": "manzil",
     "english": "address",
+    "russian": "адрес",
     "theme": "police-station",
     "level": 2
   },
@@ -68,6 +79,7 @@
     "id": "police-station.street",
     "uzbek": "ko'cha",
     "english": "street",
+    "russian": "улица",
     "theme": "police-station",
     "level": 2
   },
@@ -75,14 +87,17 @@
     "id": "police-station.registration",
     "uzbek": "ro'yxatga olish",
     "english": "registration",
+    "russian": "регистрация",
     "theme": "police-station",
     "level": 2,
-    "usageNotes": "Tourists staying privately may need to register their stay."
+    "usageNotes": "Tourists staying privately may need to register their stay.",
+    "usageNotesRu": "Туристам, останавливающимся в частном жилье, может потребоваться регистрация пребывания."
   },
   {
     "id": "police-station.form",
     "uzbek": "forma",
     "english": "form (paper)",
+    "russian": "бланк",
     "theme": "police-station",
     "level": 3
   },
@@ -90,6 +105,7 @@
     "id": "police-station.safe",
     "uzbek": "xavfsiz",
     "english": "safe (adjective)",
+    "russian": "безопасный",
     "theme": "police-station",
     "level": 3
   }

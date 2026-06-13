@@ -4,23 +4,28 @@
     "theme": "mountain-park",
     "title": {
       "en": "Up the Mountain",
+      "ru": "В горы",
       "uz": "Tog'ga chiqish"
     },
     "scenario": "At the mountain park, you want to take the cable car up to the top.",
+    "scenarioRu": "В горном парке ты хочешь подняться на канатной дороге на вершину.",
     "variants": [
       {
         "id": "mountain-park.cable-car.base",
         "description": "A ticket to the top",
+        "descriptionRu": "Билет до вершины",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Yuqoriga chiptami?",
-            "english": "Hello! A ticket to the top?"
+            "english": "Hello! A ticket to the top?",
+            "russian": "Привет! Билет наверх?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, bitta chipta, iltimos.",
             "english": "Yes, one ticket, please.",
+            "russian": "Да, один билет, пожалуйста.",
             "tokens": [
               "Ha,",
               "bitta",
@@ -31,12 +36,14 @@
           {
             "speaker": "npc",
             "uzbek": "Borib-kelishmi?",
-            "english": "Return?"
+            "english": "Return?",
+            "russian": "Туда-обратно?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, borib-kelish.",
             "english": "Yes, return.",
+            "russian": "Да, туда-обратно.",
             "tokens": [
               "Ha,",
               "borib-kelish."
@@ -45,12 +52,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ellik ming so'm. Mana chiptangiz.",
-            "english": "Fifty thousand som. Here is your ticket."
+            "english": "Fifty thousand som. Here is your ticket.",
+            "russian": "Пятьдесят тысяч сумов. Вот ваш билет."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -60,11 +69,13 @@
       {
         "id": "mountain-park.cable-car.weather",
         "description": "The weather is closing in",
+        "descriptionRu": "Погода портится",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Yuqoriga chiqsam bo'ladimi?",
             "english": "May I go up to the top?",
+            "russian": "Можно мне подняться на вершину?",
             "tokens": [
               "Yuqoriga",
               "chiqsam",
@@ -74,12 +85,14 @@
           {
             "speaker": "npc",
             "uzbek": "Havo yomonlashyapti. Sovuq va shamol.",
-            "english": "The weather is worsening. Cold and windy."
+            "english": "The weather is worsening. Cold and windy.",
+            "russian": "Погода ухудшается. Холодно и ветрено."
           },
           {
             "speaker": "user",
             "uzbek": "Xavfsizmi?",
             "english": "Is it safe?",
+            "russian": "Это безопасно?",
             "tokens": [
               "Xavfsizmi?"
             ]
@@ -87,12 +100,14 @@
           {
             "speaker": "npc",
             "uzbek": "Hozir ha, lekin tez tushing.",
-            "english": "For now yes, but come down quickly."
+            "english": "For now yes, but come down quickly.",
+            "russian": "Пока да, но спускайся быстро."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat!",
             "english": "Fine, thank you!",
+            "russian": "Хорошо, спасибо!",
             "tokens": [
               "Yaxshi,",
               "rahmat!"
@@ -103,11 +118,13 @@
       {
         "id": "mountain-park.cable-car.closed",
         "description": "The cable car is closed for wind",
+        "descriptionRu": "Канатная дорога закрыта из-за ветра",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Osma yo'l ishlayaptimi?",
             "english": "Is the cable car working?",
+            "russian": "Канатная дорога работает?",
             "tokens": [
               "Osma",
               "yo'l",
@@ -117,12 +134,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, shamol kuchli. Yopiq.",
-            "english": "No, the wind is strong. It is closed."
+            "english": "No, the wind is strong. It is closed.",
+            "russian": "Нет, сильный ветер. Она закрыта."
           },
           {
             "speaker": "user",
             "uzbek": "Piyoda chiqsam bo'ladimi?",
             "english": "Can I walk up?",
+            "russian": "Можно подняться пешком?",
             "tokens": [
               "Piyoda",
               "chiqsam",
@@ -132,12 +151,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, so'qmoq bor. Ikki soat.",
-            "english": "Yes, there is a path. Two hours."
+            "english": "Yes, there is a path. Two hours.",
+            "russian": "Да, есть тропа. Два часа."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, piyoda chiqaman!",
             "english": "Fine, I will walk up!",
+            "russian": "Хорошо, поднимусь пешком!",
             "tokens": [
               "Yaxshi,",
               "piyoda",
@@ -149,11 +170,13 @@
       {
         "id": "mountain-park.cable-car.water",
         "description": "You buy water for the climb",
+        "descriptionRu": "Ты покупаешь воду для подъёма",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Yuqorida suv bormi?",
             "english": "Is there water at the top?",
+            "russian": "Наверху есть вода?",
             "tokens": [
               "Yuqorida",
               "suv",
@@ -163,12 +186,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, bu yerdan oling.",
-            "english": "No, buy some here."
+            "english": "No, buy some here.",
+            "russian": "Нет, купи здесь."
           },
           {
             "speaker": "user",
             "uzbek": "Ikkita suv, iltimos.",
             "english": "Two waters, please.",
+            "russian": "Две воды, пожалуйста.",
             "tokens": [
               "Ikkita",
               "suv,",
@@ -178,12 +203,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana. Yo'l och bo'lsin!",
-            "english": "Here you are. Have a good climb!"
+            "english": "Here you are. Have a good climb!",
+            "russian": "Вот, пожалуйста. Удачного подъёма!"
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -193,11 +220,13 @@
       {
         "id": "mountain-park.cable-car.photo",
         "description": "You ask about the view",
+        "descriptionRu": "Ты спрашиваешь про вид",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Yuqoridan manzara go'zalmi?",
             "english": "Is the view beautiful from the top?",
+            "russian": "Сверху красивый вид?",
             "tokens": [
               "Yuqoridan",
               "manzara",
@@ -207,12 +236,14 @@
           {
             "speaker": "npc",
             "uzbek": "Juda go'zal! Butun shahar ko'rinadi.",
-            "english": "Very beautiful! You can see the whole city."
+            "english": "Very beautiful! You can see the whole city.",
+            "russian": "Очень красивый! Виден весь город."
           },
           {
             "speaker": "user",
             "uzbek": "Ajoyib! Bitta chipta.",
             "english": "Wonderful! One ticket.",
+            "russian": "Замечательно! Один билет.",
             "tokens": [
               "Ajoyib!",
               "Bitta",
@@ -222,12 +253,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana. Suratga oling!",
-            "english": "Here you are. Take photos!"
+            "english": "Here you are. Take photos!",
+            "russian": "Вот, пожалуйста. Фотографируйте!"
           },
           {
             "speaker": "user",
             "uzbek": "Albatta! Rahmat!",
             "english": "Of course! Thank you!",
+            "russian": "Конечно! Спасибо!",
             "tokens": [
               "Albatta!",
               "Rahmat!"
@@ -242,23 +275,28 @@
     "theme": "mountain-park",
     "title": {
       "en": "On the Trail",
+      "ru": "На тропе",
       "uz": "So'qmoqda"
     },
     "scenario": "Walking a mountain path, you meet a local hiker.",
+    "scenarioRu": "Идя по горной тропе, ты встречаешь местного туриста.",
     "variants": [
       {
         "id": "mountain-park.on-the-trail.base",
         "description": "A friendly hello on the path",
+        "descriptionRu": "Дружеское приветствие на тропе",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Yaxshi sayohatmi?",
-            "english": "Hello! A good walk?"
+            "english": "Hello! A good walk?",
+            "russian": "Привет! Хорошая прогулка?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, juda go'zal!",
             "english": "Yes, very beautiful!",
+            "russian": "Да, очень красиво!",
             "tokens": [
               "Ha,",
               "juda",
@@ -268,12 +306,14 @@
           {
             "speaker": "npc",
             "uzbek": "Cho'qqi uzoqmi?",
-            "english": "Is the summit far?"
+            "english": "Is the summit far?",
+            "russian": "Вершина далеко?"
           },
           {
             "speaker": "user",
             "uzbek": "Yo'q, yaqin. Bir soat.",
             "english": "No, near. One hour.",
+            "russian": "Нет, близко. Один час.",
             "tokens": [
               "Yo'q,",
               "yaqin.",
@@ -284,18 +324,21 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Yo'l och bo'lsin!",
-            "english": "Thank you! Have a good walk!"
+            "english": "Thank you! Have a good walk!",
+            "russian": "Спасибо! Хорошей прогулки!"
           }
         ]
       },
       {
         "id": "mountain-park.on-the-trail.tired",
         "description": "You are tired and ask to rest",
+        "descriptionRu": "Ты устал и хочешь отдохнуть",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Men charchadim. Bu yerda dam olaman.",
             "english": "I am tired. I will rest here.",
+            "russian": "Я устал. Отдохну здесь.",
             "tokens": [
               "Men",
               "charchadim.",
@@ -308,12 +351,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi joy. Daryo yonida salqin.",
-            "english": "A good spot. By the river it is cool."
+            "english": "A good spot. By the river it is cool.",
+            "russian": "Хорошее место. У реки прохладно."
           },
           {
             "speaker": "user",
             "uzbek": "Suv bormi yaqin?",
             "english": "Is there water nearby?",
+            "russian": "Поблизости есть вода?",
             "tokens": [
               "Suv",
               "bormi",
@@ -323,12 +368,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, daryo toza. Iching.",
-            "english": "Yes, the river is clean. Drink."
+            "english": "Yes, the river is clean. Drink.",
+            "russian": "Да, река чистая. Пей."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -338,11 +385,13 @@
       {
         "id": "mountain-park.on-the-trail.lost",
         "description": "You have lost the path",
+        "descriptionRu": "Ты потерял тропу",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, so'qmoqni yo'qotdim.",
             "english": "Excuse me, I have lost the path.",
+            "russian": "Извините, я потерял тропу.",
             "tokens": [
               "Kechirasiz,",
               "so'qmoqni",
@@ -352,12 +401,14 @@
           {
             "speaker": "npc",
             "uzbek": "Pastga qarang. So'qmoq daryo yonida.",
-            "english": "Look down. The path is by the river."
+            "english": "Look down. The path is by the river.",
+            "russian": "Посмотри вниз. Тропа у реки."
           },
           {
             "speaker": "user",
             "uzbek": "Ko'rdim! Rahmat!",
             "english": "I see it! Thank you!",
+            "russian": "Вижу! Спасибо!",
             "tokens": [
               "Ko'rdim!",
               "Rahmat!"
@@ -366,12 +417,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ehtiyot bo'ling. Toshlar sirpanchiq.",
-            "english": "Be careful. The rocks are slippery."
+            "english": "Be careful. The rocks are slippery.",
+            "russian": "Будь осторожен. Камни скользкие."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat!",
             "english": "Fine, thank you!",
+            "russian": "Хорошо, спасибо!",
             "tokens": [
               "Yaxshi,",
               "rahmat!"
@@ -382,16 +435,19 @@
       {
         "id": "mountain-park.on-the-trail.weather",
         "description": "Clouds are coming in",
+        "descriptionRu": "Надвигаются облака",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bulutlar kelyapti. Tez tushing.",
-            "english": "Clouds are coming. Come down quickly."
+            "english": "Clouds are coming. Come down quickly.",
+            "russian": "Надвигаются облака. Спускайся быстро."
           },
           {
             "speaker": "user",
             "uzbek": "Yomg'ir yog'adimi?",
             "english": "Will it rain?",
+            "russian": "Будет дождь?",
             "tokens": [
               "Yomg'ir",
               "yog'adimi?"
@@ -400,12 +456,14 @@
           {
             "speaker": "npc",
             "uzbek": "Balki. Tog'da havo tez o'zgaradi.",
-            "english": "Maybe. In the mountains the weather changes fast."
+            "english": "Maybe. In the mountains the weather changes fast.",
+            "russian": "Возможно. В горах погода меняется быстро."
           },
           {
             "speaker": "user",
             "uzbek": "Tushunaman. Hozir tushaman.",
             "english": "I understand. I will come down now.",
+            "russian": "Понимаю. Сейчас спущусь.",
             "tokens": [
               "Tushunaman.",
               "Hozir",
@@ -415,23 +473,27 @@
           {
             "speaker": "npc",
             "uzbek": "Ehtiyot bo'ling!",
-            "english": "Take care!"
+            "english": "Take care!",
+            "russian": "Береги себя!"
           }
         ]
       },
       {
         "id": "mountain-park.on-the-trail.share-food",
         "description": "They share dried fruit",
+        "descriptionRu": "Они угощают сухофруктами",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Quruq meva olasizmi? Kuch beradi.",
-            "english": "Will you have dried fruit? It gives strength."
+            "english": "Will you have dried fruit? It gives strength.",
+            "russian": "Хочешь сухофруктов? Они придают сил."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat! Juda mehribonsiz.",
             "english": "Thank you! You are very kind.",
+            "russian": "Спасибо! Ты очень добрый.",
             "tokens": [
               "Rahmat!",
               "Juda",
@@ -441,12 +503,14 @@
           {
             "speaker": "npc",
             "uzbek": "Tog'da hamma birga.",
-            "english": "In the mountains everyone is together."
+            "english": "In the mountains everyone is together.",
+            "russian": "В горах все вместе."
           },
           {
             "speaker": "user",
             "uzbek": "Chiroyli so'z! Rahmat.",
             "english": "A lovely saying! Thank you.",
+            "russian": "Красивые слова! Спасибо.",
             "tokens": [
               "Chiroyli",
               "so'z!",

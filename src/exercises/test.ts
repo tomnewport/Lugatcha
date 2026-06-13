@@ -1,6 +1,7 @@
 import type { Word, WordProgress, TestQuestionType } from '@/db/types'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import { shuffle } from './validate'
+import { glossNow } from '@/i18n/content'
 
 export const TEST_LENGTH = 5
 export const OPTION_BANK_SIZE = 40
@@ -95,16 +96,16 @@ export function selectTestWords(
   return result
 }
 
-/** A searchable bank of `size` English meanings, always including the answer. */
+/** A searchable bank of `size` meanings (base language), always including the answer. */
 export function buildOptionBank(
   correct: Word,
   allWords: Word[],
   size = OPTION_BANK_SIZE,
 ): string[] {
-  const options = new Set<string>([correct.english])
-  for (const english of shuffle(allWords.map((w) => w.english))) {
+  const options = new Set<string>([glossNow(correct)])
+  for (const meaning of shuffle(allWords.map((w) => glossNow(w)))) {
     if (options.size >= size) break
-    options.add(english)
+    options.add(meaning)
   }
   return shuffle([...options])
 }
@@ -112,7 +113,7 @@ export function buildOptionBank(
 export interface TestQuestion {
   word: Word
   type: TestQuestionType
-  /** English meanings for the choice question types; empty for 'type'. */
+  /** Base-language meanings for the choice question types; empty for 'type'. */
   options: string[]
 }
 

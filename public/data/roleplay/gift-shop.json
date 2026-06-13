@@ -4,23 +4,28 @@
     "theme": "gift-shop",
     "title": {
       "en": "A Silk Scarf",
+      "ru": "Шёлковый платок",
       "uz": "Ipak ro'mol"
     },
     "scenario": "You love a silk scarf in the bazaar. A little friendly bargaining is expected.",
+    "scenarioRu": "Вам очень нравится шёлковый платок на базаре. Здесь принято немного дружелюбно поторговаться.",
     "variants": [
       {
         "id": "gift-shop.bargain.base",
         "description": "A small, friendly discount",
+        "descriptionRu": "Небольшая дружеская скидка",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Xush kelibsiz! Bu ipak ro'mol juda chiroyli.",
-            "english": "Welcome! This silk scarf is very beautiful."
+            "english": "Welcome! This silk scarf is very beautiful.",
+            "russian": "Добро пожаловать! Этот шёлковый платок очень красивый."
           },
           {
             "speaker": "user",
             "uzbek": "Bu qancha turadi?",
             "english": "How much does this cost?",
+            "russian": "Сколько это стоит?",
             "tokens": [
               "Bu",
               "qancha",
@@ -30,12 +35,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yuz ming so'm.",
-            "english": "One hundred thousand som."
+            "english": "One hundred thousand som.",
+            "russian": "Сто тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Biroz qimmat. Chegirma bormi?",
             "english": "A little expensive. Is there a discount?",
+            "russian": "Немного дороговато. А скидка есть?",
             "tokens": [
               "Biroz",
               "qimmat.",
@@ -46,12 +53,14 @@
           {
             "speaker": "npc",
             "uzbek": "Sizga to'qson ming.",
-            "english": "For you, ninety thousand."
+            "english": "For you, ninety thousand.",
+            "russian": "Для вас — девяносто тысяч."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, olaman. Rahmat!",
             "english": "Good, I will take it. Thank you!",
+            "russian": "Хорошо, беру. Спасибо!",
             "tokens": [
               "Yaxshi,",
               "olaman.",
@@ -63,11 +72,13 @@
       {
         "id": "gift-shop.bargain.colour",
         "description": "You want a different colour",
+        "descriptionRu": "Вы хотите другой цвет",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu ro'mol chiroyli. Ko'k rang bormi?",
             "english": "This scarf is beautiful. Is there a blue one?",
+            "russian": "Этот платок красивый. А синий есть?",
             "tokens": [
               "Bu",
               "ro'mol",
@@ -80,12 +91,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, mana ko'k ro'mol.",
-            "english": "Yes, here is a blue scarf."
+            "english": "Yes, here is a blue scarf.",
+            "russian": "Да, вот синий платок."
           },
           {
             "speaker": "user",
             "uzbek": "Bu qancha?",
             "english": "How much is this?",
+            "russian": "Сколько это стоит?",
             "tokens": [
               "Bu",
               "qancha?"
@@ -94,12 +107,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bir xil narx. Yetmish ming.",
-            "english": "The same price. Seventy thousand."
+            "english": "The same price. Seventy thousand.",
+            "russian": "Та же цена. Семьдесят тысяч."
           },
           {
             "speaker": "user",
             "uzbek": "Olaman, rahmat!",
             "english": "I will take it, thank you!",
+            "russian": "Беру, спасибо!",
             "tokens": [
               "Olaman,",
               "rahmat!"
@@ -110,11 +125,13 @@
       {
         "id": "gift-shop.bargain.no-discount",
         "description": "It is a fixed price",
+        "descriptionRu": "Это фиксированная цена",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Chegirma bormi?",
             "english": "Is there a discount?",
+            "russian": "А скидка есть?",
             "tokens": [
               "Chegirma",
               "bormi?"
@@ -123,12 +140,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, bu qo'lda ishlangan. Narx qat'iy.",
-            "english": "Sorry, this is handmade. The price is fixed."
+            "english": "Sorry, this is handmade. The price is fixed.",
+            "russian": "Извините, это ручная работа. Цена фиксированная."
           },
           {
             "speaker": "user",
             "uzbek": "Tushunaman. Sifati yaxshi.",
             "english": "I understand. The quality is good.",
+            "russian": "Понимаю. Качество хорошее.",
             "tokens": [
               "Tushunaman.",
               "Sifati",
@@ -138,12 +157,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Qog'ozga o'rayman.",
-            "english": "Thank you! I will wrap it in paper."
+            "english": "Thank you! I will wrap it in paper.",
+            "russian": "Спасибо! Заверну в бумагу."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi, rahmat.",
             "english": "Very good, thank you.",
+            "russian": "Очень хорошо, спасибо.",
             "tokens": [
               "Juda",
               "yaxshi,",
@@ -155,11 +176,13 @@
       {
         "id": "gift-shop.bargain.no-change",
         "description": "They have no change for your big note",
+        "descriptionRu": "У них нет сдачи с вашей крупной купюры",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Mana ikki yuz ming so'm.",
             "english": "Here is two hundred thousand som.",
+            "russian": "Вот двести тысяч сумов.",
             "tokens": [
               "Mana",
               "ikki",
@@ -171,12 +194,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, qaytim yo'q. Mayda pul bormi?",
-            "english": "Sorry, I have no change. Do you have a smaller note?"
+            "english": "Sorry, I have no change. Do you have a smaller note?",
+            "russian": "Извините, сдачи нет. У вас есть купюра помельче?"
           },
           {
             "speaker": "user",
             "uzbek": "Bir daqiqa... mana yuz ming.",
             "english": "One minute... here is one hundred thousand.",
+            "russian": "Минутку... вот сто тысяч.",
             "tokens": [
               "Bir",
               "daqiqa...",
@@ -188,12 +213,14 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Mana sovg'angiz.",
-            "english": "Thank you! Here is your gift."
+            "english": "Thank you! Here is your gift.",
+            "russian": "Спасибо! Вот ваш подарок."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -203,11 +230,13 @@
       {
         "id": "gift-shop.bargain.two-items",
         "description": "A better price for two",
+        "descriptionRu": "Цена получше за две штуки",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Ikkita ro'mol olsam, chegirma bormi?",
             "english": "If I buy two scarves, is there a discount?",
+            "russian": "Если я возьму два платка, будет скидка?",
             "tokens": [
               "Ikkita",
               "ro'mol",
@@ -219,12 +248,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta! Ikkitasi yuz ellik ming.",
-            "english": "Of course! Two for one hundred and fifty thousand."
+            "english": "Of course! Two for one hundred and fifty thousand.",
+            "russian": "Конечно! Две за сто пятьдесят тысяч."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi! Ikkitasini olaman.",
             "english": "Good! I will take both.",
+            "russian": "Хорошо! Беру обе.",
             "tokens": [
               "Yaxshi!",
               "Ikkitasini",
@@ -234,23 +265,27 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Yaxshi tanlov.",
-            "english": "Thank you! A good choice."
+            "english": "Thank you! A good choice.",
+            "russian": "Спасибо! Хороший выбор."
           }
         ]
       },
       {
         "id": "gift-shop.bargain.closing",
         "description": "The shop is about to close",
+        "descriptionRu": "Магазин вот-вот закроется",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, biz yopilamiz.",
-            "english": "Sorry, we are closing."
+            "english": "Sorry, we are closing.",
+            "russian": "Извините, мы закрываемся."
           },
           {
             "speaker": "user",
             "uzbek": "Tez bo'laman. Bu magnit qancha?",
             "english": "I will be quick. How much is this magnet?",
+            "russian": "Я быстро. Сколько стоит этот магнит?",
             "tokens": [
               "Tez",
               "bo'laman.",
@@ -262,12 +297,14 @@
           {
             "speaker": "npc",
             "uzbek": "O'n ming so'm.",
-            "english": "Ten thousand som."
+            "english": "Ten thousand som.",
+            "russian": "Десять тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Mana pul. Rahmat!",
             "english": "Here is the money. Thank you!",
+            "russian": "Вот деньги. Спасибо!",
             "tokens": [
               "Mana",
               "pul.",
@@ -277,7 +314,8 @@
           {
             "speaker": "npc",
             "uzbek": "Rahmat! Yana keling!",
-            "english": "Thank you! Come again!"
+            "english": "Thank you! Come again!",
+            "russian": "Спасибо! Приходите ещё!"
           }
         ]
       }
@@ -288,18 +326,22 @@
     "theme": "gift-shop",
     "title": {
       "en": "A Gift for Mother",
+      "ru": "Подарок для мамы",
       "uz": "Onaga sovg'a"
     },
     "scenario": "You want to buy a special gift to take home for your mother.",
+    "scenarioRu": "Вы хотите купить особенный подарок, чтобы привезти домой для мамы.",
     "variants": [
       {
         "id": "gift-shop.choosing.base",
         "description": "The shopkeeper helps you choose",
+        "descriptionRu": "Продавец помогает вам выбрать",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Onam uchun sovg'a izlayapman.",
             "english": "I am looking for a gift for my mother.",
+            "russian": "Я ищу подарок для мамы.",
             "tokens": [
               "Onam",
               "uchun",
@@ -310,12 +352,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bu ipak ro'mol juda mashhur.",
-            "english": "This silk scarf is very popular."
+            "english": "This silk scarf is very popular.",
+            "russian": "Этот шёлковый платок очень популярен."
           },
           {
             "speaker": "user",
             "uzbek": "Chiroyli! Qancha turadi?",
             "english": "Beautiful! How much does it cost?",
+            "russian": "Красиво! Сколько он стоит?",
             "tokens": [
               "Chiroyli!",
               "Qancha",
@@ -325,12 +369,14 @@
           {
             "speaker": "npc",
             "uzbek": "Sakson ming so'm.",
-            "english": "Eighty thousand som."
+            "english": "Eighty thousand som.",
+            "russian": "Восемьдесят тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Olaman. U xursand bo'ladi!",
             "english": "I will take it. She will be happy!",
+            "russian": "Беру. Она будет рада!",
             "tokens": [
               "Olaman.",
               "U",
@@ -343,11 +389,13 @@
       {
         "id": "gift-shop.choosing.ceramics",
         "description": "You pick a ceramic bowl instead",
+        "descriptionRu": "Вместо этого вы выбираете керамическую пиалу",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Sopol idish bormi?",
             "english": "Do you have ceramic dishes?",
+            "russian": "У вас есть керамическая посуда?",
             "tokens": [
               "Sopol",
               "idish",
@@ -357,12 +405,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, mana Rishton sopoli. Ko'k va oq.",
-            "english": "Yes, here is Rishtan pottery. Blue and white."
+            "english": "Yes, here is Rishtan pottery. Blue and white.",
+            "russian": "Да, вот риштанская керамика. Синяя с белым."
           },
           {
             "speaker": "user",
             "uzbek": "Juda chiroyli! Sinmaydimi?",
             "english": "Very beautiful! Will it not break?",
+            "russian": "Очень красиво! А не разобьётся?",
             "tokens": [
               "Juda",
               "chiroyli!",
@@ -372,12 +422,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi o'rayman. Xavfsiz boradi.",
-            "english": "I will wrap it well. It will travel safely."
+            "english": "I will wrap it well. It will travel safely.",
+            "russian": "Я хорошо заверну. Доедет в целости."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat! Shuni olaman.",
             "english": "Thank you! I will take that.",
+            "russian": "Спасибо! Беру вот эту.",
             "tokens": [
               "Rahmat!",
               "Shuni",
@@ -389,11 +441,13 @@
       {
         "id": "gift-shop.choosing.budget",
         "description": "You have a small budget",
+        "descriptionRu": "У вас небольшой бюджет",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Arzonroq sovg'a bormi?",
             "english": "Is there a cheaper gift?",
+            "russian": "А есть подарок подешевле?",
             "tokens": [
               "Arzonroq",
               "sovg'a",
@@ -403,12 +457,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bu magnitlar arzon. Besh ming.",
-            "english": "These magnets are cheap. Five thousand."
+            "english": "These magnets are cheap. Five thousand.",
+            "russian": "Эти магниты недорогие. Пять тысяч."
           },
           {
             "speaker": "user",
             "uzbek": "Uchta olaman.",
             "english": "I will take three.",
+            "russian": "Беру три.",
             "tokens": [
               "Uchta",
               "olaman."
@@ -417,12 +473,14 @@
           {
             "speaker": "npc",
             "uzbek": "O'n besh ming bo'ldi. Rahmat!",
-            "english": "That is fifteen thousand. Thank you!"
+            "english": "That is fifteen thousand. Thank you!",
+            "russian": "Получается пятнадцать тысяч. Спасибо!"
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -432,11 +490,13 @@
       {
         "id": "gift-shop.choosing.wrap",
         "description": "You ask for gift wrapping",
+        "descriptionRu": "Вы просите упаковать подарок",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu sovg'ani o'rab bera olasizmi?",
             "english": "Can you wrap this gift?",
+            "russian": "Вы можете упаковать этот подарок?",
             "tokens": [
               "Bu",
               "sovg'ani",
@@ -448,12 +508,14 @@
           {
             "speaker": "npc",
             "uzbek": "Albatta! Chiroyli qog'oz bor.",
-            "english": "Of course! There is beautiful paper."
+            "english": "Of course! There is beautiful paper.",
+            "russian": "Конечно! Есть красивая бумага."
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi, rahmat!",
             "english": "Very good, thank you!",
+            "russian": "Очень хорошо, спасибо!",
             "tokens": [
               "Juda",
               "yaxshi,",
@@ -463,18 +525,21 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, tayyor. Onangizga yoqadi!",
-            "english": "Here, it is ready. Your mother will like it!"
+            "english": "Here, it is ready. Your mother will like it!",
+            "russian": "Вот, готово. Вашей маме понравится!"
           }
         ]
       },
       {
         "id": "gift-shop.choosing.recommend",
         "description": "You ask what is typical",
+        "descriptionRu": "Вы спрашиваете, что здесь типично",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu yerda nima mashhur?",
             "english": "What is famous here?",
+            "russian": "Что здесь популярно?",
             "tokens": [
               "Bu",
               "yerda",
@@ -485,12 +550,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ipak, sopol va do'ppi.",
-            "english": "Silk, ceramics, and the doppi cap."
+            "english": "Silk, ceramics, and the doppi cap.",
+            "russian": "Шёлк, керамика и тюбетейка."
           },
           {
             "speaker": "user",
             "uzbek": "Do'ppi nima?",
             "english": "What is a doppi?",
+            "russian": "А что такое тюбетейка?",
             "tokens": [
               "Do'ppi",
               "nima?"
@@ -499,12 +566,14 @@
           {
             "speaker": "npc",
             "uzbek": "An'anaviy o'zbek bosh kiyimi.",
-            "english": "A traditional Uzbek hat."
+            "english": "A traditional Uzbek hat.",
+            "russian": "Традиционный узбекский головной убор."
           },
           {
             "speaker": "user",
             "uzbek": "Qiziq! Bittasini olaman.",
             "english": "Interesting! I will take one.",
+            "russian": "Интересно! Беру одну.",
             "tokens": [
               "Qiziq!",
               "Bittasini",

@@ -2,13 +2,13 @@
   {
     "id": "tashkent.big-city",
     "theme": "tashkent",
-    "title": { "en": "The Big Capital", "uz": "Katta poytaxt" },
+    "title": { "en": "The Big Capital", "ru": "Большая столица", "uz": "Katta poytaxt" },
     "sentences": [
-      { "uzbek": "Toshkent katta poytaxt.", "english": "Tashkent is a big capital." },
-      { "uzbek": "Bu yerda koʻp odam yashaydi.", "english": "Many people live here." },
-      { "uzbek": "Men metroda ishga boraman.", "english": "I go to work by metro." },
-      { "uzbek": "Chorsu bozorida meva sotiladi.", "english": "Fruit is sold at the Chorsu bazaar." },
-      { "uzbek": "Shahar zamonaviy va toza.", "english": "The city is modern and clean." }
+      { "uzbek": "Toshkent katta poytaxt.", "english": "Tashkent is a big capital.", "russian": "Ташкент — большая столица." },
+      { "uzbek": "Bu yerda koʻp odam yashaydi.", "english": "Many people live here.", "russian": "Здесь живёт много людей." },
+      { "uzbek": "Men metroda ishga boraman.", "english": "I go to work by metro.", "russian": "Я езжу на работу на метро." },
+      { "uzbek": "Chorsu bozorida meva sotiladi.", "english": "Fruit is sold at the Chorsu bazaar.", "russian": "На базаре Чорсу продают фрукты." },
+      { "uzbek": "Shahar zamonaviy va toza.", "english": "The city is modern and clean.", "russian": "Город современный и чистый." }
     ],
     "glossary": {
       "Toshkent": "Tashkent",
@@ -31,19 +31,41 @@
       "zamonaviy": "modern",
       "va": "and",
       "toza": "clean"
+    },
+    "glossaryRu": {
+      "Toshkent": "Ташкент",
+      "katta": "большой",
+      "poytaxt": "столица",
+      "Bu": "этот",
+      "yerda": "здесь",
+      "koʻp": "много",
+      "odam": "человек / люди",
+      "yashaydi": "живёт",
+      "Men": "я",
+      "metroda": "на метро",
+      "ishga": "на работу",
+      "boraman": "я еду",
+      "Chorsu": "Чорсу",
+      "bozorida": "на базаре",
+      "meva": "фрукты",
+      "sotiladi": "продаётся",
+      "Shahar": "город",
+      "zamonaviy": "современный",
+      "va": "и",
+      "toza": "чистый"
     }
   },
   {
     "id": "tashkent.getting-around",
     "theme": "tashkent",
-    "title": { "en": "Getting Around the City", "uz": "Shahar boʻylab yurish" },
+    "title": { "en": "Getting Around the City", "ru": "Передвижение по городу", "uz": "Shahar boʻylab yurish" },
     "sentences": [
-      { "uzbek": "Toshkentda metro, avtobus va marshrutka bor.", "english": "In Tashkent there is the metro, the bus and the marshrutka." },
-      { "uzbek": "Metro eng tez va arzon.", "english": "The metro is the fastest and cheapest." },
-      { "uzbek": "Avtobusda men plastik karta bilan toʻlayman.", "english": "On the bus I pay with a plastic card." },
-      { "uzbek": "Har bir bekatda nom yozilgan.", "english": "At every stop the name is written." },
-      { "uzbek": "Men telefonda xaritaga qarayman.", "english": "I look at the map on my phone." },
-      { "uzbek": "Agar adashsam, haydovchidan soʻrayman.", "english": "If I get lost, I ask the driver." }
+      { "uzbek": "Toshkentda metro, avtobus va marshrutka bor.", "english": "In Tashkent there is the metro, the bus and the marshrutka.", "russian": "В Ташкенте есть метро, автобусы и маршрутки." },
+      { "uzbek": "Metro eng tez va arzon.", "english": "The metro is the fastest and cheapest.", "russian": "Метро — самое быстрое и дешёвое." },
+      { "uzbek": "Avtobusda men plastik karta bilan toʻlayman.", "english": "On the bus I pay with a plastic card.", "russian": "В автобусе я плачу пластиковой картой." },
+      { "uzbek": "Har bir bekatda nom yozilgan.", "english": "At every stop the name is written.", "russian": "На каждой остановке написано название." },
+      { "uzbek": "Men telefonda xaritaga qarayman.", "english": "I look at the map on my phone.", "russian": "Я смотрю на карту в телефоне." },
+      { "uzbek": "Agar adashsam, haydovchidan soʻrayman.", "english": "If I get lost, I ask the driver.", "russian": "Если я заблужусь, я спрашиваю у водителя." }
     ],
     "glossary": {
       "Toshkentda": "in Tashkent",
@@ -73,6 +95,35 @@
       "adashsam": "if I get lost",
       "haydovchidan": "from the driver",
       "soʻrayman": "I ask"
+    },
+    "glossaryRu": {
+      "Toshkentda": "в Ташкенте",
+      "metro": "метро",
+      "avtobus": "автобус",
+      "va": "и",
+      "marshrutka": "маршрутка",
+      "bor": "есть / имеется",
+      "eng": "самый",
+      "tez": "быстрый",
+      "arzon": "дешёвый",
+      "Avtobusda": "в автобусе",
+      "men": "я",
+      "plastik": "пластиковый",
+      "karta": "карта",
+      "bilan": "с / при помощи",
+      "toʻlayman": "я плачу",
+      "Har": "каждый",
+      "bir": "один",
+      "bekatda": "на остановке",
+      "nom": "название",
+      "yozilgan": "написано",
+      "telefonda": "в телефоне",
+      "xaritaga": "на карту",
+      "qarayman": "я смотрю",
+      "Agar": "если",
+      "adashsam": "если я заблужусь",
+      "haydovchidan": "у водителя",
+      "soʻrayman": "я спрашиваю"
     }
   }
 ]

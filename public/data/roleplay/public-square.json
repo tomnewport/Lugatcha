@@ -4,18 +4,22 @@
     "theme": "public-square",
     "title": {
       "en": "The Way to the Bazaar",
+      "ru": "Дорога на базар",
       "uz": "Bozorga yo'l"
     },
     "scenario": "You are standing in the main square, looking for the famous bazaar. You stop a friendly local.",
+    "scenarioRu": "Вы стоите на главной площади и ищете знаменитый базар. Вы останавливаете приветливого местного жителя.",
     "variants": [
       {
         "id": "public-square.directions.base",
         "description": "Two turns and you are there",
+        "descriptionRu": "Пара реплик — и вы на месте",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, bozor qayerda?",
             "english": "Excuse me, where is the bazaar?",
+            "russian": "Извините, где базар?",
             "tokens": [
               "Kechirasiz,",
               "bozor",
@@ -25,12 +29,14 @@
           {
             "speaker": "npc",
             "uzbek": "To'g'riga yuring, keyin chapga.",
-            "english": "Go straight, then left."
+            "english": "Go straight, then left.",
+            "russian": "Идите прямо, потом налево."
           },
           {
             "speaker": "user",
             "uzbek": "Uzoqmi?",
             "english": "Is it far?",
+            "russian": "Это далеко?",
             "tokens": [
               "Uzoqmi?"
             ]
@@ -38,12 +44,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yo'q, juda yaqin. Besh daqiqa.",
-            "english": "No, very near. Five minutes."
+            "english": "No, very near. Five minutes.",
+            "russian": "Нет, совсем близко. Пять минут."
           },
           {
             "speaker": "user",
             "uzbek": "Katta rahmat!",
             "english": "Thank you very much!",
+            "russian": "Большое спасибо!",
             "tokens": [
               "Katta",
               "rahmat!"
@@ -52,18 +60,21 @@
           {
             "speaker": "npc",
             "uzbek": "Arzimaydi!",
-            "english": "You're welcome!"
+            "english": "You're welcome!",
+            "russian": "Не за что!"
           }
         ]
       },
       {
         "id": "public-square.directions.far",
         "description": "It is far — better to take a bus",
+        "descriptionRu": "Это далеко — лучше поехать на автобусе",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, bozor qayerda?",
             "english": "Excuse me, where is the bazaar?",
+            "russian": "Извините, где базар?",
             "tokens": [
               "Kechirasiz,",
               "bozor",
@@ -73,12 +84,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bozor uzoq. Avtobusda boring.",
-            "english": "The bazaar is far. Go by bus."
+            "english": "The bazaar is far. Go by bus.",
+            "russian": "Базар далеко. Поезжайте на автобусе."
           },
           {
             "speaker": "user",
             "uzbek": "Qaysi avtobus boradi?",
             "english": "Which bus goes there?",
+            "russian": "Какой автобус туда идёт?",
             "tokens": [
               "Qaysi",
               "avtobus",
@@ -88,12 +101,14 @@
           {
             "speaker": "npc",
             "uzbek": "O'n ikkinchi avtobus. Bekat o'ng tomonda.",
-            "english": "Bus number twelve. The stop is on the right."
+            "english": "Bus number twelve. The stop is on the right.",
+            "russian": "Двенадцатый автобус. Остановка справа."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat!",
             "english": "Thank you!",
+            "russian": "Спасибо!",
             "tokens": [
               "Rahmat!"
             ]
@@ -103,11 +118,13 @@
       {
         "id": "public-square.directions.closed",
         "description": "The bazaar is closed on Mondays",
+        "descriptionRu": "По понедельникам базар закрыт",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, bozor ochiqmi?",
             "english": "Excuse me, is the bazaar open?",
+            "russian": "Извините, базар открыт?",
             "tokens": [
               "Kechirasiz,",
               "bozor",
@@ -117,12 +134,14 @@
           {
             "speaker": "npc",
             "uzbek": "Bugun dushanba. Bozor yopiq.",
-            "english": "Today is Monday. The bazaar is closed."
+            "english": "Today is Monday. The bazaar is closed.",
+            "russian": "Сегодня понедельник. Базар закрыт."
           },
           {
             "speaker": "user",
             "uzbek": "Ertaga ochiqmi?",
             "english": "Is it open tomorrow?",
+            "russian": "А завтра открыт?",
             "tokens": [
               "Ertaga",
               "ochiqmi?"
@@ -131,12 +150,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, ertaga ochiq. Erta keling!",
-            "english": "Yes, open tomorrow. Come early!"
+            "english": "Yes, open tomorrow. Come early!",
+            "russian": "Да, завтра открыт. Приходите пораньше!"
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
             "english": "Fine, thank you.",
+            "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",
               "rahmat."
@@ -147,11 +168,13 @@
       {
         "id": "public-square.directions.map",
         "description": "You show your map and they point",
+        "descriptionRu": "Вы показываете карту, и вам указывают дорогу",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, biz xaritada qayerdamiz?",
             "english": "Excuse me, where are we on the map?",
+            "russian": "Извините, где мы на карте?",
             "tokens": [
               "Kechirasiz,",
               "biz",
@@ -162,12 +185,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana bu yerda, maydonda.",
-            "english": "Right here, at the square."
+            "english": "Right here, at the square.",
+            "russian": "Вот здесь, на площади."
           },
           {
             "speaker": "user",
             "uzbek": "Bozor qaysi tomonda?",
             "english": "Which way is the bazaar?",
+            "russian": "В какой стороне базар?",
             "tokens": [
               "Bozor",
               "qaysi",
@@ -177,12 +202,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana bu tomonda. Masjid yonida.",
-            "english": "This way. Next to the mosque."
+            "english": "This way. Next to the mosque.",
+            "russian": "Вот в этой стороне. Рядом с мечетью."
           },
           {
             "speaker": "user",
             "uzbek": "Endi tushundim. Rahmat!",
             "english": "Now I understand. Thank you!",
+            "russian": "Теперь понятно. Спасибо!",
             "tokens": [
               "Endi",
               "tushundim.",
@@ -194,11 +221,13 @@
       {
         "id": "public-square.directions.second-person",
         "description": "The first person does not know — ask another",
+        "descriptionRu": "Первый человек не знает — спросите другого",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, bozor qayerda?",
             "english": "Excuse me, where is the bazaar?",
+            "russian": "Извините, где базар?",
             "tokens": [
               "Kechirasiz,",
               "bozor",
@@ -208,12 +237,14 @@
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, bilmayman. Men ham turistman.",
-            "english": "Sorry, I don't know. I am a tourist too."
+            "english": "Sorry, I don't know. I am a tourist too.",
+            "russian": "Извините, не знаю. Я тоже турист."
           },
           {
             "speaker": "user",
             "uzbek": "Hechqisi yo'q. Rahmat!",
             "english": "No problem. Thank you!",
+            "russian": "Ничего страшного. Спасибо!",
             "tokens": [
               "Hechqisi",
               "yo'q.",
@@ -223,12 +254,14 @@
           {
             "speaker": "npc",
             "uzbek": "Anavi kishidan so'rang.",
-            "english": "Ask that person over there."
+            "english": "Ask that person over there.",
+            "russian": "Спросите вон у того человека."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi fikr!",
             "english": "Good idea!",
+            "russian": "Хорошая мысль!",
             "tokens": [
               "Yaxshi",
               "fikr!"
@@ -239,11 +272,13 @@
       {
         "id": "public-square.directions.fountain",
         "description": "Use the fountain as a landmark",
+        "descriptionRu": "Используйте фонтан как ориентир",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Kechirasiz, bozor qayerda?",
             "english": "Excuse me, where is the bazaar?",
+            "russian": "Извините, где базар?",
             "tokens": [
               "Kechirasiz,",
               "bozor",
@@ -253,12 +288,14 @@
           {
             "speaker": "npc",
             "uzbek": "Favvorani ko'ryapsizmi?",
-            "english": "Do you see the fountain?"
+            "english": "Do you see the fountain?",
+            "russian": "Видите фонтан?"
           },
           {
             "speaker": "user",
             "uzbek": "Ha, ko'ryapman.",
             "english": "Yes, I see it.",
+            "russian": "Да, вижу.",
             "tokens": [
               "Ha,",
               "ko'ryapman."
@@ -267,12 +304,14 @@
           {
             "speaker": "npc",
             "uzbek": "Favvoradan o'ngga yuring.",
-            "english": "From the fountain, go right."
+            "english": "From the fountain, go right.",
+            "russian": "От фонтана идите направо."
           },
           {
             "speaker": "user",
             "uzbek": "Tushundim. Rahmat!",
             "english": "Got it. Thank you!",
+            "russian": "Понял. Спасибо!",
             "tokens": [
               "Tushundim.",
               "Rahmat!"
@@ -287,23 +326,28 @@
     "theme": "public-square",
     "title": {
       "en": "Meeting a Friend",
+      "ru": "Встреча с другом",
       "uz": "Do'st bilan uchrashuv"
     },
     "scenario": "You have agreed to meet a new friend in the square, but where exactly?",
+    "scenarioRu": "Вы договорились встретиться с новым другом на площади, но где именно?",
     "variants": [
       {
         "id": "public-square.meeting.base",
         "description": "By the fountain at five",
+        "descriptionRu": "У фонтана в пять",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Qayerda uchrashamiz?",
-            "english": "Where shall we meet?"
+            "english": "Where shall we meet?",
+            "russian": "Где встретимся?"
           },
           {
             "speaker": "user",
             "uzbek": "Favvora yonida, yaxshimi?",
             "english": "By the fountain, okay?",
+            "russian": "У фонтана, договорились?",
             "tokens": [
               "Favvora",
               "yonida,",
@@ -313,12 +357,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi! Soat nechada?",
-            "english": "Good! At what time?"
+            "english": "Good! At what time?",
+            "russian": "Хорошо! Во сколько?"
           },
           {
             "speaker": "user",
             "uzbek": "Soat beshda.",
             "english": "At five o'clock.",
+            "russian": "В пять часов.",
             "tokens": [
               "Soat",
               "beshda."
@@ -327,23 +373,27 @@
           {
             "speaker": "npc",
             "uzbek": "Kelishdik! Ko'rishguncha!",
-            "english": "Agreed! See you!"
+            "english": "Agreed! See you!",
+            "russian": "Договорились! До встречи!"
           }
         ]
       },
       {
         "id": "public-square.meeting.statue",
         "description": "The fountain is off — meet at the statue",
+        "descriptionRu": "Фонтан не работает — встречаемся у памятника",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Favvora ishlamayapti. Haykal yonida uchrashamizmi?",
-            "english": "The fountain is off. Shall we meet by the statue?"
+            "english": "The fountain is off. Shall we meet by the statue?",
+            "russian": "Фонтан не работает. Встретимся у памятника?"
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, haykal yonida.",
             "english": "Fine, by the statue.",
+            "russian": "Хорошо, у памятника.",
             "tokens": [
               "Yaxshi,",
               "haykal",
@@ -353,12 +403,14 @@
           {
             "speaker": "npc",
             "uzbek": "Soat oltida, yaxshimi?",
-            "english": "At six o'clock, okay?"
+            "english": "At six o'clock, okay?",
+            "russian": "В шесть часов, договорились?"
           },
           {
             "speaker": "user",
             "uzbek": "Juda yaxshi. Xayr!",
             "english": "Very good. Bye!",
+            "russian": "Отлично. Пока!",
             "tokens": [
               "Juda",
               "yaxshi.",
@@ -370,16 +422,19 @@
       {
         "id": "public-square.meeting.late",
         "description": "Your friend is running late",
+        "descriptionRu": "Твой друг опаздывает",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Kechirasiz, men kechikaman!",
-            "english": "Sorry, I am running late!"
+            "english": "Sorry, I am running late!",
+            "russian": "Извини, я опаздываю!"
           },
           {
             "speaker": "user",
             "uzbek": "Hechqisi yo'q. Qancha kutaman?",
             "english": "No problem. How long shall I wait?",
+            "russian": "Ничего страшного. Сколько мне ждать?",
             "tokens": [
               "Hechqisi",
               "yo'q.",
@@ -390,12 +445,14 @@
           {
             "speaker": "npc",
             "uzbek": "O'n daqiqa. Choyxonada kuting!",
-            "english": "Ten minutes. Wait at the teahouse!"
+            "english": "Ten minutes. Wait at the teahouse!",
+            "russian": "Десять минут. Подожди в чайхане!"
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, choyxonada kutaman.",
             "english": "Fine, I will wait at the teahouse.",
+            "russian": "Хорошо, подожду в чайхане.",
             "tokens": [
               "Yaxshi,",
               "choyxonada",
@@ -407,16 +464,19 @@
       {
         "id": "public-square.meeting.lost",
         "description": "You are at the wrong corner",
+        "descriptionRu": "Ты стоишь не в том углу",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Qayerdasiz? Men sizni ko'rmayapman.",
-            "english": "Where are you? I cannot see you."
+            "english": "Where are you? I cannot see you.",
+            "russian": "Ты где? Я тебя не вижу."
           },
           {
             "speaker": "user",
             "uzbek": "Men haykal yonidaman.",
             "english": "I am by the statue.",
+            "russian": "Я у памятника.",
             "tokens": [
               "Men",
               "haykal",
@@ -426,12 +486,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qaysi haykal? Maydonda ikkita haykal bor!",
-            "english": "Which statue? There are two statues in the square!"
+            "english": "Which statue? There are two statues in the square!",
+            "russian": "У какого памятника? На площади два памятника!"
           },
           {
             "speaker": "user",
             "uzbek": "Katta haykal yonidaman.",
             "english": "I am by the big statue.",
+            "russian": "Я у большого памятника.",
             "tokens": [
               "Katta",
               "haykal",
@@ -441,23 +503,27 @@
           {
             "speaker": "npc",
             "uzbek": "Ha! Sizni ko'rdim!",
-            "english": "Ah! I see you!"
+            "english": "Ah! I see you!",
+            "russian": "А! Вижу тебя!"
           }
         ]
       },
       {
         "id": "public-square.meeting.rain",
         "description": "It starts raining — move inside",
+        "descriptionRu": "Начинается дождь — идём внутрь",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Yomg'ir yog'yapti! Qayerga boramiz?",
-            "english": "It is raining! Where shall we go?"
+            "english": "It is raining! Where shall we go?",
+            "russian": "Дождь идёт! Куда пойдём?"
           },
           {
             "speaker": "user",
             "uzbek": "Choyxonaga boramizmi?",
             "english": "Shall we go to the teahouse?",
+            "russian": "Пойдём в чайхану?",
             "tokens": [
               "Choyxonaga",
               "boramizmi?"
@@ -466,12 +532,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi fikr! Yaqin choyxona bor.",
-            "english": "Good idea! There is a teahouse nearby."
+            "english": "Good idea! There is a teahouse nearby.",
+            "russian": "Хорошая мысль! Рядом есть чайхана."
           },
           {
             "speaker": "user",
             "uzbek": "Yuring, tez boramiz!",
             "english": "Let's go, quickly!",
+            "russian": "Идём, скорее!",
             "tokens": [
               "Yuring,",
               "tez",

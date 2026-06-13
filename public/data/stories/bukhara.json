@@ -2,13 +2,13 @@
   {
     "id": "bukhara.kalon-minaret",
     "theme": "bukhara",
-    "title": { "en": "By the Pool", "uz": "Hovuz yonida" },
+    "title": { "en": "By the Pool", "ru": "У водоёма", "uz": "Hovuz yonida" },
     "sentences": [
-      { "uzbek": "Buxoro koʻhna shahar.", "english": "Bukhara is an old city." },
-      { "uzbek": "Kalon minorasi juda baland.", "english": "The Kalon minaret is very tall." },
-      { "uzbek": "Qadimda karvonlar bu yerda toʻxtagan.", "english": "In the old days caravans stopped here." },
-      { "uzbek": "Savdogarlar gilam sotadi.", "english": "Merchants sell carpets." },
-      { "uzbek": "Men hovuz yonida choy ichaman.", "english": "I drink tea by the pool." }
+      { "uzbek": "Buxoro koʻhna shahar.", "english": "Bukhara is an old city.", "russian": "Бухара — древний город." },
+      { "uzbek": "Kalon minorasi juda baland.", "english": "The Kalon minaret is very tall.", "russian": "Минарет Калян очень высокий." },
+      { "uzbek": "Qadimda karvonlar bu yerda toʻxtagan.", "english": "In the old days caravans stopped here.", "russian": "В старину здесь останавливались караваны." },
+      { "uzbek": "Savdogarlar gilam sotadi.", "english": "Merchants sell carpets.", "russian": "Торговцы продают ковры." },
+      { "uzbek": "Men hovuz yonida choy ichaman.", "english": "I drink tea by the pool.", "russian": "Я пью чай у водоёма." }
     ],
     "glossary": {
       "Buxoro": "Bukhara",
@@ -31,19 +31,41 @@
       "yonida": "beside",
       "choy": "tea",
       "ichaman": "I drink"
+    },
+    "glossaryRu": {
+      "Buxoro": "Бухара",
+      "koʻhna": "старый / древний",
+      "shahar": "город",
+      "Kalon": "Калян (большой)",
+      "minorasi": "его минарет",
+      "juda": "очень",
+      "baland": "высокий",
+      "Qadimda": "в старину",
+      "karvonlar": "караваны",
+      "bu": "это / этот",
+      "yerda": "здесь",
+      "toʻxtagan": "останавливались",
+      "Savdogarlar": "торговцы",
+      "gilam": "ковёр",
+      "sotadi": "продаёт",
+      "Men": "я",
+      "hovuz": "водоём, пруд",
+      "yonida": "рядом, возле",
+      "choy": "чай",
+      "ichaman": "я пью"
     }
   },
   {
     "id": "bukhara.narrow-streets",
     "theme": "bukhara",
-    "title": { "en": "Through the Old City", "uz": "Eski shahar boʻylab" },
+    "title": { "en": "Through the Old City", "ru": "По старому городу", "uz": "Eski shahar boʻylab" },
     "sentences": [
-      { "uzbek": "Buxoroda avtobus va marshrutka bor.", "english": "In Bukhara there are buses and marshrutkas." },
-      { "uzbek": "Eski shaharda koʻchalar tor.", "english": "In the old city the streets are narrow." },
-      { "uzbek": "Men marshrutkaga chiqaman va pul beraman.", "english": "I get on the marshrutka and give money." },
-      { "uzbek": "Haydovchi meni bekatda tushiradi.", "english": "The driver drops me at the stop." },
-      { "uzbek": "Labihovuzga piyoda boraman.", "english": "I walk to Lyabi-Hauz." },
-      { "uzbek": "Taksi chaqirsam, telefon kerak.", "english": "If I call a taxi, I need a phone." }
+      { "uzbek": "Buxoroda avtobus va marshrutka bor.", "english": "In Bukhara there are buses and marshrutkas.", "russian": "В Бухаре есть автобусы и маршрутки." },
+      { "uzbek": "Eski shaharda koʻchalar tor.", "english": "In the old city the streets are narrow.", "russian": "В старом городе улицы узкие." },
+      { "uzbek": "Men marshrutkaga chiqaman va pul beraman.", "english": "I get on the marshrutka and give money.", "russian": "Я сажусь в маршрутку и плачу деньги." },
+      { "uzbek": "Haydovchi meni bekatda tushiradi.", "english": "The driver drops me at the stop.", "russian": "Водитель высаживает меня на остановке." },
+      { "uzbek": "Labihovuzga piyoda boraman.", "english": "I walk to Lyabi-Hauz.", "russian": "Я иду к Ляби-Хаузу пешком." },
+      { "uzbek": "Taksi chaqirsam, telefon kerak.", "english": "If I call a taxi, I need a phone.", "russian": "Если я вызову такси, мне нужен телефон." }
     ],
     "glossary": {
       "Buxoroda": "in Bukhara",
@@ -71,6 +93,33 @@
       "chaqirsam": "if I call",
       "telefon": "phone",
       "kerak": "is needed"
+    },
+    "glossaryRu": {
+      "Buxoroda": "в Бухаре",
+      "avtobus": "автобус",
+      "va": "и",
+      "marshrutka": "маршрутка / микроавтобус",
+      "bor": "есть, имеется",
+      "Eski": "старый",
+      "shaharda": "в городе",
+      "koʻchalar": "улицы",
+      "tor": "узкий",
+      "Men": "я",
+      "marshrutkaga": "в маршрутку",
+      "chiqaman": "я сажусь",
+      "pul": "деньги",
+      "beraman": "я даю",
+      "Haydovchi": "водитель",
+      "meni": "меня",
+      "bekatda": "на остановке",
+      "tushiradi": "высаживает",
+      "Labihovuzga": "к Ляби-Хаузу",
+      "piyoda": "пешком",
+      "boraman": "я иду",
+      "Taksi": "такси",
+      "chaqirsam": "если я вызову",
+      "telefon": "телефон",
+      "kerak": "нужен, необходим"
     }
   }
 ]

@@ -3,38 +3,53 @@
   "order": 4,
   "title": {
     "en": "sen vs siz",
-    "uz": "Sen va siz"
+    "uz": "Sen va siz",
+    "ru": "sen против siz"
   },
   "blurb": "Politeness is baked into the grammar",
+  "blurbRu": "Вежливость встроена в саму грамматику",
   "estimatedMinutes": 2,
   "sections": [
     {
       "heading": "Two kinds of “you”",
+      "headingRu": "Два вида «ты/вы»",
       "body": [
         "Uzbek has two words for *you*: **sen** for close friends, children and intimates, and **siz** for everyone else — strangers, elders, anyone you respect. Like French tu and vous.",
         "Politeness lives in the **verb ending too**: *Qalaysan?* and *Qalaysiz?* both mean “how are you?” — but only one is polite."
       ],
+      "bodyRu": [
+        "В узбекском есть два слова для *you*: **sen** — для близких друзей, детей и родных, и **siz** — для всех остальных: незнакомцев, старших, всех, кого вы уважаете. Как французские tu и vous.",
+        "Вежливость живёт и **в окончании глагола**: *Qalaysan?* и *Qalaysiz?* оба означают «как дела?» — но вежлив только один из них."
+      ],
       "examples": [
         {
           "uzbek": "Qalaysiz?",
-          "english": "How are you? (polite — siz form)"
+          "english": "How are you? (polite — siz form)",
+          "russian": "Как дела? (вежливо — форма siz)"
         },
         {
           "uzbek": "Qalaysan?",
-          "english": "How are you? (informal — sen form)"
+          "english": "How are you? (informal — sen form)",
+          "russian": "Как дела? (неформально — форма sen)"
         }
       ]
     },
     {
       "heading": "When in doubt: siz",
+      "headingRu": "Если сомневаетесь — siz",
       "body": [
         "As a visitor, **siz is always safe**. Using *sen* with the wrong person is genuinely rude. If a friendship warms up, locals will happily invite you to switch.",
         "There's even an extra-deferential **sizlar** for groups you respect — but siz covers everything a traveller needs."
+      ],
+      "bodyRu": [
+        "Для гостя **siz всегда безопасен**. Использовать *sen* не с тем человеком — по-настоящему грубо. Если дружба окрепнет, местные сами с радостью предложат перейти на «ты».",
+        "Есть даже особо почтительное **sizlar** для групп, которых вы уважаете — но siz покрывает всё, что нужно путешественнику."
       ],
       "examples": [
         {
           "uzbek": "Kechirasiz",
           "english": "Excuse me — -siz built right into the word",
+          "russian": "Извините — -siz встроено прямо в слово",
           "breakdown": [
             "Kechira",
             "siz"
@@ -42,11 +57,16 @@
           "gloss": [
             "forgive",
             "you (polite)"
+          ],
+          "glossRu": [
+            "простите",
+            "вы (вежливо)"
           ]
         },
         {
           "uzbek": "Xush kelibsiz",
           "english": "Welcome — the -siz ending marks respect",
+          "russian": "Добро пожаловать — окончание -siz выражает уважение",
           "breakdown": [
             "Xush",
             "kelib",
@@ -56,6 +76,11 @@
             "well",
             "came",
             "you (polite)"
+          ],
+          "glossRu": [
+            "благо",
+            "пришли",
+            "вы (вежливо)"
           ]
         }
       ]
@@ -66,15 +91,20 @@
       "id": "choice-baker",
       "engine": "choice",
       "instruction": "You're buying non from an elderly baker. How do you ask “how are you”?",
+      "instructionRu": "Вы покупаете non у пожилого пекаря. Как спросить «как дела»?",
       "options": [
         {
           "text": "Qalaysiz?",
+          "textRu": "Qalaysiz?",
           "correct": true,
-          "explain": "Elders always get siz — respect is grammar here."
+          "explain": "Elders always get siz — respect is grammar here.",
+          "explainRu": "Старшим всегда говорят siz — уважение здесь заложено в грамматику."
         },
         {
           "text": "Qalaysan?",
-          "explain": "sen to an elder is genuinely rude — like a slap on the back at a funeral."
+          "textRu": "Qalaysan?",
+          "explain": "sen to an elder is genuinely rude — like a slap on the back at a funeral.",
+          "explainRu": "sen старшему — по-настоящему грубо, как хлопок по плечу на похоронах."
         }
       ]
     },
@@ -82,15 +112,20 @@
       "id": "choice-child",
       "engine": "choice",
       "instruction": "A six-year-old proudly shows you her drawing. “You came!” is…",
+      "instructionRu": "Шестилетняя девочка гордо показывает вам свой рисунок. «Ты пришёл!» — это…",
       "options": [
         {
           "text": "Sen kelding!",
+          "textRu": "Sen kelding!",
           "correct": true,
-          "explain": "Children take sen — siz would sound comically formal."
+          "explain": "Children take sen — siz would sound comically formal.",
+          "explainRu": "К детям обращаются на sen — siz прозвучало бы комично официально."
         },
         {
           "text": "Siz keldingiz!",
-          "explain": "Grammatically fine, but oddly stiff for a small child."
+          "textRu": "Siz keldingiz!",
+          "explain": "Grammatically fine, but oddly stiff for a small child.",
+          "explainRu": "Грамматически верно, но странно чопорно по отношению к маленькому ребёнку."
         }
       ]
     },
@@ -98,18 +133,24 @@
       "id": "choice-default",
       "engine": "choice",
       "instruction": "Not sure which to use with your taxi driver?",
+      "instructionRu": "Не уверены, как обратиться к таксисту?",
       "options": [
         {
           "text": "siz — the safe default",
+          "textRu": "siz — безопасный вариант по умолчанию",
           "correct": true,
-          "explain": "When unsure, siz. Nobody was ever offended by too much respect."
+          "explain": "When unsure, siz. Nobody was ever offended by too much respect.",
+          "explainRu": "Если сомневаетесь — siz. Никто ещё не обиделся на излишнее уважение."
         },
         {
           "text": "sen — it's friendlier",
-          "explain": "Friendly to friends; presumptuous to strangers."
+          "textRu": "sen — так дружелюбнее",
+          "explain": "Friendly to friends; presumptuous to strangers.",
+          "explainRu": "Дружелюбно с друзьями, но самонадеянно с незнакомцами."
         }
       ]
     }
   ],
-  "wrapUp": "siz for the world, sen for your inner circle. When unsure: siz, siz, siz."
+  "wrapUp": "siz for the world, sen for your inner circle. When unsure: siz, siz, siz.",
+  "wrapUpRu": "siz — для всего мира, sen — для близкого круга. Если сомневаетесь: siz, siz, siz."
 }

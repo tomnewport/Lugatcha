@@ -4,32 +4,39 @@
     "theme": "police-station",
     "title": {
       "en": "The Lost Phone",
+      "ru": "Потерянный телефон",
       "uz": "Yo'qolgan telefon"
     },
     "sentences": [
       {
         "uzbek": "Kecha telefonim yo'qoldi.",
-        "english": "Yesterday my phone got lost."
+        "english": "Yesterday my phone got lost.",
+        "russian": "Вчера я потерял свой телефон."
       },
       {
         "uzbek": "Men politsiyaga bordim.",
-        "english": "I went to the police."
+        "english": "I went to the police.",
+        "russian": "Я пошёл в полицию."
       },
       {
         "uzbek": "Yosh politsiyachi menga yordam berdi.",
-        "english": "A young police officer helped me."
+        "english": "A young police officer helped me.",
+        "russian": "Молодой полицейский мне помог."
       },
       {
         "uzbek": "Bir kishi telefonimni topdi.",
-        "english": "Someone had found my phone."
+        "english": "Someone had found my phone.",
+        "russian": "Кто-то нашёл мой телефон."
       },
       {
         "uzbek": "U uni politsiyaga olib keldi.",
-        "english": "He had brought it to the police."
+        "english": "He had brought it to the police.",
+        "russian": "Он принёс его в полицию."
       },
       {
         "uzbek": "Odamlar bu yerda juda halol!",
-        "english": "People here are very honest!"
+        "english": "People here are very honest!",
+        "russian": "Люди здесь очень честные!"
       }
     ],
     "glossary": {
@@ -57,6 +64,32 @@
       "halol": "honest",
       "bu": "this",
       "yerda": "at (a place)"
+    },
+    "glossaryRu": {
+      "Kecha": "вчера",
+      "telefonim": "мой телефон",
+      "yo'qoldi": "потерялся",
+      "Men": "я",
+      "politsiyaga": "в полицию",
+      "bordim": "я пошёл",
+      "Yosh": "молодой",
+      "politsiyachi": "полицейский (politsiya + -chi)",
+      "menga": "мне",
+      "yordam": "помощь",
+      "berdi": "дал",
+      "Bir": "один / некий",
+      "kishi": "человек",
+      "telefonimni": "мой телефон (объект)",
+      "topdi": "нашёл",
+      "U": "он / она",
+      "uni": "его (объект)",
+      "olib": "беря (olib keldi = принёс)",
+      "keldi": "пришёл",
+      "Odamlar": "люди",
+      "juda": "очень",
+      "halol": "честный",
+      "bu": "этот",
+      "yerda": "здесь (в месте)"
     }
   },
   {
@@ -64,32 +97,39 @@
     "theme": "police-station",
     "title": {
       "en": "The Closed Road",
+      "ru": "Закрытая дорога",
       "uz": "Yopiq yo'l"
     },
     "sentences": [
       {
         "uzbek": "Bugun katta ko'cha yopiq edi.",
-        "english": "Today the big street was closed."
+        "english": "Today the big street was closed.",
+        "russian": "Сегодня большая улица была закрыта."
       },
       {
         "uzbek": "Bayram bor edi.",
-        "english": "There was a festival."
+        "english": "There was a festival.",
+        "russian": "Был праздник."
       },
       {
         "uzbek": "Politsiyachi menga yo'l ko'rsatdi.",
-        "english": "A police officer showed me the way."
+        "english": "A police officer showed me the way.",
+        "russian": "Полицейский показал мне дорогу."
       },
       {
         "uzbek": "Men boshqa ko'chadan bordim.",
-        "english": "I went by another street."
+        "english": "I went by another street.",
+        "russian": "Я пошёл по другой улице."
       },
       {
         "uzbek": "Yo'lda musiqa eshitdim.",
-        "english": "On the way I heard music."
+        "english": "On the way I heard music.",
+        "russian": "По дороге я услышал музыку."
       },
       {
         "uzbek": "Bayram juda chiroyli edi!",
-        "english": "The festival was very beautiful!"
+        "english": "The festival was very beautiful!",
+        "russian": "Праздник был очень красивым!"
       }
     ],
     "glossary": {
@@ -112,6 +152,27 @@
       "eshitdim": "I heard",
       "juda": "very",
       "chiroyli": "beautiful"
+    },
+    "glossaryRu": {
+      "Bugun": "сегодня",
+      "katta": "большой",
+      "yopiq": "закрытый",
+      "edi": "был",
+      "Bayram": "праздник",
+      "bor": "есть / был",
+      "Politsiyachi": "полицейский",
+      "menga": "мне",
+      "yo'l": "путь / дорога",
+      "ko'rsatdi": "показал",
+      "Men": "я",
+      "boshqa": "другой",
+      "ko'chadan": "по улице (ko'cha + -dan)",
+      "bordim": "я пошёл",
+      "Yo'lda": "по дороге",
+      "musiqa": "музыка",
+      "eshitdim": "я услышал",
+      "juda": "очень",
+      "chiroyli": "красивый"
     }
   }
 ]
