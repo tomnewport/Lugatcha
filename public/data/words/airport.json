@@ -3,6 +3,7 @@
     "id": "airport.passport",
     "uzbek": "pasport",
     "english": "passport",
+    "russian": "паспорт",
     "theme": "airport",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "airport.ticket",
     "uzbek": "chipta",
     "english": "ticket",
+    "russian": "билет",
     "theme": "airport",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "airport.flight",
     "uzbek": "parvoz",
     "english": "flight",
+    "russian": "рейс",
     "theme": "airport",
     "level": 2
   },
@@ -24,6 +27,7 @@
     "id": "airport.luggage",
     "uzbek": "bagaj",
     "english": "luggage",
+    "russian": "багаж",
     "theme": "airport",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "airport.customs",
     "uzbek": "bojxona",
     "english": "customs",
+    "russian": "таможня",
     "theme": "airport",
     "level": 2
   },
@@ -38,6 +43,7 @@
     "id": "airport.departure",
     "uzbek": "jo'nash",
     "english": "departure",
+    "russian": "вылет",
     "theme": "airport",
     "level": 2
   },
@@ -45,6 +51,7 @@
     "id": "airport.arrival",
     "uzbek": "kelish",
     "english": "arrival",
+    "russian": "прилёт",
     "theme": "airport",
     "level": 2
   },
@@ -52,14 +59,17 @@
     "id": "airport.gate",
     "uzbek": "yo'lak",
     "english": "gate",
+    "russian": "выход на посадку",
     "theme": "airport",
     "usageNotes": "Used for a boarding gate at an airport.",
+    "usageNotesRu": "Используется для выхода на посадку в аэропорту.",
     "level": 2
   },
   {
     "id": "airport.visa",
     "uzbek": "viza",
     "english": "visa",
+    "russian": "виза",
     "theme": "airport",
     "level": 2
   },
@@ -67,6 +77,7 @@
     "id": "airport.tourist",
     "uzbek": "turist",
     "english": "tourist",
+    "russian": "турист",
     "theme": "airport",
     "level": 1
   },
@@ -74,6 +85,7 @@
     "id": "airport.boarding-pass",
     "uzbek": "posadka taloni",
     "english": "boarding pass",
+    "russian": "посадочный талон",
     "theme": "airport",
     "level": 2
   },
@@ -81,6 +93,7 @@
     "id": "airport.security",
     "uzbek": "xavfsizlik tekshiruvi",
     "english": "security check",
+    "russian": "досмотр",
     "theme": "airport",
     "level": 3
   },
@@ -88,6 +101,7 @@
     "id": "airport.duty-free",
     "uzbek": "bojsiz do'kon",
     "english": "duty-free shop",
+    "russian": "магазин дьюти-фри",
     "theme": "airport",
     "level": 3
   },
@@ -95,6 +109,7 @@
     "id": "airport.taxi",
     "uzbek": "taksi",
     "english": "taxi",
+    "russian": "такси",
     "theme": "airport",
     "level": 1
   },
@@ -102,6 +117,7 @@
     "id": "airport.exchange",
     "uzbek": "valyuta almashtirish",
     "english": "currency exchange",
+    "russian": "обмен валюты",
     "theme": "airport",
     "level": 2
   }

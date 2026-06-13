@@ -3,9 +3,11 @@
   "order": 7,
   "title": {
     "en": "Do You Have It?",
-    "uz": "Bor va yo'q"
+    "uz": "Bor va yo'q",
+    "ru": "У вас это есть?"
   },
   "blurb": "Uzbek has no “to have” — things simply exist",
+  "blurbRu": "В узбекском нет глагола «иметь» — вещи просто существуют",
   "estimatedMinutes": 2,
   "prerequisites": [
     "school.cases"
@@ -13,14 +15,20 @@
   "sections": [
     {
       "heading": "There is no “to have”",
+      "headingRu": "Нет глагола «иметь»",
       "body": [
         "Uzbek has no verb “to have”. Instead, you say a thing **exists**: **bor** (“there is”) — or doesn't: **yo'q** (“there is not”).",
         "**Mening kitobim bor** — “my book exists” — is how you say *I have a book*. **Vaqtim yo'q** — “my time doesn't exist” — *I have no time*."
+      ],
+      "bodyRu": [
+        "В узбекском нет глагола «иметь». Вместо этого вы говорите, что вещь **существует**: **bor** («есть, имеется») — или не существует: **yo'q** («нет, не имеется»).",
+        "**Mening kitobim bor** — «моя книга существует» — так говорят *у меня есть книга*. **Vaqtim yo'q** — «моё время не существует» — *у меня нет времени*."
       ],
       "examples": [
         {
           "uzbek": "Mening kitobim bor",
           "english": "I have a book (lit. “my book exists”)",
+          "russian": "У меня есть книга (букв. «моя книга существует»)",
           "breakdown": [
             "Mening",
             "kitobim",
@@ -30,11 +38,17 @@
             "my",
             "book-my",
             "exists"
+          ],
+          "glossRu": [
+            "мой",
+            "книга-моя",
+            "существует"
           ]
         },
         {
           "uzbek": "Vaqtim yo'q",
           "english": "I have no time",
+          "russian": "У меня нет времени",
           "breakdown": [
             "Vaqtim",
             "yo'q"
@@ -42,28 +56,40 @@
           "gloss": [
             "time-my",
             "doesn't exist"
+          ],
+          "glossRu": [
+            "время-моё",
+            "не существует"
           ]
         }
       ]
     },
     {
       "heading": "bor and yo'q run the bazaar",
+      "headingRu": "bor и yo'q правят базаром",
       "body": [
         "These two little words are everywhere. Add the question particle **-mi** and you can ask for anything: **Choy bormi?** — is there tea? **Bor!** — there is! **Yo'q** — there isn't.",
         "Ask it at a choyxona, a shop, a ticket office — bormi? works for everything."
       ],
+      "bodyRu": [
+        "Эти два словечка повсюду. Добавьте вопросительную частицу **-mi** — и можно спросить о чём угодно: **Choy bormi?** — есть чай? **Bor!** — есть! **Yo'q** — нет.",
+        "Спрашивайте так в choyxona, в магазине, в кассе — bormi? работает для всего."
+      ],
       "examples": [
         {
           "uzbek": "Choy bormi?",
-          "english": "Is there tea? / Do you have tea?"
+          "english": "Is there tea? / Do you have tea?",
+          "russian": "Есть чай? / У вас есть чай?"
         },
         {
           "uzbek": "Non bormi?",
-          "english": "Is there bread? / Do you have bread?"
+          "english": "Is there bread? / Do you have bread?",
+          "russian": "Есть хлеб? / У вас есть хлеб?"
         },
         {
           "uzbek": "Bilet bormi?",
-          "english": "Are there tickets? / Do you have tickets?"
+          "english": "Are there tickets? / Do you have tickets?",
+          "russian": "Есть билеты? / У вас есть билеты?"
         }
       ]
     }
@@ -73,6 +99,7 @@
       "id": "build-book",
       "engine": "build",
       "instruction": "Say “I have a book”",
+      "instructionRu": "Скажите «у меня есть книга»",
       "tokens": [
         "Mening",
         "kitobim",
@@ -83,25 +110,33 @@
         "edi"
       ],
       "audioText": "Mening kitobim bor",
-      "translation": "I have a book — literally “my book exists”."
+      "translation": "I have a book — literally “my book exists”.",
+      "translationRu": "У меня есть книга — буквально «моя книга существует»."
     },
     {
       "id": "choice-notime",
       "engine": "choice",
       "instruction": "“I have no time” is…",
+      "instructionRu": "«У меня нет времени» — это…",
       "options": [
         {
           "text": "Vaqtim yo'q",
+          "textRu": "Vaqtim yo'q",
           "correct": true,
-          "explain": "My time doesn't exist — yo'q negates existence."
+          "explain": "My time doesn't exist — yo'q negates existence.",
+          "explainRu": "Моё время не существует — yo'q отрицает существование."
         },
         {
           "text": "Vaqtim bor",
-          "explain": "That means you DO have time — bor asserts existence."
+          "textRu": "Vaqtim bor",
+          "explain": "That means you DO have time — bor asserts existence.",
+          "explainRu": "Это значит, что время у вас ЕСТЬ — bor утверждает существование."
         },
         {
           "text": "Men vaqt emas",
-          "explain": "emas negates descriptions (“is not”), not existence — that says “I am not time”!"
+          "textRu": "Men vaqt emas",
+          "explain": "emas negates descriptions (“is not”), not existence — that says “I am not time”!",
+          "explainRu": "emas отрицает описания («не является»), а не существование — это значит «я не время»!"
         }
       ]
     },
@@ -109,22 +144,30 @@
       "id": "choice-bormi",
       "engine": "choice",
       "instruction": "You ask “Choy bormi?” and the choyxona owner beams: “Bor!” That means…",
+      "instructionRu": "Вы спрашиваете «Choy bormi?», и хозяин choyxona сияет: «Bor!» Это значит…",
       "options": [
         {
           "text": "Yes — there is tea",
+          "textRu": "Да — чай есть",
           "correct": true,
-          "explain": "Bor! — it exists. Sit down, the tea is coming."
+          "explain": "Bor! — it exists. Sit down, the tea is coming.",
+          "explainRu": "Bor! — он существует. Садитесь, чай уже несут."
         },
         {
           "text": "No — they've run out",
-          "explain": "That would be yo'q."
+          "textRu": "Нет — он закончился",
+          "explain": "That would be yo'q.",
+          "explainRu": "Это было бы yo'q."
         },
         {
           "text": "Wait a moment",
-          "explain": "bor only ever means “it exists” — good news for you."
+          "textRu": "Подождите минутку",
+          "explain": "bor only ever means “it exists” — good news for you.",
+          "explainRu": "bor всегда означает только «оно существует» — хорошая новость для вас."
         }
       ]
     }
   ],
-  "wrapUp": "Things exist (bor) or they don't (yo'q) — that's how Uzbek “has” anything. Choy bormi? Bor!"
+  "wrapUp": "Things exist (bor) or they don't (yo'q) — that's how Uzbek “has” anything. Choy bormi? Bor!",
+  "wrapUpRu": "Вещи существуют (bor) или нет (yo'q) — вот как узбекский «имеет» что-либо. Choy bormi? Bor!"
 }

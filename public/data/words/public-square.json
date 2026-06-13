@@ -3,6 +3,7 @@
     "id": "public-square.square",
     "uzbek": "maydon",
     "english": "square (in a city)",
+    "russian": "площадь",
     "theme": "public-square",
     "level": 1
   },
@@ -10,30 +11,37 @@
     "id": "public-square.left",
     "uzbek": "chap",
     "english": "left",
+    "russian": "слева / налево",
     "theme": "public-square",
     "level": 1,
-    "usageNotes": "Chap tomonda — on the left side."
+    "usageNotes": "Chap tomonda — on the left side.",
+    "usageNotesRu": "Chap tomonda — с левой стороны."
   },
   {
     "id": "public-square.right",
     "uzbek": "o'ng",
     "english": "right",
+    "russian": "справа / направо",
     "theme": "public-square",
     "level": 1,
-    "usageNotes": "O'ng tomonda — on the right side."
+    "usageNotes": "O'ng tomonda — on the right side.",
+    "usageNotesRu": "O'ng tomonda — с правой стороны."
   },
   {
     "id": "public-square.straight",
     "uzbek": "to'g'ri",
     "english": "straight / correct",
+    "russian": "прямо / правильно",
     "theme": "public-square",
     "level": 1,
-    "usageNotes": "To'g'riga yuring — go straight ahead."
+    "usageNotes": "To'g'riga yuring — go straight ahead.",
+    "usageNotesRu": "To'g'riga yuring — идите прямо."
   },
   {
     "id": "public-square.near",
     "uzbek": "yaqin",
     "english": "near",
+    "russian": "близко",
     "theme": "public-square",
     "level": 1
   },
@@ -41,6 +49,7 @@
     "id": "public-square.far",
     "uzbek": "uzoq",
     "english": "far",
+    "russian": "далеко",
     "theme": "public-square",
     "level": 1
   },
@@ -48,6 +57,7 @@
     "id": "public-square.bazaar",
     "uzbek": "bozor",
     "english": "bazaar / market",
+    "russian": "базар / рынок",
     "theme": "public-square",
     "level": 1
   },
@@ -55,6 +65,7 @@
     "id": "public-square.map",
     "uzbek": "xarita",
     "english": "map",
+    "russian": "карта",
     "theme": "public-square",
     "level": 2
   },
@@ -62,6 +73,7 @@
     "id": "public-square.fountain",
     "uzbek": "favvora",
     "english": "fountain",
+    "russian": "фонтан",
     "theme": "public-square",
     "level": 2
   },
@@ -69,6 +81,7 @@
     "id": "public-square.statue",
     "uzbek": "haykal",
     "english": "statue",
+    "russian": "статуя",
     "theme": "public-square",
     "level": 2
   },
@@ -76,6 +89,7 @@
     "id": "public-square.mosque",
     "uzbek": "masjid",
     "english": "mosque",
+    "russian": "мечеть",
     "theme": "public-square",
     "level": 2
   },
@@ -83,6 +97,7 @@
     "id": "public-square.side",
     "uzbek": "tomon",
     "english": "side / direction",
+    "russian": "сторона / направление",
     "theme": "public-square",
     "level": 2
   },
@@ -90,6 +105,7 @@
     "id": "public-square.corner",
     "uzbek": "burchak",
     "english": "corner",
+    "russian": "угол",
     "theme": "public-square",
     "level": 3
   }

@@ -5,6 +5,7 @@ import { loadLesson } from '@/db/lessons'
 import { useProgressStore } from '@/stores/progress'
 import { db } from '@/db'
 import type { Lesson, LessonExercise, LessonSection } from '@/db/types'
+import { useContentLang } from '@/i18n/content'
 import LessonSectionCard from '@/components/school/LessonSectionCard.vue'
 import ChoiceExercise from '@/components/school/ChoiceExercise.vue'
 import BuildExercise from '@/components/school/BuildExercise.vue'
@@ -12,6 +13,7 @@ import BuildExercise from '@/components/school/BuildExercise.vue'
 const route = useRoute()
 const router = useRouter()
 const progressStore = useProgressStore()
+const { name, pick } = useContentLang()
 
 const lesson = ref<Lesson | null>(null)
 const stepIndex = ref(0)
@@ -80,7 +82,7 @@ async function finishLesson() {
 <template>
   <div class="lesson">
     <header class="lesson-header">
-      <button class="exit-btn" aria-label="Back" type="button" @click="back">
+      <button class="exit-btn" :aria-label="$t('common.back')" type="button" @click="back">
         <svg
           viewBox="0 0 16 16"
           fill="none"
@@ -92,14 +94,14 @@ async function finishLesson() {
         </svg>
       </button>
       <div class="lesson-header__titles">
-        <span class="lesson-header__school">Language School</span>
-        <h1 class="lesson-header__title">{{ lesson?.title.en ?? 'Lesson' }}</h1>
+        <span class="lesson-header__school">{{ $t('lesson.breadcrumb') }}</span>
+        <h1 class="lesson-header__title">{{ lesson ? name(lesson.title) : $t('lesson.fallbackTitle') }}</h1>
       </div>
       <div
         v-if="steps.length"
         class="lesson-dots"
         role="img"
-        :aria-label="`Step ${stepIndex + 1} of ${steps.length}`"
+        :aria-label="$t('lesson.step', { current: stepIndex + 1, total: steps.length })"
       >
         <span
           v-for="(step, i) in steps"
@@ -116,12 +118,12 @@ async function finishLesson() {
 
     <div class="lesson-body">
       <p v-if="missing" class="lesson-loading">
-        Lesson not found.
+        {{ $t('lesson.notFound') }}
         <button class="btn btn--ghost" type="button" @click="router.push('/school')">
-          Back to the School
+          {{ $t('lesson.backToSchool') }}
         </button>
       </p>
-      <p v-else-if="!lesson" class="lesson-loading" aria-live="polite">Loading lesson…</p>
+      <p v-else-if="!lesson" class="lesson-loading" aria-live="polite">{{ $t('lesson.loading') }}</p>
 
       <template v-else-if="current">
         <LessonSectionCard
@@ -146,10 +148,10 @@ async function finishLesson() {
 
         <div v-else class="wrapup">
           <span class="wrapup__emoji" aria-hidden="true">🎓</span>
-          <h2 class="wrapup__title">You've got it!</h2>
-          <p class="wrapup__text">{{ lesson.wrapUp }}</p>
+          <h2 class="wrapup__title">{{ $t('lesson.gotIt') }}</h2>
+          <p class="wrapup__text">{{ pick(lesson.wrapUp, lesson.wrapUpRu) }}</p>
           <button class="btn btn--gold" type="button" @click="finishLesson">
-            Mark lesson complete
+            {{ $t('lesson.markComplete') }}
           </button>
         </div>
       </template>
@@ -157,7 +159,7 @@ async function finishLesson() {
 
     <footer v-if="lesson && current?.kind === 'section'" class="lesson-footer">
       <button class="btn btn--primary" type="button" @click="next">
-        {{ steps[stepIndex + 1]?.kind === 'exercise' ? 'Try it out' : 'Next' }}
+        {{ steps[stepIndex + 1]?.kind === 'exercise' ? $t('lesson.tryIt') : $t('common.next') }}
       </button>
     </footer>
   </div>

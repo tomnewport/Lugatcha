@@ -4,32 +4,39 @@
     "theme": "train-station",
     "title": {
       "en": "The Train to Samarkand",
+      "ru": "Поезд в Самарканд",
       "uz": "Samarqand poyezdi"
     },
     "sentences": [
       {
         "uzbek": "Ertalab men vokzalga bordim.",
-        "english": "In the morning I went to the station."
+        "english": "In the morning I went to the station.",
+        "russian": "Утром я пошёл на вокзал."
       },
       {
         "uzbek": "Tezyurar poyezd perronda turardi.",
-        "english": "The fast train was standing at the platform."
+        "english": "The fast train was standing at the platform.",
+        "russian": "Скоростной поезд стоял на перроне."
       },
       {
         "uzbek": "Men deraza yonida o'tirdim.",
-        "english": "I sat by the window."
+        "english": "I sat by the window.",
+        "russian": "Я сел у окна."
       },
       {
         "uzbek": "Poyezd tez va qulay edi.",
-        "english": "The train was fast and comfortable."
+        "english": "The train was fast and comfortable.",
+        "russian": "Поезд был быстрым и удобным."
       },
       {
         "uzbek": "Tashqarida cho'l va tog'lar edi.",
-        "english": "Outside were desert and mountains."
+        "english": "Outside were desert and mountains.",
+        "russian": "Снаружи были пустыня и горы."
       },
       {
         "uzbek": "Ikki soatda Samarqandga keldim.",
-        "english": "In two hours I arrived in Samarkand."
+        "english": "In two hours I arrived in Samarkand.",
+        "russian": "Через два часа я прибыл в Самарканд."
       }
     ],
     "glossary": {
@@ -55,6 +62,30 @@
       "Samarqandga": "to Samarkand",
       "keldim": "I arrived",
       "va": "and"
+    },
+    "glossaryRu": {
+      "Ertalab": "утром",
+      "men": "я",
+      "vokzalga": "на вокзал",
+      "bordim": "я пошёл",
+      "Tezyurar": "скоростной",
+      "poyezd": "поезд",
+      "perronda": "на перроне",
+      "turardi": "стоял",
+      "deraza": "окно",
+      "yonida": "рядом с / у",
+      "o'tirdim": "я сел",
+      "tez": "быстрый",
+      "qulay": "удобный",
+      "edi": "был",
+      "Tashqarida": "снаружи",
+      "cho'l": "пустыня",
+      "tog'lar": "горы",
+      "Ikki": "два",
+      "soatda": "через (столько-то) часов",
+      "Samarqandga": "в Самарканд",
+      "keldim": "я прибыл",
+      "va": "и"
     }
   },
   {
@@ -62,32 +93,39 @@
     "theme": "train-station",
     "title": {
       "en": "A Seat by the Window",
+      "ru": "Место у окна",
       "uz": "Deraza yonidagi joy"
     },
     "sentences": [
       {
         "uzbek": "Poyezdda mening joyim band edi.",
-        "english": "On the train my seat was taken."
+        "english": "On the train my seat was taken.",
+        "russian": "В поезде моё место было занято."
       },
       {
         "uzbek": "Bir keksa odam u yerda o'tirardi.",
-        "english": "An old man was sitting there."
+        "english": "An old man was sitting there.",
+        "russian": "Там сидел один пожилой человек."
       },
       {
         "uzbek": "Men unga chiptamni ko'rsatdim.",
-        "english": "I showed him my ticket."
+        "english": "I showed him my ticket.",
+        "russian": "Я показал ему свой билет."
       },
       {
         "uzbek": "U kuldi va kechirim so'radi.",
-        "english": "He smiled and apologised."
+        "english": "He smiled and apologised.",
+        "russian": "Он улыбнулся и извинился."
       },
       {
         "uzbek": "Biz birga choy ichdik va gaplashdik.",
-        "english": "We drank tea together and talked."
+        "english": "We drank tea together and talked.",
+        "russian": "Мы вместе пили чай и разговаривали."
       },
       {
         "uzbek": "Yo'l qisqa va yoqimli bo'ldi.",
-        "english": "The journey became short and pleasant."
+        "english": "The journey became short and pleasant.",
+        "russian": "Путь оказался коротким и приятным."
       }
     ],
     "glossary": {
@@ -119,6 +157,36 @@
       "bo'ldi": "became",
       "va": "and",
       "yerda": "at / in (a place)"
+    },
+    "glossaryRu": {
+      "Poyezdda": "в поезде",
+      "mening": "мой",
+      "joyim": "моё место",
+      "band": "занято / занят",
+      "edi": "был",
+      "Bir": "один / некий",
+      "keksa": "пожилой (о человеке)",
+      "odam": "человек / мужчина",
+      "o'tirardi": "сидел",
+      "Men": "я",
+      "unga": "ему",
+      "chiptamni": "мой билет (объект)",
+      "ko'rsatdim": "я показал",
+      "U": "он",
+      "kuldi": "улыбнулся",
+      "kechirim": "извинение (kechirim so'radi = извинился)",
+      "so'radi": "попросил",
+      "Biz": "мы",
+      "birga": "вместе",
+      "choy": "чай",
+      "ichdik": "мы пили",
+      "gaplashdik": "мы разговаривали",
+      "Yo'l": "путь / дорога",
+      "qisqa": "короткий",
+      "yoqimli": "приятный",
+      "bo'ldi": "стал",
+      "va": "и",
+      "yerda": "там / в (месте)"
     }
   }
 ]

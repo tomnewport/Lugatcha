@@ -3,6 +3,7 @@
     "id": "hotel.room",
     "uzbek": "xona",
     "english": "room",
+    "russian": "номер",
     "theme": "hotel",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "hotel.reservation",
     "uzbek": "bron",
     "english": "reservation",
+    "russian": "бронь",
     "theme": "hotel",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "hotel.check-in",
     "uzbek": "ro'yxatga olish",
     "english": "check-in",
+    "russian": "регистрация заезда",
     "theme": "hotel",
     "level": 2
   },
@@ -24,6 +27,7 @@
     "id": "hotel.key",
     "uzbek": "kalit",
     "english": "key",
+    "russian": "ключ",
     "theme": "hotel",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "hotel.floor",
     "uzbek": "qavat",
     "english": "floor / storey",
+    "russian": "этаж",
     "theme": "hotel",
     "level": 2
   },
@@ -38,6 +43,7 @@
     "id": "hotel.elevator",
     "uzbek": "lift",
     "english": "elevator / lift",
+    "russian": "лифт",
     "theme": "hotel",
     "level": 3
   },
@@ -45,6 +51,7 @@
     "id": "hotel.breakfast",
     "uzbek": "nonushta",
     "english": "breakfast",
+    "russian": "завтрак",
     "theme": "hotel",
     "level": 1
   },
@@ -52,6 +59,7 @@
     "id": "hotel.towel",
     "uzbek": "sochiq",
     "english": "towel",
+    "russian": "полотенце",
     "theme": "hotel",
     "level": 2
   },
@@ -59,6 +67,7 @@
     "id": "hotel.pillow",
     "uzbek": "yostiq",
     "english": "pillow",
+    "russian": "подушка",
     "theme": "hotel",
     "level": 3
   },
@@ -66,6 +75,7 @@
     "id": "hotel.price",
     "uzbek": "narx",
     "english": "price",
+    "russian": "цена",
     "theme": "hotel",
     "level": 1
   },
@@ -73,6 +83,7 @@
     "id": "hotel.night",
     "uzbek": "tun",
     "english": "night",
+    "russian": "ночь",
     "theme": "hotel",
     "level": 2
   },
@@ -80,6 +91,7 @@
     "id": "hotel.bathroom",
     "uzbek": "hammom",
     "english": "bathroom",
+    "russian": "ванная",
     "theme": "hotel",
     "level": 2
   },
@@ -87,6 +99,7 @@
     "id": "hotel.hot-water",
     "uzbek": "issiq suv",
     "english": "hot water",
+    "russian": "горячая вода",
     "theme": "hotel",
     "level": 2
   },
@@ -94,6 +107,7 @@
     "id": "hotel.wifi",
     "uzbek": "wifi",
     "english": "wi-fi",
+    "russian": "вай-фай",
     "theme": "hotel",
     "level": 2
   },
@@ -101,6 +115,7 @@
     "id": "hotel.single-room",
     "uzbek": "bir kishilik xona",
     "english": "single room",
+    "russian": "одноместный номер",
     "theme": "hotel",
     "level": 2
   },
@@ -108,6 +123,7 @@
     "id": "hotel.double-room",
     "uzbek": "ikki kishilik xona",
     "english": "double room",
+    "russian": "двухместный номер",
     "theme": "hotel",
     "level": 2
   }

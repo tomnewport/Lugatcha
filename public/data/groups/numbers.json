@@ -3,22 +3,30 @@
   "order": 1,
   "title": {
     "en": "Numbers",
-    "uz": "Sonlar"
+    "uz": "Sonlar",
+    "ru": "Числа"
   },
   "icon": "🔢",
   "blurb": "Count to a thousand with a dozen building blocks",
+  "blurbRu": "Считайте до тысячи с помощью десятка строительных блоков",
   "quiz": "counting",
   "article": [
     {
       "heading": "Numbers that play fair",
+      "headingRu": "Числа, которые играют честно",
       "body": [
         "If you have ever fought with French *quatre-vingt-dix* or German *einundzwanzig*, Uzbek numbers will feel like a holiday. They are **completely regular** — no special words for eleven or twelve, no swapping the order of the digits. Learn the units, the tens, plus **yuz** (hundred) and **ming** (thousand), and you can say every number up to 9,999.",
         "The rule is simply: say the parts **biggest first**, in a row, with a space between them. No joining words, no exceptions."
+      ],
+      "bodyRu": [
+        "Если вы когда-нибудь мучились с французским *quatre-vingt-dix* или немецким *einundzwanzig*, узбекские числа покажутся вам праздником. Они **совершенно регулярны** — нет особых слов для одиннадцати или двенадцати, нет перестановки порядка цифр. Выучите единицы, десятки, плюс **yuz** (сто) и **ming** (тысяча) — и вы сможете назвать любое число до 9 999.",
+        "Правило простое: называйте части **от большего к меньшему**, подряд, с пробелом между ними. Никаких соединительных слов, никаких исключений."
       ],
       "examples": [
         {
           "uzbek": "o'n besh",
           "english": "fifteen (ten + five)",
+          "russian": "пятнадцать (десять + пять)",
           "breakdown": [
             "o'n",
             "besh"
@@ -26,11 +34,16 @@
           "gloss": [
             "ten",
             "five"
+          ],
+          "glossRu": [
+            "десять",
+            "пять"
           ]
         },
         {
           "uzbek": "yigirma bir",
           "english": "twenty-one (twenty + one)",
+          "russian": "двадцать один (двадцать + один)",
           "breakdown": [
             "yigirma",
             "bir"
@@ -38,20 +51,30 @@
           "gloss": [
             "twenty",
             "one"
+          ],
+          "glossRu": [
+            "двадцать",
+            "один"
           ]
         }
       ]
     },
     {
       "heading": "The tens, then hundreds and thousands",
+      "headingRu": "Десятки, затем сотни и тысячи",
       "body": [
         "The tens each have their own word: **yigirma** 20, **o'ttiz** 30, **qirq** 40, **ellik** 50, **oltmish** 60, **yetmish** 70, **sakson** 80, **to'qson** 90. After that it is just **yuz** (100) and **ming** (1,000).",
         "One handy quirk: a lone hundred or thousand drops the **bir**. 100 is just **yuz**, not *bir yuz*; 1,000 is just **ming**. But 200 is **ikki yuz** and 2,000 is **ikki ming**."
+      ],
+      "bodyRu": [
+        "У каждого десятка своё слово: **yigirma** 20, **o'ttiz** 30, **qirq** 40, **ellik** 50, **oltmish** 60, **yetmish** 70, **sakson** 80, **to'qson** 90. После этого остаются только **yuz** (100) и **ming** (1 000).",
+        "Одна удобная особенность: одинокая сотня или тысяча опускает **bir**. 100 — это просто **yuz**, а не *bir yuz*; 1 000 — это просто **ming**. Но 200 — это **ikki yuz**, а 2 000 — это **ikki ming**."
       ],
       "examples": [
         {
           "uzbek": "ikki yuz qirq besh",
           "english": "245 (two hundred forty-five)",
+          "russian": "245 (двести сорок пять)",
           "breakdown": [
             "ikki",
             "yuz",
@@ -63,11 +86,18 @@
             "hundred",
             "forty",
             "five"
+          ],
+          "glossRu": [
+            "два",
+            "сто",
+            "сорок",
+            "пять"
           ]
         },
         {
           "uzbek": "o'n ming so'm",
           "english": "10,000 som — a common banknote",
+          "russian": "10 000 сумов — распространённая банкнота",
           "breakdown": [
             "o'n",
             "ming",
@@ -77,14 +107,23 @@
             "ten",
             "thousand",
             "som"
+          ],
+          "glossRu": [
+            "десять",
+            "тысяча",
+            "сум"
           ]
         }
       ]
     },
     {
       "heading": "Why it matters",
+      "headingRu": "Почему это важно",
       "body": [
         "Prices in Uzbekistan run into the thousands of som, so the words **ming** and **yuz** do a lot of heavy lifting at the bazaar. Get comfortable hearing *o'ttiz ming* (30,000) and *ellik ming* (50,000) and haggling gets a great deal easier."
+      ],
+      "bodyRu": [
+        "Цены в Узбекистане доходят до тысяч сумов, поэтому слова **ming** и **yuz** выполняют большую работу на базаре. Привыкните слышать *o'ttiz ming* (30 000) и *ellik ming* (50 000) — и торговаться станет намного легче."
       ]
     }
   ],
@@ -93,6 +132,7 @@
       "id": "core.zero",
       "uzbek": "nol",
       "english": "zero",
+      "russian": "ноль",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -101,6 +141,7 @@
       "id": "core.one",
       "uzbek": "bir",
       "english": "one",
+      "russian": "один",
       "theme": "core",
       "group": "numbers",
       "level": 1
@@ -109,6 +150,7 @@
       "id": "core.two",
       "uzbek": "ikki",
       "english": "two",
+      "russian": "два",
       "theme": "core",
       "group": "numbers",
       "level": 1
@@ -117,6 +159,7 @@
       "id": "core.three",
       "uzbek": "uch",
       "english": "three",
+      "russian": "три",
       "theme": "core",
       "group": "numbers",
       "level": 1
@@ -125,6 +168,7 @@
       "id": "core.four",
       "uzbek": "to'rt",
       "english": "four",
+      "russian": "четыре",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -133,6 +177,7 @@
       "id": "core.five",
       "uzbek": "besh",
       "english": "five",
+      "russian": "пять",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -141,6 +186,7 @@
       "id": "core.six",
       "uzbek": "olti",
       "english": "six",
+      "russian": "шесть",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -149,6 +195,7 @@
       "id": "core.seven",
       "uzbek": "yetti",
       "english": "seven",
+      "russian": "семь",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -157,6 +204,7 @@
       "id": "core.eight",
       "uzbek": "sakkiz",
       "english": "eight",
+      "russian": "восемь",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -165,6 +213,7 @@
       "id": "core.nine",
       "uzbek": "to'qqiz",
       "english": "nine",
+      "russian": "девять",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -173,6 +222,7 @@
       "id": "core.ten",
       "uzbek": "o'n",
       "english": "ten",
+      "russian": "десять",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -181,6 +231,7 @@
       "id": "core.twenty",
       "uzbek": "yigirma",
       "english": "twenty",
+      "russian": "двадцать",
       "theme": "core",
       "group": "numbers",
       "level": 3
@@ -189,6 +240,7 @@
       "id": "core.thirty",
       "uzbek": "o'ttiz",
       "english": "thirty",
+      "russian": "тридцать",
       "theme": "core",
       "group": "numbers",
       "level": 3
@@ -197,6 +249,7 @@
       "id": "core.forty",
       "uzbek": "qirq",
       "english": "forty",
+      "russian": "сорок",
       "theme": "core",
       "group": "numbers",
       "level": 3
@@ -205,6 +258,7 @@
       "id": "core.fifty",
       "uzbek": "ellik",
       "english": "fifty",
+      "russian": "пятьдесят",
       "theme": "core",
       "group": "numbers",
       "level": 3
@@ -213,6 +267,7 @@
       "id": "core.hundred",
       "uzbek": "yuz",
       "english": "hundred",
+      "russian": "сто",
       "theme": "core",
       "group": "numbers",
       "level": 2
@@ -221,6 +276,7 @@
       "id": "core.thousand",
       "uzbek": "ming",
       "english": "thousand",
+      "russian": "тысяча",
       "theme": "core",
       "group": "numbers",
       "level": 2

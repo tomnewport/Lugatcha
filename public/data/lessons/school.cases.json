@@ -3,9 +3,11 @@
   "order": 3,
   "title": {
     "en": "To, At, From",
-    "uz": "Kelishiklar"
+    "uz": "Kelishiklar",
+    "ru": "В, у, из"
   },
   "blurb": "Three endings that replace all your prepositions",
+  "blurbRu": "Три окончания, заменяющие все ваши предлоги",
   "estimatedMinutes": 3,
   "prerequisites": [
     "school.suffixes"
@@ -13,13 +15,18 @@
   "sections": [
     {
       "heading": "Cases do what prepositions do",
+      "headingRu": "Падежи делают то же, что и предлоги",
       "body": [
         "Where English puts little words **before** a noun — to the house, at the house, from the house — Uzbek clips an ending **onto** the noun. These endings are called **cases**, and three of them will carry you through your whole trip."
+      ],
+      "bodyRu": [
+        "Там, где английский ставит маленькие слова **перед** существительным — to the house, at the house, from the house — узбекский прикрепляет окончание **к** существительному. Эти окончания называются **падежами**, и трёх из них хватит на всю вашу поездку."
       ],
       "examples": [
         {
           "uzbek": "uyga",
           "english": "to the house",
+          "russian": "к дому",
           "breakdown": [
             "uy",
             "ga"
@@ -27,11 +34,16 @@
           "gloss": [
             "house",
             "to"
+          ],
+          "glossRu": [
+            "дом",
+            "к"
           ]
         },
         {
           "uzbek": "uyda",
           "english": "at the house",
+          "russian": "в доме",
           "breakdown": [
             "uy",
             "da"
@@ -39,11 +51,16 @@
           "gloss": [
             "house",
             "at"
+          ],
+          "glossRu": [
+            "дом",
+            "в"
           ]
         },
         {
           "uzbek": "uydan",
           "english": "from the house",
+          "russian": "из дома",
           "breakdown": [
             "uy",
             "dan"
@@ -51,20 +68,30 @@
           "gloss": [
             "house",
             "from"
+          ],
+          "glossRu": [
+            "дом",
+            "из"
           ]
         }
       ]
     },
     {
       "heading": "The big three for travellers",
+      "headingRu": "Большая тройка для путешественников",
       "body": [
         "**-ga** goes: Toshkentga — to Tashkent. **-da** stays: mehmonxonada — at the hotel. **-dan** departs: Samarqanddan — from Samarkand.",
         "There are six cases in all — **-ni** marks a definite object, **-ning** means “of” — but -ga, -da and -dan are the daily workhorses."
+      ],
+      "bodyRu": [
+        "**-ga** направляет: Toshkentga — в Ташкент. **-da** оставляет на месте: mehmonxonada — в гостинице. **-dan** отправляет прочь: Samarqanddan — из Самарканда.",
+        "Всего падежей шесть — **-ni** отмечает определённое дополнение, **-ning** означает «чей-то» — но -ga, -da и -dan и есть повседневные рабочие лошадки."
       ],
       "examples": [
         {
           "uzbek": "Toshkentga",
           "english": "to Tashkent",
+          "russian": "в Ташкент",
           "breakdown": [
             "Toshkent",
             "ga"
@@ -72,11 +99,16 @@
           "gloss": [
             "Tashkent",
             "to"
+          ],
+          "glossRu": [
+            "Ташкент",
+            "в"
           ]
         },
         {
           "uzbek": "mehmonxonada",
           "english": "at the hotel",
+          "russian": "в гостинице",
           "breakdown": [
             "mehmonxona",
             "da"
@@ -84,11 +116,16 @@
           "gloss": [
             "hotel",
             "at"
+          ],
+          "glossRu": [
+            "гостиница",
+            "в"
           ]
         },
         {
           "uzbek": "Samarqanddan",
           "english": "from Samarkand",
+          "russian": "из Самарканда",
           "breakdown": [
             "Samarqand",
             "dan"
@@ -96,6 +133,10 @@
           "gloss": [
             "Samarkand",
             "from"
+          ],
+          "glossRu": [
+            "Самарканд",
+            "из"
           ]
         }
       ]
@@ -106,20 +147,28 @@
       "id": "choice-toga",
       "engine": "choice",
       "instruction": "Pick the right form of uy (house):",
+      "instructionRu": "Выберите правильную форму слова uy (дом):",
       "prompt": "“to the house”",
+      "promptRu": "«к дому»",
       "options": [
         {
           "text": "uyga",
+          "textRu": "uyga",
           "correct": true,
-          "explain": "-ga points the way: to, towards."
+          "explain": "-ga points the way: to, towards.",
+          "explainRu": "-ga указывает направление: к, в сторону."
         },
         {
           "text": "uyda",
-          "explain": "-da means at or in — staying, not going."
+          "textRu": "uyda",
+          "explain": "-da means at or in — staying, not going.",
+          "explainRu": "-da означает «в» или «у» — пребывание, а не движение."
         },
         {
           "text": "uydan",
-          "explain": "-dan means from — the opposite direction!"
+          "textRu": "uydan",
+          "explain": "-dan means from — the opposite direction!",
+          "explainRu": "-dan означает «из» — противоположное направление!"
         }
       ]
     },
@@ -127,19 +176,26 @@
       "id": "choice-fromtash",
       "engine": "choice",
       "instruction": "Complete it: Men Toshkent___ kelaman — “I come FROM Tashkent”",
+      "instructionRu": "Дополните: Men Toshkent___ kelaman — «Я приезжаю ИЗ Ташкента»",
       "options": [
         {
           "text": "Toshkentdan",
+          "textRu": "Toshkentdan",
           "correct": true,
-          "explain": "-dan departs: from Tashkent."
+          "explain": "-dan departs: from Tashkent.",
+          "explainRu": "-dan отправляет прочь: из Ташкента."
         },
         {
           "text": "Toshkentga",
-          "explain": "-ga would mean you're coming TO Tashkent."
+          "textRu": "Toshkentga",
+          "explain": "-ga would mean you're coming TO Tashkent.",
+          "explainRu": "-ga означало бы, что вы едете В Ташкент."
         },
         {
           "text": "Toshkentda",
-          "explain": "-da would leave you sitting IN Tashkent."
+          "textRu": "Toshkentda",
+          "explain": "-da would leave you sitting IN Tashkent.",
+          "explainRu": "-da оставило бы вас сидеть В Ташкенте."
         }
       ]
     },
@@ -147,20 +203,28 @@
       "id": "choice-athotel",
       "engine": "choice",
       "instruction": "Pick the right ending:",
+      "instructionRu": "Выберите правильное окончание:",
       "prompt": "“at the hotel”",
+      "promptRu": "«в гостинице»",
       "options": [
         {
           "text": "mehmonxonada",
+          "textRu": "mehmonxonada",
           "correct": true,
-          "explain": "-da stays: at, in, on."
+          "explain": "-da stays: at, in, on.",
+          "explainRu": "-da оставляет на месте: в, у, на."
         },
         {
           "text": "mehmonxonaga",
-          "explain": "That's TO the hotel."
+          "textRu": "mehmonxonaga",
+          "explain": "That's TO the hotel.",
+          "explainRu": "Это «В гостиницу» (направление)."
         },
         {
           "text": "mehmonxonadan",
-          "explain": "That's FROM the hotel."
+          "textRu": "mehmonxonadan",
+          "explain": "That's FROM the hotel.",
+          "explainRu": "Это «ИЗ гостиницы»."
         }
       ]
     },
@@ -168,6 +232,7 @@
       "id": "build-totash",
       "engine": "build",
       "instruction": "Build the sentence: “I am going to Tashkent”",
+      "instructionRu": "Постройте предложение: «Я еду в Ташкент»",
       "tokens": [
         "Men",
         "Toshkentga",
@@ -178,8 +243,10 @@
         "uyda"
       ],
       "audioText": "Men Toshkentga boraman",
-      "translation": "I am going to Tashkent."
+      "translation": "I am going to Tashkent.",
+      "translationRu": "Я еду в Ташкент."
     }
   ],
-  "wrapUp": "-ga goes, -da stays, -dan departs. Clip the right ending onto the noun and you never need a preposition."
+  "wrapUp": "-ga goes, -da stays, -dan departs. Clip the right ending onto the noun and you never need a preposition.",
+  "wrapUpRu": "-ga направляет, -da оставляет на месте, -dan отправляет прочь. Прикрепите нужное окончание к существительному — и предлог вам больше не понадобится."
 }

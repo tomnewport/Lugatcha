@@ -3,6 +3,7 @@
     "id": "bukhara.shahar",
     "uzbek": "shahar",
     "english": "city",
+    "russian": "город",
     "theme": "bukhara",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "bukhara.baland",
     "uzbek": "baland",
     "english": "tall",
+    "russian": "высокий",
     "theme": "bukhara",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "bukhara.savdogar",
     "uzbek": "savdogar",
     "english": "merchant",
+    "russian": "торговец",
     "theme": "bukhara",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "bukhara.choy",
     "uzbek": "choy",
     "english": "tea",
+    "russian": "чай",
     "theme": "bukhara",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "bukhara.masjid",
     "uzbek": "masjid",
     "english": "mosque",
+    "russian": "мечеть",
     "theme": "bukhara",
     "level": 1
   },
@@ -38,6 +43,7 @@
     "id": "bukhara.bozor",
     "uzbek": "bozor",
     "english": "bazaar",
+    "russian": "базар",
     "theme": "bukhara",
     "level": 1
   },
@@ -45,6 +51,7 @@
     "id": "bukhara.kohna",
     "uzbek": "koʻhna",
     "english": "old",
+    "russian": "старинный",
     "theme": "bukhara",
     "level": 2
   },
@@ -52,6 +59,7 @@
     "id": "bukhara.karvon",
     "uzbek": "karvon",
     "english": "caravan",
+    "russian": "караван",
     "theme": "bukhara",
     "level": 2
   },
@@ -59,6 +67,7 @@
     "id": "bukhara.amir",
     "uzbek": "amir",
     "english": "emir",
+    "russian": "эмир",
     "theme": "bukhara",
     "level": 2
   },
@@ -66,6 +75,7 @@
     "id": "bukhara.tarix",
     "uzbek": "tarix",
     "english": "history",
+    "russian": "история",
     "theme": "bukhara",
     "level": 2
   },
@@ -73,6 +83,7 @@
     "id": "bukhara.qadimiy",
     "uzbek": "qadimiy",
     "english": "ancient",
+    "russian": "древний",
     "theme": "bukhara",
     "level": 2
   }

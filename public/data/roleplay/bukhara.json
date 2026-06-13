@@ -4,23 +4,27 @@
     "theme": "bukhara",
     "title": {
       "en": "In the Old Bazaar",
-      "uz": "Eski bozorda"
+      "ru": "На старом базаре"
     },
     "scenario": "You browse the trading domes of Bukhara, where carpets and crafts are sold.",
+    "scenarioRu": "Вы прогуливаетесь по торговым куполам Бухары, где продают ковры и изделия ремесленников.",
     "variants": [
       {
         "id": "bukhara.old-bazaar.base",
         "description": "Looking at carpets",
+        "descriptionRu": "Разглядываете ковры",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Salom! Gilamlarni koʻring.",
-            "english": "Hello! Have a look at the carpets."
+            "english": "Hello! Have a look at the carpets.",
+            "russian": "Здравствуйте! Посмотрите ковры."
           },
           {
             "speaker": "user",
             "uzbek": "Bu gilam chiroyli ekan.",
             "english": "This carpet is lovely.",
+            "russian": "Этот ковёр очень красивый.",
             "tokens": [
               "Bu",
               "gilam",
@@ -31,12 +35,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qoʻlda toʻqilgan.",
-            "english": "It is handwoven."
+            "english": "It is handwoven.",
+            "russian": "Он соткан вручную."
           },
           {
             "speaker": "user",
             "uzbek": "Narxi qancha?",
             "english": "What is the price?",
+            "russian": "Сколько он стоит?",
             "tokens": [
               "Narxi",
               "qancha?"
@@ -47,11 +53,13 @@
       {
         "id": "bukhara.old-bazaar.tea",
         "description": "Resting by the pool",
+        "descriptionRu": "Отдых у водоёма",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bir choy, iltimos.",
             "english": "One tea, please.",
+            "russian": "Один чай, пожалуйста.",
             "tokens": [
               "Bir",
               "choy,",
@@ -61,12 +69,14 @@
           {
             "speaker": "npc",
             "uzbek": "Qora yoki koʻkmi?",
-            "english": "Black or green?"
+            "english": "Black or green?",
+            "russian": "Чёрный или зелёный?"
           },
           {
             "speaker": "user",
             "uzbek": "Koʻk choy, rahmat.",
             "english": "Green tea, thank you.",
+            "russian": "Зелёный чай, спасибо.",
             "tokens": [
               "Koʻk",
               "choy,",
@@ -78,11 +88,13 @@
       {
         "id": "bukhara.old-bazaar.minaret",
         "description": "Asking about the minaret",
+        "descriptionRu": "Расспрашиваете о минарете",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu minora juda baland.",
             "english": "This minaret is very tall.",
+            "russian": "Этот минарет очень высокий.",
             "tokens": [
               "Bu",
               "minora",
@@ -93,12 +105,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, u Kalon minorasi.",
-            "english": "Yes, it is the Kalon minaret."
+            "english": "Yes, it is the Kalon minaret.",
+            "russian": "Да, это минарет Калян."
           },
           {
             "speaker": "user",
             "uzbek": "Ajoyib!",
             "english": "Wonderful!",
+            "russian": "Великолепно!",
             "tokens": [
               "Ajoyib!"
             ]
@@ -108,16 +122,19 @@
       {
         "id": "bukhara.old-bazaar.bargain",
         "description": "Bargaining for a carpet",
+        "descriptionRu": "Торгуетесь за ковёр",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bu gilam ikki yuz ming soʻm.",
-            "english": "This carpet is two hundred thousand som."
+            "english": "This carpet is two hundred thousand som.",
+            "russian": "Этот ковёр стоит двести тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Biroz arzon boʻladimi?",
             "english": "Can it be a little cheaper?",
+            "russian": "Можно немного дешевле?",
             "tokens": [
               "Biroz",
               "arzon",
@@ -127,12 +144,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mayli, sizga chegirma.",
-            "english": "Alright, a discount for you."
+            "english": "Alright, a discount for you.",
+            "russian": "Хорошо, скидка для вас."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, olaman.",
             "english": "Thanks, I will take it.",
+            "russian": "Спасибо, я возьму его.",
             "tokens": [
               "Rahmat,",
               "olaman."

@@ -2,10 +2,12 @@
 import { ref, computed, onMounted } from 'vue'
 import type { Word } from '@/db/types'
 import { foldTyping, typingTarget } from '@/exercises/test'
+import { useContentLang } from '@/i18n/content'
 import UzbekKeyboard from './UzbekKeyboard.vue'
 
 const props = defineProps<{ word: Word }>()
 const emit = defineEmits<{ answered: [correct: boolean] }>()
+const { gloss } = useContentLang()
 
 /** Display spelling and its folded form for matching. */
 const target = computed(() => typingTarget(props.word.uzbek))
@@ -75,8 +77,8 @@ function useHint() {
 
 <template>
   <div class="type-q">
-    <p class="type-q__instruction">Type this in Uzbek</p>
-    <p class="type-q__english">{{ word.english }}</p>
+    <p class="type-q__instruction">{{ $t('exercise.type.prompt') }}</p>
+    <p class="type-q__english">{{ gloss(word) }}</p>
 
     <div class="type-q__answer" :class="`type-q__answer--${status}`" lang="uz" aria-live="polite">
       <span class="type-q__typed">{{ shownText }}</span>
@@ -86,7 +88,7 @@ function useHint() {
 
     <p v-if="status === 'failed'" class="type-q__reveal" lang="uz">{{ target }}</p>
 
-    <div class="type-q__hintbar" :aria-label="`${hintsLeft} hints left`">
+    <div class="type-q__hintbar" :aria-label="$t('exercise.type.hintsLeft', { count: hintsLeft })">
       <span
         v-for="i in hintBudget"
         :key="i"
@@ -103,7 +105,7 @@ function useHint() {
       :disabled="status !== 'typing' || hintsLeft === 0"
       @click="useHint"
     >
-      💡 Hint ({{ hintsLeft }})
+      {{ $t('exercise.type.hint', { count: hintsLeft }) }}
     </button>
   </div>
 </template>

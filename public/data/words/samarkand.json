@@ -3,6 +3,7 @@
     "id": "samarkand.shahar",
     "uzbek": "shahar",
     "english": "city",
+    "russian": "город",
     "theme": "samarkand",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "samarkand.maydon",
     "uzbek": "maydon",
     "english": "square",
+    "russian": "площадь",
     "theme": "samarkand",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "samarkand.gozal",
     "uzbek": "goʻzal",
     "english": "beautiful",
+    "russian": "красивый",
     "theme": "samarkand",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "samarkand.kok",
     "uzbek": "koʻk",
     "english": "blue",
+    "russian": "синий",
     "theme": "samarkand",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "samarkand.sayyoh",
     "uzbek": "sayyoh",
     "english": "tourist",
+    "russian": "турист",
     "theme": "samarkand",
     "level": 1
   },
@@ -38,6 +43,7 @@
     "id": "samarkand.rasm",
     "uzbek": "rasm",
     "english": "photo",
+    "russian": "фотография",
     "theme": "samarkand",
     "level": 1
   },
@@ -45,6 +51,7 @@
     "id": "samarkand.qadimiy",
     "uzbek": "qadimiy",
     "english": "ancient",
+    "russian": "древний",
     "theme": "samarkand",
     "level": 2
   },
@@ -52,6 +59,7 @@
     "id": "samarkand.madrasa",
     "uzbek": "madrasa",
     "english": "madrasah",
+    "russian": "медресе",
     "theme": "samarkand",
     "level": 2
   },
@@ -59,6 +67,7 @@
     "id": "samarkand.ustoz",
     "uzbek": "ustoz",
     "english": "teacher",
+    "russian": "учитель",
     "theme": "samarkand",
     "level": 2
   },
@@ -66,6 +75,7 @@
     "id": "samarkand.karvon",
     "uzbek": "karvon",
     "english": "caravan",
+    "russian": "караван",
     "theme": "samarkand",
     "level": 2
   },
@@ -73,6 +83,7 @@
     "id": "samarkand.yulduz",
     "uzbek": "yulduz",
     "english": "star",
+    "russian": "звезда",
     "theme": "samarkand",
     "level": 2
   }

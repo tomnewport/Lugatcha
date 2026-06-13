@@ -2,11 +2,13 @@
 import { onMounted } from 'vue'
 import type { VocabGroup } from '@/db/types'
 import { useProgressStore } from '@/stores/progress'
+import { useContentLang } from '@/i18n/content'
 import LessonSectionCard from './LessonSectionCard.vue'
 import AudioButton from '@/components/AudioButton.vue'
 
 const props = defineProps<{ group: VocabGroup }>()
 const emit = defineEmits<{ done: [] }>()
+const { gloss } = useContentLang()
 
 const progress = useProgressStore()
 
@@ -26,7 +28,7 @@ onMounted(() => {
     />
 
     <section class="gallery">
-      <h2 class="gallery__heading">The words</h2>
+      <h2 class="gallery__heading">{{ $t('group.theWords') }}</h2>
       <ul class="gallery__list">
         <li v-for="word in group.words" :key="word.id" class="word">
           <span
@@ -37,7 +39,7 @@ onMounted(() => {
           />
           <span class="word__text">
             <span class="word__uzbek" lang="uz">{{ word.uzbek }}</span>
-            <span class="word__english">{{ word.english }}</span>
+            <span class="word__english">{{ gloss(word) }}</span>
           </span>
           <AudioButton :text="word.uzbek" />
         </li>
@@ -45,7 +47,7 @@ onMounted(() => {
     </section>
 
     <button class="btn btn--primary review__cta" type="button" @click="emit('done')">
-      I'm ready — test me
+      {{ $t('group.readyTest') }}
     </button>
   </div>
 </template>

@@ -4,32 +4,39 @@
     "theme": "gift-shop",
     "title": {
       "en": "The Perfect Gift",
+      "ru": "Идеальный подарок",
       "uz": "Eng yaxshi sovg'a"
     },
     "sentences": [
       {
         "uzbek": "Men oilam uchun sovg'a izladim.",
-        "english": "I looked for a gift for my family."
+        "english": "I looked for a gift for my family.",
+        "russian": "Я искал подарок для своей семьи."
       },
       {
         "uzbek": "Do'konda chiroyli ipak ro'mollar bor edi.",
-        "english": "In the shop there were beautiful silk scarves."
+        "english": "In the shop there were beautiful silk scarves.",
+        "russian": "В магазине были красивые шёлковые платки."
       },
       {
         "uzbek": "Sotuvchi menga ko'k ro'mol ko'rsatdi.",
-        "english": "The seller showed me a blue scarf."
+        "english": "The seller showed me a blue scarf.",
+        "russian": "Продавец показал мне синий платок."
       },
       {
         "uzbek": "Men narxini so'radim va chegirma oldim.",
-        "english": "I asked the price and got a discount."
+        "english": "I asked the price and got a discount.",
+        "russian": "Я спросил цену и получил скидку."
       },
       {
         "uzbek": "Sotuvchi sovg'ani chiroyli o'radi.",
-        "english": "The seller wrapped the gift beautifully."
+        "english": "The seller wrapped the gift beautifully.",
+        "russian": "Продавец красиво завернул подарок."
       },
       {
         "uzbek": "Onam bu ro'molni juda yaxshi ko'rdi!",
-        "english": "My mother loved this scarf!"
+        "english": "My mother loved this scarf!",
+        "russian": "Моей маме очень понравился этот платок!"
       }
     ],
     "glossary": {
@@ -62,6 +69,37 @@
       "ko'rdi": "saw (yaxshi ko'rdi = loved)",
       "juda": "very",
       "yaxshi": "good"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "oilam": "моя семья",
+      "uchun": "для",
+      "sovg'a": "подарок",
+      "izladim": "я искал",
+      "Do'konda": "в магазине",
+      "chiroyli": "красивый",
+      "ipak": "шёлк",
+      "ro'mollar": "платки",
+      "bor": "были / имелись",
+      "edi": "было",
+      "Sotuvchi": "продавец",
+      "menga": "мне",
+      "ko'k": "синий",
+      "ro'mol": "платок",
+      "ko'rsatdi": "показал",
+      "narxini": "его цену (объект)",
+      "so'radim": "я спросил",
+      "va": "и",
+      "chegirma": "скидка",
+      "oldim": "я получил / взял",
+      "sovg'ani": "подарок (объект)",
+      "o'radi": "завернул",
+      "Onam": "моя мама",
+      "bu": "этот",
+      "ro'molni": "платок (объект)",
+      "ko'rdi": "увидел (yaxshi ko'rdi = полюбил)",
+      "juda": "очень",
+      "yaxshi": "хороший"
     }
   },
   {
@@ -69,32 +107,39 @@
     "theme": "gift-shop",
     "title": {
       "en": "A Little Magnet",
+      "ru": "Маленький магнит",
       "uz": "Kichik magnit"
     },
     "sentences": [
       {
         "uzbek": "Pulim kam edi, lekin sovg'a kerak edi.",
-        "english": "I had little money, but I needed a gift."
+        "english": "I had little money, but I needed a gift.",
+        "russian": "Денег у меня было мало, но подарок был нужен."
       },
       {
         "uzbek": "Men kichik magnit topdim.",
-        "english": "I found a small magnet."
+        "english": "I found a small magnet.",
+        "russian": "Я нашёл маленький магнит."
       },
       {
         "uzbek": "Unda Registon rasmi bor edi.",
-        "english": "It had a picture of the Registan."
+        "english": "It had a picture of the Registan.",
+        "russian": "На нём было изображение Регистана."
       },
       {
         "uzbek": "Magnit arzon va chiroyli edi.",
-        "english": "The magnet was cheap and beautiful."
+        "english": "The magnet was cheap and beautiful.",
+        "russian": "Магнит был дешёвым и красивым."
       },
       {
         "uzbek": "Men uchta sotib oldim.",
-        "english": "I bought three."
+        "english": "I bought three.",
+        "russian": "Я купил три штуки."
       },
       {
         "uzbek": "Eng yaxshi sovg'a — bu xotira.",
-        "english": "The best gift is a memory."
+        "english": "The best gift is a memory.",
+        "russian": "Лучший подарок — это память."
       }
     ],
     "glossary": {
@@ -122,6 +167,32 @@
       "yaxshi": "good",
       "bu": "this (is)",
       "xotira": "memory"
+    },
+    "glossaryRu": {
+      "Pulim": "мои деньги",
+      "kam": "мало / немного",
+      "edi": "было",
+      "lekin": "но",
+      "sovg'a": "подарок",
+      "kerak": "нужный / необходимый",
+      "Men": "я",
+      "kichik": "маленький",
+      "magnit": "магнит",
+      "topdim": "я нашёл",
+      "Unda": "на нём",
+      "Registon": "Регистан",
+      "rasmi": "изображение (чего-либо)",
+      "bor": "было / имелось",
+      "arzon": "дешёвый",
+      "va": "и",
+      "chiroyli": "красивый",
+      "uchta": "три (штуки)",
+      "sotib": "покупая (sotib oldim = я купил)",
+      "oldim": "я взял",
+      "Eng": "самый",
+      "yaxshi": "хороший",
+      "bu": "это (есть)",
+      "xotira": "память"
     }
   }
 ]

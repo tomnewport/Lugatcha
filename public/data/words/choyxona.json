@@ -3,6 +3,7 @@
     "id": "choyxona.teahouse",
     "uzbek": "choyxona",
     "english": "teahouse",
+    "russian": "чайхана",
     "theme": "choyxona",
     "level": 1
   },
@@ -10,6 +11,7 @@
     "id": "choyxona.tea",
     "uzbek": "choy",
     "english": "tea",
+    "russian": "чай",
     "theme": "choyxona",
     "level": 1
   },
@@ -17,6 +19,7 @@
     "id": "choyxona.friend",
     "uzbek": "do'st",
     "english": "friend",
+    "russian": "друг",
     "theme": "choyxona",
     "level": 1
   },
@@ -24,6 +27,7 @@
     "id": "choyxona.name",
     "uzbek": "ism",
     "english": "name",
+    "russian": "имя",
     "theme": "choyxona",
     "level": 1
   },
@@ -31,6 +35,7 @@
     "id": "choyxona.sit",
     "uzbek": "o'tirish",
     "english": "to sit",
+    "russian": "сидеть",
     "theme": "choyxona",
     "level": 1
   },
@@ -38,6 +43,7 @@
     "id": "choyxona.where-from",
     "uzbek": "qayerdan",
     "english": "where from",
+    "russian": "откуда",
     "theme": "choyxona",
     "level": 1
   },
@@ -45,6 +51,7 @@
     "id": "choyxona.green-tea",
     "uzbek": "ko'k choy",
     "english": "green tea",
+    "russian": "зелёный чай",
     "theme": "choyxona",
     "level": 2
   },
@@ -52,6 +59,7 @@
     "id": "choyxona.samsa",
     "uzbek": "somsa",
     "english": "samsa (baked pastry)",
+    "russian": "самса (печёный пирожок)",
     "theme": "choyxona",
     "level": 2
   },
@@ -59,14 +67,17 @@
     "id": "choyxona.guest",
     "uzbek": "mehmon",
     "english": "guest",
+    "russian": "гость",
     "theme": "choyxona",
     "level": 2,
-    "usageNotes": "Hospitality (mehmondo'stlik) is central to Uzbek culture."
+    "usageNotes": "Hospitality (mehmondo'stlik) is central to Uzbek culture.",
+    "usageNotesRu": "Гостеприимство (mehmondo'stlik) занимает центральное место в узбекской культуре."
   },
   {
     "id": "choyxona.together",
     "uzbek": "birga",
     "english": "together",
+    "russian": "вместе",
     "theme": "choyxona",
     "level": 2
   },
@@ -74,6 +85,7 @@
     "id": "choyxona.conversation",
     "uzbek": "suhbat",
     "english": "conversation",
+    "russian": "беседа",
     "theme": "choyxona",
     "level": 3
   },
@@ -81,6 +93,7 @@
     "id": "choyxona.welcome",
     "uzbek": "xush kelibsiz",
     "english": "welcome",
+    "russian": "добро пожаловать",
     "theme": "choyxona",
     "level": 2
   }

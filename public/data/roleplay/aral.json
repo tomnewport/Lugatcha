@@ -4,23 +4,28 @@
     "theme": "aral",
     "title": {
       "en": "The Ship Graveyard",
+      "ru": "Кладбище кораблей",
       "uz": "Kemalar qabristoni"
     },
     "scenario": "You visit Moʻynoq and Nukus, where the Aral Sea has retreated.",
+    "scenarioRu": "Вы посещаете Муйнак и Нукус, где отступило Аральское море.",
     "variants": [
       {
         "id": "aral.ship-graveyard.base",
         "description": "On the dry seabed",
+        "descriptionRu": "На высохшем дне моря",
         "turns": [
           {
             "speaker": "npc",
             "uzbek": "Bu yerda dengiz bor edi.",
-            "english": "There was a sea here."
+            "english": "There was a sea here.",
+            "russian": "Здесь было море."
           },
           {
             "speaker": "user",
             "uzbek": "Endi faqat qum bor.",
             "english": "Now there is only sand.",
+            "russian": "Теперь здесь только песок.",
             "tokens": [
               "Endi",
               "faqat",
@@ -31,12 +36,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, juda achinarli.",
-            "english": "Yes, very sad."
+            "english": "Yes, very sad.",
+            "russian": "Да, очень грустно."
           },
           {
             "speaker": "user",
             "uzbek": "Eski kemalar qayerda?",
             "english": "Where are the old ships?",
+            "russian": "Где старые корабли?",
             "tokens": [
               "Eski",
               "kemalar",
@@ -48,11 +55,13 @@
       {
         "id": "aral.ship-graveyard.museum",
         "description": "Visiting the museum",
+        "descriptionRu": "Посещение музея",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Muzey bugun ochiqmi?",
             "english": "Is the museum open today?",
+            "russian": "Музей сегодня открыт?",
             "tokens": [
               "Muzey",
               "bugun",
@@ -62,12 +71,14 @@
           {
             "speaker": "npc",
             "uzbek": "Ha, soat oltigacha.",
-            "english": "Yes, until six o'clock."
+            "english": "Yes, until six o'clock.",
+            "russian": "Да, до шести часов."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, kiramiz.",
             "english": "Good, let us go in.",
+            "russian": "Хорошо, давайте войдём.",
             "tokens": [
               "Yaxshi,",
               "kiramiz."
@@ -78,11 +89,13 @@
       {
         "id": "aral.ship-graveyard.fish",
         "description": "Asking about fish",
+        "descriptionRu": "Вопрос о рыбе",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Bu yerda baliq bormi?",
             "english": "Is there fish here?",
+            "russian": "Здесь есть рыба?",
             "tokens": [
               "Bu",
               "yerda",
@@ -93,12 +106,14 @@
           {
             "speaker": "npc",
             "uzbek": "Yoʻq, suv qurigan.",
-            "english": "No, the water has dried up."
+            "english": "No, the water has dried up.",
+            "russian": "Нет, вода высохла."
           },
           {
             "speaker": "user",
             "uzbek": "Juda afsus.",
             "english": "Such a pity.",
+            "russian": "Какая жалость.",
             "tokens": [
               "Juda",
               "afsus."
@@ -109,11 +124,13 @@
       {
         "id": "aral.ship-graveyard.water",
         "description": "In the heat",
+        "descriptionRu": "В жару",
         "turns": [
           {
             "speaker": "user",
             "uzbek": "Iltimos, suv bering.",
             "english": "Please give me water.",
+            "russian": "Дайте, пожалуйста, воды.",
             "tokens": [
               "Iltimos,",
               "suv",
@@ -123,12 +140,14 @@
           {
             "speaker": "npc",
             "uzbek": "Mana, sovuq suv.",
-            "english": "Here, cold water."
+            "english": "Here, cold water.",
+            "russian": "Вот, холодная вода."
           },
           {
             "speaker": "user",
             "uzbek": "Rahmat, havo issiq.",
             "english": "Thanks, the weather is hot.",
+            "russian": "Спасибо, погода жаркая.",
             "tokens": [
               "Rahmat,",
               "havo",

@@ -4,32 +4,39 @@
     "theme": "library",
     "title": {
       "en": "A Quiet Corner",
+      "ru": "Тихий уголок",
       "uz": "Jim burchak"
     },
     "sentences": [
       {
         "uzbek": "Men kutubxonaga o'qishga bordim.",
-        "english": "I went to the library to read."
+        "english": "I went to the library to read.",
+        "russian": "Я пошёл в библиотеку почитать."
       },
       {
         "uzbek": "Ichkarida juda jim edi.",
-        "english": "Inside it was very quiet."
+        "english": "Inside it was very quiet.",
+        "russian": "Внутри было очень тихо."
       },
       {
         "uzbek": "Men oson o'zbekcha kitob topdim.",
-        "english": "I found an easy Uzbek book."
+        "english": "I found an easy Uzbek book.",
+        "russian": "Я нашёл лёгкую книгу на узбекском языке."
       },
       {
         "uzbek": "Har bir sahifada yangi so'zlar bor edi.",
-        "english": "On every page there were new words."
+        "english": "On every page there were new words.",
+        "russian": "На каждой странице были новые слова."
       },
       {
         "uzbek": "Men sekin va diqqat bilan o'qidim.",
-        "english": "I read slowly and carefully."
+        "english": "I read slowly and carefully.",
+        "russian": "Я читал медленно и внимательно."
       },
       {
         "uzbek": "Kitob — bu eng yaxshi do'st.",
-        "english": "A book is the best friend."
+        "english": "A book is the best friend.",
+        "russian": "Книга — это лучший друг."
       }
     ],
     "glossary": {
@@ -60,6 +67,35 @@
       "Har": "every",
       "o'zbekcha": "Uzbek (the language)",
       "bir": "one / a"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "kutubxonaga": "в библиотеку",
+      "o'qishga": "почитать",
+      "bordim": "я пошёл",
+      "Ichkarida": "внутри",
+      "juda": "очень",
+      "jim": "тихий",
+      "edi": "было",
+      "oson": "лёгкий",
+      "kitob": "книга",
+      "topdim": "я нашёл",
+      "sahifada": "на странице",
+      "yangi": "новый",
+      "so'zlar": "слова",
+      "bor": "были",
+      "sekin": "медленно",
+      "va": "и",
+      "diqqat": "внимание (diqqat bilan = внимательно)",
+      "bilan": "с",
+      "o'qidim": "я читал",
+      "bu": "это / есть",
+      "eng": "самый",
+      "yaxshi": "хороший",
+      "do'st": "друг",
+      "Har": "каждый",
+      "o'zbekcha": "узбекский (язык)",
+      "bir": "один / а"
     }
   },
   {
@@ -67,32 +103,39 @@
     "theme": "library",
     "title": {
       "en": "The Poet Navoiy",
+      "ru": "Поэт Навои",
       "uz": "Shoir Navoiy"
     },
     "sentences": [
       {
         "uzbek": "Kutubxonada men eski kitob ko'rdim.",
-        "english": "In the library I saw an old book."
+        "english": "In the library I saw an old book.",
+        "russian": "В библиотеке я увидел старую книгу."
       },
       {
         "uzbek": "Bu Alisher Navoiy she'rlari edi.",
-        "english": "It was the poems of Alisher Navoiy."
+        "english": "It was the poems of Alisher Navoiy.",
+        "russian": "Это были стихи Алишера Навои."
       },
       {
         "uzbek": "U besh yuz yil oldin yashagan.",
-        "english": "He lived five hundred years ago."
+        "english": "He lived five hundred years ago.",
+        "russian": "Он жил пятьсот лет назад."
       },
       {
         "uzbek": "Uning so'zlari hali ham chiroyli.",
-        "english": "His words are still beautiful."
+        "english": "His words are still beautiful.",
+        "russian": "Его слова всё ещё прекрасны."
       },
       {
         "uzbek": "Men bir misrani o'qidim.",
-        "english": "I read one line."
+        "english": "I read one line.",
+        "russian": "Я прочитал одну строку."
       },
       {
         "uzbek": "Yaxshi she'r hech qachon qarimaydi.",
-        "english": "Good poetry never grows old."
+        "english": "Good poetry never grows old.",
+        "russian": "Хорошие стихи никогда не стареют."
       }
     ],
     "glossary": {
@@ -125,6 +168,37 @@
       "ham": "also",
       "hech": "never (with qachon)",
       "qachon": "when"
+    },
+    "glossaryRu": {
+      "Kutubxonada": "в библиотеке",
+      "men": "я",
+      "eski": "старый",
+      "kitob": "книга",
+      "ko'rdim": "я увидел",
+      "Bu": "это / оно",
+      "Alisher": "Алишер",
+      "Navoiy": "Навои (великий поэт)",
+      "she'rlari": "стихи (чьи-то)",
+      "edi": "было",
+      "U": "он",
+      "besh": "пять",
+      "yuz": "сто",
+      "yil": "лет",
+      "oldin": "назад",
+      "yashagan": "жил",
+      "Uning": "его",
+      "so'zlari": "слова (его)",
+      "chiroyli": "прекрасный",
+      "bir": "один",
+      "misrani": "строку стиха (винительный)",
+      "o'qidim": "я прочитал",
+      "Yaxshi": "хороший",
+      "she'r": "стихи",
+      "qarimaydi": "не стареет",
+      "hali": "ещё",
+      "ham": "тоже",
+      "hech": "никогда (с qachon)",
+      "qachon": "когда"
     }
   }
 ]

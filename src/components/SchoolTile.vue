@@ -30,7 +30,7 @@ const dashOffset = computed(() =>
   <button
     class="tile"
     :class="{ 'tile--complete': isComplete }"
-    aria-label="Language School"
+    :aria-label="$t('school.title')"
     @click="router.push('/school')"
   >
     <div class="tile__ring-wrap" aria-hidden="true">
@@ -65,8 +65,8 @@ const dashOffset = computed(() =>
         <path d="M8 3.5v10" />
       </svg>
     </div>
-    <span class="tile__name">Language School</span>
-    <span class="tile__name-uz" lang="uz">Til maktabi</span>
+    <span class="tile__name">{{ $t('school.title') }}</span>
+    <span class="tile__name-uz" lang="uz">{{ $t('school.subtitle') }}</span>
   </button>
 </template>
 

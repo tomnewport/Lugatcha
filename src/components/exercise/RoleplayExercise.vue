@@ -4,12 +4,14 @@ import { db } from '@/db'
 import type { Roleplay, RoleplayVariant, RoleplayTurn } from '@/db/types'
 import { tokenize, buildDecoys, shuffle } from '@/exercises/validate'
 import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
+const { name, pick } = useContentLang()
 
 const roleplay = ref<Roleplay | null>(null)
 const stage = ref<'select' | 'play' | 'done'>('select')
@@ -102,31 +104,31 @@ function restart() {
 
 <template>
   <div class="roleplay">
-    <p v-if="loading" class="roleplay__loading" aria-live="polite">Loading scenario…</p>
+    <p v-if="loading" class="roleplay__loading" aria-live="polite">{{ $t('exercise.roleplay.loading') }}</p>
 
     <div v-else-if="!roleplay" class="roleplay__empty">
       <p class="roleplay__loading">
-        No roleplay for this location yet — it'll arrive in a content update.
+        {{ $t('exercise.roleplay.empty') }}
       </p>
-      <button class="btn btn--primary" type="button" @click="emit('complete')">Continue</button>
+      <button class="btn btn--primary" type="button" @click="emit('complete')">{{ $t('common.continue') }}</button>
     </div>
 
     <!-- Variant selector -->
     <template v-else-if="stage === 'select'">
       <div class="scenario-card">
-        <h2 class="scenario-card__title">{{ roleplay.title.en }}</h2>
+        <h2 class="scenario-card__title">{{ name(roleplay.title) }}</h2>
         <p class="scenario-card__title-uz" lang="uz">{{ roleplay.title.uz }}</p>
-        <p class="scenario-card__desc">{{ roleplay.scenario }}</p>
+        <p class="scenario-card__desc">{{ pick(roleplay.scenario, roleplay.scenarioRu) }}</p>
       </div>
 
-      <p class="roleplay__pick-label">Choose how it goes:</p>
+      <p class="roleplay__pick-label">{{ $t('exercise.roleplay.chooseHow') }}</p>
       <ul class="variant-list">
         <li v-for="(variant, i) in roleplay.variants" :key="variant.id">
           <button class="variant-btn" type="button" @click="startVariant(variant)">
             <span class="variant-btn__tag" :class="{ 'variant-btn__tag--base': i === 0 }">
-              {{ i === 0 ? 'Start here' : 'Twist' }}
+              {{ i === 0 ? $t('exercise.roleplay.startHere') : $t('exercise.roleplay.twist') }}
             </span>
-            <span class="variant-btn__desc">{{ variant.description }}</span>
+            <span class="variant-btn__desc">{{ pick(variant.description, variant.descriptionRu) }}</span>
           </button>
         </li>
       </ul>
@@ -145,7 +147,7 @@ function restart() {
             <UzbekSentence :uzbek="turn.uzbek" />
             <AudioButton :text="turn.uzbek" />
           </p>
-          <p class="bubble__english">{{ turn.english }}</p>
+          <p class="bubble__english">{{ pick(turn.english, turn.russian) }}</p>
         </div>
 
         <!-- Current NPC turn while speaking -->
@@ -153,30 +155,30 @@ function restart() {
           <p class="bubble__uzbek">
             <UzbekSentence :uzbek="currentTurn.uzbek" />
           </p>
-          <p class="bubble__english">{{ currentTurn.english }}</p>
+          <p class="bubble__english">{{ pick(currentTurn.english, currentTurn.russian) }}</p>
         </div>
       </div>
 
       <!-- User turn input -->
       <div v-if="stage === 'play' && currentTurn?.speaker === 'user'" class="user-turn">
         <p class="user-turn__prompt">
-          💬 Say: <strong>“{{ currentTurn.english }}”</strong>
+          💬 {{ $t('exercise.roleplay.say') }} <strong>“{{ pick(currentTurn.english, currentTurn.russian) }}”</strong>
         </p>
         <TokenAssembly
           :key="currentIndex"
           :tokens="turnTokens(currentTurn)"
           :decoys="buildDecoys(turnTokens(currentTurn), decoyPool, 3)"
           mode="strict"
-          checkLabel="Say it"
+          :check-label="$t('exercise.roleplay.sayIt')"
           @result="onUserResult"
         />
       </div>
 
       <!-- Completion -->
       <div v-if="stage === 'done'" class="roleplay__done">
-        <p class="roleplay__done-msg">Suhbat tugadi — conversation complete! 🎉</p>
-        <button class="btn btn--primary" type="button" @click="emit('complete')">Finish</button>
-        <button class="btn btn--ghost" type="button" @click="restart">Try another variant</button>
+        <p class="roleplay__done-msg">{{ $t('exercise.roleplay.done') }}</p>
+        <button class="btn btn--primary" type="button" @click="emit('complete')">{{ $t('common.finish') }}</button>
+        <button class="btn btn--ghost" type="button" @click="restart">{{ $t('exercise.roleplay.tryAnother') }}</button>
       </div>
     </template>
   </div>
