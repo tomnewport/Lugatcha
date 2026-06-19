@@ -26,6 +26,8 @@ export default {
     downloadAudio: 'Download audio',
     dismiss: 'Dismiss',
     loadingCity: 'Loading city…',
+    lockedTitle: 'This area is not open yet',
+    lockedBody: 'Finish the Welcome Center first. Once your first area is complete, the rest of the city opens.',
   },
 
   welcome: {

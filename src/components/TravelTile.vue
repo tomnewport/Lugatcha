@@ -3,10 +3,18 @@ import { useRouter } from 'vue-router'
 
 const props = defineProps<{ locked?: boolean }>()
 
+const emit = defineEmits<{
+  locked: []
+}>()
+
 const router = useRouter()
 
 function open() {
-  if (!props.locked) router.push('/travel')
+  if (props.locked) {
+    emit('locked')
+    return
+  }
+  router.push('/travel')
 }
 </script>
 
@@ -15,16 +23,17 @@ function open() {
   <button
     class="tile"
     :class="{ 'tile--locked': locked }"
-    :disabled="locked"
+    :aria-disabled="locked"
     :aria-label="`${$t('travel.title')}${locked ? ', ' + $t('common.locked') : ''}`"
     @click="open"
   >
     <div class="tile__icon-wrap" aria-hidden="true">
       <!-- Map pin over a little globe -->
-      <svg class="tile__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <svg v-if="!locked" class="tile__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
         <path d="M12 2C8.7 2 6 4.7 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.3-2.7-6-6-6z" fill="#fbeee6" />
         <circle cx="12" cy="8" r="2.4" fill="currentColor" stroke="none" />
       </svg>
+      <span v-else class="tile__icon tile__icon--no-entry" aria-hidden="true">⛔</span>
     </div>
     <span class="tile__name">{{ $t('travel.title') }}</span>
     <span class="tile__name-uz" lang="uz">{{ $t('travel.tileSubtitle') }}</span>
@@ -59,7 +68,7 @@ function open() {
 
 .tile--locked {
   opacity: 0.5;
-  cursor: default;
+  cursor: pointer;
   filter: grayscale(0.7);
 }
 
@@ -76,6 +85,15 @@ function open() {
   width: 30px;
   height: 30px;
   color: var(--color-terracotta);
+}
+
+.tile__icon--no-entry {
+  font-size: 1rem;
+  line-height: 1;
+  width: auto;
+  height: auto;
+  color: var(--color-terracotta);
+  filter: drop-shadow(0 1px 1px rgba(37, 28, 18, 0.35));
 }
 
 .tile__name {

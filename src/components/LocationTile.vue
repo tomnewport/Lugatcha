@@ -15,6 +15,10 @@ const props = defineProps<{
   knownWords?: number
 }>()
 
+const emit = defineEmits<{
+  locked: []
+}>()
+
 const router = useRouter()
 const settings = useSettingsStore()
 const { name } = useContentLang()
@@ -46,9 +50,11 @@ const seenDashOffset = computed(() => CIRCUMFERENCE * (1 - seenFraction.value))
 const knownDashOffset = computed(() => CIRCUMFERENCE * (1 - knownFraction.value))
 
 function navigate() {
-  if (!props.locked) {
-    router.push(`/location/${props.location.id}`)
+  if (props.locked) {
+    emit('locked')
+    return
   }
+  router.push(`/location/${props.location.id}`)
 }
 </script>
 
@@ -60,7 +66,7 @@ function navigate() {
       'tile--started': completedCount > 0 && !isComplete,
       'tile--complete': isComplete,
     }"
-    :disabled="locked"
+    :aria-disabled="locked"
     :aria-label="`${baseName}${locked ? ', ' + $t('common.locked') : ''}`"
     @click="navigate"
   >
@@ -95,19 +101,8 @@ function navigate() {
         />
       </svg>
 
-      <!-- Lock icon -->
-      <svg
-        v-if="locked"
-        class="tile__icon tile__icon--lock"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        aria-hidden="true"
-      >
-        <rect x="2" y="7" width="12" height="8" rx="2" />
-        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke-linecap="round" />
-      </svg>
+      <!-- Locked marker -->
+      <span v-if="locked" class="tile__icon tile__icon--no-entry" aria-hidden="true">⛔</span>
 
       <!-- Complete icon -->
       <svg
@@ -170,7 +165,7 @@ function navigate() {
 
 .tile--locked {
   opacity: 0.5;
-  cursor: default;
+  cursor: pointer;
   background: var(--color-bg);
 }
 
@@ -246,6 +241,16 @@ function navigate() {
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
+}
+
+.tile__icon--no-entry {
+  font-size: 1rem;
+  line-height: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  filter: drop-shadow(0 1px 1px rgba(37, 28, 18, 0.35));
 }
 
 /* Labels */
