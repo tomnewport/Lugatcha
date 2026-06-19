@@ -1,8 +1,11 @@
 <script setup lang="ts">
 /**
- * On-screen keyboard optimised for Uzbek Latin: the 24 base letters plus the
- * characters English keyboards lack — oʻ, gʻ, the sh/ch digraphs, and the
- * tutuq belgisi (ʼ). A key's `value` is what it types; its label is what shows.
+ * On-screen keyboard for Uzbek Latin. The letters sit in the real QWERTY
+ * arrangement the standard Uzbek (Latin) keyboard uses, so muscle memory
+ * carries over to a physical keyboard. The bottom row collects the characters
+ * an English QWERTY lacks — oʻ, gʻ, the sh/ch/ng digraphs, and the tutuq
+ * belgisi (ʼ) — which on a hardware keyboard are composed from their bases.
+ * A key's `value` is what it types; its label is what shows.
  *
  * When `litKeys` is non-null, only those values stay bright and the rest dim —
  * that's how a hint narrows the keyboard down.
@@ -19,18 +22,19 @@ interface Key {
   label: string
 }
 
+const letter = (v: string): Key => ({ value: v, label: v })
+
 const ROWS: Key[][] = [
-  ['a', 'b', 'd', 'e', 'f', 'g', 'h', 'i', 'j'].map((v) => ({ value: v, label: v })),
-  ['k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's'].map((v) => ({ value: v, label: v })),
-  ['t', 'u', 'v', 'x', 'y', 'z'].map((v) => ({ value: v, label: v })).concat([
+  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'].map(letter),
+  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'].map(letter),
+  ['z', 'x', 'c', 'v', 'b', 'n', 'm'].map(letter),
+  [
     { value: 'oʻ', label: 'oʻ' },
     { value: 'gʻ', label: 'gʻ' },
-    { value: 'ʼ', label: 'ʼ' },
-  ]),
-  [
     { value: 'sh', label: 'sh' },
     { value: 'ch', label: 'ch' },
     { value: 'ng', label: 'ng' },
+    { value: 'ʼ', label: 'ʼ' },
     { value: ' ', label: '␣' },
   ],
 ]
