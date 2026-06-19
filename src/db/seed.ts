@@ -68,7 +68,8 @@ async function fetchTravelWords(): Promise<Word[]> {
 // re-seeding refreshes content without touching progress tables.
 // v6: added Russian translations (russian/ru fields) across all content.
 // v7: added the Welcome Center onboarding vocabulary.
-export const CONTENT_VERSION = 7
+// v8: added basic Welcome Center stories and roleplay.
+export const CONTENT_VERSION = 8
 const CONTENT_VERSION_KEY = 'lugatcha.contentVersion'
 
 function storedContentVersion(): string | null {
