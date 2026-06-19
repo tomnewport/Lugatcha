@@ -98,6 +98,14 @@ export default {
       confirmYes: 'Yes, reset',
       done: 'Progress reset. ✓',
     },
+    data: {
+      title: 'Clear all data',
+      desc: 'Permanently delete everything stored on this device — progress, settings, and downloaded audio. The app reloads as if freshly installed.',
+      clear: 'Clear all data…',
+      confirm: "Delete all local data? This can't be undone.",
+      confirmYes: 'Delete everything',
+      clearing: 'Clearing…',
+    },
   },
 
   location: {
