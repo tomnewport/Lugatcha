@@ -7,4 +7,4 @@
 #   ./scripts/build_yandex_audio.sh --force      # regenerate all clips
 set -euo pipefail
 cd "$(dirname "$0")/.."
-uv run python scripts/generate_audio.py --backend yandex "$@"
+uv run python scripts/generate_audio.py "$@"
