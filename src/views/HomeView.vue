@@ -69,6 +69,18 @@ const wordStats = useLiveQuery(
   { seen: new Map<string, number>(), known: new Map<string, number>(), total: new Map<string, number>() },
 )
 
+/**
+ * The Welcome Center is the city's front door: until you've met all of its very
+ * basic words (hello, please, thank you, yes/no, …) every other tile stays
+ * locked. Completion = every Welcome Center word has been seen at least once.
+ */
+const WELCOME_ID = 'welcome-center'
+const welcomeComplete = computed(() => {
+  const total = wordStats.value.total.get(WELCOME_ID) ?? 0
+  const seen = wordStats.value.seen.get(WELCOME_ID) ?? 0
+  return total > 0 && seen >= total
+})
+
 const lastTried = ref<string | null>(null)
 
 onMounted(() => {
@@ -140,7 +152,9 @@ function nextExerciseEmoji(locationId: string): string {
  */
 const chipMap = computed(() => {
   const map = new Map<string, string | null>()
-  const locs = sortedLocations.value.filter((l) => l.id !== 'school' && l.id !== 'travel')
+  const locs = sortedLocations.value.filter(
+    (l) => l.id !== 'school' && l.id !== 'travel' && l.id !== WELCOME_ID,
+  )
 
   const eligible = locs.filter((l) => l.id !== lastTried.value)
   const count = Math.max(1, Math.round(eligible.length * 0.9))
@@ -222,11 +236,13 @@ const chipMap = computed(() => {
         <SchoolTile
           v-if="loc.id === 'school'"
           role="listitem"
+          :locked="!welcomeComplete"
           :style="{ gridRow: loc.gridRow, gridColumn: loc.gridCol }"
         />
         <TravelTile
           v-else-if="loc.id === 'travel'"
           role="listitem"
+          :locked="!welcomeComplete"
           :style="{ gridRow: loc.gridRow, gridColumn: loc.gridCol }"
         />
         <LocationTile
@@ -234,7 +250,7 @@ const chipMap = computed(() => {
           role="listitem"
           :location="loc"
           :progress="progressMap.get(loc.id)"
-          :locked="false"
+          :locked="loc.id !== WELCOME_ID && !welcomeComplete"
           :exercise-emoji="chipMap.get(loc.id) ?? undefined"
           :seen-words="wordStats.seen.get(loc.id) ?? 0"
           :total-words="wordStats.total.get(loc.id) ?? 0"

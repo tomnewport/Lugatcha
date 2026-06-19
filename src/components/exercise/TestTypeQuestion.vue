@@ -66,10 +66,13 @@ function useHint() {
     emit('answered', false)
     return
   }
-  // Keep the valid keys plus enough random others to leave roughly a third lit.
+  // Each press cuts the *currently lit* keys down to about a third — always
+  // keeping the key(s) that actually come next — so repeated hints close in:
+  // the full board narrows to roughly nine keys, then three, then the one key.
   const valid = new Set(validNextKeys())
-  const keep = Math.max(valid.size, Math.ceil(ALL_KEYS.length / 3))
-  const others = ALL_KEYS.filter((k) => !valid.has(k)).sort(() => Math.random() - 0.5)
+  const current = litKeys.value ?? ALL_KEYS
+  const keep = Math.max(valid.size, Math.floor(current.length / 3))
+  const others = current.filter((k) => !valid.has(k)).sort(() => Math.random() - 0.5)
   while (valid.size < keep && others.length) valid.add(others.pop()!)
   litKeys.value = [...valid]
 }
@@ -88,13 +91,25 @@ function useHint() {
 
     <p v-if="status === 'failed'" class="type-q__reveal" lang="uz">{{ target }}</p>
 
-    <div class="type-q__hintbar" :aria-label="$t('exercise.type.hintsLeft', { count: hintsLeft })">
+    <div class="type-q__hintrow">
       <span
-        v-for="i in hintBudget"
-        :key="i"
-        class="type-q__hintseg"
-        :class="{ 'type-q__hintseg--spent': i > hintsLeft }"
-      />
+        class="type-q__hinticon"
+        role="img"
+        tabindex="0"
+        :title="$t('exercise.type.hintExplainer')"
+        :aria-label="$t('exercise.type.hintExplainer')"
+      >
+        <span class="type-q__hinticon-kb" aria-hidden="true">⌨️</span>
+        <span class="type-q__hinticon-bolt" aria-hidden="true">⚡</span>
+      </span>
+      <div class="type-q__hintbar" :aria-label="$t('exercise.type.hintsLeft', { count: hintsLeft })">
+        <span
+          v-for="i in hintBudget"
+          :key="i"
+          class="type-q__hintseg"
+          :class="{ 'type-q__hintseg--spent': i > hintsLeft }"
+        />
+      </div>
     </div>
 
     <UzbekKeyboard :lit-keys="litKeys" :disabled="status !== 'typing'" @press="press" />
@@ -180,11 +195,39 @@ function useHint() {
   margin: 0;
 }
 
+.type-q__hintrow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 280px;
+}
+
+.type-q__hinticon {
+  position: relative;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: help;
+}
+
+.type-q__hinticon-bolt {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  font-size: 0.7rem;
+  filter: drop-shadow(0 0 1px var(--color-surface));
+}
+
 .type-q__hintbar {
   display: flex;
   gap: 3px;
-  width: 100%;
-  max-width: 280px;
+  flex: 1;
   height: 7px;
 }
 

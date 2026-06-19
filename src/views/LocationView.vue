@@ -13,7 +13,9 @@ import {
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import { playChime } from '@/audio/audio'
+import { WELCOME_CENTER_ID } from '@/db/progress'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
+import WelcomeInduction from '@/components/WelcomeInduction.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
 import FlashcardsExercise from '@/components/exercise/FlashcardsExercise.vue'
 import ListeningExercise from '@/components/exercise/ListeningExercise.vue'
@@ -34,6 +36,7 @@ const activeExercise = ref<ExerciseType | null>(null)
 const sessionKey = ref(0)
 
 const locationId = computed(() => route.params.id as string)
+const isWelcome = computed(() => locationId.value === WELCOME_CENTER_ID)
 
 const stats = useLiveQuery<LocationStats | null>(
   () => loadLocationStats(db, route.params.id as string),
@@ -64,11 +67,13 @@ onMounted(async () => {
 
 const potluck = computed(() => (stats.value ? buildPotluck(stats.value) : []))
 
-// Auto-launch the visit's exercise once stats load (only if no exercise is running)
+// Auto-launch the visit's exercise once stats load (only if no exercise is running).
+// The Welcome Center is the city's onboarding gate: instead of auto-launching, it
+// opens on its induction screen, which then starts the basic-vocabulary intro.
 watch(
   stats,
   (newStats) => {
-    if (activeExercise.value || !newStats) return
+    if (activeExercise.value || !newStats || isWelcome.value) return
     const next = selectAutoExercise(newStats)
     if (next) {
       sessionKey.value++
@@ -77,6 +82,12 @@ watch(
   },
   { immediate: true },
 )
+
+/** The Welcome Center only ever teaches its own basics. */
+function startWelcomeVocab() {
+  sessionKey.value++
+  activeExercise.value = 'intro'
+}
 
 const EXERCISE_COMPONENTS = {
   intro: WordIntroExercise,
@@ -99,10 +110,21 @@ async function onComplete() {
   if (activeExercise.value) {
     await progressStore.recordLocationVisit(locationId.value)
   }
+  // The Welcome Center returns to its induction screen so the learner sees their
+  // updated progress and can continue (or, once done, head into the city).
+  if (isWelcome.value) {
+    activeExercise.value = null
+    return
+  }
   router.push('/')
 }
 
 function exitExercise() {
+  // Leaving a Welcome Center session drops back to its induction screen.
+  if (isWelcome.value) {
+    activeExercise.value = null
+    return
+  }
   router.push('/')
 }
 </script>
@@ -122,6 +144,9 @@ function exitExercise() {
       @complete="onComplete"
     />
   </ExerciseLayout>
+
+  <!-- Welcome Center induction: explains the city, then teaches the basics -->
+  <WelcomeInduction v-else-if="location && isWelcome" @start="startWelcomeVocab" />
 
   <!-- Fallback: nothing available at this location -->
   <main v-else-if="location && stats && potluck.every(a => a.state === 'locked')" class="location-view">

@@ -5,7 +5,13 @@ import { useLiveQuery, db } from '@/db/useDb'
 import { loadLessonIndex } from '@/db/lessons'
 import type { LessonProgress } from '@/db/types'
 
+const props = defineProps<{ locked?: boolean }>()
+
 const router = useRouter()
+
+function open() {
+  if (!props.locked) router.push('/school')
+}
 
 const RADIUS = 18
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
@@ -29,9 +35,10 @@ const dashOffset = computed(() =>
   <!-- The School is a meta tile: always unlocked, teaches the language itself -->
   <button
     class="tile"
-    :class="{ 'tile--complete': isComplete }"
-    :aria-label="$t('school.title')"
-    @click="router.push('/school')"
+    :class="{ 'tile--complete': isComplete && !locked, 'tile--locked': locked }"
+    :disabled="locked"
+    :aria-label="`${$t('school.title')}${locked ? ', ' + $t('common.locked') : ''}`"
+    @click="open"
   >
     <div class="tile__ring-wrap" aria-hidden="true">
       <svg class="tile__svg" viewBox="0 0 44 44">
@@ -91,9 +98,15 @@ const dashOffset = computed(() =>
   -webkit-tap-highlight-color: transparent;
 }
 
-.tile:hover {
+.tile:not(:disabled):hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+.tile--locked {
+  opacity: 0.5;
+  cursor: default;
+  filter: grayscale(0.7);
 }
 
 .tile--complete {

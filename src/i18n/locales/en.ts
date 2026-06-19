@@ -28,6 +28,36 @@ export default {
     loadingCity: 'Loading city…',
   },
 
+  welcome: {
+    title: 'Welcome Center',
+    subtitle: 'Start here — learn how the city works',
+    intro:
+      "Before you explore the city, get the handful of words you'll need everywhere — and see how a single area works from start to finish.",
+    howTitle: 'How the city works',
+    steps: {
+      tapTitle: 'Tap an area to practise it',
+      tapBody:
+        'Each place — the café, the bank, the airport — teaches the words you need there. This Welcome Center is your first area.',
+      activitiesTitle: 'Every visit is one activity',
+      activitiesBody:
+        'Areas serve a different activity each visit and rotate through them: New Words, Matching, Listening, Phrase Assembly, Roleplay, Storytime, and a Test.',
+      ringTitle: 'The rings track your progress',
+      ringBody:
+        'The gold ring fills as you meet words; the inner ring fills as you learn them. Learned words drop into the treasure chest.',
+      metaTitle: 'The School and Travel Agency',
+      metaBody:
+        'The Language School explains how Uzbek itself works; the Travel Agency takes you around the country. Both open once you finish here.',
+    },
+    progress: '{seen} of {total} basics met',
+    start: 'Learn the basics',
+    continue: 'Keep going',
+    refresh: 'Refresh the basics',
+    completeTitle: "That's your first area complete!",
+    completeBody:
+      'You now know the essentials and how an area works. The rest of the city is open — and you can come back here any time to refresh these words.',
+    toCity: 'Explore the city',
+  },
+
   settings: {
     title: 'Settings',
     learningLanguage: {
@@ -244,6 +274,8 @@ export default {
       prompt: 'Type this in Uzbek',
       hintsLeft: '{count} hints left',
       hint: '💡 Hint ({count})',
+      hintExplainer:
+        'Keyboard hints: each tap dims the keyboard further — down to about nine keys, then three, then the one you need. The bar shows how many hints are left.',
     },
     token: {
       answerLabel: 'Your answer',
