@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LocationView from '@/views/LocationView.vue'
+import { db } from '@/db'
+import { isWelcomeCenterComplete, WELCOME_CENTER_ID } from '@/db/progress'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -47,6 +49,18 @@ const router = createRouter({
       component: () => import('@/views/TravelPlaceView.vue'),
     },
   ],
+})
+
+// Gate the whole city behind the Welcome Center: until its basic vocabulary is
+// met, only the home map, settings, and the Welcome Center itself are reachable.
+// The locked tiles enforce this in the UI; this guard also covers deep links.
+const GATED_ROUTES = new Set(['location', 'school', 'group', 'lesson', 'travel', 'travel-place'])
+
+router.beforeEach(async (to) => {
+  if (!GATED_ROUTES.has(to.name as string)) return true
+  if (to.name === 'location' && to.params.id === WELCOME_CENTER_ID) return true
+  if (await isWelcomeCenterComplete(db)) return true
+  return { name: 'home' }
 })
 
 export default router
