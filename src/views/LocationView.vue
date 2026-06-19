@@ -64,12 +64,15 @@ onMounted(async () => {
 
 const potluck = computed(() => (stats.value ? buildPotluck(stats.value) : []))
 
-// Auto-launch the visit's exercise once stats load (only if no exercise is running)
+// Auto-launch the visit's exercise once stats load (only if no exercise is running).
+// The Welcome Center is the city's onboarding gate: it only ever teaches its basic
+// vocabulary, so it always serves New Words instead of the usual rotation.
 watch(
   stats,
   (newStats) => {
     if (activeExercise.value || !newStats) return
-    const next = selectAutoExercise(newStats)
+    const next =
+      newStats.locationId === 'welcome-center' ? 'intro' : selectAutoExercise(newStats)
     if (next) {
       sessionKey.value++
       activeExercise.value = next

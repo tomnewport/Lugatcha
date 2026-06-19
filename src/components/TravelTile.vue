@@ -1,12 +1,24 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
+const props = defineProps<{ locked?: boolean }>()
+
 const router = useRouter()
+
+function open() {
+  if (!props.locked) router.push('/travel')
+}
 </script>
 
 <template>
   <!-- The Travel Agency: a map of Uzbekistan you explore place by place -->
-  <button class="tile" :aria-label="$t('travel.title')" @click="router.push('/travel')">
+  <button
+    class="tile"
+    :class="{ 'tile--locked': locked }"
+    :disabled="locked"
+    :aria-label="`${$t('travel.title')}${locked ? ', ' + $t('common.locked') : ''}`"
+    @click="open"
+  >
     <div class="tile__icon-wrap" aria-hidden="true">
       <!-- Map pin over a little globe -->
       <svg class="tile__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -40,9 +52,15 @@ const router = useRouter()
   -webkit-tap-highlight-color: transparent;
 }
 
-.tile:hover {
+.tile:not(:disabled):hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+}
+
+.tile--locked {
+  opacity: 0.5;
+  cursor: default;
+  filter: grayscale(0.7);
 }
 
 .tile__icon-wrap {
