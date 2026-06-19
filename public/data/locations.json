@@ -1,5 +1,17 @@
 [
   {
+    "id": "welcome-center",
+    "name": {
+      "en": "Welcome Center",
+      "uz": "Mehmonlar markazi",
+      "ru": "Центр для гостей"
+    },
+    "icon": "welcome-center",
+    "gridRow": 1,
+    "gridCol": 1,
+    "colSpan": 4
+  },
+  {
     "id": "police-station",
     "name": {
       "en": "Police Station",
@@ -7,7 +19,7 @@
       "ru": "Полицейский участок"
     },
     "icon": "police-station",
-    "gridRow": 1,
+    "gridRow": 2,
     "gridCol": 1
   },
   {
@@ -18,7 +30,7 @@
       "ru": "Городская площадь"
     },
     "icon": "public-square",
-    "gridRow": 1,
+    "gridRow": 2,
     "gridCol": 2
   },
   {
@@ -29,7 +41,7 @@
       "ru": "Больница"
     },
     "icon": "hospital",
-    "gridRow": 1,
+    "gridRow": 2,
     "gridCol": 3
   },
   {
@@ -40,7 +52,7 @@
       "ru": "Гостиница"
     },
     "icon": "hotel",
-    "gridRow": 1,
+    "gridRow": 2,
     "gridCol": 4
   },
   {
@@ -51,7 +63,7 @@
       "ru": "Музей"
     },
     "icon": "museum",
-    "gridRow": 2,
+    "gridRow": 3,
     "gridCol": 1
   },
   {
@@ -62,7 +74,7 @@
       "ru": "Железнодорожный вокзал"
     },
     "icon": "train-station",
-    "gridRow": 2,
+    "gridRow": 3,
     "gridCol": 2
   },
   {
@@ -73,7 +85,7 @@
       "ru": "Станция метро"
     },
     "icon": "metro-station",
-    "gridRow": 2,
+    "gridRow": 3,
     "gridCol": 3
   },
   {
@@ -84,7 +96,7 @@
       "ru": "Автобусная остановка"
     },
     "icon": "bus-stop",
-    "gridRow": 2,
+    "gridRow": 3,
     "gridCol": 4
   },
   {
@@ -95,7 +107,7 @@
       "ru": "Магазин подарков"
     },
     "icon": "gift-shop",
-    "gridRow": 3,
+    "gridRow": 4,
     "gridCol": 1
   },
   {
@@ -106,7 +118,7 @@
       "ru": "Продуктовый магазин"
     },
     "icon": "grocery-store",
-    "gridRow": 3,
+    "gridRow": 4,
     "gridCol": 2
   },
   {
@@ -117,7 +129,7 @@
       "ru": "Библиотека"
     },
     "icon": "library",
-    "gridRow": 3,
+    "gridRow": 4,
     "gridCol": 3
   },
   {
@@ -128,7 +140,7 @@
       "ru": "Ресторан"
     },
     "icon": "restaurant",
-    "gridRow": 3,
+    "gridRow": 4,
     "gridCol": 4
   },
   {
@@ -139,7 +151,7 @@
       "ru": "Кафе"
     },
     "icon": "cafe",
-    "gridRow": 4,
+    "gridRow": 5,
     "gridCol": 1
   },
   {
@@ -150,7 +162,7 @@
       "ru": "Чайхана"
     },
     "icon": "choyxona",
-    "gridRow": 4,
+    "gridRow": 5,
     "gridCol": 2
   },
   {
@@ -161,7 +173,7 @@
       "ru": "Банк"
     },
     "icon": "bank",
-    "gridRow": 4,
+    "gridRow": 5,
     "gridCol": 3
   },
   {
@@ -172,7 +184,7 @@
       "ru": "Горный парк"
     },
     "icon": "mountain-park",
-    "gridRow": 4,
+    "gridRow": 5,
     "gridCol": 4
   },
   {
@@ -183,7 +195,7 @@
       "ru": "Аэропорт"
     },
     "icon": "airport",
-    "gridRow": 5,
+    "gridRow": 6,
     "gridCol": 1
   },
   {
@@ -194,7 +206,7 @@
       "ru": "Языковая школа"
     },
     "icon": "school",
-    "gridRow": 5,
+    "gridRow": 6,
     "gridCol": 2
   },
   {
@@ -205,7 +217,7 @@
       "ru": "Турагентство"
     },
     "icon": "travel",
-    "gridRow": 5,
+    "gridRow": 6,
     "gridCol": 3
   }
 ]

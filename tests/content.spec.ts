@@ -105,9 +105,12 @@ describe('content coverage', () => {
   // The auto-launcher can serve roleplay or storytime at any location/place, so
   // every word theme must actually have both — otherwise it surfaces an empty
   // exercise. Travel places carry their words in travel.json, not the manifest.
+  // The Welcome Center is the exception: it is an intro-only onboarding gate that
+  // never auto-launches anything but New Words, so it ships no story or roleplay.
+  const INTRO_ONLY = new Set(['welcome-center'])
   const travelPlaces = read<TravelPlace[]>('travel.json')
   const themes = [
-    ...manifest.words.filter((t) => t !== 'core'),
+    ...manifest.words.filter((t) => t !== 'core' && !INTRO_ONLY.has(t)),
     ...travelPlaces.map((p) => p.id),
   ]
   const storyThemes = new Set(allStories.map((s) => s.theme))

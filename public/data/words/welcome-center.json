@@ -1,0 +1,112 @@
+[
+  {
+    "id": "welcome-center.hello",
+    "uzbek": "Salom",
+    "english": "Hello",
+    "russian": "Здравствуйте",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "The everyday hello — friendly and safe with almost anyone.",
+    "usageNotesRu": "Повседневное приветствие — уместно почти с любым человеком."
+  },
+  {
+    "id": "welcome-center.assalomu-alaykum",
+    "uzbek": "Assalomu alaykum",
+    "english": "Peace be upon you (formal hello)",
+    "russian": "Мир вам (формальное приветствие)",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "The polite, universal greeting. Reply: Vaalaykum assalom.",
+    "usageNotesRu": "Вежливое универсальное приветствие. Ответ: Vaalaykum assalom."
+  },
+  {
+    "id": "welcome-center.goodbye",
+    "uzbek": "Xayr",
+    "english": "Goodbye",
+    "russian": "До свидания",
+    "theme": "welcome-center",
+    "level": 1
+  },
+  {
+    "id": "welcome-center.please",
+    "uzbek": "Iltimos",
+    "english": "Please",
+    "russian": "Пожалуйста",
+    "theme": "welcome-center",
+    "level": 1
+  },
+  {
+    "id": "welcome-center.thank-you",
+    "uzbek": "Rahmat",
+    "english": "Thank you",
+    "russian": "Спасибо",
+    "theme": "welcome-center",
+    "level": 1
+  },
+  {
+    "id": "welcome-center.youre-welcome",
+    "uzbek": "Marhamat",
+    "english": "You're welcome / here you go",
+    "russian": "Пожалуйста / вот, держите",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "Said when handing something over or inviting someone to go ahead.",
+    "usageNotesRu": "Говорят, передавая что-то или приглашая собеседника продолжить."
+  },
+  {
+    "id": "welcome-center.excuse-me",
+    "uzbek": "Kechirasiz",
+    "english": "Excuse me / sorry",
+    "russian": "Извините",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "Polite form to get attention or to apologise.",
+    "usageNotesRu": "Вежливая форма, чтобы привлечь внимание или извиниться."
+  },
+  {
+    "id": "welcome-center.yes",
+    "uzbek": "Ha",
+    "english": "Yes",
+    "russian": "Да",
+    "theme": "welcome-center",
+    "level": 1
+  },
+  {
+    "id": "welcome-center.no",
+    "uzbek": "Yo'q",
+    "english": "No",
+    "russian": "Нет",
+    "theme": "welcome-center",
+    "level": 1
+  },
+  {
+    "id": "welcome-center.help",
+    "uzbek": "Yordam",
+    "english": "Help",
+    "russian": "Помощь",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "Yordam bering! — Help me!",
+    "usageNotesRu": "Yordam bering! — Помогите!"
+  },
+  {
+    "id": "welcome-center.good",
+    "uzbek": "Yaxshi",
+    "english": "Good / OK",
+    "russian": "Хорошо",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "Also the easy answer to 'how are you?' — Yaxshi.",
+    "usageNotesRu": "Также простой ответ на «как дела?» — Yaxshi."
+  },
+  {
+    "id": "welcome-center.i-dont-understand",
+    "uzbek": "Tushunmayapman",
+    "english": "I don't understand",
+    "russian": "Я не понимаю",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "Say this when you need someone to slow down or repeat.",
+    "usageNotesRu": "Скажите это, когда нужно, чтобы собеседник повторил или говорил медленнее."
+  }
+]

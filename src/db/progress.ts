@@ -6,6 +6,21 @@ const MAX_RESULTS = 4
 /** Failed questions on a learned word before it's unlearned (issue #61). */
 const FAILS_TO_UNLEARN = 2
 
+/** The onboarding location that gates the rest of the city. */
+export const WELCOME_CENTER_ID = 'welcome-center'
+
+/**
+ * Whether the Welcome Center is done — every one of its basic words has been seen
+ * at least once. Returns false while the database is still unseeded (no words
+ * yet), so the rest of the city stays locked until vocabulary has loaded.
+ */
+export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> {
+  const words = await db.words.where('theme').equals(WELCOME_CENTER_ID).toArray()
+  if (words.length === 0) return false
+  const progress = await db.wordProgress.bulkGet(words.map((w) => w.id))
+  return progress.every((p) => Boolean(p?.seenAt))
+}
+
 /** Records first exposure to each word. No-op for words already seen. */
 export async function markWordsSeen(db: LugatchaDB, wordIds: string[]): Promise<void> {
   const now = Date.now()
