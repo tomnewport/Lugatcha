@@ -91,7 +91,11 @@ function useHint() {
 
     <p v-if="status === 'failed'" class="type-q__reveal" lang="uz">{{ target }}</p>
 
-    <div class="type-q__hintrow">
+    <UzbekKeyboard :lit-keys="litKeys" :disabled="status !== 'typing'" @press="press" />
+
+    <!-- Hint meter and its trigger live together so it reads as one control:
+         tapping the button spends a segment of the bar beside it. -->
+    <div class="type-q__hint">
       <span
         class="type-q__hinticon"
         role="img"
@@ -110,18 +114,15 @@ function useHint() {
           :class="{ 'type-q__hintseg--spent': i > hintsLeft }"
         />
       </div>
+      <button
+        class="btn btn--ghost type-q__hintbtn"
+        type="button"
+        :disabled="status !== 'typing' || hintsLeft === 0"
+        @click="useHint"
+      >
+        {{ $t('exercise.type.hint', { count: hintsLeft }) }}
+      </button>
     </div>
-
-    <UzbekKeyboard :lit-keys="litKeys" :disabled="status !== 'typing'" @press="press" />
-
-    <button
-      class="btn btn--ghost type-q__hintbtn"
-      type="button"
-      :disabled="status !== 'typing' || hintsLeft === 0"
-      @click="useHint"
-    >
-      {{ $t('exercise.type.hint', { count: hintsLeft }) }}
-    </button>
   </div>
 </template>
 
@@ -195,12 +196,12 @@ function useHint() {
   margin: 0;
 }
 
-.type-q__hintrow {
+.type-q__hint {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   width: 100%;
-  max-width: 280px;
+  max-width: 340px;
 }
 
 .type-q__hinticon {
@@ -243,6 +244,7 @@ function useHint() {
 }
 
 .type-q__hintbtn {
+  flex-shrink: 0;
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
 }
