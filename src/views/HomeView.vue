@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { loadLocations } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
 import { isWordLearned } from '@/exercises/test'
+import { WELCOME_CENTER_ID, WELCOME_REQUIRED_EXERCISES } from '@/db/progress'
 import type { Location, LocationProgress, ExerciseType } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
@@ -70,15 +71,18 @@ const wordStats = useLiveQuery(
 )
 
 /**
- * The Welcome Center is the city's front door: until you've met all of its very
- * basic words (hello, please, thank you, yes/no, …) every other tile stays
- * locked. Completion = every Welcome Center word has been seen at least once.
+ * The Welcome Center is the city's front door: every other tile stays locked
+ * until it's finished. Completion = every basic word met *and* every activity —
+ * the practice exercises and the exam — completed at least once.
  */
-const WELCOME_ID = 'welcome-center'
+const WELCOME_ID = WELCOME_CENTER_ID
 const welcomeComplete = computed(() => {
   const total = wordStats.value.total.get(WELCOME_ID) ?? 0
   const seen = wordStats.value.seen.get(WELCOME_ID) ?? 0
-  return total > 0 && seen >= total
+  if (total === 0 || seen < total) return false
+  const progress = allProgress.value.find((p) => p.locationId === WELCOME_ID)
+  const done = new Set(progress?.completedExercises ?? [])
+  return WELCOME_REQUIRED_EXERCISES.every((e) => done.has(e))
 })
 
 const lastTried = ref<string | null>(null)
