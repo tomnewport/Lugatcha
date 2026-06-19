@@ -50,7 +50,7 @@ export default {
     },
     activitiesTitle: 'Complete your first area',
     activitiesIntro:
-      'Meet all the basics, then finish each activity — including the exam — to open the city.',
+      'Meet all the basics, finish each activity, and learn every word in the exam — identified and spelled — to open the city.',
     progressCount: '{done} of {total} done',
     completeTitle: "That's your first area complete!",
     completeBody:

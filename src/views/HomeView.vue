@@ -72,14 +72,15 @@ const wordStats = useLiveQuery(
 
 /**
  * The Welcome Center is the city's front door: every other tile stays locked
- * until it's finished. Completion = every basic word met *and* every activity —
- * the practice exercises and the exam — completed at least once.
+ * until it's finished. Completion = every basic word met, every word learned
+ * (the exam — identified and spelled), and every practice activity done.
  */
 const WELCOME_ID = WELCOME_CENTER_ID
 const welcomeComplete = computed(() => {
   const total = wordStats.value.total.get(WELCOME_ID) ?? 0
   const seen = wordStats.value.seen.get(WELCOME_ID) ?? 0
-  if (total === 0 || seen < total) return false
+  const learned = wordStats.value.known.get(WELCOME_ID) ?? 0
+  if (total === 0 || seen < total || learned < total) return false
   const progress = allProgress.value.find((p) => p.locationId === WELCOME_ID)
   const done = new Set(progress?.completedExercises ?? [])
   return WELCOME_REQUIRED_EXERCISES.every((e) => done.has(e))
