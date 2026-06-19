@@ -5,6 +5,7 @@ import { useSettingsStore, type LabelLanguage, type BaseLanguage } from '@/store
 import { useProgressStore } from '@/stores/progress'
 import { getAudioManifest, type AudioManifest } from '@/audio/audio'
 import { useAudioDownload } from '@/audio/offline'
+import { clearAllLocalData } from '@/db/clearAll'
 
 const router = useRouter()
 const settings = useSettingsStore()
@@ -12,6 +13,9 @@ const progress = useProgressStore()
 
 const confirmingReset = ref(false)
 const resetDone = ref(false)
+
+const confirmingClear = ref(false)
+const clearing = ref(false)
 
 const audioManifest = ref<AudioManifest | null>(null)
 const audioChecked = ref(false)
@@ -49,6 +53,13 @@ async function resetProgress() {
   confirmingReset.value = false
   resetDone.value = true
   setTimeout(() => (resetDone.value = false), 3000)
+}
+
+async function clearAllData() {
+  clearing.value = true
+  await clearAllLocalData()
+  // Reload from the app root so it re-seeds from scratch, like a fresh install.
+  window.location.assign(import.meta.env.BASE_URL)
 }
 </script>
 
@@ -207,6 +218,32 @@ async function resetProgress() {
         </div>
       </div>
       <p v-if="resetDone" class="settings-card__note" aria-live="polite">{{ $t('settings.progress.done') }}</p>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.data.title') }}</h2>
+      <p class="settings-card__desc">
+        {{ $t('settings.data.desc') }}
+      </p>
+      <button
+        v-if="!confirmingClear"
+        class="btn btn--danger"
+        type="button"
+        @click="confirmingClear = true"
+      >
+        {{ $t('settings.data.clear') }}
+      </button>
+      <div v-else class="reset-confirm">
+        <p class="reset-confirm__msg">{{ $t('settings.data.confirm') }}</p>
+        <div class="reset-confirm__actions">
+          <button class="btn btn--danger" type="button" :disabled="clearing" @click="clearAllData">
+            {{ clearing ? $t('settings.data.clearing') : $t('settings.data.confirmYes') }}
+          </button>
+          <button class="btn btn--ghost" type="button" :disabled="clearing" @click="confirmingClear = false">
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
+      </div>
     </section>
   </main>
 </template>
