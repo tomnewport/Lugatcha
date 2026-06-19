@@ -1,0 +1,111 @@
+[
+  {
+    "id": "welcome-center.greetings",
+    "theme": "welcome-center",
+    "title": {
+      "en": "Saying Hello",
+      "ru": "Приветствие"
+    },
+    "scenario": "You meet someone. Greet them and ask how they are.",
+    "scenarioRu": "Вы встречаете человека. Поздоровайтесь и спросите, как у него дела.",
+    "variants": [
+      {
+        "id": "welcome-center.greetings.base",
+        "description": "A simple hello",
+        "descriptionRu": "Простое приветствие",
+        "turns": [
+          { "speaker": "npc", "uzbek": "Salom!", "english": "Hello!", "russian": "Привет!" },
+          { "speaker": "user", "uzbek": "Salom!", "english": "Hello!", "russian": "Привет!" },
+          { "speaker": "npc", "uzbek": "Yaxshimisiz?", "english": "How are you?", "russian": "Как дела?" },
+          { "speaker": "user", "uzbek": "Rahmat, yaxshi.", "english": "Thank you, good.", "russian": "Спасибо, хорошо." }
+        ]
+      },
+      {
+        "id": "welcome-center.greetings.formal",
+        "description": "The formal greeting",
+        "descriptionRu": "Формальное приветствие",
+        "turns": [
+          { "speaker": "npc", "uzbek": "Assalomu alaykum!", "english": "Peace be upon you!", "russian": "Мир вам!" },
+          { "speaker": "user", "uzbek": "Vaalaykum assalom!", "english": "And peace be upon you!", "russian": "И вам мир!" },
+          { "speaker": "npc", "uzbek": "Yaxshimisiz?", "english": "How are you?", "russian": "Как дела?" },
+          { "speaker": "user", "uzbek": "Yaxshi, rahmat. Siz-chi?", "english": "Good, thank you. And you?", "russian": "Хорошо, спасибо. А вы?" },
+          { "speaker": "npc", "uzbek": "Men ham yaxshi.", "english": "I am well too.", "russian": "Я тоже хорошо." }
+        ]
+      },
+      {
+        "id": "welcome-center.greetings.asking-back",
+        "description": "Asking back",
+        "descriptionRu": "Спросить в ответ",
+        "turns": [
+          { "speaker": "npc", "uzbek": "Salom! Yaxshimisiz?", "english": "Hello! How are you?", "russian": "Привет! Как дела?" },
+          { "speaker": "user", "uzbek": "Yaxshi, rahmat. Siz yaxshimisiz?", "english": "Good, thanks. Are you well?", "russian": "Хорошо, спасибо. А вы как?" },
+          { "speaker": "npc", "uzbek": "Ha, rahmat.", "english": "Yes, thank you.", "russian": "Да, спасибо." }
+        ]
+      },
+      {
+        "id": "welcome-center.greetings.goodbye",
+        "description": "Saying goodbye",
+        "descriptionRu": "Прощание",
+        "turns": [
+          { "speaker": "npc", "uzbek": "Xayr!", "english": "Goodbye!", "russian": "До свидания!" },
+          { "speaker": "user", "uzbek": "Xayr! Rahmat.", "english": "Goodbye! Thank you.", "russian": "До свидания! Спасибо." }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "welcome-center.politeness",
+    "theme": "welcome-center",
+    "title": {
+      "en": "Please and Thank You",
+      "ru": "Пожалуйста и спасибо"
+    },
+    "scenario": "Practise the polite words you'll use every day.",
+    "scenarioRu": "Потренируйте вежливые слова, которые пригодятся каждый день.",
+    "variants": [
+      {
+        "id": "welcome-center.politeness.base",
+        "description": "Please and thank you",
+        "descriptionRu": "Пожалуйста и спасибо",
+        "turns": [
+          { "speaker": "user", "uzbek": "Bir choy, iltimos.", "english": "One tea, please.", "russian": "Один чай, пожалуйста." },
+          { "speaker": "npc", "uzbek": "Mana.", "english": "Here you are.", "russian": "Вот, пожалуйста." },
+          { "speaker": "user", "uzbek": "Rahmat!", "english": "Thank you!", "russian": "Спасибо!" },
+          { "speaker": "npc", "uzbek": "Marhamat.", "english": "You're welcome.", "russian": "Пожалуйста." }
+        ]
+      },
+      {
+        "id": "welcome-center.politeness.sorry",
+        "description": "Saying sorry",
+        "descriptionRu": "Извинение",
+        "turns": [
+          { "speaker": "user", "uzbek": "Kechirasiz.", "english": "Excuse me / sorry.", "russian": "Извините." },
+          { "speaker": "npc", "uzbek": "Hechqisi yo'q.", "english": "No problem.", "russian": "Ничего страшного." },
+          { "speaker": "user", "uzbek": "Rahmat.", "english": "Thank you.", "russian": "Спасибо." }
+        ]
+      },
+      {
+        "id": "welcome-center.politeness.help",
+        "description": "Asking for help",
+        "descriptionRu": "Просьба о помощи",
+        "turns": [
+          { "speaker": "user", "uzbek": "Yordam bering, iltimos!", "english": "Help me, please!", "russian": "Помогите, пожалуйста!" },
+          { "speaker": "npc", "uzbek": "Albatta.", "english": "Of course.", "russian": "Конечно." },
+          { "speaker": "user", "uzbek": "Rahmat!", "english": "Thank you!", "russian": "Спасибо!" },
+          { "speaker": "npc", "uzbek": "Marhamat.", "english": "You're welcome.", "russian": "Пожалуйста." }
+        ]
+      },
+      {
+        "id": "welcome-center.politeness.dont-understand",
+        "description": "When you don't understand",
+        "descriptionRu": "Когда не понимаешь",
+        "turns": [
+          { "speaker": "npc", "uzbek": "Xush kelibsiz!", "english": "Welcome!", "russian": "Добро пожаловать!" },
+          { "speaker": "user", "uzbek": "Kechirasiz, tushunmayapman.", "english": "Sorry, I don't understand.", "russian": "Извините, я не понимаю." },
+          { "speaker": "npc", "uzbek": "Sekinroq aytaman.", "english": "I'll say it more slowly.", "russian": "Скажу помедленнее." },
+          { "speaker": "user", "uzbek": "Rahmat.", "english": "Thank you.", "russian": "Спасибо." }
+        ]
+      }
+    ]
+  }
+]
