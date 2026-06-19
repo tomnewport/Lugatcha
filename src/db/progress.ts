@@ -10,15 +10,35 @@ const FAILS_TO_UNLEARN = 2
 export const WELCOME_CENTER_ID = 'welcome-center'
 
 /**
- * Whether the Welcome Center is done — every one of its basic words has been seen
- * at least once. Returns false while the database is still unseeded (no words
- * yet), so the rest of the city stays locked until vocabulary has loaded.
+ * Activities the learner must finish at the Welcome Center before the city
+ * opens — every practice type plus the exam. New Words is tracked separately
+ * (it's "done" once all the basic words have been met), so it isn't listed here.
+ */
+export const WELCOME_REQUIRED_EXERCISES: ExerciseType[] = [
+  'flashcards',
+  'listening',
+  'phrase-assembly',
+  'roleplay',
+  'storytime',
+  'test',
+]
+
+/**
+ * Whether the Welcome Center is done: every basic word has been met *and* every
+ * activity — practice and exam — has been completed at least once. Returns false
+ * while the database is still unseeded, so the rest of the city stays locked.
  */
 export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> {
-  const words = await db.words.where('theme').equals(WELCOME_CENTER_ID).toArray()
+  const [words, locationProgress] = await Promise.all([
+    db.words.where('theme').equals(WELCOME_CENTER_ID).toArray(),
+    db.locationProgress.get(WELCOME_CENTER_ID),
+  ])
   if (words.length === 0) return false
   const progress = await db.wordProgress.bulkGet(words.map((w) => w.id))
-  return progress.every((p) => Boolean(p?.seenAt))
+  const allWordsSeen = progress.every((p) => Boolean(p?.seenAt))
+  const done = new Set(locationProgress?.completedExercises ?? [])
+  const allActivitiesDone = WELCOME_REQUIRED_EXERCISES.every((e) => done.has(e))
+  return allWordsSeen && allActivitiesDone
 }
 
 /** Records first exposure to each word. No-op for words already seen. */
