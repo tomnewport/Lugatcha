@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLiveQuery, db } from '@/db/useDb'
 import { WELCOME_CENTER_ID } from '@/db/progress'
+import { isWordLearned } from '@/exercises/test'
 import {
   buildPotluck,
   loadLocationStats,
@@ -27,6 +28,18 @@ const stats = useLiveQuery<LocationStats | null>(
   null,
 )
 
+// The Exam is only "done" once every word is learned — identified and spelled,
+// i.e. all three test question types passed. Tracked separately from the stats'
+// flashcard-based "known" count.
+const learned = useLiveQuery(
+  async () => {
+    const words = await db.words.where('theme').equals(WELCOME_CENTER_ID).toArray()
+    const progress = await db.wordProgress.bulkGet(words.map((w) => w.id))
+    return { learned: progress.filter((p) => isWordLearned(p)).length, total: words.length }
+  },
+  { learned: 0, total: 0 },
+)
+
 const EMOJI: Record<ExerciseType, string> = {
   intro: '📝',
   flashcards: '🃏',
@@ -49,6 +62,10 @@ const allWordsSeen = computed(() => {
   return !!s && s.totalWords > 0 && s.seenWords >= s.totalWords
 })
 
+const allWordsLearned = computed(
+  () => learned.value.total > 0 && learned.value.learned >= learned.value.total,
+)
+
 const steps = computed<Step[]>(() => {
   const s = stats.value
   if (!s) return []
@@ -57,6 +74,10 @@ const steps = computed<Step[]>(() => {
     // launchable so the learner can keep meeting words (or review later).
     if (a.type === 'intro') {
       return { type: a.type, state: 'available', done: allWordsSeen.value }
+    }
+    // The Exam is "done" only once every word is learned, not after one sitting.
+    if (a.type === 'test') {
+      return { type: a.type, state: a.state, done: allWordsLearned.value, hint: a.hint }
     }
     return { type: a.type, state: a.state, done: a.done, hint: a.hint }
   })
@@ -76,6 +97,9 @@ function pick(step: Step) {
 function subtitle(step: Step): string {
   if (step.type === 'intro' && stats.value) {
     return `${exerciseDescription(step.type)} · ${stats.value.seenWords}/${stats.value.totalWords}`
+  }
+  if (step.type === 'test') {
+    return `${exerciseDescription(step.type)} · ${learned.value.learned}/${learned.value.total}`
   }
   return exerciseDescription(step.type)
 }

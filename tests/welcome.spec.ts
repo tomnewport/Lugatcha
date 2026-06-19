@@ -6,7 +6,9 @@ import {
   isWelcomeCenterComplete,
   markWordsSeen,
   completeExercise,
+  recordTestResult,
 } from '@/db/progress'
+import { TEST_QUESTION_TYPES } from '@/db/types'
 import type { Word } from '@/db/types'
 
 const words: Word[] = [
@@ -29,9 +31,18 @@ beforeEach(async () => {
 
 afterEach(() => vi.unstubAllGlobals())
 
-async function finishAllActivities() {
+async function finishAllPractice() {
   for (const exercise of WELCOME_REQUIRED_EXERCISES) {
     await completeExercise(db, WELCOME_CENTER_ID, exercise)
+  }
+}
+
+/** Pass every test question type for every word, so each becomes "learned". */
+async function learnAllWords() {
+  for (const w of words) {
+    for (const type of TEST_QUESTION_TYPES) {
+      await recordTestResult(db, w.id, type, true)
+    }
   }
 }
 
@@ -40,22 +51,32 @@ describe('isWelcomeCenterComplete', () => {
     expect(await isWelcomeCenterComplete(db)).toBe(false)
   })
 
-  it('is false with every activity done but words still unseen', async () => {
-    await finishAllActivities()
+  it('is false with words met and practice done but the exam unfinished', async () => {
+    await markWordsSeen(db, words.map((w) => w.id))
+    await finishAllPractice()
     expect(await isWelcomeCenterComplete(db)).toBe(false)
   })
 
-  it('is false with all words seen but an activity (the exam) missing', async () => {
-    await markWordsSeen(db, words.map((w) => w.id))
+  it('is false when words are learned but a practice activity is missing', async () => {
+    await learnAllWords()
     for (const exercise of WELCOME_REQUIRED_EXERCISES) {
-      if (exercise !== 'test') await completeExercise(db, WELCOME_CENTER_ID, exercise)
+      if (exercise !== 'storytime') await completeExercise(db, WELCOME_CENTER_ID, exercise)
     }
     expect(await isWelcomeCenterComplete(db)).toBe(false)
   })
 
-  it('is true once every word is met and every activity is done', async () => {
+  it('is false when only some words are learned', async () => {
+    await finishAllPractice()
     await markWordsSeen(db, words.map((w) => w.id))
-    await finishAllActivities()
+    for (const type of TEST_QUESTION_TYPES) {
+      await recordTestResult(db, 'welcome-center.hello', type, true) // only one word learned
+    }
+    expect(await isWelcomeCenterComplete(db)).toBe(false)
+  })
+
+  it('is true once every word is learned and every practice activity is done', async () => {
+    await learnAllWords()
+    await finishAllPractice()
     expect(await isWelcomeCenterComplete(db)).toBe(true)
   })
 })
