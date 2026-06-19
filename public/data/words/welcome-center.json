@@ -20,6 +20,16 @@
     "usageNotesRu": "Вежливое универсальное приветствие. Ответ: Vaalaykum assalom."
   },
   {
+    "id": "welcome-center.vaalaykum-assalom",
+    "uzbek": "Vaalaykum assalom",
+    "english": "And peace be upon you (the reply)",
+    "russian": "И вам мир (ответ)",
+    "theme": "welcome-center",
+    "level": 1,
+    "usageNotes": "The set reply to Assalomu alaykum.",
+    "usageNotesRu": "Устойчивый ответ на Assalomu alaykum."
+  },
+  {
     "id": "welcome-center.goodbye",
     "uzbek": "Xayr",
     "english": "Goodbye",
