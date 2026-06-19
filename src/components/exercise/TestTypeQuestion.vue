@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import type { Word } from '@/db/types'
 import { foldTyping, typingTarget } from '@/exercises/test'
 import { useContentLang } from '@/i18n/content'
+import { speakUzbek } from '@/audio/audio'
 import UzbekKeyboard from './UzbekKeyboard.vue'
 
 const props = defineProps<{ word: Word }>()
@@ -53,8 +54,14 @@ function press(value: string) {
   advancePastSpaces()
   if (typed.value === folded.value) {
     status.value = 'passed'
+    reveal()
     emit('answered', true)
   }
+}
+
+/** Read the word aloud whenever it becomes fully visible — spelled or revealed. */
+function reveal() {
+  void speakUzbek(props.word.uzbek)
 }
 
 function useHint() {
@@ -63,6 +70,7 @@ function useHint() {
   if (hintsUsed.value >= hintBudget.value) {
     status.value = 'failed'
     litKeys.value = null
+    reveal()
     emit('answered', false)
     return
   }
