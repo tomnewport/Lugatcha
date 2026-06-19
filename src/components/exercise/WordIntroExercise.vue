@@ -222,6 +222,12 @@ function retryMatch() {
 
 async function advanceFromMatch() {
   await loadPhrases()
+  // Some locations (the Welcome Center) carry no roleplay or story, so there are
+  // no phrases to show — finish rather than dead-ending on an empty step.
+  if (phrases.value.length === 0) {
+    await finish()
+    return
+  }
   step.value = 'phrases'
 }
 
