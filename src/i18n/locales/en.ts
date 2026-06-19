@@ -244,6 +244,8 @@ export default {
       prompt: 'Type this in Uzbek',
       hintsLeft: '{count} hints left',
       hint: '💡 Hint ({count})',
+      hintExplainer:
+        'Keyboard hints: each tap dims the keyboard further — down to about nine keys, then three, then the one you need. The bar shows how many hints are left.',
     },
     token: {
       answerLabel: 'Your answer',
