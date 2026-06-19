@@ -10,9 +10,9 @@ const FAILS_TO_UNLEARN = 2
 export const WELCOME_CENTER_ID = 'welcome-center'
 
 /**
- * Activities the learner must finish at the Welcome Center before the city
- * opens — every practice type plus the exam. New Words is tracked separately
- * (it's "done" once all the basic words have been met), so it isn't listed here.
+ * Practice activities the learner must finish at the Welcome Center before the
+ * city opens. New Words and the Exam are tracked by word progress instead (every
+ * word met, and every word learned), so they're not listed here.
  */
 export const WELCOME_REQUIRED_EXERCISES: ExerciseType[] = [
   'flashcards',
@@ -20,13 +20,15 @@ export const WELCOME_REQUIRED_EXERCISES: ExerciseType[] = [
   'phrase-assembly',
   'roleplay',
   'storytime',
-  'test',
 ]
 
 /**
- * Whether the Welcome Center is done: every basic word has been met *and* every
- * activity — practice and exam — has been completed at least once. Returns false
- * while the database is still unseeded, so the rest of the city stays locked.
+ * Whether the Welcome Center is done. The learner must:
+ *  - meet every basic word (New Words),
+ *  - finish every practice activity at least once, and
+ *  - learn every word — identified and spelled, i.e. all three test question
+ *    types passed (the Exam isn't "done" until then).
+ * Returns false while the database is still unseeded, so the city stays locked.
  */
 export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> {
   const [words, locationProgress] = await Promise.all([
@@ -36,9 +38,12 @@ export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> 
   if (words.length === 0) return false
   const progress = await db.wordProgress.bulkGet(words.map((w) => w.id))
   const allWordsSeen = progress.every((p) => Boolean(p?.seenAt))
+  const allWordsLearned = progress.every((p) =>
+    TEST_QUESTION_TYPES.every((t) => p?.testPassed?.includes(t)),
+  )
   const done = new Set(locationProgress?.completedExercises ?? [])
   const allActivitiesDone = WELCOME_REQUIRED_EXERCISES.every((e) => done.has(e))
-  return allWordsSeen && allActivitiesDone
+  return allWordsSeen && allWordsLearned && allActivitiesDone
 }
 
 /** Records first exposure to each word. No-op for words already seen. */
