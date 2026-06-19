@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import type { Word } from '@/db/types'
 import { foldTyping, typingTarget } from '@/exercises/test'
 import { useContentLang } from '@/i18n/content'
+import { speakUzbek } from '@/audio/audio'
 import UzbekKeyboard from './UzbekKeyboard.vue'
 
 const props = defineProps<{ word: Word }>()
@@ -53,8 +54,14 @@ function press(value: string) {
   advancePastSpaces()
   if (typed.value === folded.value) {
     status.value = 'passed'
+    reveal()
     emit('answered', true)
   }
+}
+
+/** Read the word aloud whenever it becomes fully visible — spelled or revealed. */
+function reveal() {
+  void speakUzbek(props.word.uzbek)
 }
 
 function useHint() {
@@ -63,6 +70,7 @@ function useHint() {
   if (hintsUsed.value >= hintBudget.value) {
     status.value = 'failed'
     litKeys.value = null
+    reveal()
     emit('answered', false)
     return
   }
@@ -91,7 +99,11 @@ function useHint() {
 
     <p v-if="status === 'failed'" class="type-q__reveal" lang="uz">{{ target }}</p>
 
-    <div class="type-q__hintrow">
+    <UzbekKeyboard :lit-keys="litKeys" :disabled="status !== 'typing'" @press="press" />
+
+    <!-- Hint meter and its trigger live together so it reads as one control:
+         tapping the button spends a segment of the bar beside it. -->
+    <div class="type-q__hint">
       <span
         class="type-q__hinticon"
         role="img"
@@ -110,18 +122,15 @@ function useHint() {
           :class="{ 'type-q__hintseg--spent': i > hintsLeft }"
         />
       </div>
+      <button
+        class="btn btn--ghost type-q__hintbtn"
+        type="button"
+        :disabled="status !== 'typing' || hintsLeft === 0"
+        @click="useHint"
+      >
+        {{ $t('exercise.type.hint', { count: hintsLeft }) }}
+      </button>
     </div>
-
-    <UzbekKeyboard :lit-keys="litKeys" :disabled="status !== 'typing'" @press="press" />
-
-    <button
-      class="btn btn--ghost type-q__hintbtn"
-      type="button"
-      :disabled="status !== 'typing' || hintsLeft === 0"
-      @click="useHint"
-    >
-      {{ $t('exercise.type.hint', { count: hintsLeft }) }}
-    </button>
   </div>
 </template>
 
@@ -195,12 +204,12 @@ function useHint() {
   margin: 0;
 }
 
-.type-q__hintrow {
+.type-q__hint {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   width: 100%;
-  max-width: 280px;
+  max-width: 340px;
 }
 
 .type-q__hinticon {
@@ -243,6 +252,7 @@ function useHint() {
 }
 
 .type-q__hintbtn {
+  flex-shrink: 0;
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
 }
