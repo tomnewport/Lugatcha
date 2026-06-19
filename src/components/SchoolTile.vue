@@ -7,10 +7,18 @@ import type { LessonProgress } from '@/db/types'
 
 const props = defineProps<{ locked?: boolean }>()
 
+const emit = defineEmits<{
+  locked: []
+}>()
+
 const router = useRouter()
 
 function open() {
-  if (!props.locked) router.push('/school')
+  if (props.locked) {
+    emit('locked')
+    return
+  }
+  router.push('/school')
 }
 
 const RADIUS = 18
@@ -36,7 +44,7 @@ const dashOffset = computed(() =>
   <button
     class="tile"
     :class="{ 'tile--complete': isComplete && !locked, 'tile--locked': locked }"
-    :disabled="locked"
+    :aria-disabled="locked"
     :aria-label="`${$t('school.title')}${locked ? ', ' + $t('common.locked') : ''}`"
     @click="open"
   >
@@ -59,6 +67,7 @@ const dashOffset = computed(() =>
       </svg>
       <!-- Open book icon -->
       <svg
+        v-if="!locked"
         class="tile__icon"
         viewBox="0 0 16 16"
         fill="none"
@@ -71,6 +80,7 @@ const dashOffset = computed(() =>
         />
         <path d="M8 3.5v10" />
       </svg>
+      <span v-else class="tile__icon tile__icon--no-entry" aria-hidden="true">⛔</span>
     </div>
     <span class="tile__name">{{ $t('school.title') }}</span>
     <span class="tile__name-uz" lang="uz">{{ $t('school.subtitle') }}</span>
@@ -105,7 +115,7 @@ const dashOffset = computed(() =>
 
 .tile--locked {
   opacity: 0.5;
-  cursor: default;
+  cursor: pointer;
   filter: grayscale(0.7);
 }
 
@@ -147,6 +157,15 @@ const dashOffset = computed(() =>
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.tile__icon--no-entry {
+  font-size: 1rem;
+  line-height: 1;
+  width: auto;
+  height: auto;
+  stroke: none;
+  filter: drop-shadow(0 1px 1px rgba(37, 28, 18, 0.35));
 }
 
 .tile__name {

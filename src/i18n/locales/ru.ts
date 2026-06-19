@@ -27,6 +27,8 @@ const ru: MessageSchema = {
     downloadAudio: 'Загрузить аудио',
     dismiss: 'Закрыть',
     loadingCity: 'Загрузка города…',
+    lockedTitle: 'Этот район пока закрыт',
+    lockedBody: 'Сначала закончите Центр для гостей. Когда первый район будет пройден, откроется остальной город.',
   },
 
   welcome: {

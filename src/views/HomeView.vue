@@ -12,6 +12,7 @@ import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
 import { useAudioReady } from '@/audio/offline'
 import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
+import homeCityMap from '@/assets/home-city-map.jpg'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 const SEED_KEY = 'lugatcha.sessionSeed'
@@ -22,10 +23,15 @@ const { ready: audioReady } = useAudioReady()
 const BANNER_KEY = 'lugatcha.audioBannerDismissed'
 const bannerDismissed = ref(localStorage.getItem(BANNER_KEY) === 'true')
 const showBanner = computed(() => !audioReady.value && !bannerDismissed.value)
+const lockedNoticeVisible = ref(false)
 
 function dismissBanner() {
   bannerDismissed.value = true
   try { localStorage.setItem(BANNER_KEY, 'true') } catch { /* private mode */ }
+}
+
+function showLockedNotice() {
+  lockedNoticeVisible.value = true
 }
 
 function getOrCreateSeed(): number {
@@ -174,6 +180,44 @@ const chipMap = computed(() => {
   }
   return map
 })
+
+const MAP_COLUMNS = [26.8, 43.8, 60.8, 77.8]
+const MAP_ROWS = [28, 41.5, 55, 68.5, 82]
+const MAP_BLOCK = { w: 13.2, h: 9.2 }
+
+const MAP_MARKERS: Record<string, { col: number; row: number }> = {
+  'welcome-center': { col: 0, row: 0 },
+  'police-station': { col: 1, row: 0 },
+  'public-square': { col: 2, row: 0 },
+  hospital: { col: 3, row: 0 },
+  hotel: { col: 0, row: 1 },
+  museum: { col: 1, row: 1 },
+  'train-station': { col: 2, row: 1 },
+  'metro-station': { col: 3, row: 1 },
+  'bus-stop': { col: 0, row: 2 },
+  'gift-shop': { col: 1, row: 2 },
+  'grocery-store': { col: 2, row: 2 },
+  library: { col: 3, row: 2 },
+  restaurant: { col: 0, row: 3 },
+  cafe: { col: 1, row: 3 },
+  choyxona: { col: 2, row: 3 },
+  bank: { col: 3, row: 3 },
+  'mountain-park': { col: 0, row: 4 },
+  airport: { col: 1, row: 4 },
+  school: { col: 2, row: 4 },
+  travel: { col: 3, row: 4 },
+}
+
+function markerStyle(locationId: string) {
+  const marker = MAP_MARKERS[locationId]
+  if (!marker) return {}
+  return {
+    left: `${MAP_COLUMNS[marker.col]}%`,
+    top: `${MAP_ROWS[marker.row]}%`,
+    width: `${MAP_BLOCK.w}%`,
+    height: `${MAP_BLOCK.h}%`,
+  }
+}
 </script>
 
 <template>
@@ -236,38 +280,54 @@ const chipMap = computed(() => {
       <button class="audio-banner__close" type="button" :aria-label="$t('home.dismiss')" @click="dismissBanner">✕</button>
     </div>
 
+    <div
+      v-if="lockedNoticeVisible"
+      class="locked-notice"
+      :class="{ 'locked-notice--below-banner': showBanner }"
+      role="alert"
+      aria-live="polite"
+    >
+      <div class="locked-notice__icon" aria-hidden="true">⛔</div>
+      <div class="locked-notice__body">
+        <p class="locked-notice__title">{{ $t('home.lockedTitle') }}</p>
+        <p class="locked-notice__text">{{ $t('home.lockedBody') }}</p>
+      </div>
+      <button class="locked-notice__close" type="button" :aria-label="$t('common.close')" @click="lockedNoticeVisible = false">✕</button>
+    </div>
+
     <div v-if="sortedLocations.length" class="city-grid" role="list">
-      <template v-for="loc in sortedLocations" :key="loc.id">
-        <SchoolTile
-          v-if="loc.id === 'school'"
-          role="listitem"
-          :locked="!welcomeComplete"
-          :style="{ gridRow: loc.gridRow, gridColumn: loc.gridCol }"
-        />
-        <TravelTile
-          v-else-if="loc.id === 'travel'"
-          role="listitem"
-          :locked="!welcomeComplete"
-          :style="{ gridRow: loc.gridRow, gridColumn: loc.gridCol }"
-        />
-        <LocationTile
-          v-else
+      <div class="city-grid__stage">
+        <img class="city-grid__art" :src="homeCityMap" alt="" aria-hidden="true" />
+        <template v-for="loc in sortedLocations" :key="loc.id">
+          <SchoolTile
+            v-if="loc.id === 'school'"
+            role="listitem"
+            :locked="!welcomeComplete"
+            :style="markerStyle(loc.id)"
+            @locked="showLockedNotice"
+          />
+          <TravelTile
+            v-else-if="loc.id === 'travel'"
+            role="listitem"
+            :locked="!welcomeComplete"
+            :style="markerStyle(loc.id)"
+            @locked="showLockedNotice"
+          />
+          <LocationTile
+            v-else
           role="listitem"
           :location="loc"
           :progress="progressMap.get(loc.id)"
           :locked="loc.id !== WELCOME_ID && !welcomeComplete"
-          :exercise-emoji="chipMap.get(loc.id) ?? undefined"
+            :exercise-emoji="loc.id === WELCOME_ID ? '📖' : (chipMap.get(loc.id) ?? undefined)"
           :seen-words="wordStats.seen.get(loc.id) ?? 0"
           :total-words="wordStats.total.get(loc.id) ?? 0"
           :known-words="wordStats.known.get(loc.id) ?? 0"
-          :style="{
-            gridRow: loc.gridRow,
-            gridColumn: loc.gridCol,
-            ...(loc.colSpan ? { gridColumn: `${loc.gridCol} / span ${loc.colSpan}` } : {}),
-            ...(loc.rowSpan ? { gridRow: `${loc.gridRow} / span ${loc.rowSpan}` } : {}),
-          }"
-        />
-      </template>
+            :style="markerStyle(loc.id)"
+            @locked="showLockedNotice"
+          />
+        </template>
+      </div>
     </div>
 
     <p v-else class="home-loading" aria-live="polite">{{ $t('home.loadingCity') }}</p>
@@ -276,13 +336,14 @@ const chipMap = computed(() => {
 
 <style scoped>
 .home {
+  --home-map-bg: #e7ddcf;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
   padding: 1.25rem 1rem 4rem;
-  background: var(--color-bg);
+  background: var(--home-map-bg);
   position: relative;
 }
 
@@ -300,6 +361,7 @@ const chipMap = computed(() => {
   background: var(--color-surface);
   color: var(--color-text-muted);
   box-shadow: var(--shadow-sm);
+  z-index: 4;
 }
 
 .settings-link svg {
@@ -335,6 +397,7 @@ const chipMap = computed(() => {
   border-left: 4px solid var(--color-primary);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
+  z-index: 3;
 }
 
 .audio-banner__body {
@@ -368,6 +431,57 @@ const chipMap = computed(() => {
   line-height: 1;
 }
 
+.locked-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  width: min(92vw, 440px);
+  padding: 0.75rem 0.85rem;
+  border: 1.5px solid rgba(177, 67, 54, 0.35);
+  border-left: 5px solid var(--color-terracotta);
+  border-radius: var(--radius-md);
+  background: rgba(255, 252, 240, 0.94);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px) saturate(1.08);
+  z-index: 5;
+}
+
+.locked-notice__icon {
+  flex-shrink: 0;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.locked-notice__body {
+  min-width: 0;
+  flex: 1;
+}
+
+.locked-notice__title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--color-terracotta);
+  line-height: 1.15;
+}
+
+.locked-notice__text {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--color-text);
+}
+
+.locked-notice__close {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 0.12rem 0.18rem;
+}
+
 /* Header */
 .home-header {
   display: flex;
@@ -375,6 +489,7 @@ const chipMap = computed(() => {
   align-items: center;
   gap: 0.25rem;
   text-align: center;
+  z-index: 3;
 }
 
 .home-header__ornament {
@@ -398,13 +513,251 @@ const chipMap = computed(() => {
   margin: 0;
 }
 
-/* 4-column city grid */
+/* Image-backed city map with location markers */
 .city-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
   width: 100%;
-  max-width: 520px;
+  max-width: min(620px, calc(100dvh - 12rem));
+  aspect-ratio: 1122 / 1402;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(82, 63, 39, 0.18);
+  border-radius: var(--radius-lg);
+  background: var(--home-map-bg);
+  box-shadow: var(--shadow-md);
+  isolation: isolate;
+}
+
+.city-grid__stage {
+  position: absolute;
+  inset: 0;
+}
+
+.city-grid__art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+}
+
+.city-grid :deep(.tile) {
+  z-index: 3;
+}
+
+.city-grid :deep(.tile) {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  min-height: 0;
+  padding: 5px 6px;
+  gap: 2px;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.city-grid :deep(.tile:not(:disabled):hover) {
+  transform: translate(-50%, calc(-50% - 3px)) scale(1.02);
+  box-shadow: none;
+}
+
+.city-grid :deep(.tile--locked) {
+  background: transparent;
+  opacity: 0.82;
+}
+
+.city-grid :deep(.tile__ring-wrap),
+.city-grid :deep(.tile__svg),
+.city-grid :deep(.tile__icon-wrap) {
+  width: 36px;
+  height: 36px;
+}
+
+.city-grid :deep(.tile__icon-wrap) {
+  display: flex;
+}
+
+.city-grid :deep(.tile__icon-wrap .tile__icon) {
+  width: 30px;
+  height: 30px;
+}
+
+.city-grid :deep(.tile__name) {
+  font-size: 0.79rem;
+  line-height: 1.05;
+  margin-top: 0.22rem;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  color: var(--color-text);
+  text-shadow:
+    -1px -1px 0 rgba(255, 252, 240, 0.95),
+    1px -1px 0 rgba(255, 252, 240, 0.95),
+    -1px 1px 0 rgba(255, 252, 240, 0.95),
+    1px 1px 0 rgba(255, 252, 240, 0.95),
+    0 2px 4px rgba(37, 28, 18, 0.35);
+}
+
+.city-grid :deep(.tile__icon--letter),
+.city-grid :deep(.tile__icon--no-entry) {
+  font-size: 1.2rem;
+}
+
+.city-grid :deep(.tile__name-uz) {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .city-grid :deep(.tile) {
+    padding: 4px;
+  }
+
+  .city-grid :deep(.tile__ring-wrap),
+  .city-grid :deep(.tile__svg),
+  .city-grid :deep(.tile__icon-wrap) {
+    width: 30px;
+    height: 30px;
+  }
+
+  .city-grid :deep(.tile__name) {
+    font-size: 0.68rem;
+  }
+}
+
+@media (orientation: portrait) {
+  .home {
+    min-height: 100dvh;
+    padding: 0;
+    gap: 0;
+    overflow: hidden;
+    background: var(--home-map-bg);
+  }
+
+  .home-header {
+    position: absolute;
+    top: max(0.8rem, env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 0;
+    padding: 0.45rem 0.7rem;
+    border-radius: var(--radius-lg);
+    background: rgba(255, 252, 240, 0.74);
+    box-shadow: 0 8px 20px rgba(37, 28, 18, 0.14);
+    backdrop-filter: blur(6px) saturate(1.12);
+  }
+
+  .home-header__ornament {
+    display: none;
+  }
+
+  .home-header__title {
+    font-size: 1.25rem;
+  }
+
+  .home-header__subtitle {
+    font-size: 0.68rem;
+  }
+
+  .audio-banner {
+    position: absolute;
+    top: calc(max(0.8rem, env(safe-area-inset-top)) + 4.2rem);
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+    max-width: none;
+    padding: 0.7rem 0.8rem;
+    background: rgba(255, 252, 240, 0.9);
+    backdrop-filter: blur(7px) saturate(1.1);
+  }
+
+  .audio-banner__text {
+    font-size: 0.78rem;
+  }
+
+  .audio-banner__btn {
+    font-size: 0.78rem;
+  }
+
+  .locked-notice {
+    position: absolute;
+    top: calc(max(0.8rem, env(safe-area-inset-top)) + 4.2rem);
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+  }
+
+  .locked-notice--below-banner {
+    top: calc(max(0.8rem, env(safe-area-inset-top)) + 11.2rem);
+  }
+
+  .city-grid {
+    position: fixed;
+    inset: 0;
+    --map-focus-x: 55%;
+    --map-nudge-x: 16px;
+    --map-scale: 0.9;
+    width: 100vw;
+    height: 100dvh;
+    padding: 0;
+    max-width: none;
+    aspect-ratio: auto;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .city-grid__stage {
+    position: absolute;
+    flex: none;
+    top: 50%;
+    left: 50%;
+    width: calc(
+      max(100vw, min(calc(100dvh * 0.8003), calc(100vw * 1.62))) * var(--map-scale)
+    );
+    height: auto;
+    aspect-ratio: 1122 / 1402;
+    transform: translate(calc(-1 * var(--map-focus-x) + var(--map-nudge-x)), -50%);
+  }
+
+  .city-grid :deep(.tile) {
+    padding: 4px;
+  }
+
+  .city-grid :deep(.tile__ring-wrap),
+  .city-grid :deep(.tile__svg),
+  .city-grid :deep(.tile__icon-wrap) {
+    width: 32px;
+    height: 32px;
+  }
+
+  .city-grid :deep(.tile__name) {
+    font-size: 0.73rem;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 420px) {
+  .city-grid :deep(.tile__ring-wrap),
+  .city-grid :deep(.tile__svg),
+  .city-grid :deep(.tile__icon-wrap) {
+    width: 30px;
+    height: 30px;
+  }
+
+  .city-grid :deep(.tile__name) {
+    font-size: 0.75rem;
+  }
 }
 
 .home-loading {
