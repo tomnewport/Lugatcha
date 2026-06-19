@@ -48,14 +48,15 @@ export default {
       metaBody:
         'The Language School explains how Uzbek itself works; the Travel Agency takes you around the country. Both open once you finish here.',
     },
-    progress: '{seen} of {total} basics met',
-    start: 'Learn the basics',
-    continue: 'Keep going',
-    refresh: 'Refresh the basics',
+    activitiesTitle: 'Complete your first area',
+    activitiesIntro:
+      'Meet all the basics, then finish each activity — including the exam — to open the city.',
+    progressCount: '{done} of {total} done',
     completeTitle: "That's your first area complete!",
     completeBody:
-      'You now know the essentials and how an area works. The rest of the city is open — and you can come back here any time to refresh these words.',
+      'You now know the essentials and how an area works — words met, practice done, exam passed. The rest of the city is open.',
     toCity: 'Explore the city',
+    resit: "Curious? Re-sit any activity any time — it won't lock the city again.",
   },
 
   settings: {

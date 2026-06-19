@@ -83,10 +83,10 @@ watch(
   { immediate: true },
 )
 
-/** The Welcome Center only ever teaches its own basics. */
-function startWelcomeVocab() {
+/** The Welcome Center induction launches whichever activity the learner picks. */
+function startWelcomeActivity(type: ExerciseType) {
   sessionKey.value++
-  activeExercise.value = 'intro'
+  activeExercise.value = type
 }
 
 const EXERCISE_COMPONENTS = {
@@ -101,13 +101,15 @@ const EXERCISE_COMPONENTS = {
 
 async function onComplete() {
   playChime()
-  // The Test is a recurring activity — it never gets marked permanently done,
-  // so it stays on the table for repeated learning and re-testing.
-  if (activeExercise.value && activeExercise.value !== 'test') {
-    await progressStore.completeExercise(locationId.value, activeExercise.value)
+  const finished = activeExercise.value
+  // Normally the Test is a recurring activity and never marked permanently done.
+  // The Welcome Center is the exception: finishing the exam (and every other
+  // activity) is required to complete it, so record the Test there too.
+  if (finished && (isWelcome.value || finished !== 'test')) {
+    await progressStore.completeExercise(locationId.value, finished)
   }
   // Every finished exercise advances the rotation so the next visit varies.
-  if (activeExercise.value) {
+  if (finished) {
     await progressStore.recordLocationVisit(locationId.value)
   }
   // The Welcome Center returns to its induction screen so the learner sees their
@@ -145,8 +147,8 @@ function exitExercise() {
     />
   </ExerciseLayout>
 
-  <!-- Welcome Center induction: explains the city, then teaches the basics -->
-  <WelcomeInduction v-else-if="location && isWelcome" @start="startWelcomeVocab" />
+  <!-- Welcome Center induction: explains the city, then guides through each activity -->
+  <WelcomeInduction v-else-if="location && isWelcome" @start="startWelcomeActivity" />
 
   <!-- Fallback: nothing available at this location -->
   <main v-else-if="location && stats && potluck.every(a => a.state === 'locked')" class="location-view">
