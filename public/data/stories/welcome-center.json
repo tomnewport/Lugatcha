@@ -1,0 +1,178 @@
+[
+  {
+    "id": "welcome-center.first-hello",
+    "theme": "welcome-center",
+    "title": {
+      "en": "A First Hello",
+      "ru": "Первое приветствие",
+      "uz": "Birinchi salom"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men yangi shaharga keldim.",
+        "english": "I came to a new city.",
+        "russian": "Я приехал в новый город."
+      },
+      {
+        "uzbek": "Bir kishi menga salom berdi.",
+        "english": "A person greeted me.",
+        "russian": "Один человек поздоровался со мной."
+      },
+      {
+        "uzbek": "Men ham unga salom berdim.",
+        "english": "I greeted them back.",
+        "russian": "Я тоже поздоровался с ним."
+      },
+      {
+        "uzbek": "U mendan yaxshimisiz deb so'radi.",
+        "english": "They asked me how I was.",
+        "russian": "Он спросил у меня, как дела."
+      },
+      {
+        "uzbek": "Men rahmat, yaxshi dedim.",
+        "english": "I said thank you, good.",
+        "russian": "Я сказал спасибо, хорошо."
+      },
+      {
+        "uzbek": "Bu mening birinchi suhbatim edi.",
+        "english": "This was my first conversation.",
+        "russian": "Это был мой первый разговор."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "yangi": "new",
+      "shaharga": "to the city",
+      "keldim": "I came / arrived",
+      "Bir": "one / a",
+      "kishi": "person",
+      "menga": "to me",
+      "salom": "hello / greeting",
+      "berdi": "gave",
+      "ham": "also / too",
+      "unga": "to them",
+      "berdim": "I gave",
+      "U": "he / she / they",
+      "mendan": "from me",
+      "yaxshimisiz": "how are you / are you well",
+      "deb": "saying / that",
+      "so'radi": "asked",
+      "rahmat": "thank you",
+      "yaxshi": "good",
+      "dedim": "I said",
+      "Bu": "this",
+      "mening": "my",
+      "birinchi": "first",
+      "suhbatim": "my conversation",
+      "edi": "was"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "yangi": "новый",
+      "shaharga": "в город",
+      "keldim": "я приехал",
+      "Bir": "один / некий",
+      "kishi": "человек",
+      "menga": "мне",
+      "salom": "привет / приветствие",
+      "berdi": "дал",
+      "ham": "тоже / также",
+      "unga": "ему / ей",
+      "berdim": "я дал",
+      "U": "он / она",
+      "mendan": "у меня",
+      "yaxshimisiz": "как дела / всё хорошо?",
+      "deb": "говоря / что",
+      "so'radi": "спросил",
+      "rahmat": "спасибо",
+      "yaxshi": "хорошо",
+      "dedim": "я сказал",
+      "Bu": "это",
+      "mening": "мой",
+      "suhbatim": "мой разговор",
+      "birinchi": "первый",
+      "edi": "был"
+    }
+  },
+  {
+    "id": "welcome-center.please-thank-you",
+    "theme": "welcome-center",
+    "title": {
+      "en": "Please and Thank You",
+      "ru": "Пожалуйста и спасибо",
+      "uz": "Iltimos va rahmat"
+    },
+    "sentences": [
+      {
+        "uzbek": "Men do'konga kirdim.",
+        "english": "I went into the shop.",
+        "russian": "Я зашёл в магазин."
+      },
+      {
+        "uzbek": "Menga bir suv kerak edi.",
+        "english": "I needed a water.",
+        "russian": "Мне нужна была вода."
+      },
+      {
+        "uzbek": "Bir suv, iltimos, dedim.",
+        "english": "One water, please, I said.",
+        "russian": "Один воды, пожалуйста, сказал я."
+      },
+      {
+        "uzbek": "Sotuvchi menga suv berdi.",
+        "english": "The seller gave me water.",
+        "russian": "Продавец дал мне воду."
+      },
+      {
+        "uzbek": "Men rahmat dedim.",
+        "english": "I said thank you.",
+        "russian": "Я сказал спасибо."
+      },
+      {
+        "uzbek": "Sotuvchi marhamat dedi.",
+        "english": "The seller said you're welcome.",
+        "russian": "Продавец сказал пожалуйста."
+      }
+    ],
+    "glossary": {
+      "Men": "I",
+      "do'konga": "into the shop",
+      "kirdim": "I entered",
+      "Menga": "to me",
+      "menga": "to me",
+      "bir": "one / a",
+      "Bir": "one / a",
+      "suv": "water",
+      "kerak": "needed / necessary",
+      "edi": "was",
+      "iltimos": "please",
+      "dedim": "I said",
+      "Sotuvchi": "the seller",
+      "sotuvchi": "the seller",
+      "berdi": "gave",
+      "rahmat": "thank you",
+      "marhamat": "you're welcome",
+      "dedi": "said"
+    },
+    "glossaryRu": {
+      "Men": "я",
+      "do'konga": "в магазин",
+      "kirdim": "я вошёл",
+      "Menga": "мне",
+      "menga": "мне",
+      "bir": "один / некий",
+      "Bir": "один / некий",
+      "suv": "вода",
+      "kerak": "нужно / необходимо",
+      "edi": "был",
+      "iltimos": "пожалуйста",
+      "dedim": "я сказал",
+      "Sotuvchi": "продавец",
+      "sotuvchi": "продавец",
+      "berdi": "дал",
+      "rahmat": "спасибо",
+      "marhamat": "пожалуйста",
+      "dedi": "сказал"
+    }
+  }
+]

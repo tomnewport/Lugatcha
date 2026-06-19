@@ -26,6 +26,7 @@
     "fergana"
   ],
   "stories": [
+    "welcome-center",
     "airport",
     "restaurant",
     "hotel",
@@ -51,6 +52,7 @@
     "aral"
   ],
   "roleplay": [
+    "welcome-center",
     "airport",
     "restaurant",
     "hotel",
