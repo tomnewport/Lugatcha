@@ -1,7 +1,8 @@
 import { db } from '@/db'
 import type { Word, WordProgress } from '@/db/types'
-import { shuffle } from './validate'
+import { shuffle, normalizeToken } from './validate'
 import { isWordLearned } from './test'
+import { WELCOME_CENTER_ID } from '@/db/progress'
 
 async function seenWordIds(): Promise<Set<string>> {
   const progress = await db.wordProgress.toArray()
@@ -14,9 +15,28 @@ function byLevel(words: Word[]): Word[] {
 }
 
 /**
+ * Keeps the first word of each Uzbek surface form. Two cards that share a
+ * spelling (e.g. a theme word and the identical core word) can't be matched
+ * unambiguously, so the duplicate is dropped.
+ */
+function dedupeBySurface(words: Word[]): Word[] {
+  const seen = new Set<string>()
+  const out: Word[] = []
+  for (const w of words) {
+    const form = normalizeToken(w.uzbek)
+    if (seen.has(form)) continue
+    seen.add(form)
+    out.push(w)
+  }
+  return out
+}
+
+/**
  * Words for the intro exercise: unseen theme words first (essential levels
  * before nice-to-have), padded with unseen core vocabulary, then (when nearly
- * everything is seen) already-seen words.
+ * everything is seen) already-seen words. The Welcome Center is self-contained
+ * onboarding, so it never pads with core — its basics already overlap core
+ * vocabulary, which would surface the same word twice.
  */
 export async function pickIntroWords(theme: string, count = 5): Promise<Word[]> {
   const [themeWords, coreWords, seen] = await Promise.all([
@@ -25,9 +45,13 @@ export async function pickIntroWords(theme: string, count = 5): Promise<Word[]> 
     seenWordIds(),
   ])
   const unseenTheme = byLevel(themeWords.filter((w) => !seen.has(w.id)))
+  const seenTheme = shuffle(themeWords.filter((w) => seen.has(w.id)))
+  if (theme === WELCOME_CENTER_ID) {
+    return dedupeBySurface([...unseenTheme, ...seenTheme]).slice(0, count)
+  }
   const unseenCore = byLevel(coreWords.filter((w) => !seen.has(w.id)))
   const seenAny = shuffle([...themeWords, ...coreWords].filter((w) => seen.has(w.id)))
-  return [...unseenTheme, ...unseenCore, ...seenAny].slice(0, count)
+  return dedupeBySurface([...unseenTheme, ...unseenCore, ...seenAny]).slice(0, count)
 }
 
 /**
