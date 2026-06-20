@@ -2,14 +2,18 @@
 import { ref, computed, onMounted } from 'vue'
 import type { Word } from '@/db/types'
 import { speakUzbek } from '@/audio/audio'
+import { latinToCyrillic } from '@/exercises/transliterate'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 
 const props = defineProps<{
   word: Word
-  /** 'listen' plays the audio prompt; 'read' shows the Uzbek text. */
-  mode: 'listen' | 'read'
+  /**
+   * 'listen' plays the audio prompt; 'read' shows the Latin spelling;
+   * 'read-cyrillic' shows the Cyrillic spelling.
+   */
+  mode: 'listen' | 'read' | 'read-cyrillic'
   options: string[]
 }>()
 
@@ -18,6 +22,15 @@ const { gloss } = useContentLang()
 
 /** The correct answer in the learner's base language. */
 const answer = computed(() => gloss(props.word))
+
+/** Cyrillic spelling for the sight-Cyrillic prompt, transliterated if absent. */
+const cyrillic = computed(() => props.word.cyrillic || latinToCyrillic(props.word.uzbek))
+
+const instruction = computed(() => {
+  if (props.mode === 'listen') return 'exercise.choice.listenChoose'
+  if (props.mode === 'read-cyrillic') return 'exercise.choice.chooseCyrillic'
+  return 'exercise.choice.choose'
+})
 
 const query = ref('')
 const picked = ref<string | null>(null)
@@ -54,12 +67,11 @@ function optionClass(option: string): string {
 
 <template>
   <div class="choice-q">
-    <p class="choice-q__instruction">
-      {{ mode === 'listen' ? $t('exercise.choice.listenChoose') : $t('exercise.choice.choose') }}
-    </p>
+    <p class="choice-q__instruction">{{ $t(instruction) }}</p>
 
     <div class="choice-q__prompt">
       <AudioButton v-if="mode === 'listen'" :text="word.uzbek" large :label="$t('audio.playSound')" />
+      <p v-else-if="mode === 'read-cyrillic'" class="choice-q__uzbek" lang="uz">{{ cyrillic }}</p>
       <p v-else class="choice-q__uzbek">
         <UzbekSentence :uzbek="word.uzbek" />
       </p>

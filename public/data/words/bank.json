@@ -2,6 +2,7 @@
   {
     "id": "bank.bank",
     "uzbek": "bank",
+    "cyrillic": "банк",
     "english": "bank",
     "russian": "банк",
     "theme": "bank",
@@ -10,6 +11,7 @@
   {
     "id": "bank.money",
     "uzbek": "pul",
+    "cyrillic": "пул",
     "english": "money",
     "russian": "деньги",
     "theme": "bank",
@@ -18,6 +20,7 @@
   {
     "id": "bank.exchange",
     "uzbek": "almashtirish",
+    "cyrillic": "алмаштириш",
     "english": "to exchange",
     "russian": "обменять",
     "theme": "bank",
@@ -26,6 +29,7 @@
   {
     "id": "bank.dollar",
     "uzbek": "dollar",
+    "cyrillic": "доллар",
     "english": "dollar",
     "russian": "доллар",
     "theme": "bank",
@@ -34,6 +38,7 @@
   {
     "id": "bank.som",
     "uzbek": "so'm",
+    "cyrillic": "сўм",
     "english": "som (Uzbek currency)",
     "russian": "сум (узбекская валюта)",
     "theme": "bank",
@@ -42,6 +47,7 @@
   {
     "id": "bank.how-much",
     "uzbek": "qancha",
+    "cyrillic": "қанча",
     "english": "how much",
     "russian": "сколько",
     "theme": "bank",
@@ -50,6 +56,7 @@
   {
     "id": "bank.card-bank",
     "uzbek": "karta",
+    "cyrillic": "карта",
     "english": "bank card",
     "russian": "банковская карта",
     "theme": "bank",
@@ -58,6 +65,7 @@
   {
     "id": "bank.cash",
     "uzbek": "naqd pul",
+    "cyrillic": "нақд пул",
     "english": "cash",
     "russian": "наличные",
     "theme": "bank",
@@ -66,6 +74,7 @@
   {
     "id": "bank.atm",
     "uzbek": "bankomat",
+    "cyrillic": "банкомат",
     "english": "ATM",
     "russian": "банкомат",
     "theme": "bank",
@@ -74,6 +83,7 @@
   {
     "id": "bank.rate",
     "uzbek": "kurs",
+    "cyrillic": "курс",
     "english": "exchange rate",
     "russian": "обменный курс",
     "theme": "bank",
@@ -82,6 +92,7 @@
   {
     "id": "bank.passport",
     "uzbek": "pasport",
+    "cyrillic": "паспорт",
     "english": "passport",
     "russian": "паспорт",
     "theme": "bank",
@@ -90,6 +101,7 @@
   {
     "id": "bank.sign",
     "uzbek": "imzo",
+    "cyrillic": "имзо",
     "english": "signature",
     "russian": "подпись",
     "theme": "bank",

@@ -2,6 +2,7 @@
   {
     "id": "museum.museum",
     "uzbek": "muzey",
+    "cyrillic": "музей",
     "english": "museum",
     "russian": "музей",
     "theme": "museum",
@@ -10,6 +11,7 @@
   {
     "id": "museum.history",
     "uzbek": "tarix",
+    "cyrillic": "тарих",
     "english": "history",
     "russian": "история",
     "theme": "museum",
@@ -18,6 +20,7 @@
   {
     "id": "museum.old",
     "uzbek": "eski",
+    "cyrillic": "эски",
     "english": "old",
     "russian": "старый",
     "theme": "museum",
@@ -26,6 +29,7 @@
   {
     "id": "museum.picture",
     "uzbek": "rasm",
+    "cyrillic": "расм",
     "english": "picture / painting",
     "russian": "картина",
     "theme": "museum",
@@ -34,6 +38,7 @@
   {
     "id": "museum.beautiful",
     "uzbek": "chiroyli",
+    "cyrillic": "чиройли",
     "english": "beautiful",
     "russian": "красивый",
     "theme": "museum",
@@ -42,6 +47,7 @@
   {
     "id": "museum.hall",
     "uzbek": "zal",
+    "cyrillic": "зал",
     "english": "hall",
     "russian": "зал",
     "theme": "museum",
@@ -50,6 +56,7 @@
   {
     "id": "museum.tour",
     "uzbek": "ekskursiya",
+    "cyrillic": "экскурсия",
     "english": "tour / excursion",
     "russian": "экскурсия",
     "theme": "museum",
@@ -58,6 +65,7 @@
   {
     "id": "museum.student",
     "uzbek": "talaba",
+    "cyrillic": "талаба",
     "english": "student",
     "russian": "студент",
     "theme": "museum",
@@ -66,6 +74,7 @@
   {
     "id": "museum.discount",
     "uzbek": "chegirma",
+    "cyrillic": "чегирма",
     "english": "discount",
     "russian": "скидка",
     "theme": "museum",
@@ -74,6 +83,7 @@
   {
     "id": "museum.opening-hours",
     "uzbek": "ish vaqti",
+    "cyrillic": "иш вақти",
     "english": "opening hours",
     "russian": "часы работы",
     "theme": "museum",
@@ -82,6 +92,7 @@
   {
     "id": "museum.art",
     "uzbek": "san'at",
+    "cyrillic": "санъат",
     "english": "art",
     "russian": "искусство",
     "theme": "museum",
@@ -90,6 +101,7 @@
   {
     "id": "museum.ceramics",
     "uzbek": "sopol",
+    "cyrillic": "сопол",
     "english": "ceramics / pottery",
     "russian": "керамика",
     "theme": "museum",
@@ -98,6 +110,7 @@
   {
     "id": "museum.silk",
     "uzbek": "ipak",
+    "cyrillic": "ипак",
     "english": "silk",
     "russian": "шёлк",
     "theme": "museum",

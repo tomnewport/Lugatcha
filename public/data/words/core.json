@@ -2,6 +2,7 @@
   {
     "id": "core.hello",
     "uzbek": "Salom",
+    "cyrillic": "Салом",
     "english": "Hello",
     "russian": "Здравствуйте",
     "theme": "core",
@@ -10,6 +11,7 @@
   {
     "id": "core.thank-you",
     "uzbek": "Rahmat",
+    "cyrillic": "Раҳмат",
     "english": "Thank you",
     "russian": "Спасибо",
     "theme": "core",
@@ -18,6 +20,7 @@
   {
     "id": "core.please",
     "uzbek": "Iltimos",
+    "cyrillic": "Илтимос",
     "english": "Please",
     "russian": "Пожалуйста",
     "theme": "core",
@@ -26,6 +29,7 @@
   {
     "id": "core.yes",
     "uzbek": "Ha",
+    "cyrillic": "Ҳа",
     "english": "Yes",
     "russian": "Да",
     "theme": "core",
@@ -34,6 +38,7 @@
   {
     "id": "core.no",
     "uzbek": "Yo'q",
+    "cyrillic": "Йўқ",
     "english": "No",
     "russian": "Нет",
     "theme": "core",
@@ -42,6 +47,7 @@
   {
     "id": "core.excuse-me",
     "uzbek": "Kechirasiz",
+    "cyrillic": "Кечирасиз",
     "english": "Excuse me",
     "russian": "Извините",
     "theme": "core",
@@ -52,6 +58,7 @@
   {
     "id": "core.goodbye",
     "uzbek": "Xayr",
+    "cyrillic": "Хайр",
     "english": "Goodbye",
     "russian": "До свидания",
     "theme": "core",
@@ -60,6 +67,7 @@
   {
     "id": "core.i-dont-understand",
     "uzbek": "Tushunmayapman",
+    "cyrillic": "Тушунмаяпман",
     "english": "I don't understand",
     "russian": "Я не понимаю",
     "theme": "core",
@@ -70,6 +78,7 @@
   {
     "id": "core.do-you-speak-english",
     "uzbek": "Siz inglizcha gapirasizmi?",
+    "cyrillic": "Сиз инглизча гапирасизми?",
     "english": "Do you speak English?",
     "russian": "Вы говорите по-английски?",
     "theme": "core",
@@ -78,6 +87,7 @@
   {
     "id": "core.where-is",
     "uzbek": "... qayerda?",
+    "cyrillic": "... қаерда?",
     "english": "Where is ...?",
     "russian": "Где ...?",
     "theme": "core",
@@ -88,6 +98,7 @@
   {
     "id": "core.need",
     "uzbek": "kerak",
+    "cyrillic": "керак",
     "english": "need / necessary",
     "russian": "нужно / необходимо",
     "theme": "core",
@@ -98,6 +109,7 @@
   {
     "id": "core.there-is",
     "uzbek": "bor",
+    "cyrillic": "бор",
     "english": "there is / have",
     "russian": "есть / иметься",
     "theme": "core",
@@ -108,6 +120,7 @@
   {
     "id": "core.how-much",
     "uzbek": "qancha",
+    "cyrillic": "қанча",
     "english": "how much / how many",
     "russian": "сколько",
     "theme": "core",
@@ -118,6 +131,7 @@
   {
     "id": "core.money",
     "uzbek": "pul",
+    "cyrillic": "пул",
     "english": "money",
     "russian": "деньги",
     "theme": "core",
@@ -126,6 +140,7 @@
   {
     "id": "core.som",
     "uzbek": "so'm",
+    "cyrillic": "сўм",
     "english": "som (Uzbek currency)",
     "russian": "сум (узбекская валюта)",
     "theme": "core",
@@ -136,6 +151,7 @@
   {
     "id": "core.open",
     "uzbek": "ochiq",
+    "cyrillic": "очиқ",
     "english": "open",
     "russian": "открыто",
     "theme": "core",
@@ -144,6 +160,7 @@
   {
     "id": "core.closed",
     "uzbek": "yopiq",
+    "cyrillic": "ёпиқ",
     "english": "closed",
     "russian": "закрыто",
     "theme": "core",
@@ -152,6 +169,7 @@
   {
     "id": "core.good",
     "uzbek": "yaxshi",
+    "cyrillic": "яхши",
     "english": "good",
     "russian": "хорошо",
     "theme": "core",
@@ -160,6 +178,7 @@
   {
     "id": "core.now",
     "uzbek": "hozir",
+    "cyrillic": "ҳозир",
     "english": "now",
     "russian": "сейчас",
     "theme": "core",
@@ -168,6 +187,7 @@
   {
     "id": "core.today",
     "uzbek": "bugun",
+    "cyrillic": "бугун",
     "english": "today",
     "russian": "сегодня",
     "theme": "core",
@@ -176,6 +196,7 @@
   {
     "id": "core.tomorrow",
     "uzbek": "ertaga",
+    "cyrillic": "эртага",
     "english": "tomorrow",
     "russian": "завтра",
     "theme": "core",
@@ -184,6 +205,7 @@
   {
     "id": "core.big",
     "uzbek": "katta",
+    "cyrillic": "катта",
     "english": "big",
     "russian": "большой",
     "theme": "core",
@@ -192,6 +214,7 @@
   {
     "id": "core.small",
     "uzbek": "kichik",
+    "cyrillic": "кичик",
     "english": "small",
     "russian": "маленький",
     "theme": "core",
@@ -200,6 +223,7 @@
   {
     "id": "core.hour-clock",
     "uzbek": "soat",
+    "cyrillic": "соат",
     "english": "hour / o'clock",
     "russian": "час / время",
     "theme": "core",
@@ -210,6 +234,7 @@
   {
     "id": "core.when",
     "uzbek": "qachon",
+    "cyrillic": "қачон",
     "english": "when",
     "russian": "когда",
     "theme": "core",

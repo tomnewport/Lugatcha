@@ -2,6 +2,7 @@
   {
     "id": "welcome-center.hello",
     "uzbek": "Salom",
+    "cyrillic": "Салом",
     "english": "Hello",
     "russian": "Здравствуйте",
     "theme": "welcome-center",
@@ -12,6 +13,7 @@
   {
     "id": "welcome-center.assalomu-alaykum",
     "uzbek": "Assalomu alaykum",
+    "cyrillic": "Ассалому алайкум",
     "english": "Peace be upon you (formal hello)",
     "russian": "Мир вам (формальное приветствие)",
     "theme": "welcome-center",
@@ -22,6 +24,7 @@
   {
     "id": "welcome-center.vaalaykum-assalom",
     "uzbek": "Vaalaykum assalom",
+    "cyrillic": "Ваалайкум ассалом",
     "english": "And peace be upon you (the reply)",
     "russian": "И вам мир (ответ)",
     "theme": "welcome-center",
@@ -32,6 +35,7 @@
   {
     "id": "welcome-center.goodbye",
     "uzbek": "Xayr",
+    "cyrillic": "Хайр",
     "english": "Goodbye",
     "russian": "До свидания",
     "theme": "welcome-center",
@@ -40,6 +44,7 @@
   {
     "id": "welcome-center.please",
     "uzbek": "Iltimos",
+    "cyrillic": "Илтимос",
     "english": "Please",
     "russian": "Пожалуйста",
     "theme": "welcome-center",
@@ -48,6 +53,7 @@
   {
     "id": "welcome-center.thank-you",
     "uzbek": "Rahmat",
+    "cyrillic": "Раҳмат",
     "english": "Thank you",
     "russian": "Спасибо",
     "theme": "welcome-center",
@@ -56,6 +62,7 @@
   {
     "id": "welcome-center.youre-welcome",
     "uzbek": "Marhamat",
+    "cyrillic": "Марҳамат",
     "english": "You're welcome / here you go",
     "russian": "Пожалуйста / вот, держите",
     "theme": "welcome-center",
@@ -66,6 +73,7 @@
   {
     "id": "welcome-center.excuse-me",
     "uzbek": "Kechirasiz",
+    "cyrillic": "Кечирасиз",
     "english": "Excuse me / sorry",
     "russian": "Извините",
     "theme": "welcome-center",
@@ -76,6 +84,7 @@
   {
     "id": "welcome-center.yes",
     "uzbek": "Ha",
+    "cyrillic": "Ҳа",
     "english": "Yes",
     "russian": "Да",
     "theme": "welcome-center",
@@ -84,6 +93,7 @@
   {
     "id": "welcome-center.no",
     "uzbek": "Yo'q",
+    "cyrillic": "Йўқ",
     "english": "No",
     "russian": "Нет",
     "theme": "welcome-center",
@@ -92,6 +102,7 @@
   {
     "id": "welcome-center.help",
     "uzbek": "Yordam",
+    "cyrillic": "Ёрдам",
     "english": "Help",
     "russian": "Помощь",
     "theme": "welcome-center",
@@ -102,6 +113,7 @@
   {
     "id": "welcome-center.good",
     "uzbek": "Yaxshi",
+    "cyrillic": "Яхши",
     "english": "Good / OK",
     "russian": "Хорошо",
     "theme": "welcome-center",
@@ -112,6 +124,7 @@
   {
     "id": "welcome-center.i-dont-understand",
     "uzbek": "Tushunmayapman",
+    "cyrillic": "Тушунмаяпман",
     "english": "I don't understand",
     "russian": "Я не понимаю",
     "theme": "welcome-center",

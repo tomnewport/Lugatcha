@@ -2,6 +2,7 @@
   {
     "id": "airport.passport",
     "uzbek": "pasport",
+    "cyrillic": "паспорт",
     "english": "passport",
     "russian": "паспорт",
     "theme": "airport",
@@ -10,6 +11,7 @@
   {
     "id": "airport.ticket",
     "uzbek": "chipta",
+    "cyrillic": "чипта",
     "english": "ticket",
     "russian": "билет",
     "theme": "airport",
@@ -18,6 +20,7 @@
   {
     "id": "airport.flight",
     "uzbek": "parvoz",
+    "cyrillic": "парвоз",
     "english": "flight",
     "russian": "рейс",
     "theme": "airport",
@@ -26,6 +29,7 @@
   {
     "id": "airport.luggage",
     "uzbek": "bagaj",
+    "cyrillic": "багаж",
     "english": "luggage",
     "russian": "багаж",
     "theme": "airport",
@@ -34,6 +38,7 @@
   {
     "id": "airport.customs",
     "uzbek": "bojxona",
+    "cyrillic": "божхона",
     "english": "customs",
     "russian": "таможня",
     "theme": "airport",
@@ -42,6 +47,7 @@
   {
     "id": "airport.departure",
     "uzbek": "jo'nash",
+    "cyrillic": "жўнаш",
     "english": "departure",
     "russian": "вылет",
     "theme": "airport",
@@ -50,6 +56,7 @@
   {
     "id": "airport.arrival",
     "uzbek": "kelish",
+    "cyrillic": "келиш",
     "english": "arrival",
     "russian": "прилёт",
     "theme": "airport",
@@ -58,6 +65,7 @@
   {
     "id": "airport.gate",
     "uzbek": "yo'lak",
+    "cyrillic": "йўлак",
     "english": "gate",
     "russian": "выход на посадку",
     "theme": "airport",
@@ -68,6 +76,7 @@
   {
     "id": "airport.visa",
     "uzbek": "viza",
+    "cyrillic": "виза",
     "english": "visa",
     "russian": "виза",
     "theme": "airport",
@@ -76,6 +85,7 @@
   {
     "id": "airport.tourist",
     "uzbek": "turist",
+    "cyrillic": "турист",
     "english": "tourist",
     "russian": "турист",
     "theme": "airport",
@@ -84,6 +94,7 @@
   {
     "id": "airport.boarding-pass",
     "uzbek": "posadka taloni",
+    "cyrillic": "посадка талони",
     "english": "boarding pass",
     "russian": "посадочный талон",
     "theme": "airport",
@@ -92,6 +103,7 @@
   {
     "id": "airport.security",
     "uzbek": "xavfsizlik tekshiruvi",
+    "cyrillic": "хавфсизлик текшируви",
     "english": "security check",
     "russian": "досмотр",
     "theme": "airport",
@@ -100,6 +112,7 @@
   {
     "id": "airport.duty-free",
     "uzbek": "bojsiz do'kon",
+    "cyrillic": "божсиз дўкон",
     "english": "duty-free shop",
     "russian": "магазин дьюти-фри",
     "theme": "airport",
@@ -108,6 +121,7 @@
   {
     "id": "airport.taxi",
     "uzbek": "taksi",
+    "cyrillic": "такси",
     "english": "taxi",
     "russian": "такси",
     "theme": "airport",
@@ -116,6 +130,7 @@
   {
     "id": "airport.exchange",
     "uzbek": "valyuta almashtirish",
+    "cyrillic": "валюта алмаштириш",
     "english": "currency exchange",
     "russian": "обмен валюты",
     "theme": "airport",

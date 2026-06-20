@@ -2,6 +2,7 @@
   {
     "id": "metro-station.metro",
     "uzbek": "metro",
+    "cyrillic": "метро",
     "english": "metro / underground",
     "russian": "метро",
     "theme": "metro-station",
@@ -10,6 +11,7 @@
   {
     "id": "metro-station.station-stop",
     "uzbek": "bekat",
+    "cyrillic": "бекат",
     "english": "station / stop",
     "russian": "станция / остановка",
     "theme": "metro-station",
@@ -18,6 +20,7 @@
   {
     "id": "metro-station.card",
     "uzbek": "karta",
+    "cyrillic": "карта",
     "english": "travel card",
     "russian": "проездной",
     "theme": "metro-station",
@@ -26,6 +29,7 @@
   {
     "id": "metro-station.entrance",
     "uzbek": "kirish",
+    "cyrillic": "кириш",
     "english": "entrance",
     "russian": "вход",
     "theme": "metro-station",
@@ -34,6 +38,7 @@
   {
     "id": "metro-station.exit",
     "uzbek": "chiqish",
+    "cyrillic": "чиқиш",
     "english": "exit",
     "russian": "выход",
     "theme": "metro-station",
@@ -42,6 +47,7 @@
   {
     "id": "metro-station.line",
     "uzbek": "yo'nalish",
+    "cyrillic": "йўналиш",
     "english": "line / route",
     "russian": "линия / маршрут",
     "theme": "metro-station",
@@ -50,6 +56,7 @@
   {
     "id": "metro-station.transfer",
     "uzbek": "o'tish",
+    "cyrillic": "ўтиш",
     "english": "transfer / change",
     "russian": "пересадка",
     "theme": "metro-station",
@@ -58,6 +65,7 @@
   {
     "id": "metro-station.next",
     "uzbek": "keyingi",
+    "cyrillic": "кейинги",
     "english": "next",
     "russian": "следующий",
     "theme": "metro-station",
@@ -66,6 +74,7 @@
   {
     "id": "metro-station.how-many-stops",
     "uzbek": "necha bekat",
+    "cyrillic": "неча бекат",
     "english": "how many stops",
     "russian": "сколько остановок",
     "theme": "metro-station",
@@ -74,6 +83,7 @@
   {
     "id": "metro-station.centre",
     "uzbek": "markaz",
+    "cyrillic": "марказ",
     "english": "centre",
     "russian": "центр",
     "theme": "metro-station",
@@ -82,6 +92,7 @@
   {
     "id": "metro-station.underground",
     "uzbek": "yer osti",
+    "cyrillic": "ер ости",
     "english": "underground",
     "russian": "под землёй",
     "theme": "metro-station",
@@ -90,6 +101,7 @@
   {
     "id": "metro-station.crowded",
     "uzbek": "gavjum",
+    "cyrillic": "гавжум",
     "english": "crowded",
     "russian": "многолюдный",
     "theme": "metro-station",

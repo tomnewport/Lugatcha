@@ -2,6 +2,7 @@
   {
     "id": "train-station.train",
     "uzbek": "poyezd",
+    "cyrillic": "поезд",
     "english": "train",
     "russian": "поезд",
     "theme": "train-station",
@@ -10,6 +11,7 @@
   {
     "id": "train-station.station",
     "uzbek": "vokzal",
+    "cyrillic": "вокзал",
     "english": "train station",
     "russian": "вокзал",
     "theme": "train-station",
@@ -18,6 +20,7 @@
   {
     "id": "train-station.ticket",
     "uzbek": "chipta",
+    "cyrillic": "чипта",
     "english": "ticket",
     "russian": "билет",
     "theme": "train-station",
@@ -26,6 +29,7 @@
   {
     "id": "train-station.platform",
     "uzbek": "perron",
+    "cyrillic": "перрон",
     "english": "platform",
     "russian": "платформа",
     "theme": "train-station",
@@ -34,6 +38,7 @@
   {
     "id": "train-station.when",
     "uzbek": "qachon",
+    "cyrillic": "қачон",
     "english": "when",
     "russian": "когда",
     "theme": "train-station",
@@ -42,6 +47,7 @@
   {
     "id": "train-station.late",
     "uzbek": "kech",
+    "cyrillic": "кеч",
     "english": "late",
     "russian": "поздно",
     "theme": "train-station",
@@ -50,6 +56,7 @@
   {
     "id": "train-station.seat",
     "uzbek": "joy",
+    "cyrillic": "жой",
     "english": "seat / place",
     "russian": "место",
     "theme": "train-station",
@@ -58,6 +65,7 @@
   {
     "id": "train-station.fast-train",
     "uzbek": "tezyurar",
+    "cyrillic": "тезюрар",
     "english": "high-speed train",
     "russian": "скоростной поезд",
     "theme": "train-station",
@@ -68,6 +76,7 @@
   {
     "id": "train-station.return",
     "uzbek": "borib-kelish",
+    "cyrillic": "бориб-келиш",
     "english": "return (round trip)",
     "russian": "туда и обратно",
     "theme": "train-station",
@@ -76,6 +85,7 @@
   {
     "id": "train-station.timetable",
     "uzbek": "jadval",
+    "cyrillic": "жадвал",
     "english": "timetable",
     "russian": "расписание",
     "theme": "train-station",
@@ -84,6 +94,7 @@
   {
     "id": "train-station.carriage",
     "uzbek": "vagon",
+    "cyrillic": "вагон",
     "english": "carriage",
     "russian": "вагон",
     "theme": "train-station",
@@ -92,6 +103,7 @@
   {
     "id": "train-station.delay",
     "uzbek": "kechikish",
+    "cyrillic": "кечикиш",
     "english": "delay",
     "russian": "задержка",
     "theme": "train-station",
@@ -100,6 +112,7 @@
   {
     "id": "train-station.window-seat",
     "uzbek": "deraza yoni",
+    "cyrillic": "дераза ёни",
     "english": "window seat",
     "russian": "место у окна",
     "theme": "train-station",

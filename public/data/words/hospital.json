@@ -2,6 +2,7 @@
   {
     "id": "hospital.doctor",
     "uzbek": "shifokor",
+    "cyrillic": "шифокор",
     "english": "doctor",
     "russian": "врач",
     "theme": "hospital",
@@ -10,6 +11,7 @@
   {
     "id": "hospital.medicine",
     "uzbek": "dori",
+    "cyrillic": "дори",
     "english": "medicine",
     "russian": "лекарство",
     "theme": "hospital",
@@ -18,6 +20,7 @@
   {
     "id": "hospital.pharmacy",
     "uzbek": "dorixona",
+    "cyrillic": "дорихона",
     "english": "pharmacy",
     "russian": "аптека",
     "theme": "hospital",
@@ -28,6 +31,7 @@
   {
     "id": "hospital.pain",
     "uzbek": "og'riq",
+    "cyrillic": "оғриқ",
     "english": "pain",
     "russian": "боль",
     "theme": "hospital",
@@ -38,6 +42,7 @@
   {
     "id": "hospital.head",
     "uzbek": "bosh",
+    "cyrillic": "бош",
     "english": "head",
     "russian": "голова",
     "theme": "hospital",
@@ -46,6 +51,7 @@
   {
     "id": "hospital.stomach",
     "uzbek": "qorin",
+    "cyrillic": "қорин",
     "english": "stomach",
     "russian": "живот",
     "theme": "hospital",
@@ -54,6 +60,7 @@
   {
     "id": "hospital.sick",
     "uzbek": "kasal",
+    "cyrillic": "касал",
     "english": "sick / ill",
     "russian": "больной",
     "theme": "hospital",
@@ -62,6 +69,7 @@
   {
     "id": "hospital.fever",
     "uzbek": "isitma",
+    "cyrillic": "иситма",
     "english": "fever",
     "russian": "температура",
     "theme": "hospital",
@@ -70,6 +78,7 @@
   {
     "id": "hospital.tooth",
     "uzbek": "tish",
+    "cyrillic": "тиш",
     "english": "tooth",
     "russian": "зуб",
     "theme": "hospital",
@@ -78,6 +87,7 @@
   {
     "id": "hospital.queue",
     "uzbek": "navbat",
+    "cyrillic": "навбат",
     "english": "queue / turn",
     "russian": "очередь",
     "theme": "hospital",
@@ -86,6 +96,7 @@
   {
     "id": "hospital.prescription",
     "uzbek": "retsept",
+    "cyrillic": "рецепт",
     "english": "prescription",
     "russian": "рецепт",
     "theme": "hospital",
@@ -94,6 +105,7 @@
   {
     "id": "hospital.cold-illness",
     "uzbek": "shamollash",
+    "cyrillic": "шамоллаш",
     "english": "a cold (illness)",
     "russian": "простуда",
     "theme": "hospital",
@@ -104,6 +116,7 @@
   {
     "id": "hospital.insurance",
     "uzbek": "sug'urta",
+    "cyrillic": "суғурта",
     "english": "insurance",
     "russian": "страховка",
     "theme": "hospital",

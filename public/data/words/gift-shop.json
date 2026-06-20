@@ -2,6 +2,7 @@
   {
     "id": "gift-shop.gift",
     "uzbek": "sovg'a",
+    "cyrillic": "совға",
     "english": "gift",
     "russian": "подарок",
     "theme": "gift-shop",
@@ -10,6 +11,7 @@
   {
     "id": "gift-shop.how-much",
     "uzbek": "qancha",
+    "cyrillic": "қанча",
     "english": "how much",
     "russian": "сколько",
     "theme": "gift-shop",
@@ -18,6 +20,7 @@
   {
     "id": "gift-shop.expensive",
     "uzbek": "qimmat",
+    "cyrillic": "қиммат",
     "english": "expensive",
     "russian": "дорогой",
     "theme": "gift-shop",
@@ -26,6 +29,7 @@
   {
     "id": "gift-shop.cheap",
     "uzbek": "arzon",
+    "cyrillic": "арзон",
     "english": "cheap",
     "russian": "дешёвый",
     "theme": "gift-shop",
@@ -34,6 +38,7 @@
   {
     "id": "gift-shop.buy",
     "uzbek": "sotib olish",
+    "cyrillic": "сотиб олиш",
     "english": "to buy",
     "russian": "купить",
     "theme": "gift-shop",
@@ -42,6 +47,7 @@
   {
     "id": "gift-shop.discount",
     "uzbek": "chegirma",
+    "cyrillic": "чегирма",
     "english": "discount",
     "russian": "скидка",
     "theme": "gift-shop",
@@ -52,6 +58,7 @@
   {
     "id": "gift-shop.ceramics",
     "uzbek": "sopol",
+    "cyrillic": "сопол",
     "english": "ceramics",
     "russian": "керамика",
     "theme": "gift-shop",
@@ -60,6 +67,7 @@
   {
     "id": "gift-shop.scarf",
     "uzbek": "ro'mol",
+    "cyrillic": "рўмол",
     "english": "scarf / headscarf",
     "russian": "платок",
     "theme": "gift-shop",
@@ -68,6 +76,7 @@
   {
     "id": "gift-shop.silk",
     "uzbek": "ipak",
+    "cyrillic": "ипак",
     "english": "silk",
     "russian": "шёлк",
     "theme": "gift-shop",
@@ -76,6 +85,7 @@
   {
     "id": "gift-shop.colour",
     "uzbek": "rang",
+    "cyrillic": "ранг",
     "english": "colour",
     "russian": "цвет",
     "theme": "gift-shop",
@@ -84,6 +94,7 @@
   {
     "id": "gift-shop.magnet",
     "uzbek": "magnit",
+    "cyrillic": "магнит",
     "english": "fridge magnet",
     "russian": "магнит на холодильник",
     "theme": "gift-shop",
@@ -92,6 +103,7 @@
   {
     "id": "gift-shop.handmade",
     "uzbek": "qo'lda ishlangan",
+    "cyrillic": "қўлда ишланган",
     "english": "handmade",
     "russian": "ручная работа",
     "theme": "gift-shop",
@@ -100,6 +112,7 @@
   {
     "id": "gift-shop.change-money",
     "uzbek": "qaytim",
+    "cyrillic": "қайтим",
     "english": "change (money back)",
     "russian": "сдача",
     "theme": "gift-shop",

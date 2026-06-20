@@ -61,6 +61,7 @@
     {
       "id": "core.animal-dog",
       "uzbek": "it",
+      "cyrillic": "ит",
       "english": "dog",
       "russian": "собака",
       "theme": "core",
@@ -70,6 +71,7 @@
     {
       "id": "core.animal-cat",
       "uzbek": "mushuk",
+      "cyrillic": "мушук",
       "english": "cat",
       "russian": "кошка",
       "theme": "core",
@@ -79,6 +81,7 @@
     {
       "id": "core.animal-horse",
       "uzbek": "ot",
+      "cyrillic": "от",
       "english": "horse",
       "russian": "конь",
       "theme": "core",
@@ -88,6 +91,7 @@
     {
       "id": "core.animal-donkey",
       "uzbek": "eshak",
+      "cyrillic": "эшак",
       "english": "donkey",
       "russian": "осёл",
       "theme": "core",
@@ -97,6 +101,7 @@
     {
       "id": "core.animal-camel",
       "uzbek": "tuya",
+      "cyrillic": "туя",
       "english": "camel",
       "russian": "верблюд",
       "theme": "core",
@@ -106,6 +111,7 @@
     {
       "id": "core.animal-sheep",
       "uzbek": "qo'y",
+      "cyrillic": "қўй",
       "english": "sheep",
       "russian": "овца",
       "theme": "core",
@@ -115,6 +121,7 @@
     {
       "id": "core.animal-goat",
       "uzbek": "echki",
+      "cyrillic": "эчки",
       "english": "goat",
       "russian": "коза",
       "theme": "core",
@@ -124,6 +131,7 @@
     {
       "id": "core.animal-cow",
       "uzbek": "sigir",
+      "cyrillic": "сигир",
       "english": "cow",
       "russian": "корова",
       "theme": "core",
@@ -133,6 +141,7 @@
     {
       "id": "core.animal-chicken",
       "uzbek": "tovuq",
+      "cyrillic": "товуқ",
       "english": "chicken",
       "russian": "курица",
       "theme": "core",
@@ -142,6 +151,7 @@
     {
       "id": "core.animal-bird",
       "uzbek": "qush",
+      "cyrillic": "қуш",
       "english": "bird",
       "russian": "птица",
       "theme": "core",
@@ -151,6 +161,7 @@
     {
       "id": "core.animal-snake",
       "uzbek": "ilon",
+      "cyrillic": "илон",
       "english": "snake",
       "russian": "змея",
       "theme": "core",
