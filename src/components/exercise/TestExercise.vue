@@ -35,6 +35,13 @@ const learnedCount = useLiveQuery(
 const current = computed(() => questions.value[index.value])
 const isLast = computed(() => index.value >= questions.value.length - 1)
 
+/** Maps a choice question type to the prompt mode the choice component shows. */
+function choiceMode(type: TestQuestion['type']): 'listen' | 'read' | 'read-cyrillic' {
+  if (type === 'listen-choice') return 'listen'
+  if (type === 'read-cyrillic-choice') return 'read-cyrillic'
+  return 'read'
+}
+
 onMounted(async () => {
   const { candidates, learnedPool, allWords, progress: prog } = props.pool
     ? await loadPoolTestData(props.pool)
@@ -44,11 +51,12 @@ onMounted(async () => {
   loading.value = false
 })
 
-async function onAnswered(correct: boolean) {
+/** Choice questions report a boolean; the typing question reports a 0–1 score. */
+async function onAnswered(result: boolean | number) {
   if (phase.value !== 'answering' || !current.value) return
   phase.value = 'feedback'
   const { word, type } = current.value
-  const outcome = await progress.recordTestResult(word.id, type, correct)
+  const outcome = await progress.recordTestResult(word.id, type, result)
   if (outcome.newlyLearned) {
     celebrate.value = { uzbek: word.uzbek, meaning: gloss(word) }
     confettiKey.value++
@@ -83,7 +91,7 @@ function next() {
         v-else
         :key="`q-${index}`"
         :word="current.word"
-        :mode="current.type === 'listen-choice' ? 'listen' : 'read'"
+        :mode="choiceMode(current.type)"
         :options="current.options"
         @answered="onAnswered"
       />

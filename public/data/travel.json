@@ -20,6 +20,7 @@
       {
         "id": "samarkand.registon",
         "uzbek": "Registon",
+        "cyrillic": "Регистон",
         "english": "Registan square",
         "russian": "площадь Регистан",
         "theme": "samarkand",
@@ -28,6 +29,7 @@
       {
         "id": "samarkand.gumbaz",
         "uzbek": "gumbaz",
+        "cyrillic": "гумбаз",
         "english": "dome",
         "russian": "купол",
         "theme": "samarkand",
@@ -36,6 +38,7 @@
       {
         "id": "samarkand.koshin",
         "uzbek": "koshin",
+        "cyrillic": "кошин",
         "english": "glazed tile",
         "russian": "глазурованная плитка",
         "theme": "samarkand",
@@ -44,6 +47,7 @@
       {
         "id": "samarkand.maqbara",
         "uzbek": "maqbara",
+        "cyrillic": "мақбара",
         "english": "mausoleum",
         "russian": "мавзолей",
         "theme": "samarkand",
@@ -52,6 +56,7 @@
       {
         "id": "samarkand.rasadxona",
         "uzbek": "rasadxona",
+        "cyrillic": "расадхона",
         "english": "observatory",
         "russian": "обсерватория",
         "theme": "samarkand",
@@ -60,6 +65,7 @@
       {
         "id": "samarkand.ipak",
         "uzbek": "ipak",
+        "cyrillic": "ипак",
         "english": "silk",
         "russian": "шёлк",
         "theme": "samarkand",
@@ -88,6 +94,7 @@
       {
         "id": "bukhara.minora",
         "uzbek": "minora",
+        "cyrillic": "минора",
         "english": "minaret",
         "russian": "минарет",
         "theme": "bukhara",
@@ -96,6 +103,7 @@
       {
         "id": "bukhara.madrasa",
         "uzbek": "madrasa",
+        "cyrillic": "мадраса",
         "english": "madrasah",
         "russian": "медресе",
         "theme": "bukhara",
@@ -104,6 +112,7 @@
       {
         "id": "bukhara.karvonsaroy",
         "uzbek": "karvonsaroy",
+        "cyrillic": "карвонсарой",
         "english": "caravanserai",
         "russian": "караван-сарай",
         "theme": "bukhara",
@@ -112,6 +121,7 @@
       {
         "id": "bukhara.hovuz",
         "uzbek": "hovuz",
+        "cyrillic": "ҳовуз",
         "english": "pool",
         "russian": "водоём",
         "theme": "bukhara",
@@ -120,6 +130,7 @@
       {
         "id": "bukhara.gilam",
         "uzbek": "gilam",
+        "cyrillic": "гилам",
         "english": "carpet",
         "russian": "ковёр",
         "theme": "bukhara",
@@ -128,6 +139,7 @@
       {
         "id": "bukhara.qala",
         "uzbek": "qalʼa",
+        "cyrillic": "қалъа",
         "english": "fortress",
         "russian": "крепость",
         "theme": "bukhara",
@@ -156,6 +168,7 @@
       {
         "id": "khiva.darvoza",
         "uzbek": "darvoza",
+        "cyrillic": "дарвоза",
         "english": "gate",
         "russian": "ворота",
         "theme": "khiva",
@@ -164,6 +177,7 @@
       {
         "id": "khiva.devor",
         "uzbek": "devor",
+        "cyrillic": "девор",
         "english": "wall",
         "russian": "стена",
         "theme": "khiva",
@@ -172,6 +186,7 @@
       {
         "id": "khiva.ustun",
         "uzbek": "ustun",
+        "cyrillic": "устун",
         "english": "column",
         "russian": "колонна",
         "theme": "khiva",
@@ -180,6 +195,7 @@
       {
         "id": "khiva.gisht",
         "uzbek": "gʻisht",
+        "cyrillic": "ғишт",
         "english": "brick",
         "russian": "кирпич",
         "theme": "khiva",
@@ -188,6 +204,7 @@
       {
         "id": "khiva.chol",
         "uzbek": "choʻl",
+        "cyrillic": "чўл",
         "english": "desert",
         "russian": "пустыня",
         "theme": "khiva",
@@ -196,6 +213,7 @@
       {
         "id": "khiva.voha",
         "uzbek": "voha",
+        "cyrillic": "воҳа",
         "english": "oasis",
         "russian": "оазис",
         "theme": "khiva",
@@ -224,6 +242,7 @@
       {
         "id": "tashkent.poytaxt",
         "uzbek": "poytaxt",
+        "cyrillic": "пойтахт",
         "english": "capital city",
         "russian": "столица",
         "theme": "tashkent",
@@ -232,6 +251,7 @@
       {
         "id": "tashkent.metro",
         "uzbek": "metro",
+        "cyrillic": "метро",
         "english": "metro",
         "russian": "метро",
         "theme": "tashkent",
@@ -240,6 +260,7 @@
       {
         "id": "tashkent.bozor",
         "uzbek": "bozor",
+        "cyrillic": "бозор",
         "english": "bazaar",
         "russian": "базар",
         "theme": "tashkent",
@@ -248,6 +269,7 @@
       {
         "id": "tashkent.maydon",
         "uzbek": "maydon",
+        "cyrillic": "майдон",
         "english": "square",
         "russian": "площадь",
         "theme": "tashkent",
@@ -256,6 +278,7 @@
       {
         "id": "tashkent.zilzila",
         "uzbek": "zilzila",
+        "cyrillic": "зилзила",
         "english": "earthquake",
         "russian": "землетрясение",
         "theme": "tashkent",
@@ -264,6 +287,7 @@
       {
         "id": "tashkent.zamonaviy",
         "uzbek": "zamonaviy",
+        "cyrillic": "замонавий",
         "english": "modern",
         "russian": "современный",
         "theme": "tashkent",
@@ -292,6 +316,7 @@
       {
         "id": "fergana.vodiy",
         "uzbek": "vodiy",
+        "cyrillic": "водий",
         "english": "valley",
         "russian": "долина",
         "theme": "fergana",
@@ -300,6 +325,7 @@
       {
         "id": "fergana.paxta",
         "uzbek": "paxta",
+        "cyrillic": "пахта",
         "english": "cotton",
         "russian": "хлопок",
         "theme": "fergana",
@@ -308,6 +334,7 @@
       {
         "id": "fergana.atlas",
         "uzbek": "atlas",
+        "cyrillic": "атлас",
         "english": "atlas silk",
         "russian": "шёлк-атлас",
         "theme": "fergana",
@@ -316,6 +343,7 @@
       {
         "id": "fergana.meva",
         "uzbek": "meva",
+        "cyrillic": "мева",
         "english": "fruit",
         "russian": "фрукт",
         "theme": "fergana",
@@ -324,6 +352,7 @@
       {
         "id": "fergana.orik",
         "uzbek": "oʻrik",
+        "cyrillic": "ўрик",
         "english": "apricot",
         "russian": "абрикос",
         "theme": "fergana",
@@ -332,6 +361,7 @@
       {
         "id": "fergana.hosil",
         "uzbek": "hosil",
+        "cyrillic": "ҳосил",
         "english": "harvest",
         "russian": "урожай",
         "theme": "fergana",
@@ -360,6 +390,7 @@
       {
         "id": "aral.dengiz",
         "uzbek": "dengiz",
+        "cyrillic": "денгиз",
         "english": "sea",
         "russian": "море",
         "theme": "aral",
@@ -368,6 +399,7 @@
       {
         "id": "aral.suv",
         "uzbek": "suv",
+        "cyrillic": "сув",
         "english": "water",
         "russian": "вода",
         "theme": "aral",
@@ -376,6 +408,7 @@
       {
         "id": "aral.baliq",
         "uzbek": "baliq",
+        "cyrillic": "балиқ",
         "english": "fish",
         "russian": "рыба",
         "theme": "aral",
@@ -384,6 +417,7 @@
       {
         "id": "aral.kema",
         "uzbek": "kema",
+        "cyrillic": "кема",
         "english": "ship",
         "russian": "судно",
         "theme": "aral",
@@ -392,6 +426,7 @@
       {
         "id": "aral.qum",
         "uzbek": "qum",
+        "cyrillic": "қум",
         "english": "sand",
         "russian": "песок",
         "theme": "aral",
@@ -400,6 +435,7 @@
       {
         "id": "aral.tuz",
         "uzbek": "tuz",
+        "cyrillic": "туз",
         "english": "salt",
         "russian": "соль",
         "theme": "aral",

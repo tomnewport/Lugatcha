@@ -2,6 +2,7 @@
   {
     "id": "library.book",
     "uzbek": "kitob",
+    "cyrillic": "китоб",
     "english": "book",
     "russian": "книга",
     "theme": "library",
@@ -10,6 +11,7 @@
   {
     "id": "library.library",
     "uzbek": "kutubxona",
+    "cyrillic": "кутубхона",
     "english": "library",
     "russian": "библиотека",
     "theme": "library",
@@ -20,6 +22,7 @@
   {
     "id": "library.read",
     "uzbek": "o'qish",
+    "cyrillic": "ўқиш",
     "english": "reading",
     "russian": "чтение",
     "theme": "library",
@@ -28,6 +31,7 @@
   {
     "id": "library.quiet",
     "uzbek": "jim",
+    "cyrillic": "жим",
     "english": "quiet",
     "russian": "тихо",
     "theme": "library",
@@ -36,6 +40,7 @@
   {
     "id": "library.word",
     "uzbek": "so'z",
+    "cyrillic": "сўз",
     "english": "word",
     "russian": "слово",
     "theme": "library",
@@ -44,6 +49,7 @@
   {
     "id": "library.newspaper",
     "uzbek": "gazeta",
+    "cyrillic": "газета",
     "english": "newspaper",
     "russian": "газета",
     "theme": "library",
@@ -52,6 +58,7 @@
   {
     "id": "library.language",
     "uzbek": "til",
+    "cyrillic": "тил",
     "english": "language",
     "russian": "язык",
     "theme": "library",
@@ -60,6 +67,7 @@
   {
     "id": "library.write",
     "uzbek": "yozish",
+    "cyrillic": "ёзиш",
     "english": "writing",
     "russian": "письмо (процесс)",
     "theme": "library",
@@ -68,6 +76,7 @@
   {
     "id": "library.page",
     "uzbek": "sahifa",
+    "cyrillic": "саҳифа",
     "english": "page",
     "russian": "страница",
     "theme": "library",
@@ -76,6 +85,7 @@
   {
     "id": "library.help",
     "uzbek": "yordam",
+    "cyrillic": "ёрдам",
     "english": "help",
     "russian": "помощь",
     "theme": "library",
@@ -84,6 +94,7 @@
   {
     "id": "library.name",
     "uzbek": "ism",
+    "cyrillic": "исм",
     "english": "name",
     "russian": "имя",
     "theme": "library",
@@ -92,6 +103,7 @@
   {
     "id": "library.story",
     "uzbek": "hikoya",
+    "cyrillic": "ҳикоя",
     "english": "story",
     "russian": "рассказ",
     "theme": "library",

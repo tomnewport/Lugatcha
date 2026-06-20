@@ -69,7 +69,8 @@ async function fetchTravelWords(): Promise<Word[]> {
 // v6: added Russian translations (russian/ru fields) across all content.
 // v7: added the Welcome Center onboarding vocabulary.
 // v8: added basic Welcome Center stories and roleplay.
-export const CONTENT_VERSION = 8
+// v9: added Cyrillic spellings to every word (sight-Cyrillic test question).
+export const CONTENT_VERSION = 9
 const CONTENT_VERSION_KEY = 'lugatcha.contentVersion'
 
 function storedContentVersion(): string | null {

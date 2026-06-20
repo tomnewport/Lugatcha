@@ -2,6 +2,7 @@
   {
     "id": "fergana.yashil",
     "uzbek": "yashil",
+    "cyrillic": "яшил",
     "english": "green",
     "russian": "зелёный",
     "theme": "fergana",
@@ -10,6 +11,7 @@
   {
     "id": "fergana.bog",
     "uzbek": "bogʻ",
+    "cyrillic": "боғ",
     "english": "orchard",
     "russian": "сад",
     "theme": "fergana",
@@ -18,6 +20,7 @@
   {
     "id": "fergana.shirin",
     "uzbek": "shirin",
+    "cyrillic": "ширин",
     "english": "sweet",
     "russian": "сладкий",
     "theme": "fergana",
@@ -26,6 +29,7 @@
   {
     "id": "fergana.dala",
     "uzbek": "dala",
+    "cyrillic": "дала",
     "english": "field",
     "russian": "поле",
     "theme": "fergana",
@@ -34,6 +38,7 @@
   {
     "id": "fergana.daraxt",
     "uzbek": "daraxt",
+    "cyrillic": "дарахт",
     "english": "tree",
     "russian": "дерево",
     "theme": "fergana",
@@ -42,6 +47,7 @@
   {
     "id": "fergana.gul",
     "uzbek": "gul",
+    "cyrillic": "гул",
     "english": "flower",
     "russian": "цветок",
     "theme": "fergana",
@@ -50,6 +56,7 @@
   {
     "id": "fergana.anor",
     "uzbek": "anor",
+    "cyrillic": "анор",
     "english": "pomegranate",
     "russian": "гранат",
     "theme": "fergana",
@@ -58,6 +65,7 @@
   {
     "id": "fergana.uzum",
     "uzbek": "uzum",
+    "cyrillic": "узум",
     "english": "grape",
     "russian": "виноград",
     "theme": "fergana",
@@ -66,6 +74,7 @@
   {
     "id": "fergana.quyosh",
     "uzbek": "quyosh",
+    "cyrillic": "қуёш",
     "english": "sun",
     "russian": "солнце",
     "theme": "fergana",
@@ -74,6 +83,7 @@
   {
     "id": "fergana.dehqon",
     "uzbek": "dehqon",
+    "cyrillic": "деҳқон",
     "english": "farmer",
     "russian": "крестьянин",
     "theme": "fergana",
@@ -82,6 +92,7 @@
   {
     "id": "fergana.kuz",
     "uzbek": "kuz",
+    "cyrillic": "куз",
     "english": "autumn",
     "russian": "осень",
     "theme": "fergana",

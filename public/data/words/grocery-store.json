@@ -2,6 +2,7 @@
   {
     "id": "grocery-store.shop",
     "uzbek": "do'kon",
+    "cyrillic": "дўкон",
     "english": "shop",
     "russian": "магазин",
     "theme": "grocery-store",
@@ -10,6 +11,7 @@
   {
     "id": "grocery-store.bread",
     "uzbek": "non",
+    "cyrillic": "нон",
     "english": "bread",
     "russian": "хлеб",
     "theme": "grocery-store",
@@ -18,6 +20,7 @@
   {
     "id": "grocery-store.milk",
     "uzbek": "sut",
+    "cyrillic": "сут",
     "english": "milk",
     "russian": "молоко",
     "theme": "grocery-store",
@@ -26,6 +29,7 @@
   {
     "id": "grocery-store.egg",
     "uzbek": "tuxum",
+    "cyrillic": "тухум",
     "english": "egg",
     "russian": "яйцо",
     "theme": "grocery-store",
@@ -34,6 +38,7 @@
   {
     "id": "grocery-store.fruit",
     "uzbek": "meva",
+    "cyrillic": "мева",
     "english": "fruit",
     "russian": "фрукты",
     "theme": "grocery-store",
@@ -42,6 +47,7 @@
   {
     "id": "grocery-store.kilo",
     "uzbek": "kilo",
+    "cyrillic": "кило",
     "english": "kilogram",
     "russian": "килограмм",
     "theme": "grocery-store",
@@ -50,6 +56,7 @@
   {
     "id": "grocery-store.apple",
     "uzbek": "olma",
+    "cyrillic": "олма",
     "english": "apple",
     "russian": "яблоко",
     "theme": "grocery-store",
@@ -58,6 +65,7 @@
   {
     "id": "grocery-store.tomato",
     "uzbek": "pomidor",
+    "cyrillic": "помидор",
     "english": "tomato",
     "russian": "помидор",
     "theme": "grocery-store",
@@ -66,6 +74,7 @@
   {
     "id": "grocery-store.cheese",
     "uzbek": "pishloq",
+    "cyrillic": "пишлоқ",
     "english": "cheese",
     "russian": "сыр",
     "theme": "grocery-store",
@@ -74,6 +83,7 @@
   {
     "id": "grocery-store.water-bottle",
     "uzbek": "suv",
+    "cyrillic": "сув",
     "english": "water",
     "russian": "вода",
     "theme": "grocery-store",
@@ -82,6 +92,7 @@
   {
     "id": "grocery-store.bag",
     "uzbek": "paket",
+    "cyrillic": "пакет",
     "english": "plastic bag",
     "russian": "пакет",
     "theme": "grocery-store",
@@ -90,6 +101,7 @@
   {
     "id": "grocery-store.fresh",
     "uzbek": "yangi",
+    "cyrillic": "янги",
     "english": "fresh / new",
     "russian": "свежий / новый",
     "theme": "grocery-store",
@@ -98,6 +110,7 @@
   {
     "id": "grocery-store.ripe",
     "uzbek": "pishgan",
+    "cyrillic": "пишган",
     "english": "ripe",
     "russian": "спелый",
     "theme": "grocery-store",
