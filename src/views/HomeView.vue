@@ -398,14 +398,20 @@ onMounted(async () => {
 <style scoped>
 .home {
   --home-map-bg: #dccba9;
-  height: 100dvh;
+  /*
+   * Pinned to the viewport rather than laid out in flow: a flowed 100dvh
+   * element still lets the document itself scroll when a mobile address bar
+   * shrinks the visible area, which dragged the title off the top. Fixed +
+   * inset:0 takes the page out of flow so there is nothing to scroll.
+   */
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
   padding: 1.25rem 1rem 1.5rem;
   background: var(--home-map-bg);
-  position: relative;
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -602,6 +608,32 @@ onMounted(async () => {
   isolation: isolate;
 }
 
+/*
+ * Always fade the map's top and bottom into the background, whatever the
+ * pan/scale: a gradient in the exact background colour over the top and
+ * bottom edges of the visible map, sitting above the art, tiles and fog.
+ */
+.city-grid::before,
+.city-grid::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(56px, 13%, 132px);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.city-grid::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--home-map-bg) 0%, rgba(220, 203, 169, 0) 100%);
+}
+
+.city-grid::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--home-map-bg) 0%, rgba(220, 203, 169, 0) 100%);
+}
+
 .city-grid__stage {
   position: absolute;
   inset: 0;
@@ -674,14 +706,9 @@ onMounted(async () => {
   object-fit: cover;
   pointer-events: none;
   user-select: none;
-  mask-image:
-    linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-image:
-    linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 9%, #000 91%, transparent 100%);
-  -webkit-mask-composite: source-in;
+  /* Left/right fade (desktop); top/bottom is handled by .city-grid edges. */
+  mask-image: linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 9%, #000 91%, transparent 100%);
 }
 
 .city-grid :deep(.tile) {
@@ -768,7 +795,7 @@ onMounted(async () => {
 
 @media (orientation: portrait) {
   .home {
-    min-height: 100dvh;
+    /* position: fixed; inset: 0 is inherited from the base rule. */
     padding: 0;
     gap: 0;
     overflow: hidden;
