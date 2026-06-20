@@ -2,9 +2,9 @@
   {
     "id": "welcome-center",
     "name": {
-      "en": "Welcome Center",
-      "uz": "Mehmonlar markazi",
-      "ru": "Центр для гостей"
+      "en": "Tourist Information",
+      "uz": "Turistik axborot markazi",
+      "ru": "Туристический информационный центр"
     },
     "icon": "welcome-center",
     "gridRow": 1,
