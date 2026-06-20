@@ -619,19 +619,35 @@ onMounted(async () => {
   position: absolute;
   left: 0;
   right: 0;
-  height: clamp(56px, 13%, 132px);
+  height: clamp(96px, 19%, 190px);
   z-index: 5;
   pointer-events: none;
 }
 
+/*
+ * Solid background colour right up to (and a little past) the map's hard edge,
+ * then a taper into the map — a pure gradient only half-covers a high-contrast
+ * edge, so the seam still showed through. The solid band sits below the tile
+ * rows, so no tile is hidden.
+ */
 .city-grid::before {
   top: 0;
-  background: linear-gradient(to bottom, var(--home-map-bg) 0%, rgba(220, 203, 169, 0) 100%);
+  background: linear-gradient(
+    to bottom,
+    var(--home-map-bg) 0%,
+    var(--home-map-bg) 46%,
+    rgba(220, 203, 169, 0) 100%
+  );
 }
 
 .city-grid::after {
   bottom: 0;
-  background: linear-gradient(to top, var(--home-map-bg) 0%, rgba(220, 203, 169, 0) 100%);
+  background: linear-gradient(
+    to top,
+    var(--home-map-bg) 0%,
+    var(--home-map-bg) 46%,
+    rgba(220, 203, 169, 0) 100%
+  );
 }
 
 .city-grid__stage {
