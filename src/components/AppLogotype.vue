@@ -42,23 +42,23 @@
     <!-- ── Decorative baseline rule ── -->
 
     <!-- Left arm -->
-    <line x1="70"  y1="78" x2="232" y2="78"
+    <line x1="70"  y1="81" x2="232" y2="81"
       stroke="url(#lt-rule)" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
     <!-- Left outer diamond -->
-    <g transform="translate(64,78)">
+    <g transform="translate(64,81)">
       <rect x="-5" y="-5" width="10" height="10" fill="#1b4f8a" transform="rotate(45)"/>
     </g>
 
     <!-- Right arm -->
-    <line x1="308" y1="78" x2="470" y2="78"
+    <line x1="308" y1="81" x2="470" y2="81"
       stroke="url(#lt-rule)" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
     <!-- Right outer diamond -->
-    <g transform="translate(476,78)">
+    <g transform="translate(476,81)">
       <rect x="-5" y="-5" width="10" height="10" fill="#c9a84c" transform="rotate(45)"/>
     </g>
 
     <!-- Centre rub el hizb — ties the wordmark to the AppLogo emblem -->
-    <g transform="translate(270,78)">
+    <g transform="translate(270,81)">
       <rect x="-9"   y="-9"   width="18" height="18" fill="#C9A84C"/>
       <rect x="-9"   y="-9"   width="18" height="18" fill="#C9A84C" transform="rotate(45)"/>
       <rect x="-6"   y="-6"   width="12" height="12" fill="#F5F0E8"/>
