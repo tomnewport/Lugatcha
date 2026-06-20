@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia'
 import { setI18nLocale, type UiLanguage } from '@/i18n'
 
-/** Which non-Uzbek language leads a tile's two labels (the Uzbek side is always shown too). */
-export type LabelLanguage = 'en' | 'uz'
-
 /**
  * The language the learner already knows and is approaching Uzbek *from*.
  * Drives the whole interface language (vue-i18n) and which gloss is shown for
@@ -16,7 +13,6 @@ const STORAGE_KEY = 'lugatcha.settings'
 
 interface PersistedSettings {
   baseLanguage: BaseLanguage
-  labelLanguage: LabelLanguage
   /** False until the learner has picked their language in the first-run modal. */
   languageChosen: boolean
 }
@@ -24,7 +20,6 @@ interface PersistedSettings {
 function load(): PersistedSettings {
   const defaults: PersistedSettings = {
     baseLanguage: 'en',
-    labelLanguage: 'en',
     languageChosen: false,
   }
   try {
@@ -59,14 +54,9 @@ export const useSettingsStore = defineStore('settings', {
       this.languageChosen = true
       this.setBaseLanguage(lang)
     },
-    setLabelLanguage(lang: LabelLanguage) {
-      this.labelLanguage = lang
-      this.persist()
-    },
     persist() {
       save({
         baseLanguage: this.baseLanguage,
-        labelLanguage: this.labelLanguage,
         languageChosen: this.languageChosen,
       })
     },

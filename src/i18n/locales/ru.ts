@@ -71,13 +71,6 @@ const ru: MessageSchema = {
       english: 'English',
       russian: 'Русский',
     },
-    tileLabels: {
-      title: 'Подписи плиток',
-      desc: 'Какой язык идёт первым на карте города?',
-      groupLabel: 'Язык подписей',
-      baseFirst: 'Сначала ваш язык',
-      uzbekFirst: "O'zbekcha birinchi",
-    },
     audio: {
       title: 'Аудио',
       checking: 'Проверка доступного аудио…',
