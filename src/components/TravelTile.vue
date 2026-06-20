@@ -33,7 +33,11 @@ function open() {
         <path d="M12 2C8.7 2 6 4.7 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.3-2.7-6-6-6z" fill="#fbeee6" />
         <circle cx="12" cy="8" r="2.4" fill="currentColor" stroke="none" />
       </svg>
-      <span v-else class="tile__icon tile__icon--no-entry" aria-hidden="true">⛔</span>
+      <!-- Lock icon -->
+      <svg v-else class="tile__icon tile__icon--lock" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <rect x="2" y="7" width="12" height="8" rx="2" />
+        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke-linecap="round" />
+      </svg>
     </div>
     <span class="tile__name">{{ $t('travel.title') }}</span>
     <span class="tile__name-uz" lang="uz">{{ $t('travel.tileSubtitle') }}</span>
@@ -61,7 +65,7 @@ function open() {
   -webkit-tap-highlight-color: transparent;
 }
 
-.tile:not(:disabled):hover {
+.tile:not(.tile--locked):hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -87,13 +91,11 @@ function open() {
   color: var(--color-terracotta);
 }
 
-.tile__icon--no-entry {
-  font-size: 1rem;
-  line-height: 1;
-  width: auto;
-  height: auto;
+.tile__icon--lock {
+  width: 24px;
+  height: 24px;
   color: var(--color-terracotta);
-  filter: drop-shadow(0 1px 1px rgba(37, 28, 18, 0.35));
+  filter: drop-shadow(0 1px 1px rgba(255, 252, 240, 0.9));
 }
 
 .tile__name {
