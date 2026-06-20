@@ -12,7 +12,7 @@ import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
 import { useAudioReady } from '@/audio/offline'
 import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
-import homeCityMap from '@/assets/home-city-map.jpg'
+import homeCityMap from '@/assets/home-city-map.webp'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 const SEED_KEY = 'lugatcha.sessionSeed'
@@ -49,6 +49,12 @@ const sessionSeed = ref(getOrCreateSeed())
 
 onMounted(async () => {
   locations.value = await loadLocations()
+  if (import.meta.env.DEV) {
+    const unplaced = locations.value.filter((l) => !MAP_MARKERS[l.id]).map((l) => l.id)
+    if (unplaced.length) {
+      console.warn(`[HomeView] locations missing a map marker: ${unplaced.join(', ')}`)
+    }
+  }
 })
 
 const allProgress = useLiveQuery(() => db.locationProgress.toArray(), [] as LocationProgress[])
@@ -181,6 +187,16 @@ const chipMap = computed(() => {
   return map
 })
 
+/**
+ * Marker placement is driven by the illustration, not by the location data's
+ * gridRow/gridCol: the hand-drawn map fixes where each building sits, so these
+ * constants are tuned to home-city-map.webp and must be re-tuned if the art
+ * changes. The data grid is only used for DOM (reading/tab) order now.
+ *
+ * MAP_COLUMNS / MAP_ROWS are marker centres as a percentage of the stage;
+ * MAP_BLOCK is the marker's footprint. A location absent from MAP_MARKERS has
+ * no place on the art and is reported below rather than silently stacking.
+ */
 const MAP_COLUMNS = [26.8, 43.8, 60.8, 77.8]
 const MAP_ROWS = [28, 41.5, 55, 68.5, 82]
 const MAP_BLOCK = { w: 13.2, h: 9.2 }
@@ -538,7 +554,7 @@ function markerStyle(locationId: string) {
   z-index: 0;
   width: 100%;
   height: 100%;
-  object-fit: fill;
+  object-fit: cover;
   pointer-events: none;
   user-select: none;
   mask-image:
@@ -553,9 +569,6 @@ function markerStyle(locationId: string) {
 
 .city-grid :deep(.tile) {
   z-index: 3;
-}
-
-.city-grid :deep(.tile) {
   position: absolute;
   transform: translate(-50%, -50%);
   justify-content: center;
@@ -568,7 +581,7 @@ function markerStyle(locationId: string) {
   backdrop-filter: none;
 }
 
-.city-grid :deep(.tile:not(:disabled):hover) {
+.city-grid :deep(.tile:not(.tile--locked):hover) {
   transform: translate(-50%, calc(-50% - 3px)) scale(1.02);
   box-shadow: none;
 }
@@ -702,6 +715,13 @@ function markerStyle(locationId: string) {
     top: calc(max(0.8rem, env(safe-area-inset-top)) + 11.2rem);
   }
 
+  /*
+   * Portrait: the map fills the screen and is panned to a focal point, since
+   * the tall illustration can't fit a phone's aspect ratio without cropping.
+   * --map-focus-x  horizontal point of the stage to centre on (panning)
+   * --map-nudge-x  small manual offset on top of the focal point
+   * --map-scale    overall zoom applied to the chosen stage width
+   */
   .city-grid {
     position: fixed;
     inset: 0;
@@ -723,6 +743,13 @@ function markerStyle(locationId: string) {
     flex: none;
     top: 50%;
     left: 50%;
+    /*
+     * Stage width = max(fill the width, but no wider than the smaller of:
+     *   100dvh * 0.8003  — the width at which the map's full height fits
+     *                      (0.8003 = 1122 / 1402, the art's aspect ratio), and
+     *   100vw  * 1.62    — a cap on horizontal overflow so panning stays sane).
+     * The whole thing is then zoomed by --map-scale.
+     */
     width: calc(
       max(100vw, min(calc(100dvh * 0.8003), calc(100vw * 1.62))) * var(--map-scale)
     );
