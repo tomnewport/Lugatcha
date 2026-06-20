@@ -2,7 +2,6 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Location, LocationProgress } from '@/db/types'
-import { useSettingsStore } from '@/stores/settings'
 import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{
@@ -20,17 +19,13 @@ const emit = defineEmits<{
 }>()
 
 const router = useRouter()
-const settings = useSettingsStore()
 const { name } = useContentLang()
 
 /** The non-Uzbek label, in the learner's base language (English or Russian). */
 const baseName = computed(() => name(props.location.name))
-const primaryName = computed(() =>
-  settings.labelLanguage === 'uz' ? props.location.name.uz : baseName.value,
-)
-const secondaryName = computed(() =>
-  settings.labelLanguage === 'uz' ? baseName.value : props.location.name.uz,
-)
+/** The city map always leads with the Uzbek place name. */
+const primaryName = computed(() => props.location.name.uz)
+const secondaryName = computed(() => baseName.value)
 
 const RADIUS = 18
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
@@ -120,12 +115,8 @@ function navigate() {
       </span>
     </div>
 
-    <span class="tile__name" :lang="settings.labelLanguage === 'uz' ? 'uz' : undefined">{{
-      primaryName
-    }}</span>
-    <span class="tile__name-uz" :lang="settings.labelLanguage === 'uz' ? undefined : 'uz'">{{
-      secondaryName
-    }}</span>
+    <span class="tile__name" lang="uz">{{ primaryName }}</span>
+    <span class="tile__name-uz">{{ secondaryName }}</span>
   </button>
 </template>
 

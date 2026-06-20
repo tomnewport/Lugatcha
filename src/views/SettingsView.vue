@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useSettingsStore, type LabelLanguage, type BaseLanguage } from '@/stores/settings'
+import { useSettingsStore, type BaseLanguage } from '@/stores/settings'
 import { useProgressStore } from '@/stores/progress'
 import { getAudioManifest, type AudioManifest } from '@/audio/audio'
 import { useAudioDownload } from '@/audio/offline'
@@ -39,10 +39,6 @@ onMounted(async () => {
   audioChecked.value = true
   await prepareAudio()
 })
-
-function setLanguage(lang: LabelLanguage) {
-  settings.setLabelLanguage(lang)
-}
 
 function setBaseLanguage(lang: BaseLanguage) {
   settings.setBaseLanguage(lang)
@@ -103,33 +99,6 @@ async function clearAllData() {
           @click="setBaseLanguage('ru')"
         >
           {{ $t('settings.learningLanguage.russian') }}
-        </button>
-      </div>
-    </section>
-
-    <section class="settings-card">
-      <h2 class="settings-card__title">{{ $t('settings.tileLabels.title') }}</h2>
-      <p class="settings-card__desc">{{ $t('settings.tileLabels.desc') }}</p>
-      <div class="lang-toggle" role="radiogroup" :aria-label="$t('settings.tileLabels.groupLabel')">
-        <button
-          class="lang-toggle__btn"
-          :class="{ 'lang-toggle__btn--active': settings.labelLanguage === 'en' }"
-          type="button"
-          role="radio"
-          :aria-checked="settings.labelLanguage === 'en'"
-          @click="setLanguage('en')"
-        >
-          {{ $t('settings.tileLabels.baseFirst') }}
-        </button>
-        <button
-          class="lang-toggle__btn"
-          :class="{ 'lang-toggle__btn--active': settings.labelLanguage === 'uz' }"
-          type="button"
-          role="radio"
-          :aria-checked="settings.labelLanguage === 'uz'"
-          @click="setLanguage('uz')"
-        >
-          {{ $t('settings.tileLabels.uzbekFirst') }}
         </button>
       </div>
     </section>
