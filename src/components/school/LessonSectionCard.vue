@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { LessonSection } from '@/db/types'
 import AudioButton from '@/components/AudioButton.vue'
+import CyrillicSub from '@/components/CyrillicSub.vue'
 import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{ section: LessonSection; visitCount?: number }>()
@@ -40,6 +41,7 @@ const exampleGloss = computed(() =>
         <div class="example__row">
           <div class="example__text">
             <span class="example__uzbek" lang="uz">{{ example.uzbek }}</span>
+            <CyrillicSub :latin="example.uzbek" />
             <span class="example__english">{{ pick(example.english, example.russian) }}</span>
           </div>
           <AudioButton :text="example.uzbek" />

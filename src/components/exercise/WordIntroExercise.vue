@@ -10,6 +10,7 @@ import { speakUzbek } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekWord from '@/components/UzbekWord.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
+import CyrillicSub from '@/components/CyrillicSub.vue'
 
 type Step = 'listen' | 'quiz' | 'match' | 'phrases'
 
@@ -307,6 +308,7 @@ async function finish() {
           <AudioButton :text="word.uzbek" @played="markHeard(word.id)" />
           <div class="word-card__text">
             <UzbekWord class="word-card__uzbek" :word="word.uzbek" :meaning="gloss(word)" />
+            <CyrillicSub :latin="word.uzbek" :cyrillic="word.cyrillic" />
             <span class="word-card__english">{{ gloss(word) }}</span>
             <span v-if="word.usageNotes" class="word-card__notes">{{ pick(word.usageNotes, word.usageNotesRu) }}</span>
           </div>
