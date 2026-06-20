@@ -80,7 +80,19 @@ const dashOffset = computed(() =>
         />
         <path d="M8 3.5v10" />
       </svg>
-      <span v-else class="tile__icon tile__icon--no-entry" aria-hidden="true">⛔</span>
+      <!-- Lock icon -->
+      <svg
+        v-else
+        class="tile__icon tile__icon--lock"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        aria-hidden="true"
+      >
+        <rect x="2" y="7" width="12" height="8" rx="2" />
+        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke-linecap="round" />
+      </svg>
     </div>
     <span class="tile__name">{{ $t('school.title') }}</span>
     <span class="tile__name-uz" lang="uz">{{ $t('school.subtitle') }}</span>
@@ -108,7 +120,7 @@ const dashOffset = computed(() =>
   -webkit-tap-highlight-color: transparent;
 }
 
-.tile:not(:disabled):hover {
+.tile:not(.tile--locked):hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -159,13 +171,11 @@ const dashOffset = computed(() =>
   transform: translate(-50%, -50%);
 }
 
-.tile__icon--no-entry {
-  font-size: 1rem;
-  line-height: 1;
-  width: auto;
-  height: auto;
-  stroke: none;
-  filter: drop-shadow(0 1px 1px rgba(37, 28, 18, 0.35));
+.tile__icon--lock {
+  width: 16px;
+  height: 16px;
+  color: var(--color-terracotta);
+  filter: drop-shadow(0 1px 1px rgba(255, 252, 240, 0.9));
 }
 
 .tile__name {
