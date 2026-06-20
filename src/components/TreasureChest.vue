@@ -5,6 +5,7 @@ import { isWordLearned, isWordPartiallyLearned, passedTypes } from '@/exercises/
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
+import CyrillicSub from '@/components/CyrillicSub.vue'
 
 interface ChestWord {
   id: string
@@ -81,7 +82,10 @@ const totalTypes = TEST_QUESTION_TYPES.length
             <ul class="chest-list">
               <li v-for="w in chest.learned" :key="w.id" class="chest-item">
                 <AudioButton :text="w.uzbek" />
-                <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
+                <span class="chest-item__word">
+                  <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
+                  <CyrillicSub :latin="w.uzbek" />
+                </span>
                 <span class="chest-item__en">{{ gloss(w) }}</span>
                 <span class="chest-item__badge chest-item__badge--learned" aria-hidden="true">✓</span>
               </li>
@@ -93,7 +97,10 @@ const totalTypes = TEST_QUESTION_TYPES.length
             <ul class="chest-list">
               <li v-for="w in chest.partial" :key="w.id" class="chest-item">
                 <AudioButton :text="w.uzbek" />
-                <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
+                <span class="chest-item__word">
+                  <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
+                  <CyrillicSub :latin="w.uzbek" />
+                </span>
                 <span class="chest-item__en">{{ gloss(w) }}</span>
                 <span class="chest-item__badge">{{ w.passed }}/{{ totalTypes }}</span>
               </li>
@@ -221,6 +228,12 @@ const totalTypes = TEST_QUESTION_TYPES.length
   background: var(--color-surface);
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-sm);
+}
+
+.chest-item__word {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .chest-item__uz {

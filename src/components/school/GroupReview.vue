@@ -5,6 +5,7 @@ import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import LessonSectionCard from './LessonSectionCard.vue'
 import AudioButton from '@/components/AudioButton.vue'
+import CyrillicSub from '@/components/CyrillicSub.vue'
 
 const props = defineProps<{ group: VocabGroup }>()
 const emit = defineEmits<{ done: [] }>()
@@ -39,6 +40,7 @@ onMounted(() => {
           />
           <span class="word__text">
             <span class="word__uzbek" lang="uz">{{ word.uzbek }}</span>
+            <CyrillicSub :latin="word.uzbek" :cyrillic="word.cyrillic" />
             <span class="word__english">{{ gloss(word) }}</span>
           </span>
           <AudioButton :text="word.uzbek" />
