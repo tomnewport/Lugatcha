@@ -407,6 +407,7 @@ onMounted(async () => {
   background: var(--home-map-bg);
   position: relative;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .settings-link {
@@ -562,11 +563,22 @@ onMounted(async () => {
 }
 
 .home-header__title {
-  font-size: clamp(1.6rem, 6vw, 2.2rem);
-  font-weight: 800;
-  color: var(--color-primary);
+  font-family: Georgia, 'Cambria', 'Times New Roman', serif;
+  font-size: clamp(2.3rem, 9vw, 3.4rem);
+  font-weight: 700;
   margin: 0;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.005em;
+  background: linear-gradient(
+    105deg,
+    var(--color-primary) 0%,
+    var(--color-primary-light) 50%,
+    var(--color-gold) 125%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 2px 2px rgba(37, 28, 18, 0.16));
 }
 
 .home-header__subtitle {
@@ -585,10 +597,8 @@ onMounted(async () => {
   aspect-ratio: 1122 / 1402;
   position: relative;
   overflow: hidden;
-  border: 2px solid rgba(82, 63, 39, 0.18);
-  border-radius: var(--radius-lg);
+  /* No frame: the masked art fades straight into the matching background. */
   background: var(--home-map-bg);
-  box-shadow: var(--shadow-md);
   isolation: isolate;
 }
 
@@ -771,23 +781,23 @@ onMounted(async () => {
     left: 50%;
     transform: translateX(-50%);
     gap: 0;
-    padding: 0.45rem 0.7rem;
-    border-radius: var(--radius-lg);
-    background: rgba(255, 252, 240, 0.74);
-    box-shadow: 0 8px 20px rgba(37, 28, 18, 0.14);
-    backdrop-filter: blur(6px) saturate(1.12);
   }
 
   .home-header__ornament {
     display: none;
   }
 
+  /* No card here, so the title carries its own halo to read over the map. */
   .home-header__title {
-    font-size: 1.25rem;
+    font-size: clamp(1.8rem, 8vw, 2.2rem);
+    filter:
+      drop-shadow(0 1px 1px rgba(255, 252, 240, 0.95))
+      drop-shadow(0 1px 4px rgba(37, 28, 18, 0.35));
   }
 
   .home-header__subtitle {
-    font-size: 0.68rem;
+    font-size: 0.72rem;
+    text-shadow: 0 1px 2px rgba(255, 252, 240, 0.95);
   }
 
   .audio-banner {

@@ -42,6 +42,8 @@ body {
   color: var(--color-text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  /* App-like: no rubber-band bounce or scroll chaining past a screen's edge. */
+  overscroll-behavior: none;
 }
 
 img,
