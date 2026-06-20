@@ -10,6 +10,7 @@ import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
 import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
+import AppLogo from '@/components/AppLogo.vue'
 import { useAudioReady } from '@/audio/offline'
 import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
 import homeCityMap from '@/assets/home-city-map.webp'
@@ -283,31 +284,7 @@ onMounted(async () => {
 
     <header class="home-header">
       <div class="home-header__ornament" aria-hidden="true">
-        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="2" />
-          <circle cx="60" cy="60" r="40" fill="none" stroke="currentColor" stroke-width="1.5" />
-          <circle cx="60" cy="60" r="8" fill="currentColor" />
-          <g stroke="currentColor" stroke-width="1.5" fill="none">
-            <line x1="60" y1="5" x2="60" y2="20" />
-            <line x1="60" y1="100" x2="60" y2="115" />
-            <line x1="5" y1="60" x2="20" y2="60" />
-            <line x1="100" y1="60" x2="115" y2="60" />
-            <line x1="21" y1="21" x2="31" y2="31" />
-            <line x1="89" y1="89" x2="99" y2="99" />
-            <line x1="99" y1="21" x2="89" y2="31" />
-            <line x1="21" y1="99" x2="31" y2="89" />
-          </g>
-          <g fill="currentColor">
-            <circle cx="60" cy="5" r="3" />
-            <circle cx="60" cy="115" r="3" />
-            <circle cx="5" cy="60" r="3" />
-            <circle cx="115" cy="60" r="3" />
-            <circle cx="21" cy="21" r="3" />
-            <circle cx="99" cy="99" r="3" />
-            <circle cx="99" cy="21" r="3" />
-            <circle cx="21" cy="99" r="3" />
-          </g>
-        </svg>
+        <AppLogo />
       </div>
       <h1 class="home-header__title">Lugʻatcha</h1>
       <p class="home-header__subtitle" lang="uz">{{ $t('home.subtitle') }}</p>
@@ -562,10 +539,9 @@ onMounted(async () => {
 }
 
 .home-header__ornament {
-  width: 52px;
-  height: 52px;
-  color: var(--color-gold);
-  margin-bottom: 0.25rem;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 0.1rem;
 }
 
 .home-header__title {
