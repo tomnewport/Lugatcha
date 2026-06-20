@@ -101,23 +101,9 @@ function navigate() {
         />
       </svg>
 
-      <!-- Lock icon -->
-      <svg
-        v-if="locked"
-        class="tile__icon tile__icon--lock"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        aria-hidden="true"
-      >
-        <rect x="2" y="7" width="12" height="8" rx="2" />
-        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke-linecap="round" />
-      </svg>
-
       <!-- Complete icon -->
       <svg
-        v-else-if="isComplete"
+        v-if="isComplete"
         class="tile__icon tile__icon--check"
         viewBox="0 0 16 16"
         fill="none"
@@ -221,17 +207,6 @@ function navigate() {
   align-items: center;
   justify-content: center;
   margin: auto;
-}
-
-.tile__icon--lock {
-  width: 16px;
-  height: 16px;
-  color: var(--color-terracotta);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: absolute;
-  filter: drop-shadow(0 1px 1px rgba(255, 252, 240, 0.9));
 }
 
 .tile__icon--check {
