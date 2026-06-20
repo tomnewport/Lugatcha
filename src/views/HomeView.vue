@@ -397,7 +397,7 @@ onMounted(async () => {
 
 <style scoped>
 .home {
-  --home-map-bg: #e7ddcf;
+  --home-map-bg: #dccba9;
   height: 100dvh;
   display: flex;
   flex-direction: column;
