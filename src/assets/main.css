@@ -31,22 +31,6 @@
   --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.16);
 
   --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
-
-  /*
-   * Route-transition geometry. The place "screen" that grows out of a tapped
-   * point is clipped to an eight-pointed star (khatam) — the two-overlapping-
-   * squares motif of Uzbek ceramic tilework. The silhouette is a 16-vertex
-   * polygon (8 outer points, 8 concave inner points at 0.765 of the outer
-   * radius, the exact ratio formed by two squares crossing). It is drawn well
-   * past the viewport so that once the screen scales up to full size, even the
-   * concave notches clear the corners and the cover is complete.
-   */
-  --star-open: polygon(
-    50.00% -210.00%, 126.12% -133.76%, 233.85% -133.85%, 233.76% -26.12%,
-    310.00% 50.00%, 233.76% 126.12%, 233.85% 233.85%, 126.12% 233.76%,
-    50.00% 310.00%, -26.12% 233.76%, -133.85% 233.85%, -133.76% 126.12%,
-    -210.00% 50.00%, -133.76% -26.12%, -133.85% -133.85%, -26.12% -133.76%
-  );
 }
 
 /* Reset */
@@ -138,4 +122,87 @@ a {
   background: var(--color-terracotta);
   color: #fff;
   box-shadow: var(--shadow-sm);
+}
+
+/* ---------------------------------------------------------------------------
+ * Route transitions
+ *
+ * Global (unscoped) on purpose: Vue applies these classes to each *view's* root
+ * element, which lives in the child component's style scope, not App.vue's, so
+ * scoped rules wouldn't reach it.
+ *
+ * Home <-> place is a sheet slide. The place screen rises up over the home map
+ * on entry and drops back down on exit; the home map parallaxes a short way up
+ * behind it (and dims slightly for depth), moving far less than the sheet. Both
+ * screens are on-screen together (simultaneous transition), so they're pinned
+ * to the viewport for the duration and the place is kept on top via z-index.
+ * The same geometry runs in reverse for back/forward navigation.
+ * ------------------------------------------------------------------------- */
+.slide-up-enter-active,
+.slide-up-leave-active,
+.slide-down-enter-active,
+.slide-down-leave-active {
+  position: fixed;
+  inset: 0;
+  transition:
+    transform 0.38s cubic-bezier(0.33, 0, 0.2, 1),
+    filter 0.38s ease;
+  will-change: transform;
+}
+
+/* Place sits above the home map in both directions. */
+.slide-up-enter-active,
+.slide-down-leave-active {
+  z-index: 2;
+}
+.slide-up-leave-active,
+.slide-down-enter-active {
+  z-index: 1;
+}
+
+/* Forward (home -> place): place rises from the bottom, home parallaxes up. */
+.slide-up-enter-from {
+  transform: translateY(100%);
+}
+.slide-up-leave-to {
+  transform: translateY(-12%);
+  filter: brightness(0.88);
+}
+
+/* Back (place -> home): place drops back down, home settles from its offset. */
+.slide-down-leave-to {
+  transform: translateY(100%);
+}
+.slide-down-enter-from {
+  transform: translateY(-12%);
+  filter: brightness(0.88);
+}
+
+/* Everything else: a quiet cross-fade. */
+.fade-enter-active,
+.fade-leave-active {
+  position: fixed;
+  inset: 0;
+  transition: opacity 0.18s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-up-enter-active,
+  .slide-up-leave-active,
+  .slide-down-enter-active,
+  .slide-down-leave-active {
+    transition: opacity 0.2s ease;
+  }
+  .slide-up-enter-from,
+  .slide-up-leave-to,
+  .slide-down-enter-from,
+  .slide-down-leave-to {
+    transform: none;
+    filter: none;
+    opacity: 0;
+  }
 }
