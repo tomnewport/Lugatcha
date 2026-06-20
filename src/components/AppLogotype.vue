@@ -12,18 +12,18 @@
     style="display:block;width:100%;height:auto;overflow:visible"
   >
     <defs>
-      <!-- Lapis lazuli → light blue → gold, spanning the text width -->
+      <!-- Deep lapis → lapis → lighter lapis, spanning the text width -->
       <linearGradient id="lt-fill" gradientUnits="userSpaceOnUse" x1="80" y1="0" x2="460" y2="0">
-        <stop offset="0%"   stop-color="#1b4f8a"/>
-        <stop offset="50%"  stop-color="#2e6db4"/>
-        <stop offset="100%" stop-color="#c9a84c"/>
+        <stop offset="0%"   stop-color="#163d6e"/>
+        <stop offset="50%"  stop-color="#1b4f8a"/>
+        <stop offset="100%" stop-color="#2e6db4"/>
       </linearGradient>
 
       <!-- Same range for rule / ornaments -->
       <linearGradient id="lt-rule" gradientUnits="userSpaceOnUse" x1="64" y1="0" x2="476" y2="0">
-        <stop offset="0%"   stop-color="#1b4f8a"/>
-        <stop offset="50%"  stop-color="#2e6db4"/>
-        <stop offset="100%" stop-color="#c9a84c"/>
+        <stop offset="0%"   stop-color="#163d6e"/>
+        <stop offset="50%"  stop-color="#1b4f8a"/>
+        <stop offset="100%" stop-color="#2e6db4"/>
       </linearGradient>
     </defs>
 
@@ -54,16 +54,16 @@
       stroke="url(#lt-rule)" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
     <!-- Right outer diamond -->
     <g transform="translate(476,81)">
-      <rect x="-5" y="-5" width="10" height="10" fill="#c9a84c" transform="rotate(45)"/>
+      <rect x="-5" y="-5" width="10" height="10" fill="#2e6db4" transform="rotate(45)"/>
     </g>
 
     <!-- Centre rub el hizb — ties the wordmark to the AppLogo emblem -->
     <g transform="translate(270,81)">
-      <rect x="-9"   y="-9"   width="18" height="18" fill="#C9A84C"/>
-      <rect x="-9"   y="-9"   width="18" height="18" fill="#C9A84C" transform="rotate(45)"/>
-      <rect x="-6"   y="-6"   width="12" height="12" fill="#F5F0E8"/>
-      <rect x="-6"   y="-6"   width="12" height="12" fill="#F5F0E8" transform="rotate(45)"/>
-      <circle r="4.2" fill="#1A5E52"/>
+      <rect x="-9"   y="-9"   width="18" height="18" fill="#1b4f8a"/>
+      <rect x="-9"   y="-9"   width="18" height="18" fill="#1b4f8a" transform="rotate(45)"/>
+      <rect x="-6"   y="-6"   width="12" height="12" fill="#d6e6f5"/>
+      <rect x="-6"   y="-6"   width="12" height="12" fill="#d6e6f5" transform="rotate(45)"/>
+      <circle r="4.2" fill="#163d6e"/>
     </g>
   </svg>
 </template>
