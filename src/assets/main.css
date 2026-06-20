@@ -31,6 +31,28 @@
   --shadow-lg: 0 8px 24px rgb(0 0 0 / 0.16);
 
   --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+  /*
+   * Route-transition geometry. The reveal irises through an eight-pointed star
+   * (khatam) — the two-overlapping-squares motif of Uzbek ceramic tilework. The
+   * silhouette is a 16-vertex polygon (8 outer points, 8 concave inner points at
+   * 0.765 of the outer radius, the exact ratio formed by two squares crossing).
+   * --star-closed is a pinprick at the centre; --star-open is blown well past
+   * the viewport so even the concave notches clear the corners. Both share the
+   * vertex count so clip-path interpolates cleanly between them.
+   */
+  --star-closed: polygon(
+    50.00% 46.00%, 51.17% 47.17%, 52.83% 47.17%, 52.83% 48.83%, 54.00% 50.00%,
+    52.83% 51.17%, 52.83% 52.83%, 51.17% 52.83%, 50.00% 54.00%, 48.83% 52.83%,
+    47.17% 52.83%, 47.17% 51.17%, 46.00% 50.00%, 47.17% 48.83%, 47.17% 47.17%,
+    48.83% 47.17%
+  );
+  --star-open: polygon(
+    50.00% -210.00%, 126.12% -133.76%, 233.85% -133.85%, 233.76% -26.12%,
+    310.00% 50.00%, 233.76% 126.12%, 233.85% 233.85%, 126.12% 233.76%,
+    50.00% 310.00%, -26.12% 233.76%, -133.85% 233.85%, -133.76% 126.12%,
+    -210.00% 50.00%, -133.76% -26.12%, -133.85% -133.85%, -26.12% -133.76%
+  );
 }
 
 /* Reset */
@@ -122,4 +144,71 @@ a {
   background: var(--color-terracotta);
   color: #fff;
   box-shadow: var(--shadow-sm);
+}
+
+/* ---------------------------------------------------------------------------
+ * Route transitions
+ *
+ * These live in a global (unscoped) stylesheet on purpose: the transition
+ * classes are applied by Vue to each *view's* root element, which sits in the
+ * child component's style scope, not App.vue's — scoped rules wouldn't reach it.
+ *
+ * The deep-lapis field that briefly shows through the star is .route-backdrop
+ * in App.vue.
+ * ------------------------------------------------------------------------- */
+
+/* Star portal: home <-> a place. The current screen contracts into an
+ * eight-pointed star and the destination blooms back out of one. Using
+ * mode="out-in", the same pair of rules reads correctly in both directions
+ * (and therefore for browser back/forward too). A gentle counter-rotation
+ * echoes the two squares of the motif sliding apart. */
+.star-enter-active,
+.star-leave-active {
+  transition:
+    clip-path 0.5s cubic-bezier(0.45, 0, 0.2, 1),
+    transform 0.5s cubic-bezier(0.45, 0, 0.2, 1),
+    opacity 0.4s ease;
+  will-change: clip-path, transform, opacity;
+}
+
+.star-enter-from {
+  clip-path: var(--star-closed);
+  transform: rotate(-45deg) scale(0.92);
+  opacity: 0;
+}
+
+.star-enter-to,
+.star-leave-from {
+  clip-path: var(--star-open);
+}
+
+.star-leave-to {
+  clip-path: var(--star-closed);
+  transform: rotate(45deg) scale(0.92);
+  opacity: 0;
+}
+
+/* Everywhere else: a quiet cross-fade so navigation never feels abrupt. */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.18s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-enter-active,
+  .star-leave-active {
+    transition: opacity 0.2s ease;
+  }
+
+  .star-enter-from,
+  .star-leave-to {
+    clip-path: none;
+    transform: none;
+    opacity: 0;
+  }
 }
