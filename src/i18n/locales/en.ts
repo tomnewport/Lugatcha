@@ -27,11 +27,11 @@ export default {
     dismiss: 'Dismiss',
     loadingCity: 'Loading city…',
     lockedTitle: 'This area is not open yet',
-    lockedBody: 'Finish the Welcome Center first. Once your first area is complete, the rest of the city opens.',
+    lockedBody: 'Finish Tourist Information first. Once your first area is complete, the rest of the city opens.',
   },
 
   welcome: {
-    title: 'Welcome Center',
+    title: 'Tourist Information',
     subtitle: 'Start here — learn how the city works',
     intro:
       "Before you explore the city, get the handful of words you'll need everywhere — and see how a single area works from start to finish.",
@@ -39,7 +39,7 @@ export default {
     steps: {
       tapTitle: 'Tap an area to practise it',
       tapBody:
-        'Each place — the café, the bank, the airport — teaches the words you need there. This Welcome Center is your first area.',
+        'Each place — the café, the bank, the airport — teaches the words you need there. Tourist Information is your first area.',
       activitiesTitle: 'Every visit is one activity',
       activitiesBody:
         'Areas serve a different activity each visit and rotate through them: New Words, Matching, Listening, Phrase Assembly, Roleplay, Storytime, and a Test.',
