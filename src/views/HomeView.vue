@@ -398,14 +398,20 @@ onMounted(async () => {
 <style scoped>
 .home {
   --home-map-bg: #dccba9;
-  height: 100dvh;
+  /*
+   * Pinned to the viewport rather than laid out in flow: a flowed 100dvh
+   * element still lets the document itself scroll when a mobile address bar
+   * shrinks the visible area, which dragged the title off the top. Fixed +
+   * inset:0 takes the page out of flow so there is nothing to scroll.
+   */
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
   padding: 1.25rem 1rem 1.5rem;
   background: var(--home-map-bg);
-  position: relative;
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -768,7 +774,7 @@ onMounted(async () => {
 
 @media (orientation: portrait) {
   .home {
-    min-height: 100dvh;
+    /* position: fixed; inset: 0 is inherited from the base rule. */
     padding: 0;
     gap: 0;
     overflow: hidden;
