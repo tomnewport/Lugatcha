@@ -10,6 +10,8 @@ import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
 import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
+import AppLogo from '@/components/AppLogo.vue'
+import AppLogotype from '@/components/AppLogotype.vue'
 import { useAudioReady } from '@/audio/offline'
 import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
 import homeCityMap from '@/assets/home-city-map.webp'
@@ -283,33 +285,11 @@ onMounted(async () => {
 
     <header class="home-header">
       <div class="home-header__ornament" aria-hidden="true">
-        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="2" />
-          <circle cx="60" cy="60" r="40" fill="none" stroke="currentColor" stroke-width="1.5" />
-          <circle cx="60" cy="60" r="8" fill="currentColor" />
-          <g stroke="currentColor" stroke-width="1.5" fill="none">
-            <line x1="60" y1="5" x2="60" y2="20" />
-            <line x1="60" y1="100" x2="60" y2="115" />
-            <line x1="5" y1="60" x2="20" y2="60" />
-            <line x1="100" y1="60" x2="115" y2="60" />
-            <line x1="21" y1="21" x2="31" y2="31" />
-            <line x1="89" y1="89" x2="99" y2="99" />
-            <line x1="99" y1="21" x2="89" y2="31" />
-            <line x1="21" y1="99" x2="31" y2="89" />
-          </g>
-          <g fill="currentColor">
-            <circle cx="60" cy="5" r="3" />
-            <circle cx="60" cy="115" r="3" />
-            <circle cx="5" cy="60" r="3" />
-            <circle cx="115" cy="60" r="3" />
-            <circle cx="21" cy="21" r="3" />
-            <circle cx="99" cy="99" r="3" />
-            <circle cx="99" cy="21" r="3" />
-            <circle cx="21" cy="99" r="3" />
-          </g>
-        </svg>
+        <AppLogo />
       </div>
-      <h1 class="home-header__title">Lugʻatcha</h1>
+      <h1 class="home-header__title" aria-label="Lugʻatcha">
+        <AppLogotype />
+      </h1>
       <p class="home-header__subtitle" lang="uz">{{ $t('home.subtitle') }}</p>
     </header>
 
@@ -562,28 +542,15 @@ onMounted(async () => {
 }
 
 .home-header__ornament {
-  width: 52px;
-  height: 52px;
-  color: var(--color-gold);
-  margin-bottom: 0.25rem;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 0.1rem;
 }
 
 .home-header__title {
-  font-family: Georgia, 'Cambria', 'Times New Roman', serif;
-  font-size: clamp(2.3rem, 9vw, 3.4rem);
-  font-weight: 700;
   margin: 0;
-  letter-spacing: 0.005em;
-  background: linear-gradient(
-    105deg,
-    var(--color-primary) 0%,
-    var(--color-primary-light) 50%,
-    var(--color-gold) 125%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  /* Width drives the SVG logotype's rendered size (height scales via aspect ratio). */
+  width: min(88vw, 370px);
   filter: drop-shadow(0 2px 2px rgba(37, 28, 18, 0.16));
 }
 
@@ -830,9 +797,9 @@ onMounted(async () => {
     display: none;
   }
 
-  /* No card here, so the title carries its own halo to read over the map. */
+  /* Logotype floats over the map in portrait — cream halo for legibility. */
   .home-header__title {
-    font-size: clamp(1.8rem, 8vw, 2.2rem);
+    width: min(78vw, 300px);
     filter:
       drop-shadow(0 1px 1px rgba(255, 252, 240, 0.95))
       drop-shadow(0 1px 4px rgba(37, 28, 18, 0.35));
