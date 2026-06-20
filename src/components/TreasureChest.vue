@@ -110,6 +110,7 @@ const totalTypes = TEST_QUESTION_TYPES.length
   position: absolute;
   top: 1rem;
   left: 1rem;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
