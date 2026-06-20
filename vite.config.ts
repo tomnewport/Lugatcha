@@ -51,7 +51,7 @@ export default defineConfig({
         // Precache the shell AND the content data files, so the app is fully
         // usable offline from the first install. Audio stays out of the
         // precache (large, optional) and is cached at runtime instead.
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}', 'data/**/*.json'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff2}', 'data/**/*.json'],
         runtimeCaching: [
           {
             // Data files: serve stale immediately, refresh in background
