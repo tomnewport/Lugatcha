@@ -131,6 +131,7 @@
     {
       "id": "core.zero",
       "uzbek": "nol",
+      "cyrillic": "нол",
       "english": "zero",
       "russian": "ноль",
       "theme": "core",
@@ -140,6 +141,7 @@
     {
       "id": "core.one",
       "uzbek": "bir",
+      "cyrillic": "бир",
       "english": "one",
       "russian": "один",
       "theme": "core",
@@ -149,6 +151,7 @@
     {
       "id": "core.two",
       "uzbek": "ikki",
+      "cyrillic": "икки",
       "english": "two",
       "russian": "два",
       "theme": "core",
@@ -158,6 +161,7 @@
     {
       "id": "core.three",
       "uzbek": "uch",
+      "cyrillic": "уч",
       "english": "three",
       "russian": "три",
       "theme": "core",
@@ -167,6 +171,7 @@
     {
       "id": "core.four",
       "uzbek": "to'rt",
+      "cyrillic": "тўрт",
       "english": "four",
       "russian": "четыре",
       "theme": "core",
@@ -176,6 +181,7 @@
     {
       "id": "core.five",
       "uzbek": "besh",
+      "cyrillic": "беш",
       "english": "five",
       "russian": "пять",
       "theme": "core",
@@ -185,6 +191,7 @@
     {
       "id": "core.six",
       "uzbek": "olti",
+      "cyrillic": "олти",
       "english": "six",
       "russian": "шесть",
       "theme": "core",
@@ -194,6 +201,7 @@
     {
       "id": "core.seven",
       "uzbek": "yetti",
+      "cyrillic": "етти",
       "english": "seven",
       "russian": "семь",
       "theme": "core",
@@ -203,6 +211,7 @@
     {
       "id": "core.eight",
       "uzbek": "sakkiz",
+      "cyrillic": "саккиз",
       "english": "eight",
       "russian": "восемь",
       "theme": "core",
@@ -212,6 +221,7 @@
     {
       "id": "core.nine",
       "uzbek": "to'qqiz",
+      "cyrillic": "тўққиз",
       "english": "nine",
       "russian": "девять",
       "theme": "core",
@@ -221,6 +231,7 @@
     {
       "id": "core.ten",
       "uzbek": "o'n",
+      "cyrillic": "ўн",
       "english": "ten",
       "russian": "десять",
       "theme": "core",
@@ -230,6 +241,7 @@
     {
       "id": "core.twenty",
       "uzbek": "yigirma",
+      "cyrillic": "йигирма",
       "english": "twenty",
       "russian": "двадцать",
       "theme": "core",
@@ -239,6 +251,7 @@
     {
       "id": "core.thirty",
       "uzbek": "o'ttiz",
+      "cyrillic": "ўттиз",
       "english": "thirty",
       "russian": "тридцать",
       "theme": "core",
@@ -248,6 +261,7 @@
     {
       "id": "core.forty",
       "uzbek": "qirq",
+      "cyrillic": "қирқ",
       "english": "forty",
       "russian": "сорок",
       "theme": "core",
@@ -257,6 +271,7 @@
     {
       "id": "core.fifty",
       "uzbek": "ellik",
+      "cyrillic": "эллик",
       "english": "fifty",
       "russian": "пятьдесят",
       "theme": "core",
@@ -266,6 +281,7 @@
     {
       "id": "core.hundred",
       "uzbek": "yuz",
+      "cyrillic": "юз",
       "english": "hundred",
       "russian": "сто",
       "theme": "core",
@@ -275,6 +291,7 @@
     {
       "id": "core.thousand",
       "uzbek": "ming",
+      "cyrillic": "минг",
       "english": "thousand",
       "russian": "тысяча",
       "theme": "core",

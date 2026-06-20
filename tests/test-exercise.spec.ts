@@ -39,7 +39,7 @@ describe('learned classification', () => {
 
 describe('pickQuestionType', () => {
   it('only offers types the word has not passed yet', () => {
-    const p = progress(['type', 'read-choice'])
+    const p = progress(['type', 'read-choice', 'read-cyrillic-choice'])
     for (let i = 0; i < 20; i++) {
       expect(pickQuestionType(p, Math.random)).toBe('listen-choice')
     }
@@ -101,7 +101,7 @@ describe('buildTest', () => {
     const allWords = Array.from({ length: 60 }, (_, i) => word(`w${i}`, `m${i}`))
     const words = [word('w0', 'm0')]
     const prog = new Map<string, WordProgress | undefined>([
-      ['w0', progress(['listen-choice', 'read-choice'])], // forces 'type'
+      ['w0', progress(['listen-choice', 'read-choice', 'read-cyrillic-choice'])], // forces 'type'
     ])
     const [q] = buildTest(words, prog, allWords)
     expect(q.type).toBe('type')
@@ -137,16 +137,40 @@ describe('recordTestResult', () => {
     vi.unstubAllGlobals()
   })
 
-  it('learns a word only after all three types pass', async () => {
+  it('learns a word only after all four types pass', async () => {
     let r = await recordTestResult(db, 'w', 'type', true)
     expect(r.newlyLearned).toBe(false)
     r = await recordTestResult(db, 'w', 'read-choice', true)
+    expect(r.newlyLearned).toBe(false)
+    r = await recordTestResult(db, 'w', 'read-cyrillic-choice', true)
     expect(r.newlyLearned).toBe(false)
     r = await recordTestResult(db, 'w', 'listen-choice', true)
     expect(r.newlyLearned).toBe(true)
     const p = await db.wordProgress.get('w')
     expect(isWordLearned(p)).toBe(true)
     expect(p?.learnedAt).toBeTypeOf('number')
+  })
+
+  it('only banks the type requirement at a full spelling score', async () => {
+    let p = (await recordTestResult(db, 'w', 'type', 0.7), await db.wordProgress.get('w'))
+    expect(p?.testPassed).not.toContain('type')
+    expect(p?.spellMastery).toBeCloseTo(0.7)
+    // A weaker later attempt never lowers the recorded best.
+    await recordTestResult(db, 'w', 'type', 0.4)
+    p = await db.wordProgress.get('w')
+    expect(p?.spellMastery).toBeCloseTo(0.7)
+    // A perfect spelling banks the requirement.
+    await recordTestResult(db, 'w', 'type', 1)
+    p = await db.wordProgress.get('w')
+    expect(p?.testPassed).toContain('type')
+    expect(p?.spellMastery).toBe(1)
+  })
+
+  it('treats a partial spelling as neither pass nor fail on a learned word', async () => {
+    for (const t of TEST_QUESTION_TYPES) await recordTestResult(db, 'w', t, true)
+    const r = await recordTestResult(db, 'w', 'type', 0.5)
+    expect(r.unlearned).toBe(false)
+    expect(isWordLearned(await db.wordProgress.get('w'))).toBe(true)
   })
 
   it('forgives wrong answers on an un-learned word', async () => {

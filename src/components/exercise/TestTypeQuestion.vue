@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import type { Word } from '@/db/types'
 import { foldTyping, typingTarget } from '@/exercises/test'
 import { useContentLang } from '@/i18n/content'
@@ -7,82 +7,95 @@ import { speakUzbek } from '@/audio/audio'
 import UzbekKeyboard from './UzbekKeyboard.vue'
 
 const props = defineProps<{ word: Word }>()
-const emit = defineEmits<{ answered: [correct: boolean] }>()
+/** Reports the spelling score: 1 for a tip-free spelling, down to 0 (gave up). */
+const emit = defineEmits<{ answered: [score: number] }>()
 const { gloss } = useContentLang()
 
 /** Display spelling and its folded form for matching. */
 const target = computed(() => typingTarget(props.word.uzbek))
 const folded = computed(() => foldTyping(target.value))
-/** Characters the learner actually has to press (spaces auto-fill). */
-const charCount = computed(() => folded.value.replace(/ /g, '').length)
+/** Tips available — roughly one per letter; spending them all drains the bar. */
+const tipBudget = computed(() => Math.max(1, folded.value.replace(/\s/g, '').length))
 
-const typed = ref('') // folded text entered so far
+const keys = ref<string[]>([]) // pressed keys, kept as units so backspace is clean
+const tipsUsed = ref(0)
 const litKeys = ref<string[] | null>(null)
-const hintsUsed = ref(0)
 const status = ref<'typing' | 'passed' | 'failed'>('typing')
+const score = ref(0)
 
-/** One hint press allowed per character; depleting the bar fails the question. */
-const hintBudget = computed(() => charCount.value)
-const hintsLeft = computed(() => Math.max(0, hintBudget.value - hintsUsed.value))
+const typed = computed(() => keys.value.join(''))
+const foldedTyped = computed(() => foldTyping(typed.value))
+/** Whether what's typed so far is still a correct prefix of the target. */
+const onTrack = computed(() => folded.value.startsWith(foldedTyped.value))
+const offTrack = computed(() => foldedTyped.value.length > 0 && !onTrack.value)
+/** How much of the target the typing matches from the start (the tip anchor). */
+const correctLen = computed(() => {
+  const a = foldedTyped.value
+  const b = folded.value
+  let n = 0
+  while (n < a.length && n < b.length && a[n] === b[n]) n++
+  return n
+})
 
-onMounted(() => advancePastSpaces())
+const tipsLeft = computed(() => Math.max(0, tipBudget.value - tipsUsed.value))
+/** Continuous fill of the tip bar, 0–1; also the score if spelled right now. */
+const meterPct = computed(() => tipsLeft.value / tipBudget.value)
+const scorePercent = computed(() => Math.round(score.value * 100))
 
-/** Spaces are filled automatically so the learner never types them. */
-function advancePastSpaces() {
-  while (folded.value[typed.value.length] === ' ') {
-    typed.value += ' '
-  }
-}
+const answerClass = computed(() => `type-q__answer--${status.value}`)
 
-/** The visible word so far, in the target's own (cased) spelling. */
-const shownText = computed(() => target.value.slice(0, typed.value.length))
-const remaining = computed(() => folded.value.slice(typed.value.length))
+const ALL_KEYS = [
+  'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t',
+  'u','v','w','x','y','z','oʻ','gʻ','ʼ','sh','ch','ng',' ',
+]
 
-const ALL_KEYS = ['a','b','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','x','y','z','oʻ','gʻ','ʼ','sh','ch','ng',' ']
-
-/** Keys whose one press keeps the answer on track from where we are now. */
+/** Keys whose press would extend the correct prefix by one step. */
 function validNextKeys(): string[] {
-  return ALL_KEYS.filter((k) => folded.value.startsWith(typed.value + foldTyping(k)))
+  const prefix = folded.value.slice(0, correctLen.value)
+  return ALL_KEYS.filter((k) => folded.value.startsWith(prefix + foldTyping(k)))
 }
 
 function press(value: string) {
   if (status.value !== 'typing') return
-  const candidate = typed.value + foldTyping(value)
-  if (!folded.value.startsWith(candidate)) return // wrong key — quietly ignored
-  typed.value = candidate
-  litKeys.value = null // brighten the whole keyboard again for the next letter
-  advancePastSpaces()
-  if (typed.value === folded.value) {
-    status.value = 'passed'
-    reveal()
-    emit('answered', true)
+  keys.value.push(value)
+  litKeys.value = null // a tip lasts one keystroke, then the board reopens
+  if (foldedTyped.value === folded.value) {
+    score.value = meterPct.value
+    finish('passed')
   }
 }
 
-/** Read the word aloud whenever it becomes fully visible — spelled or revealed. */
-function reveal() {
-  void speakUzbek(props.word.uzbek)
+function backspace() {
+  if (status.value !== 'typing') return
+  keys.value.pop()
+  litKeys.value = null
 }
 
-function useHint() {
-  if (status.value !== 'typing' || hintsLeft.value === 0) return
-  hintsUsed.value++
-  if (hintsUsed.value >= hintBudget.value) {
-    status.value = 'failed'
-    litKeys.value = null
-    reveal()
-    emit('answered', false)
+/** The hint button: spends a tip to narrow the keyboard, or — once the bar is
+ *  empty — gives up, revealing the answer and scoring the attempt zero. */
+function useTip() {
+  if (status.value !== 'typing') return
+  if (tipsLeft.value === 0) {
+    score.value = 0
+    finish('failed')
     return
   }
-  // Each press cuts the *currently lit* keys down to about a third — always
-  // keeping the key(s) that actually come next — so repeated hints close in:
-  // the full board narrows to roughly nine keys, then three, then the one key.
+  tipsUsed.value++
+  // Each tip cuts the lit keys down toward the one(s) that come next, so
+  // repeated tips close in: the full board narrows to a few keys, then one.
   const valid = new Set(validNextKeys())
   const current = litKeys.value ?? ALL_KEYS
   const keep = Math.max(valid.size, Math.floor(current.length / 3))
   const others = current.filter((k) => !valid.has(k)).sort(() => Math.random() - 0.5)
   while (valid.size < keep && others.length) valid.add(others.pop()!)
   litKeys.value = [...valid]
+}
+
+function finish(result: 'passed' | 'failed') {
+  status.value = result
+  litKeys.value = null
+  void speakUzbek(props.word.uzbek) // read the word aloud the moment it's revealed
+  emit('answered', score.value)
 }
 </script>
 
@@ -91,44 +104,59 @@ function useHint() {
     <p class="type-q__instruction">{{ $t('exercise.type.prompt') }}</p>
     <p class="type-q__english">{{ gloss(word) }}</p>
 
-    <div class="type-q__answer" :class="`type-q__answer--${status}`" lang="uz" aria-live="polite">
-      <span class="type-q__typed">{{ shownText }}</span>
-      <span v-if="status === 'typing'" class="type-q__caret" aria-hidden="true" />
-      <span v-for="(_, i) in remaining" :key="i" class="type-q__slot" aria-hidden="true" />
+    <div class="type-q__answer" :class="answerClass" lang="uz" aria-live="polite">
+      <template v-if="status === 'typing'">
+        <span class="type-q__typed" :class="{ 'type-q__typed--off': offTrack }">{{ typed }}</span>
+        <span class="type-q__caret" aria-hidden="true" />
+      </template>
+      <span v-else class="type-q__typed">{{ target }}</span>
     </div>
 
-    <p v-if="status === 'failed'" class="type-q__reveal" lang="uz">{{ target }}</p>
+    <p
+      v-if="status !== 'typing'"
+      class="type-q__score"
+      :class="score >= 1 ? 'type-q__score--full' : 'type-q__score--partial'"
+    >
+      {{ $t('exercise.type.score', { percent: scorePercent }) }}
+    </p>
 
-    <UzbekKeyboard :lit-keys="litKeys" :disabled="status !== 'typing'" @press="press" />
+    <UzbekKeyboard
+      :lit-keys="litKeys"
+      :disabled="status !== 'typing'"
+      @press="press"
+      @backspace="backspace"
+    />
 
-    <!-- Hint meter and its trigger live together so it reads as one control:
-         tapping the button spends a segment of the bar beside it. -->
+    <!-- The tip meter and its trigger are one control: each tip drains the bar
+         and lowers the score it would award; emptying it turns the button into
+         a give-up that reveals the answer. -->
     <div class="type-q__hint">
       <span
         class="type-q__hinticon"
         role="img"
         tabindex="0"
-        :title="$t('exercise.type.hintExplainer')"
-        :aria-label="$t('exercise.type.hintExplainer')"
+        :title="$t('exercise.type.tipExplainer')"
+        :aria-label="$t('exercise.type.tipExplainer')"
       >
         <span class="type-q__hinticon-kb" aria-hidden="true">⌨️</span>
         <span class="type-q__hinticon-bolt" aria-hidden="true">⚡</span>
       </span>
-      <div class="type-q__hintbar" :aria-label="$t('exercise.type.hintsLeft', { count: hintsLeft })">
-        <span
-          v-for="i in hintBudget"
-          :key="i"
-          class="type-q__hintseg"
-          :class="{ 'type-q__hintseg--spent': i > hintsLeft }"
-        />
+      <div
+        class="type-q__tipbar"
+        role="meter"
+        :aria-valuenow="Math.round(meterPct * 100)"
+        :aria-label="$t('exercise.type.tipMeter', { percent: Math.round(meterPct * 100) })"
+      >
+        <span class="type-q__tipfill" :style="{ width: `${meterPct * 100}%` }" />
       </div>
       <button
-        class="btn btn--ghost type-q__hintbtn"
+        class="btn btn--ghost type-q__tipbtn"
+        :class="{ 'type-q__tipbtn--pass': tipsLeft === 0 }"
         type="button"
-        :disabled="status !== 'typing' || hintsLeft === 0"
-        @click="useHint"
+        :disabled="status !== 'typing'"
+        @click="useTip"
       >
-        {{ $t('exercise.type.hint', { count: hintsLeft }) }}
+        {{ tipsLeft > 0 ? $t('exercise.type.useTip') : $t('exercise.type.pass') }}
       </button>
     </div>
   </div>
@@ -178,10 +206,8 @@ function useHint() {
   color: var(--color-terracotta);
 }
 
-.type-q__slot {
-  width: 14px;
-  border-bottom: 3px solid var(--color-border);
-  margin-bottom: 4px;
+.type-q__typed--off {
+  color: var(--color-terracotta);
 }
 
 .type-q__caret {
@@ -197,11 +223,18 @@ function useHint() {
   }
 }
 
-.type-q__reveal {
-  font-size: 1rem;
+.type-q__score {
+  font-size: 0.95rem;
   font-weight: 700;
-  color: var(--color-terracotta);
   margin: 0;
+}
+
+.type-q__score--full {
+  color: var(--color-teal);
+}
+
+.type-q__score--partial {
+  color: var(--color-gold);
 }
 
 .type-q__hint {
@@ -233,27 +266,30 @@ function useHint() {
   filter: drop-shadow(0 0 1px var(--color-surface));
 }
 
-.type-q__hintbar {
-  display: flex;
-  gap: 3px;
+.type-q__tipbar {
   flex: 1;
   height: 7px;
-}
-
-.type-q__hintseg {
-  flex: 1;
-  border-radius: 3px;
-  background: var(--color-gold);
-  transition: background-color 0.25s ease;
-}
-
-.type-q__hintseg--spent {
+  border-radius: 4px;
   background: var(--color-border);
+  overflow: hidden;
 }
 
-.type-q__hintbtn {
+.type-q__tipfill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--color-gold);
+  transition: width 0.3s ease;
+}
+
+.type-q__tipbtn {
   flex-shrink: 0;
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
+}
+
+.type-q__tipbtn--pass {
+  color: var(--color-terracotta);
+  border-color: var(--color-terracotta);
 }
 </style>

@@ -7,15 +7,17 @@
  * belgisi (ʼ) — which on a hardware keyboard are composed from their bases.
  * A key's `value` is what it types; its label is what shows.
  *
- * When `litKeys` is non-null, only those values stay bright and the rest dim —
- * that's how a hint narrows the keyboard down.
+ * When `litKeys` is non-null, those values stay bright and the rest dim — that's
+ * a tip *highlighting* the likely next letter. Dim keys are still pressable: the
+ * keyboard always accepts whatever the learner types, right or wrong, and a
+ * backspace key lets them take it back.
  */
 const props = defineProps<{
   litKeys?: string[] | null
   disabled?: boolean
 }>()
 
-const emit = defineEmits<{ press: [value: string] }>()
+const emit = defineEmits<{ press: [value: string]; backspace: [] }>()
 
 interface Key {
   value: string
@@ -44,7 +46,7 @@ function isLit(value: string): boolean {
 }
 
 function press(value: string) {
-  if (props.disabled || !isLit(value)) return
+  if (props.disabled) return
   emit('press', value)
 }
 </script>
@@ -63,6 +65,16 @@ function press(value: string) {
         @click="press(key.value)"
       >
         {{ key.label }}
+      </button>
+      <button
+        v-if="r === ROWS.length - 1"
+        class="key key--control"
+        type="button"
+        :disabled="disabled"
+        :aria-label="$t('exercise.type.backspace')"
+        @click="emit('backspace')"
+      >
+        ⌫
       </button>
     </div>
   </div>
@@ -108,14 +120,21 @@ function press(value: string) {
   max-width: 120px;
 }
 
+.key--control {
+  flex: 1.4 1 0;
+  max-width: 56px;
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+}
+
 .key:not(:disabled):active {
   transform: translateY(1px);
   background: #f2f7fc;
 }
 
+/* A tip dims the keys it isn't pointing at, but they stay pressable. */
 .key--dim {
-  opacity: 0.22;
-  pointer-events: none;
+  opacity: 0.3;
 }
 
 .keyboard--disabled .key {

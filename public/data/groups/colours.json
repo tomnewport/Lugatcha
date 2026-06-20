@@ -61,6 +61,7 @@
     {
       "id": "core.colour-white",
       "uzbek": "oq",
+      "cyrillic": "оқ",
       "english": "white",
       "russian": "белый",
       "theme": "core",
@@ -71,6 +72,7 @@
     {
       "id": "core.colour-black",
       "uzbek": "qora",
+      "cyrillic": "қора",
       "english": "black",
       "russian": "чёрный",
       "theme": "core",
@@ -81,6 +83,7 @@
     {
       "id": "core.colour-red",
       "uzbek": "qizil",
+      "cyrillic": "қизил",
       "english": "red",
       "russian": "красный",
       "theme": "core",
@@ -91,6 +94,7 @@
     {
       "id": "core.colour-blue",
       "uzbek": "ko'k",
+      "cyrillic": "кўк",
       "english": "blue",
       "russian": "синий",
       "theme": "core",
@@ -103,6 +107,7 @@
     {
       "id": "core.colour-green",
       "uzbek": "yashil",
+      "cyrillic": "яшил",
       "english": "green",
       "russian": "зелёный",
       "theme": "core",
@@ -113,6 +118,7 @@
     {
       "id": "core.colour-yellow",
       "uzbek": "sariq",
+      "cyrillic": "сариқ",
       "english": "yellow",
       "russian": "жёлтый",
       "theme": "core",
@@ -123,6 +129,7 @@
     {
       "id": "core.colour-brown",
       "uzbek": "jigarrang",
+      "cyrillic": "жигарранг",
       "english": "brown",
       "russian": "коричневый",
       "theme": "core",
@@ -135,6 +142,7 @@
     {
       "id": "core.colour-grey",
       "uzbek": "kulrang",
+      "cyrillic": "кулранг",
       "english": "grey",
       "russian": "серый",
       "theme": "core",
@@ -147,6 +155,7 @@
     {
       "id": "core.colour-pink",
       "uzbek": "pushti",
+      "cyrillic": "пушти",
       "english": "pink",
       "russian": "розовый",
       "theme": "core",
@@ -157,6 +166,7 @@
     {
       "id": "core.colour-purple",
       "uzbek": "binafsha",
+      "cyrillic": "бинафша",
       "english": "purple",
       "russian": "фиолетовый",
       "theme": "core",

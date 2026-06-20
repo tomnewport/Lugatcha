@@ -2,6 +2,7 @@
   {
     "id": "police-station.police",
     "uzbek": "politsiya",
+    "cyrillic": "полиция",
     "english": "police",
     "russian": "полиция",
     "theme": "police-station",
@@ -10,6 +11,7 @@
   {
     "id": "police-station.help",
     "uzbek": "yordam",
+    "cyrillic": "ёрдам",
     "english": "help",
     "russian": "помощь",
     "theme": "police-station",
@@ -20,6 +22,7 @@
   {
     "id": "police-station.document",
     "uzbek": "hujjat",
+    "cyrillic": "ҳужжат",
     "english": "document",
     "russian": "документ",
     "theme": "police-station",
@@ -28,6 +31,7 @@
   {
     "id": "police-station.wallet",
     "uzbek": "hamyon",
+    "cyrillic": "ҳамён",
     "english": "wallet",
     "russian": "кошелёк",
     "theme": "police-station",
@@ -36,6 +40,7 @@
   {
     "id": "police-station.bag",
     "uzbek": "sumka",
+    "cyrillic": "сумка",
     "english": "bag",
     "russian": "сумка",
     "theme": "police-station",
@@ -44,6 +49,7 @@
   {
     "id": "police-station.phone",
     "uzbek": "telefon",
+    "cyrillic": "телефон",
     "english": "telephone",
     "russian": "телефон",
     "theme": "police-station",
@@ -52,6 +58,7 @@
   {
     "id": "police-station.lost",
     "uzbek": "yo'qoldi",
+    "cyrillic": "йўқолди",
     "english": "got lost / went missing",
     "russian": "потерялся / пропал",
     "theme": "police-station",
@@ -62,6 +69,7 @@
   {
     "id": "police-station.problem",
     "uzbek": "muammo",
+    "cyrillic": "муаммо",
     "english": "problem",
     "russian": "проблема",
     "theme": "police-station",
@@ -70,6 +78,7 @@
   {
     "id": "police-station.address",
     "uzbek": "manzil",
+    "cyrillic": "манзил",
     "english": "address",
     "russian": "адрес",
     "theme": "police-station",
@@ -78,6 +87,7 @@
   {
     "id": "police-station.street",
     "uzbek": "ko'cha",
+    "cyrillic": "кўча",
     "english": "street",
     "russian": "улица",
     "theme": "police-station",
@@ -86,6 +96,7 @@
   {
     "id": "police-station.registration",
     "uzbek": "ro'yxatga olish",
+    "cyrillic": "рўйхатга олиш",
     "english": "registration",
     "russian": "регистрация",
     "theme": "police-station",
@@ -96,6 +107,7 @@
   {
     "id": "police-station.form",
     "uzbek": "forma",
+    "cyrillic": "форма",
     "english": "form (paper)",
     "russian": "бланк",
     "theme": "police-station",
@@ -104,6 +116,7 @@
   {
     "id": "police-station.safe",
     "uzbek": "xavfsiz",
+    "cyrillic": "хавфсиз",
     "english": "safe (adjective)",
     "russian": "безопасный",
     "theme": "police-station",

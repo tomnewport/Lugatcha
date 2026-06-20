@@ -61,6 +61,7 @@
     {
       "id": "core.food-plov",
       "uzbek": "palov",
+      "cyrillic": "палов",
       "english": "plov",
       "russian": "плов",
       "theme": "core",
@@ -72,6 +73,7 @@
     {
       "id": "core.food-manti",
       "uzbek": "manti",
+      "cyrillic": "манти",
       "english": "manti (steamed dumplings)",
       "russian": "манты (паровые пельмени)",
       "theme": "core",
@@ -81,6 +83,7 @@
     {
       "id": "core.food-lagman",
       "uzbek": "lag'mon",
+      "cyrillic": "лағмон",
       "english": "lagman (pulled noodles)",
       "russian": "лагман (тянутая лапша)",
       "theme": "core",
@@ -90,6 +93,7 @@
     {
       "id": "core.food-shorva",
       "uzbek": "sho'rva",
+      "cyrillic": "шўрва",
       "english": "soup",
       "russian": "суп",
       "theme": "core",
@@ -99,6 +103,7 @@
     {
       "id": "core.food-carrot",
       "uzbek": "sabzi",
+      "cyrillic": "сабзи",
       "english": "carrot",
       "russian": "морковь",
       "theme": "core",
@@ -108,6 +113,7 @@
     {
       "id": "core.food-onion",
       "uzbek": "piyoz",
+      "cyrillic": "пиёз",
       "english": "onion",
       "russian": "лук",
       "theme": "core",
@@ -117,6 +123,7 @@
     {
       "id": "core.food-potato",
       "uzbek": "kartoshka",
+      "cyrillic": "картошка",
       "english": "potato",
       "russian": "картофель",
       "theme": "core",
@@ -126,6 +133,7 @@
     {
       "id": "core.food-pomegranate",
       "uzbek": "anor",
+      "cyrillic": "анор",
       "english": "pomegranate",
       "russian": "гранат",
       "theme": "core",
@@ -135,6 +143,7 @@
     {
       "id": "core.food-melon",
       "uzbek": "qovun",
+      "cyrillic": "қовун",
       "english": "melon",
       "russian": "дыня",
       "theme": "core",
@@ -144,6 +153,7 @@
     {
       "id": "core.food-watermelon",
       "uzbek": "tarvuz",
+      "cyrillic": "тарвуз",
       "english": "watermelon",
       "russian": "арбуз",
       "theme": "core",
@@ -153,6 +163,7 @@
     {
       "id": "core.food-honey",
       "uzbek": "asal",
+      "cyrillic": "асал",
       "english": "honey",
       "russian": "мёд",
       "theme": "core",
@@ -162,6 +173,7 @@
     {
       "id": "core.food-sweets",
       "uzbek": "shirinlik",
+      "cyrillic": "ширинлик",
       "english": "sweets",
       "russian": "сладости",
       "theme": "core",
