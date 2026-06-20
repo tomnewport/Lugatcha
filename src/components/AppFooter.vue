@@ -37,9 +37,15 @@ const settings = useSettingsStore()
   left: 0;
   right: 0;
   z-index: 10;
-  background: var(--color-surface);
-  border-top: 1.5px solid var(--color-border);
-  padding: 0.45rem 1rem calc(0.45rem + env(safe-area-inset-bottom));
+  /* Fade up into whatever is behind it (the map, or a page's content) rather
+     than presenting a hard bar with a border line. */
+  background: linear-gradient(
+    to top,
+    var(--color-bg) 0%,
+    var(--color-bg) 52%,
+    transparent 100%
+  );
+  padding: 1.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
 }
 
 .app-footer__inner {
