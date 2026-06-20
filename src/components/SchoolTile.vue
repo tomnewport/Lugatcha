@@ -80,8 +80,8 @@ const dashOffset = computed(() =>
         <path d="M8 3.5v10" />
       </svg>
     </div>
-    <span class="tile__name">{{ $t('school.title') }}</span>
-    <span class="tile__name-uz" lang="uz">{{ $t('school.subtitle') }}</span>
+    <span class="tile__name" lang="uz">{{ $t('school.subtitle') }}</span>
+    <span class="tile__name-uz">{{ $t('school.title') }}</span>
   </button>
 </template>
 

@@ -70,13 +70,6 @@ export default {
       english: 'English',
       russian: 'Русский',
     },
-    tileLabels: {
-      title: 'Tile labels',
-      desc: 'Which language leads on the city map?',
-      groupLabel: 'Label language',
-      baseFirst: 'Your language first',
-      uzbekFirst: "O'zbekcha birinchi",
-    },
     audio: {
       title: 'Audio',
       checking: 'Checking for downloadable audio…',

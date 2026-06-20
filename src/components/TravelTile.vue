@@ -34,8 +34,8 @@ function open() {
         <circle cx="12" cy="8" r="2.4" fill="currentColor" stroke="none" />
       </svg>
     </div>
-    <span class="tile__name">{{ $t('travel.title') }}</span>
-    <span class="tile__name-uz" lang="uz">{{ $t('travel.tileSubtitle') }}</span>
+    <span class="tile__name" lang="uz">{{ $t('travel.tileSubtitle') }}</span>
+    <span class="tile__name-uz">{{ $t('travel.title') }}</span>
   </button>
 </template>
 
