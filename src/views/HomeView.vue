@@ -11,6 +11,7 @@ import SchoolTile from '@/components/SchoolTile.vue'
 import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
 import AppLogo from '@/components/AppLogo.vue'
+import AppLogotype from '@/components/AppLogotype.vue'
 import { useAudioReady } from '@/audio/offline'
 import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
 import homeCityMap from '@/assets/home-city-map.webp'
@@ -286,7 +287,9 @@ onMounted(async () => {
       <div class="home-header__ornament" aria-hidden="true">
         <AppLogo />
       </div>
-      <h1 class="home-header__title">Lugʻatcha</h1>
+      <h1 class="home-header__title" aria-label="Lugʻatcha">
+        <AppLogotype />
+      </h1>
       <p class="home-header__subtitle" lang="uz">{{ $t('home.subtitle') }}</p>
     </header>
 
@@ -545,21 +548,9 @@ onMounted(async () => {
 }
 
 .home-header__title {
-  font-family: Georgia, 'Cambria', 'Times New Roman', serif;
-  font-size: clamp(2.3rem, 9vw, 3.4rem);
-  font-weight: 700;
   margin: 0;
-  letter-spacing: 0.005em;
-  background: linear-gradient(
-    105deg,
-    var(--color-primary) 0%,
-    var(--color-primary-light) 50%,
-    var(--color-gold) 125%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  /* Width drives the SVG logotype's rendered size (height scales via aspect ratio). */
+  width: min(88vw, 370px);
   filter: drop-shadow(0 2px 2px rgba(37, 28, 18, 0.16));
 }
 
@@ -806,9 +797,9 @@ onMounted(async () => {
     display: none;
   }
 
-  /* No card here, so the title carries its own halo to read over the map. */
+  /* Logotype floats over the map in portrait — cream halo for legibility. */
   .home-header__title {
-    font-size: clamp(1.8rem, 8vw, 2.2rem);
+    width: min(78vw, 300px);
     filter:
       drop-shadow(0 1px 1px rgba(255, 252, 240, 0.95))
       drop-shadow(0 1px 4px rgba(37, 28, 18, 0.35));
