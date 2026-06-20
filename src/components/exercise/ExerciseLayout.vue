@@ -108,7 +108,10 @@ const emit = defineEmits<{ exit: [] }>()
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 1.25rem 1rem 2rem;
+  /* Bottom padding must clear the fixed AppFooter (language picker).
+     Footer height ≈ 1.5rem padding-top + ~1.6rem button + 0.5rem padding-bottom = ~3.6rem,
+     plus env(safe-area-inset-bottom) on notched phones. */
+  padding: 1.25rem 1rem calc(4.5rem + env(safe-area-inset-bottom));
   width: 100%;
   max-width: 560px;
   margin: 0 auto;
