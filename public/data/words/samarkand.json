@@ -2,6 +2,7 @@
   {
     "id": "samarkand.shahar",
     "uzbek": "shahar",
+    "cyrillic": "шаҳар",
     "english": "city",
     "russian": "город",
     "theme": "samarkand",
@@ -10,6 +11,7 @@
   {
     "id": "samarkand.maydon",
     "uzbek": "maydon",
+    "cyrillic": "майдон",
     "english": "square",
     "russian": "площадь",
     "theme": "samarkand",
@@ -18,6 +20,7 @@
   {
     "id": "samarkand.gozal",
     "uzbek": "goʻzal",
+    "cyrillic": "гўзал",
     "english": "beautiful",
     "russian": "красивый",
     "theme": "samarkand",
@@ -26,6 +29,7 @@
   {
     "id": "samarkand.kok",
     "uzbek": "koʻk",
+    "cyrillic": "кўк",
     "english": "blue",
     "russian": "синий",
     "theme": "samarkand",
@@ -34,6 +38,7 @@
   {
     "id": "samarkand.sayyoh",
     "uzbek": "sayyoh",
+    "cyrillic": "сайёҳ",
     "english": "tourist",
     "russian": "турист",
     "theme": "samarkand",
@@ -42,6 +47,7 @@
   {
     "id": "samarkand.rasm",
     "uzbek": "rasm",
+    "cyrillic": "расм",
     "english": "photo",
     "russian": "фотография",
     "theme": "samarkand",
@@ -50,6 +56,7 @@
   {
     "id": "samarkand.qadimiy",
     "uzbek": "qadimiy",
+    "cyrillic": "қадимий",
     "english": "ancient",
     "russian": "древний",
     "theme": "samarkand",
@@ -58,6 +65,7 @@
   {
     "id": "samarkand.madrasa",
     "uzbek": "madrasa",
+    "cyrillic": "мадраса",
     "english": "madrasah",
     "russian": "медресе",
     "theme": "samarkand",
@@ -66,6 +74,7 @@
   {
     "id": "samarkand.ustoz",
     "uzbek": "ustoz",
+    "cyrillic": "устоз",
     "english": "teacher",
     "russian": "учитель",
     "theme": "samarkand",
@@ -74,6 +83,7 @@
   {
     "id": "samarkand.karvon",
     "uzbek": "karvon",
+    "cyrillic": "карвон",
     "english": "caravan",
     "russian": "караван",
     "theme": "samarkand",
@@ -82,6 +92,7 @@
   {
     "id": "samarkand.yulduz",
     "uzbek": "yulduz",
+    "cyrillic": "юлдуз",
     "english": "star",
     "russian": "звезда",
     "theme": "samarkand",

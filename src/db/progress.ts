@@ -88,39 +88,49 @@ export interface TestResultOutcome {
 /**
  * Records one test question result for a word.
  *
- * A correct answer banks that question type; once all three are banked the word
- * is learned. Wrong answers on un-learned words are forgiven ("the user will
- * pick them up on the next test"), but two wrong answers on a learned word
- * unlearn it so it comes back round for testing.
+ * Choice questions pass a boolean; the typing question passes a 0–1 score (the
+ * share of tips left unused — 1 means a perfect, tip-free spelling). A type
+ * question only banks 'type' at a full score, but every attempt updates the
+ * best `spellMastery` so progress toward mastery is visible. Once all four
+ * question types are banked the word is learned. Wrong answers (score 0) on an
+ * un-learned word are forgiven; two on a learned word unlearn it so it comes
+ * back round for testing.
  */
 export async function recordTestResult(
   db: LugatchaDB,
   wordId: string,
   type: TestQuestionType,
-  correct: boolean,
+  result: boolean | number,
 ): Promise<TestResultOutcome> {
+  const score = typeof result === 'boolean' ? (result ? 1 : 0) : Math.max(0, Math.min(1, result))
   return db.transaction('rw', db.wordProgress, async () => {
     const existing = await db.wordProgress.get(wordId)
     const passed = new Set<TestQuestionType>(existing?.testPassed ?? [])
     const wasLearned = TEST_QUESTION_TYPES.every((t) => passed.has(t))
     let fails = existing?.failsSinceLearned ?? 0
     let learnedAt = existing?.learnedAt
+    let spellMastery = existing?.spellMastery ?? 0
     let newlyLearned = false
     let unlearned = false
 
-    if (correct) {
+    if (type === 'type') spellMastery = Math.max(spellMastery, score)
+
+    if (score >= 1) {
       passed.add(type)
       fails = 0
       if (!wasLearned && TEST_QUESTION_TYPES.every((t) => passed.has(t))) {
         learnedAt = Date.now()
         newlyLearned = true
       }
-    } else if (wasLearned) {
+    } else if (score <= 0 && wasLearned) {
+      // Only an outright miss (a wrong choice, or spelling given up on) counts
+      // against a learned word; a partial spelling is neither pass nor fail.
       fails += 1
       if (fails >= FAILS_TO_UNLEARN) {
         passed.clear()
         learnedAt = undefined
         fails = 0
+        spellMastery = 0
         unlearned = true
       }
     }
@@ -130,6 +140,7 @@ export async function recordTestResult(
       seenAt: existing?.seenAt ?? Date.now(),
       lastResults: existing?.lastResults ?? [],
       testPassed: [...passed],
+      spellMastery,
       learnedAt,
       failsSinceLearned: fails,
     })

@@ -2,6 +2,7 @@
   {
     "id": "mountain-park.mountain",
     "uzbek": "tog'",
+    "cyrillic": "тоғ",
     "english": "mountain",
     "russian": "гора",
     "theme": "mountain-park",
@@ -10,6 +11,7 @@
   {
     "id": "mountain-park.water",
     "uzbek": "suv",
+    "cyrillic": "сув",
     "english": "water",
     "russian": "вода",
     "theme": "mountain-park",
@@ -18,6 +20,7 @@
   {
     "id": "mountain-park.tired",
     "uzbek": "charchadim",
+    "cyrillic": "чарчадим",
     "english": "I am tired",
     "russian": "Я устал",
     "theme": "mountain-park",
@@ -26,6 +29,7 @@
   {
     "id": "mountain-park.beautiful",
     "uzbek": "go'zal",
+    "cyrillic": "гўзал",
     "english": "beautiful",
     "russian": "красивый",
     "theme": "mountain-park",
@@ -34,6 +38,7 @@
   {
     "id": "mountain-park.sun",
     "uzbek": "quyosh",
+    "cyrillic": "қуёш",
     "english": "sun",
     "russian": "солнце",
     "theme": "mountain-park",
@@ -42,6 +47,7 @@
   {
     "id": "mountain-park.cold",
     "uzbek": "sovuq",
+    "cyrillic": "совуқ",
     "english": "cold",
     "russian": "холодный",
     "theme": "mountain-park",
@@ -50,6 +56,7 @@
   {
     "id": "mountain-park.path",
     "uzbek": "so'qmoq",
+    "cyrillic": "сўқмоқ",
     "english": "path / trail",
     "russian": "тропа",
     "theme": "mountain-park",
@@ -58,6 +65,7 @@
   {
     "id": "mountain-park.river",
     "uzbek": "daryo",
+    "cyrillic": "дарё",
     "english": "river",
     "russian": "река",
     "theme": "mountain-park",
@@ -66,6 +74,7 @@
   {
     "id": "mountain-park.tree",
     "uzbek": "daraxt",
+    "cyrillic": "дарахт",
     "english": "tree",
     "russian": "дерево",
     "theme": "mountain-park",
@@ -74,6 +83,7 @@
   {
     "id": "mountain-park.sky",
     "uzbek": "osmon",
+    "cyrillic": "осмон",
     "english": "sky",
     "russian": "небо",
     "theme": "mountain-park",
@@ -82,6 +92,7 @@
   {
     "id": "mountain-park.top",
     "uzbek": "cho'qqi",
+    "cyrillic": "чўққи",
     "english": "summit / peak",
     "russian": "вершина",
     "theme": "mountain-park",
@@ -90,6 +101,7 @@
   {
     "id": "mountain-park.cable-car",
     "uzbek": "osma yo'l",
+    "cyrillic": "осма йўл",
     "english": "cable car",
     "russian": "канатная дорога",
     "theme": "mountain-park",
@@ -98,6 +110,7 @@
   {
     "id": "mountain-park.fresh-air",
     "uzbek": "toza havo",
+    "cyrillic": "тоза ҳаво",
     "english": "fresh air",
     "russian": "свежий воздух",
     "theme": "mountain-park",

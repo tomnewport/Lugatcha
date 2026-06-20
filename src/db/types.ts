@@ -68,19 +68,31 @@ export interface Roleplay {
 }
 
 /**
- * The three ways a word is quizzed in a Test. A word is "learned" only once all
- * three have been passed at least once (issue #61).
+ * The four ways a word is quizzed in a Test. A word is "learned" only once all
+ * four have been passed (issue #61): identified by sound, by sight in Latin and
+ * in Cyrillic, and spelled at 100% with no tips.
  */
-export const TEST_QUESTION_TYPES = ['listen-choice', 'read-choice', 'type'] as const
+export const TEST_QUESTION_TYPES = [
+  'listen-choice',
+  'read-choice',
+  'read-cyrillic-choice',
+  'type',
+] as const
 export type TestQuestionType = (typeof TEST_QUESTION_TYPES)[number]
 
 export interface WordProgress {
   wordId: string
   seenAt?: number // unix timestamp of first exposure
   lastResults: boolean[] // newest first, capped at 4 entries
-  /** Test question types passed at least once — three of them means "learned". */
+  /** Test question types passed at least once — all of them means "learned". */
   testPassed?: TestQuestionType[]
-  /** When the word was first fully learned (all three types). Drives the chest. */
+  /**
+   * Best spelling score so far, 0–1 (1 = spelled with no tips). The 'type'
+   * requirement only counts as passed at a full 1, but partial scores persist
+   * so the learner can see how close they are.
+   */
+  spellMastery?: number
+  /** When the word was first fully learned (all four types). Drives the chest. */
   learnedAt?: number
   /** Failed test questions accrued since it was learned; two of them unlearns it. */
   failsSinceLearned?: number
