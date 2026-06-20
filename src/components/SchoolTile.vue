@@ -67,7 +67,6 @@ const dashOffset = computed(() =>
       </svg>
       <!-- Open book icon -->
       <svg
-        v-if="!locked"
         class="tile__icon"
         viewBox="0 0 16 16"
         fill="none"
@@ -79,19 +78,6 @@ const dashOffset = computed(() =>
           d="M8 3.5C6.8 2.6 5 2.3 3 2.5v10c2-.2 3.8.1 5 1 1.2-.9 3-1.2 5-1v-10c-2-.2-3.8.1-5 1z"
         />
         <path d="M8 3.5v10" />
-      </svg>
-      <!-- Lock icon -->
-      <svg
-        v-else
-        class="tile__icon tile__icon--lock"
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        aria-hidden="true"
-      >
-        <rect x="2" y="7" width="12" height="8" rx="2" />
-        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke-linecap="round" />
       </svg>
     </div>
     <span class="tile__name">{{ $t('school.title') }}</span>
@@ -169,13 +155,6 @@ const dashOffset = computed(() =>
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-.tile__icon--lock {
-  width: 16px;
-  height: 16px;
-  color: var(--color-terracotta);
-  filter: drop-shadow(0 1px 1px rgba(255, 252, 240, 0.9));
 }
 
 .tile__name {

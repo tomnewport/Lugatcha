@@ -234,6 +234,31 @@ function markerStyle(locationId: string) {
     height: `${MAP_BLOCK.h}%`,
   }
 }
+
+/**
+ * Centre of the "fog of war" cutout, derived from the Welcome Center's marker
+ * so it tracks the building automatically. Nudged slightly down so the circle
+ * frames the icon and its label rather than just the icon.
+ */
+const veilStyle = computed(() => {
+  const marker = MAP_MARKERS[WELCOME_ID]
+  if (!marker) return {}
+  return {
+    '--veil-cx': `${MAP_COLUMNS[marker.col]}%`,
+    '--veil-cy': `${MAP_ROWS[marker.row] - 0.5}%`,
+  }
+})
+
+/**
+ * The veil only appears once we know the real lock state. Without this gate the
+ * live queries start empty (locked), so an already-unlocked returning user
+ * would see the fog flash in and iris back open on every visit home.
+ */
+const statsReady = ref(false)
+onMounted(async () => {
+  await Promise.all([db.words.toArray(), db.wordProgress.toArray(), db.locationProgress.toArray()])
+  statsReady.value = true
+})
 </script>
 
 <template>
@@ -331,18 +356,38 @@ function markerStyle(locationId: string) {
           />
           <LocationTile
             v-else
-          role="listitem"
-          :location="loc"
-          :progress="progressMap.get(loc.id)"
-          :locked="loc.id !== WELCOME_ID && !welcomeComplete"
-            :exercise-emoji="loc.id === WELCOME_ID ? '📖' : (chipMap.get(loc.id) ?? undefined)"
-          :seen-words="wordStats.seen.get(loc.id) ?? 0"
-          :total-words="wordStats.total.get(loc.id) ?? 0"
-          :known-words="wordStats.known.get(loc.id) ?? 0"
+            role="listitem"
+            :location="loc"
+            :progress="progressMap.get(loc.id)"
+            :locked="loc.id !== WELCOME_ID && !welcomeComplete"
+            :exercise-emoji="
+              loc.id === WELCOME_ID
+                ? '📖'
+                : welcomeComplete
+                  ? (chipMap.get(loc.id) ?? undefined)
+                  : undefined
+            "
+            :seen-words="wordStats.seen.get(loc.id) ?? 0"
+            :total-words="wordStats.total.get(loc.id) ?? 0"
+            :known-words="wordStats.known.get(loc.id) ?? 0"
             :style="markerStyle(loc.id)"
             @locked="showLockedNotice"
           />
         </template>
+
+        <!--
+          Fog of war: everything but the Welcome Center sits under a dimming
+          veil with a soft circular cutout. When the Welcome Center is finished
+          the veil irises open to reveal the whole city.
+        -->
+        <Transition name="reveal">
+          <div
+            v-if="statsReady && !welcomeComplete"
+            class="city-grid__veil"
+            :style="veilStyle"
+            aria-hidden="true"
+          />
+        </Transition>
       </div>
     </div>
 
@@ -546,6 +591,64 @@ function markerStyle(locationId: string) {
 .city-grid__stage {
   position: absolute;
   inset: 0;
+  /* Container so the veil's cutout radius (cqmin) scales with the map. */
+  container-type: size;
+}
+
+/* Animatable so the fog can iris open; bare custom props don't transition. */
+@property --veil-r {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+.city-grid__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  /* Visual only: clicks fall through to the tiles (locked ones still
+     surface the "not open yet" notice; the Welcome Center stays live). */
+  pointer-events: none;
+  --veil-cx: 26.8%;
+  --veil-cy: 27.5%;
+  --veil-r: 17cqmin;
+  background: radial-gradient(
+    circle var(--veil-r) at var(--veil-cx) var(--veil-cy),
+    transparent 0,
+    transparent 44%,
+    rgba(255, 246, 222, 0.16) 50%,
+    rgba(33, 24, 13, 0.7) 80%,
+    rgba(33, 24, 13, 0.7) 100%
+  );
+}
+
+/* Brand-new users: fade the fog in. */
+.reveal-enter-active {
+  transition: opacity 0.45s ease;
+}
+.reveal-enter-from {
+  opacity: 0;
+}
+
+/* On unlock: the cutout expands past the edges, revealing the city. */
+.reveal-leave-active {
+  transition:
+    --veil-r 0.9s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.9s ease;
+}
+.reveal-leave-to {
+  --veil-r: 180cqmin;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-enter-active,
+  .reveal-leave-active {
+    transition: opacity 0.3s ease;
+  }
+  .reveal-leave-to {
+    --veil-r: 17cqmin;
+  }
 }
 
 .city-grid__art {

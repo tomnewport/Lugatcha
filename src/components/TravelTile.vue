@@ -29,14 +29,9 @@ function open() {
   >
     <div class="tile__icon-wrap" aria-hidden="true">
       <!-- Map pin over a little globe -->
-      <svg v-if="!locked" class="tile__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+      <svg class="tile__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
         <path d="M12 2C8.7 2 6 4.7 6 8c0 4.5 6 12 6 12s6-7.5 6-12c0-3.3-2.7-6-6-6z" fill="#fbeee6" />
         <circle cx="12" cy="8" r="2.4" fill="currentColor" stroke="none" />
-      </svg>
-      <!-- Lock icon -->
-      <svg v-else class="tile__icon tile__icon--lock" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-        <rect x="2" y="7" width="12" height="8" rx="2" />
-        <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke-linecap="round" />
       </svg>
     </div>
     <span class="tile__name">{{ $t('travel.title') }}</span>
@@ -89,13 +84,6 @@ function open() {
   width: 30px;
   height: 30px;
   color: var(--color-terracotta);
-}
-
-.tile__icon--lock {
-  width: 24px;
-  height: 24px;
-  color: var(--color-terracotta);
-  filter: drop-shadow(0 1px 1px rgba(255, 252, 240, 0.9));
 }
 
 .tile__name {
