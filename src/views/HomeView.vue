@@ -398,14 +398,15 @@ onMounted(async () => {
 <style scoped>
 .home {
   --home-map-bg: #e7ddcf;
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.25rem;
-  padding: 1.25rem 1rem 4rem;
+  padding: 1.25rem 1rem 1.5rem;
   background: var(--home-map-bg);
   position: relative;
+  overflow: hidden;
 }
 
 .settings-link {
@@ -577,7 +578,10 @@ onMounted(async () => {
 /* Image-backed city map with location markers */
 .city-grid {
   width: 100%;
-  max-width: min(620px, calc(100dvh - 12rem));
+  max-width: 620px;
+  max-height: 100%;
+  min-height: 0;
+  flex-shrink: 1;
   aspect-ratio: 1122 / 1402;
   position: relative;
   overflow: hidden;
@@ -616,9 +620,9 @@ onMounted(async () => {
     circle var(--veil-r) at var(--veil-cx) var(--veil-cy),
     transparent 0,
     transparent 44%,
-    rgba(255, 246, 222, 0.16) 50%,
-    rgba(33, 24, 13, 0.7) 80%,
-    rgba(33, 24, 13, 0.7) 100%
+    rgba(255, 250, 235, 0.3) 50%,
+    rgba(220, 203, 169, 0.82) 82%,
+    rgba(212, 194, 158, 0.86) 100%
   );
 }
 
