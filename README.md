@@ -112,3 +112,8 @@ You will see these rendered inconsistently online (as `o'`, `o`, `ў`, etc.).
 This guide uses the proper turned-comma forms where it can and notes the
 alternatives. See [Writing systems](docs/language/02-writing-systems.md) for the
 full story.
+
+## License
+
+Both the code and the written reference content in this repository are released
+under the [MIT License](LICENSE).

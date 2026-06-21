@@ -19,6 +19,29 @@ export default defineConfig({
     __APP_COMMIT__: JSON.stringify(commitHash),
     __APP_BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Split heavy, slow-moving libraries into their own chunks so they
+        // stay cached across deploys instead of busting the main bundle hash
+        // every time app code changes (issue #119). Function form so it works
+        // under both rollup and vite 8's rolldown bundler.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return
+          if (id.includes('vue-i18n') || id.includes('@intlify')) return 'i18n'
+          if (id.includes('dexie')) return 'db'
+          if (
+            id.includes('/vue/') ||
+            id.includes('/@vue/') ||
+            id.includes('vue-router') ||
+            id.includes('pinia')
+          ) {
+            return 'vue'
+          }
+        },
+      },
+    },
+  },
   plugins: [
     vue(),
     VitePWA({
