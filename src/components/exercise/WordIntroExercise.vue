@@ -236,13 +236,17 @@ async function advanceFromMatch() {
 
 interface Phrase {
   uzbek: string
-  translation: string
+  english: string
+  russian?: string
 }
 
 const phrases = ref<Phrase[]>([])
 const phraseIndex = ref(0)
 const phrasesLoading = ref(false)
 const currentPhrase = computed(() => phrases.value[phraseIndex.value] ?? null)
+const currentTranslation = computed(() =>
+  currentPhrase.value ? pick(currentPhrase.value.english, currentPhrase.value.russian) : '',
+)
 const isLastPhrase = computed(() => phraseIndex.value >= phrases.value.length - 1)
 
 async function loadPhrases() {
@@ -252,7 +256,7 @@ async function loadPhrases() {
   for (const rp of roleplays) {
     for (const variant of rp.variants) {
       for (const turn of variant.turns) {
-        pool.push({ uzbek: turn.uzbek, translation: pick(turn.english, turn.russian) })
+        pool.push({ uzbek: turn.uzbek, english: turn.english, russian: turn.russian })
       }
     }
   }
@@ -260,7 +264,7 @@ async function loadPhrases() {
     const stories = await db.stories.where('theme').equals(props.locationId).toArray()
     for (const story of stories) {
       for (const sentence of story.sentences) {
-        pool.push({ uzbek: sentence.uzbek, translation: pick(sentence.english, sentence.russian) })
+        pool.push({ uzbek: sentence.uzbek, english: sentence.english, russian: sentence.russian })
       }
     }
   }
@@ -460,7 +464,7 @@ async function finish() {
           </p>
           <div class="phrase-card__translation">
             <span class="phrase-card__translation-label">{{ $t('intro.translationLabel') }}</span>
-            <p class="phrase-card__english">{{ currentPhrase.translation }}</p>
+            <p class="phrase-card__english">{{ currentTranslation }}</p>
           </div>
         </div>
 
