@@ -28,6 +28,15 @@ export default {
     loadingCity: 'Loading city…',
     lockedTitle: 'This area is not open yet',
     lockedBody: 'Finish Tourist Information first. Once your first area is complete, the rest of the city opens.',
+    practice: 'Daily practice',
+    practiceDone: 'Practised today',
+    practiceAria: 'Daily vocabulary practice',
+  },
+
+  practice: {
+    eyebrow: 'Daily practice',
+    title: 'Words from across the city',
+    empty: 'Meet some words first — explore the city, then come back to practise what you have learned.',
   },
 
   welcome: {

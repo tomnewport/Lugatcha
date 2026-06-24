@@ -18,6 +18,8 @@ import homeCityMap from '@/assets/home-city-map.webp'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
 const SEED_KEY = 'lugatcha.sessionSeed'
+// Set by PracticeView when a practice session finishes (local YYYY-MM-DD).
+const DAILY_PRACTICE_DATE_KEY = 'lugatcha.dailyPracticeDate'
 
 const router = useRouter()
 const { ready: audioReady } = useAudioReady()
@@ -101,10 +103,13 @@ const welcomeComplete = computed(() => {
 })
 
 const lastTried = ref<string | null>(null)
+const practicedToday = ref(false)
 
 onMounted(() => {
   try {
     lastTried.value = localStorage.getItem(LAST_TRIED_KEY)
+    const today = new Date().toLocaleDateString('en-CA')
+    practicedToday.value = localStorage.getItem(DAILY_PRACTICE_DATE_KEY) === today
   } catch {
     // private mode
   }
@@ -291,6 +296,19 @@ onMounted(async () => {
         <AppLogotype />
       </h1>
       <p class="home-header__subtitle" lang="uz">{{ $t('home.subtitle') }}</p>
+
+      <RouterLink
+        v-if="welcomeComplete"
+        class="practice-btn"
+        :class="{ 'practice-btn--done': practicedToday }"
+        to="/practice"
+        :aria-label="$t('home.practiceAria')"
+      >
+        <span class="practice-btn__icon" aria-hidden="true">{{ practicedToday ? '✓' : '🎯' }}</span>
+        <span class="practice-btn__label">
+          {{ practicedToday ? $t('home.practiceDone') : $t('home.practice') }}
+        </span>
+      </RouterLink>
     </header>
 
     <div v-if="showBanner" class="audio-banner">
@@ -558,6 +576,41 @@ onMounted(async () => {
   font-size: 0.85rem;
   color: var(--color-text-muted);
   margin: 0;
+}
+
+.practice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding: 0.45rem 0.95rem;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.practice-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.practice-btn--done {
+  border-color: var(--color-teal);
+  background: var(--color-surface);
+  color: var(--color-teal);
+}
+
+.practice-btn__icon {
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
 /* Image-backed city map with location markers */

@@ -71,6 +71,16 @@ export async function pickFlashcardWords(theme: string, count = 5): Promise<Word
   return [...seenTheme, ...seenCore, ...unseenTheme].slice(0, count)
 }
 
+/**
+ * Every word the learner has met anywhere — the pool for the home screen's
+ * Daily Practice. Unlike a location test it draws on all seen vocabulary, so one
+ * session mixes words from across the city for review and retention.
+ */
+export async function loadDailyPracticePool(): Promise<Word[]> {
+  const [allWords, seen] = await Promise.all([db.words.toArray(), seenWordIds()])
+  return shuffle(allWords.filter((w) => seen.has(w.id)))
+}
+
 export interface TestData {
   /** Seen words at this location (theme + core), the pool for new test words. */
   candidates: Word[]

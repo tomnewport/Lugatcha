@@ -24,6 +24,12 @@ const router = createRouter({
       component: () => import('@/views/SettingsView.vue'),
     },
     {
+      path: '/practice',
+      name: 'practice',
+      // Lazy: only reached from the home screen's Daily Practice button
+      component: () => import('@/views/PracticeView.vue'),
+    },
+    {
       path: '/school',
       name: 'school',
       component: () => import('@/views/SchoolView.vue'),
@@ -54,7 +60,7 @@ const router = createRouter({
 // Gate the whole city behind the Welcome Center: until its basic vocabulary is
 // met, only the home map, settings, and the Welcome Center itself are reachable.
 // The locked tiles enforce this in the UI; this guard also covers deep links.
-const GATED_ROUTES = new Set(['location', 'school', 'group', 'lesson', 'travel', 'travel-place'])
+const GATED_ROUTES = new Set(['location', 'practice', 'school', 'group', 'lesson', 'travel', 'travel-place'])
 
 router.beforeEach(async (to) => {
   if (!GATED_ROUTES.has(to.name as string)) return true
