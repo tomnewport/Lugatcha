@@ -11,8 +11,11 @@ import TestTypeQuestion from './TestTypeQuestion.vue'
 import ConfettiBurst from '@/components/ConfettiBurst.vue'
 
 const emit = defineEmits<{ complete: [] }>()
-/** Location test by theme, or a focused test over an explicit word pool (#62). */
-const props = defineProps<{ locationId?: string; pool?: Word[] }>()
+/**
+ * Three ways to source questions: a location test by theme, a focused test over
+ * an explicit word pool (#62), or a ready-built question list (Daily Practice).
+ */
+const props = defineProps<{ locationId?: string; pool?: Word[]; presetQuestions?: TestQuestion[] }>()
 
 const progress = useProgressStore()
 const { gloss } = useContentLang()
@@ -43,6 +46,11 @@ function choiceMode(type: TestQuestion['type']): 'listen' | 'read' | 'read-cyril
 }
 
 onMounted(async () => {
+  if (props.presetQuestions) {
+    questions.value = props.presetQuestions
+    loading.value = false
+    return
+  }
   const { candidates, learnedPool, allWords, progress: prog } = props.pool
     ? await loadPoolTestData(props.pool)
     : await loadTestData(props.locationId ?? '')

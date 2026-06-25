@@ -71,14 +71,27 @@ export async function pickFlashcardWords(theme: string, count = 5): Promise<Word
   return [...seenTheme, ...seenCore, ...unseenTheme].slice(0, count)
 }
 
+export interface DailyPracticeData {
+  /** Every word the learner has met anywhere — the Daily Practice pool. */
+  seenWords: Word[]
+  /** All vocabulary, for the choice questions' option banks. */
+  allWords: Word[]
+  /** Progress keyed by word id, for weak-skill and learned classification. */
+  progress: Map<string, WordProgress | undefined>
+}
+
 /**
- * Every word the learner has met anywhere — the pool for the home screen's
- * Daily Practice. Unlike a location test it draws on all seen vocabulary, so one
- * session mixes words from across the city for review and retention.
+ * Loads everything Daily Practice needs in one pass. Unlike a location test it
+ * draws on all seen vocabulary, so a session can range across the whole city.
  */
-export async function loadDailyPracticePool(): Promise<Word[]> {
-  const [allWords, seen] = await Promise.all([db.words.toArray(), seenWordIds()])
-  return shuffle(allWords.filter((w) => seen.has(w.id)))
+export async function loadDailyPracticeData(): Promise<DailyPracticeData> {
+  const [allWords, allProgress] = await Promise.all([
+    db.words.toArray(),
+    db.wordProgress.toArray(),
+  ])
+  const progress = new Map<string, WordProgress | undefined>(allProgress.map((p) => [p.wordId, p]))
+  const seenIds = new Set(allProgress.filter((p) => p.seenAt).map((p) => p.wordId))
+  return { seenWords: allWords.filter((w) => seenIds.has(w.id)), allWords, progress }
 }
 
 export interface TestData {

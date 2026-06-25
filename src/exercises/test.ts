@@ -117,18 +117,112 @@ export interface TestQuestion {
   options: string[]
 }
 
+/** A single thing to drill: one word tested through one skill (question type). */
+export interface PracticePair {
+  word: Word
+  type: TestQuestionType
+}
+
+/** Turns explicit (word, skill) pairs into questions, building option banks. */
+export function buildQuestionsFromPairs(pairs: PracticePair[], allWords: Word[]): TestQuestion[] {
+  return pairs.map(({ word, type }) => ({
+    word,
+    type,
+    options: type === 'type' ? [] : buildOptionBank(word, allWords),
+  }))
+}
+
 export function buildTest(
   words: Word[],
   progress: Map<string, WordProgress | undefined>,
   allWords: Word[],
   rng: () => number = Math.random,
 ): TestQuestion[] {
-  return words.map((word) => {
-    const type = pickQuestionType(progress.get(word.id), rng)
-    return {
-      word,
-      type,
-      options: type === 'type' ? [] : buildOptionBank(word, allWords),
+  const pairs = words.map((word) => ({
+    word,
+    type: pickQuestionType(progress.get(word.id), rng),
+  }))
+  return buildQuestionsFromPairs(pairs, allWords)
+}
+
+/** How many questions a Daily Practice session serves. */
+export const DAILY_PRACTICE_LENGTH = 20
+/**
+ * Words actively being learned per city area. Each area keeps a rolling batch of
+ * this many seen-but-unlearned words; finishing one frees its slot for the next.
+ */
+export const DAILY_BATCH_PER_THEME = 7
+
+/**
+ * The Daily Practice queue: which (word, skill) pairs to drill, weakest first.
+ *
+ * A "skill" is a test question type; a word is learned once all four pass. Per
+ * area we keep an active batch of up to seven seen-but-unlearned words — the
+ * ones closest to learned lead, so finishing a word frees its slot for the next.
+ * Practice drills only the skills those batch words have NOT passed yet,
+ * interleaved across words for variety, so it never re-tests a skill already in
+ * hand. Learned words are fair game only to top up once every weak skill is
+ * covered, keeping retention light rather than re-asking things you reliably get
+ * right.
+ */
+export function selectDailyPracticePairs(
+  seenWords: Word[],
+  progress: Map<string, WordProgress | undefined>,
+  count = DAILY_PRACTICE_LENGTH,
+  batchPerTheme = DAILY_BATCH_PER_THEME,
+): PracticePair[] {
+  const passedOf = (w: Word) => passedTypes(progress.get(w.id))
+  const learned = (w: Word) => isWordLearned(progress.get(w.id))
+  const weakSkills = (w: Word) => TEST_QUESTION_TYPES.filter((t) => !passedOf(w).includes(t))
+
+  // Active batch per area: seen, not yet learned, closest-to-learned first so
+  // started words get finished before fresh ones crowd in.
+  const byTheme = new Map<string, Word[]>()
+  for (const w of seenWords) {
+    if (learned(w)) continue
+    const arr = byTheme.get(w.theme) ?? []
+    arr.push(w)
+    byTheme.set(w.theme, arr)
+  }
+  const batch: Word[] = []
+  for (const themeWords of byTheme.values()) {
+    const ordered = shuffle(themeWords).sort((a, b) => passedOf(b).length - passedOf(a).length)
+    batch.push(...ordered.slice(0, batchPerTheme))
+  }
+
+  const pairs: PracticePair[] = []
+  const used = new Set<string>()
+  const add = (word: Word, type: TestQuestionType): boolean => {
+    const key = `${word.id}:${type}`
+    if (used.has(key) || pairs.length >= count) return false
+    used.add(key)
+    pairs.push({ word, type })
+    return pairs.length < count
+  }
+
+  // Drain each batch word's weak skills round-robin so questions alternate
+  // between words; near-finished words lead each pass to reach learned sooner.
+  const queues = batch
+    .map((w) => ({ word: w, skills: shuffle(weakSkills(w)) }))
+    .filter((q) => q.skills.length > 0)
+    .sort((a, b) => a.skills.length - b.skills.length)
+  for (let progressed = true; progressed && pairs.length < count; ) {
+    progressed = false
+    for (const q of queues) {
+      const type = q.skills.shift()
+      if (type && add(q.word, type)) progressed = true
+      else if (type) return pairs
     }
-  })
+  }
+  if (pairs.length >= count) return pairs
+
+  // Top up with retention on learned words (fair game once weak skills are done).
+  for (const w of shuffle(seenWords.filter(learned))) {
+    for (const t of shuffle([...TEST_QUESTION_TYPES])) if (!add(w, t)) return pairs
+  }
+  // Still short (a very small vocabulary): re-ask passed skills on batch words.
+  for (const w of shuffle(batch)) {
+    for (const t of shuffle([...TEST_QUESTION_TYPES])) if (!add(w, t)) return pairs
+  }
+  return pairs
 }

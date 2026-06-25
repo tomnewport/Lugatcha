@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { loadDailyPracticePool } from '@/exercises/words'
+import { loadDailyPracticeData } from '@/exercises/words'
+import { selectDailyPracticePairs, buildQuestionsFromPairs, type TestQuestion } from '@/exercises/test'
 import { playChime } from '@/audio/audio'
-import type { Word } from '@/db/types'
 import TestExercise from '@/components/exercise/TestExercise.vue'
 
 // Mirrors the key HomeView reads to show the "practised today" state.
 const DAILY_PRACTICE_DATE_KEY = 'lugatcha.dailyPracticeDate'
 
 const router = useRouter()
-const pool = ref<Word[] | null>(null)
+const questions = ref<TestQuestion[] | null>(null)
 
 onMounted(async () => {
-  pool.value = await loadDailyPracticePool()
+  const { seenWords, allWords, progress } = await loadDailyPracticeData()
+  const pairs = selectDailyPracticePairs(seenWords, progress)
+  questions.value = buildQuestionsFromPairs(pairs, allWords)
 })
 
 function home() {
@@ -49,15 +51,15 @@ function onComplete() {
     </header>
 
     <div class="practice-body">
-      <p v-if="pool === null" class="practice-loading" aria-live="polite">{{ $t('common.loading') }}</p>
+      <p v-if="questions === null" class="practice-loading" aria-live="polite">{{ $t('common.loading') }}</p>
 
-      <div v-else-if="pool.length === 0" class="practice-empty">
+      <div v-else-if="questions.length === 0" class="practice-empty">
         <span class="practice-empty__icon" aria-hidden="true">🗺️</span>
         <p class="practice-empty__text">{{ $t('practice.empty') }}</p>
         <button class="btn btn--primary" type="button" @click="home">{{ $t('common.backToCity') }}</button>
       </div>
 
-      <TestExercise v-else :pool="pool" @complete="onComplete" />
+      <TestExercise v-else :preset-questions="questions" @complete="onComplete" />
     </div>
   </div>
 </template>
