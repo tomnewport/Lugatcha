@@ -36,6 +36,10 @@ const query = ref('')
 const picked = ref<string | null>(null)
 const answered = computed(() => picked.value !== null)
 
+const eq = (a: string, b: string) => a.toLowerCase() === b.toLowerCase()
+
+const isCorrect = computed(() => picked.value !== null && eq(picked.value, answer.value))
+
 onMounted(() => {
   if (props.mode === 'listen') speakUzbek(props.word.uzbek)
 })
@@ -49,17 +53,18 @@ const filtered = computed(() => {
 function choose(option: string) {
   if (answered.value) return
   picked.value = option
-  emit('answered', option === answer.value)
+  emit('answered', eq(option, answer.value))
 }
 
 /** After answering, collapse to just the chosen answer and (if wrong) the right one. */
-const revealed = computed(() =>
-  answered.value ? [...new Set([picked.value!, answer.value])] : filtered.value,
-)
+const revealed = computed(() => {
+  if (!answered.value) return filtered.value
+  return isCorrect.value ? [picked.value!] : [picked.value!, answer.value]
+})
 
 function optionClass(option: string): string {
   if (!answered.value) return ''
-  if (option === answer.value) return 'option--correct'
+  if (eq(option, answer.value)) return 'option--correct'
   if (option === picked.value) return 'option--wrong'
   return 'option--muted'
 }
@@ -87,8 +92,8 @@ function optionClass(option: string): string {
       :aria-label="$t('exercise.choice.searchLabel')"
     />
 
-    <p v-if="answered" class="choice-q__result" :class="picked === answer ? 'is-right' : 'is-wrong'">
-      {{ picked === answer ? $t('exercise.choice.correct') : $t('exercise.choice.answer', { answer }) }}
+    <p v-if="answered" class="choice-q__result" :class="isCorrect ? 'is-right' : 'is-wrong'">
+      {{ isCorrect ? $t('exercise.choice.correct') : $t('exercise.choice.answer', { answer }) }}
     </p>
 
     <div class="choice-q__options" role="listbox">
