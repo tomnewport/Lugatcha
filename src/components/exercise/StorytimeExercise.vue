@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { db } from '@/db'
 import type { Story } from '@/db/types'
 import { tokenize, buildDecoys, contentWords, normalizeToken, shuffle } from '@/exercises/validate'
@@ -7,6 +7,7 @@ import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import { useContentLang } from '@/i18n/content'
+import { speakUzbek, stopSpeaking } from '@/audio/audio'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -75,6 +76,13 @@ function next() {
     solved.value = false
   }
 }
+
+// Read each sentence aloud as it appears (initial load + each advance)
+watch(sentence, (s) => {
+  if (s && !replayMode.value) void speakUzbek(s.uzbek)
+})
+
+onUnmounted(stopSpeaking)
 </script>
 
 <template>
