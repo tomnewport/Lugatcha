@@ -31,7 +31,13 @@ const RADIUS = 18
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 const completedCount = computed(() => props.progress?.completedExercises.length ?? 0)
-const isComplete = computed(() => completedCount.value >= 6)
+const isComplete = computed(() => {
+  const total = props.totalWords ?? 0
+  if (total === 0) return false
+  const allKnown = (props.knownWords ?? 0) >= total
+  const done = new Set(props.progress?.completedExercises ?? [])
+  return allKnown && done.has('roleplay') && done.has('storytime')
+})
 
 const seenFraction = computed(() => {
   if (!props.totalWords) return 0
