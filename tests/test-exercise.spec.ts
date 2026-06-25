@@ -6,6 +6,7 @@ import {
   isWordPartiallyLearned,
   pickQuestionType,
   selectTestWords,
+  selectDailyPracticePairs,
   buildOptionBank,
   buildTest,
   typingTarget,
@@ -81,6 +82,62 @@ describe('selectTestWords', () => {
     const picked = selectTestWords(candidates, [], new Map())
     expect(picked).toHaveLength(5)
     expect(picked.every(() => !isWordLearned(undefined))).toBe(true)
+  })
+})
+
+describe('selectDailyPracticePairs', () => {
+  const themed = (id: string, theme: string): Word => ({ id, uzbek: id, english: id, theme, level: 1 })
+  const learnedProgress = () => progress([...TEST_QUESTION_TYPES], { learnedAt: 1 })
+
+  it('drills only un-passed skills, never ones already in hand', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    const words = Array.from({ length: 6 }, (_, i) => themed(`w${i}`, 'airport'))
+    prog.set('w0', progress(['type', 'read-choice'])) // two skills already passed
+    const pairs = selectDailyPracticePairs(words, prog, 20)
+    expect(pairs.length).toBeGreaterThan(0)
+    for (const p of pairs) {
+      expect(prog.get(p.word.id)?.testPassed ?? []).not.toContain(p.type)
+    }
+  })
+
+  it('keeps at most seven words per area in the active batch', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    const words = Array.from({ length: 12 }, (_, i) => themed(`a${i}`, 'airport'))
+    const pairs = selectDailyPracticePairs(words, prog, 100)
+    expect(new Set(pairs.map((p) => p.word.id)).size).toBeLessThanOrEqual(7)
+  })
+
+  it('serves the requested number of questions when there is enough to drill', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    // 10 areas × 1 unlearned word × 4 weak skills = 40 candidate pairs.
+    const words = Array.from({ length: 10 }, (_, i) => themed(`a${i}`, `t${i}`))
+    expect(selectDailyPracticePairs(words, prog, 20)).toHaveLength(20)
+  })
+
+  it('leaves learned words out while weak skills remain', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    const fresh = Array.from({ length: 6 }, (_, i) => themed(`f${i}`, `t${i}`))
+    const done = themed('done', 'airport')
+    prog.set('done', learnedProgress())
+    const pairs = selectDailyPracticePairs([...fresh, done], prog, 20)
+    expect(pairs.some((p) => p.word.id === 'done')).toBe(false)
+  })
+
+  it('falls back to learned words for retention once nothing is left to learn', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    const learned = Array.from({ length: 3 }, (_, i) => themed(`L${i}`, 'airport'))
+    for (const w of learned) prog.set(w.id, learnedProgress())
+    const pairs = selectDailyPracticePairs(learned, prog, 20)
+    expect(pairs.length).toBeGreaterThan(0)
+    expect(pairs.every((p) => isWordLearned(prog.get(p.word.id)))).toBe(true)
+  })
+
+  it('produces no duplicate (word, skill) pairs', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    const words = Array.from({ length: 8 }, (_, i) => themed(`d${i}`, `t${i}`))
+    const pairs = selectDailyPracticePairs(words, prog, 20)
+    const keys = pairs.map((p) => `${p.word.id}:${p.type}`)
+    expect(new Set(keys).size).toBe(keys.length)
   })
 })
 
