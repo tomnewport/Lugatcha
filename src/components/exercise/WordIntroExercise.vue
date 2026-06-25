@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import type { Word } from '@/db/types'
 import { pickIntroWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
@@ -73,6 +73,10 @@ function buildQuiz() {
   quizSelected.value = null
   quizRevealed.value = false
 }
+
+watch(currentQuestion, (q) => {
+  if (q) void speakUzbek(q.word.uzbek)
+})
 
 function selectOption(text: string) {
   if (quizRevealed.value) return

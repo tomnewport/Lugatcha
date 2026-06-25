@@ -8,6 +8,7 @@ import { speakUzbek } from '@/audio/audio'
 const props = defineProps<{
   word: string
   meaning?: string
+  noHint?: boolean
 }>()
 
 // Sentence-level coordination: only one tooltip open at a time within a sentence.
@@ -29,7 +30,7 @@ onMounted(() => {
 const breakdown = computed(() => getBreakdown(props.word))
 const isMultiMorpheme = computed(() => (breakdown.value?.breakdown.length ?? 0) > 1)
 const isAgglutinated = computed(() => breakdown.value !== null)
-const hasTooltip = computed(() => isAgglutinated.value || !!props.meaning)
+const hasTooltip = computed(() => !props.noHint && (isAgglutinated.value || !!props.meaning))
 
 // Full assembled-word meaning shown under the morpheme grid. Prefer the curated
 // lesson gloss; fall back to the sentence glossary lookup passed via `meaning`.

@@ -78,7 +78,7 @@ function optionClass(option: string): string {
       <AudioButton v-if="mode === 'listen'" :text="word.uzbek" large :label="$t('audio.playSound')" />
       <p v-else-if="mode === 'read-cyrillic'" class="choice-q__uzbek" lang="uz">{{ cyrillic }}</p>
       <p v-else class="choice-q__uzbek">
-        <UzbekSentence :uzbek="word.uzbek" />
+        <UzbekSentence :uzbek="word.uzbek" no-hint />
       </p>
     </div>
 
