@@ -4,6 +4,9 @@ import LocationView from '@/views/LocationView.vue'
 import { db } from '@/db'
 import { isWelcomeCenterComplete, WELCOME_CENTER_ID } from '@/db/progress'
 
+const LAST_PRACTICE_AT_KEY = 'lugatcha.lastPracticeAt'
+const PRACTICE_REQUIRED_MS = 60 * 60 * 1000 // 1 hour
+
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
@@ -63,10 +66,32 @@ const router = createRouter({
 const GATED_ROUTES = new Set(['location', 'practice', 'school', 'group', 'lesson', 'travel', 'travel-place'])
 
 router.beforeEach(async (to) => {
-  if (!GATED_ROUTES.has(to.name as string)) return true
-  if (to.name === 'location' && to.params.id === WELCOME_CENTER_ID) return true
-  if (await isWelcomeCenterComplete(db)) return true
-  return { name: 'home' }
+  if (GATED_ROUTES.has(to.name as string)) {
+    if (to.name === 'location' && to.params.id === WELCOME_CENTER_ID) return true
+    if (await isWelcomeCenterComplete(db)) return true
+    return { name: 'home' }
+  }
+
+  // Require daily practice before returning to the city if the user has been
+  // away for more than an hour and there are eligible (seen) words to practise.
+  if (to.name === 'home') {
+    try {
+      const stored = localStorage.getItem(LAST_PRACTICE_AT_KEY)
+      const practiceOverdue =
+        !stored || Date.now() - parseInt(stored, 10) > PRACTICE_REQUIRED_MS
+      if (practiceOverdue) {
+        const allProgress = await db.wordProgress.toArray()
+        const hasEligibleWords = allProgress.some((p) => Boolean(p.seenAt))
+        if (hasEligibleWords) {
+          return { name: 'practice', query: { required: '1' } }
+        }
+      }
+    } catch {
+      // localStorage unavailable (private mode) or DB error — don't block
+    }
+  }
+
+  return true
 })
 
 export default router

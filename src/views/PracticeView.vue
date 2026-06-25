@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { loadDailyPracticeData } from '@/exercises/words'
 import { selectDailyPracticePairs, buildQuestionsFromPairs, type TestQuestion } from '@/exercises/test'
 import { playChime } from '@/audio/audio'
@@ -8,8 +8,15 @@ import TestExercise from '@/components/exercise/TestExercise.vue'
 
 // Mirrors the key HomeView reads to show the "practised today" state.
 const DAILY_PRACTICE_DATE_KEY = 'lugatcha.dailyPracticeDate'
+// Timestamp of last completed practice — used by the router's hourly gate.
+const LAST_PRACTICE_AT_KEY = 'lugatcha.lastPracticeAt'
 
 const router = useRouter()
+const route = useRoute()
+
+// True when the router redirected here as a mandatory gate before the city.
+const isRequired = computed(() => route.query.required === '1')
+
 const questions = ref<TestQuestion[] | null>(null)
 
 onMounted(async () => {
@@ -17,6 +24,14 @@ onMounted(async () => {
   const pairs = selectDailyPracticePairs(seenWords, progress)
   questions.value = buildQuestionsFromPairs(pairs, allWords)
 })
+
+function recordPracticeAt() {
+  try {
+    localStorage.setItem(LAST_PRACTICE_AT_KEY, String(Date.now()))
+  } catch {
+    // private mode
+  }
+}
 
 function home() {
   router.push('/')
@@ -31,6 +46,14 @@ function onComplete() {
   } catch {
     // private mode
   }
+  recordPracticeAt()
+  home()
+}
+
+function onEmptyBack() {
+  // No questions available — record practice anyway so the router gate doesn't
+  // loop. (Empty state is only reachable when there is nothing left to drill.)
+  recordPracticeAt()
   home()
 }
 </script>
@@ -38,12 +61,12 @@ function onComplete() {
 <template>
   <div class="practice">
     <header class="practice-header">
-      <button class="exit-btn" :aria-label="$t('common.backToCity')" type="button" @click="home">
+      <button v-if="!isRequired" class="exit-btn" :aria-label="$t('common.backToCity')" type="button" @click="home">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
-      <div class="practice-header__titles">
+      <div class="practice-header__titles" :class="{ 'practice-header__titles--full': isRequired }">
         <span class="practice-header__eyebrow">{{ $t('practice.eyebrow') }}</span>
         <h1 class="practice-header__title">{{ $t('practice.title') }}</h1>
       </div>
@@ -56,7 +79,7 @@ function onComplete() {
       <div v-else-if="questions.length === 0" class="practice-empty">
         <span class="practice-empty__icon" aria-hidden="true">🗺️</span>
         <p class="practice-empty__text">{{ $t('practice.empty') }}</p>
-        <button class="btn btn--primary" type="button" @click="home">{{ $t('common.backToCity') }}</button>
+        <button class="btn btn--primary" type="button" @click="onEmptyBack">{{ $t('common.backToCity') }}</button>
       </div>
 
       <TestExercise v-else :preset-questions="questions" @complete="onComplete" />
@@ -107,6 +130,10 @@ function onComplete() {
   min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+.practice-header__titles--full {
+  padding-left: 0.25rem;
 }
 
 .practice-header__eyebrow {
