@@ -7,6 +7,7 @@ import { i18n } from '@/i18n'
 const props = defineProps<{
   uzbek: string
   glossary?: Map<string, string>
+  noHint?: boolean
 }>()
 
 const tokens = computed(() => tokenize(props.uzbek))
@@ -40,6 +41,7 @@ function meaningFor(token: string): string | undefined {
       :key="i"
       :word="token"
       :meaning="meaningFor(token)"
+      :no-hint="noHint"
     />
   </span>
 </template>
