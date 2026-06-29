@@ -4,7 +4,9 @@ import { useRouter, useRoute } from 'vue-router'
 import { loadDailyPracticeData } from '@/exercises/words'
 import { selectDailyPracticePairs, buildQuestionsFromPairs, type TestQuestion } from '@/exercises/test'
 import { playChime } from '@/audio/audio'
+import { recordStreakDay, type StreakUpdate } from '@/streak'
 import TestExercise from '@/components/exercise/TestExercise.vue'
+import StreakCelebration from '@/components/StreakCelebration.vue'
 
 // Mirrors the key HomeView reads to show the "practised today" state.
 const DAILY_PRACTICE_DATE_KEY = 'lugatcha.dailyPracticeDate'
@@ -18,6 +20,9 @@ const route = useRoute()
 const isRequired = computed(() => route.query.required === '1')
 
 const questions = ref<TestQuestion[] | null>(null)
+
+// Set when a finished session grows the streak, driving the celebration overlay.
+const celebration = ref<StreakUpdate | null>(null)
 
 onMounted(async () => {
   const { seenWords, allWords, progress } = await loadDailyPracticeData()
@@ -47,6 +52,17 @@ function onComplete() {
     // private mode
   }
   recordPracticeAt()
+  const update = recordStreakDay()
+  // Celebrate a growing streak; the overlay takes the learner home when done.
+  if (update.extended) {
+    celebration.value = update
+  } else {
+    home()
+  }
+}
+
+function onCelebrationDone() {
+  celebration.value = null
   home()
 }
 
@@ -54,6 +70,7 @@ function onEmptyBack() {
   // No questions available — record practice anyway so the router gate doesn't
   // loop. (Empty state is only reachable when there is nothing left to drill.)
   recordPracticeAt()
+  recordStreakDay()
   home()
 }
 </script>
@@ -84,6 +101,13 @@ function onEmptyBack() {
 
       <TestExercise v-else :preset-questions="questions" @complete="onComplete" />
     </div>
+
+    <StreakCelebration
+      v-if="celebration"
+      :from="celebration.from"
+      :to="celebration.to"
+      @done="onCelebrationDone"
+    />
   </div>
 </template>
 

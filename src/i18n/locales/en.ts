@@ -31,12 +31,20 @@ export default {
     practice: 'Daily practice',
     practiceDone: 'Practised today',
     practiceAria: 'Daily vocabulary practice',
+    streakDays: '{count}-day streak',
   },
 
   practice: {
     eyebrow: 'Daily practice',
     title: 'Words from across the city',
     empty: 'Meet some words first — explore the city, then come back to practise what you have learned.',
+  },
+
+  streak: {
+    aria: 'Daily practice streak celebration',
+    started: 'Streak started!',
+    extended: 'Streak extended!',
+    days: '{count}-day streak',
   },
 
   welcome: {
