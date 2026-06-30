@@ -13,6 +13,7 @@ import TreasureChest from '@/components/TreasureChest.vue'
 import AppLogo from '@/components/AppLogo.vue'
 import AppLogotype from '@/components/AppLogotype.vue'
 import { useAudioReady } from '@/audio/offline'
+import { currentStreak, streakChips } from '@/streak'
 import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
 import homeCityMap from '@/assets/home-city-map.webp'
 
@@ -104,6 +105,13 @@ const welcomeComplete = computed(() => {
 
 const lastTried = ref<string | null>(null)
 const practicedToday = ref(false)
+const streak = ref(0)
+
+const streakSymbols = computed(() =>
+  streakChips(streak.value)
+    .map((c) => c.symbol)
+    .join(''),
+)
 
 onMounted(() => {
   try {
@@ -113,6 +121,7 @@ onMounted(() => {
   } catch {
     // private mode
   }
+  streak.value = currentStreak()
 })
 
 const progressMap = computed(() => {
@@ -309,6 +318,11 @@ onMounted(async () => {
           {{ practicedToday ? $t('home.practiceDone') : $t('home.practice') }}
         </span>
       </RouterLink>
+
+      <p v-if="welcomeComplete && streak > 0" class="streak-line" :title="$t('home.streakDays', { count: streak })">
+        <span class="streak-line__chips" aria-hidden="true">{{ streakSymbols }}</span>
+        <span class="streak-line__label">{{ $t('home.streakDays', { count: streak }) }}</span>
+      </p>
     </header>
 
     <div v-if="showBanner" class="audio-banner">
@@ -611,6 +625,22 @@ onMounted(async () => {
 .practice-btn__icon {
   font-size: 0.95rem;
   line-height: 1;
+}
+
+.streak-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.streak-line__chips {
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
 }
 
 /* Image-backed city map with location markers */
