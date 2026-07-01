@@ -1,7 +1,6 @@
 import type { Word, WordProgress, TestQuestionType } from '@/db/types'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import { shuffle } from './validate'
-import { glossNow } from '@/i18n/content'
 
 export const TEST_LENGTH = 5
 export const OPTION_BANK_SIZE = 40
@@ -96,25 +95,36 @@ export function selectTestWords(
   return result
 }
 
-/** A searchable bank of `size` meanings (base language), always including the answer. */
+/**
+ * A searchable bank of `size` option words, always including the answer.
+ *
+ * Holds the words themselves rather than pre-glossed strings so the choices
+ * re-render in the active base language — otherwise a test built in one
+ * language keeps showing its distractors in that language after the learner
+ * switches language. Deduplicated by the canonical English gloss so distinct
+ * meanings show regardless of which language is displayed.
+ */
 export function buildOptionBank(
   correct: Word,
   allWords: Word[],
   size = OPTION_BANK_SIZE,
-): string[] {
-  const options = new Set<string>([glossNow(correct)])
-  for (const meaning of shuffle(allWords.map((w) => glossNow(w)))) {
-    if (options.size >= size) break
-    options.add(meaning)
+): Word[] {
+  const seen = new Set<string>([correct.english])
+  const bank: Word[] = [correct]
+  for (const w of shuffle(allWords)) {
+    if (bank.length >= size) break
+    if (seen.has(w.english)) continue
+    seen.add(w.english)
+    bank.push(w)
   }
-  return shuffle([...options])
+  return shuffle(bank)
 }
 
 export interface TestQuestion {
   word: Word
   type: TestQuestionType
-  /** Base-language meanings for the choice question types; empty for 'type'. */
-  options: string[]
+  /** Option words for the choice question types (glossed at render); empty for 'type'. */
+  options: Word[]
 }
 
 /** A single thing to drill: one word tested through one skill (question type). */
@@ -192,37 +202,49 @@ export function selectDailyPracticePairs(
 
   const pairs: PracticePair[] = []
   const used = new Set<string>()
-  const add = (word: Word, type: TestQuestionType): boolean => {
+  const add = (word: Word, type: TestQuestionType) => {
     const key = `${word.id}:${type}`
-    if (used.has(key) || pairs.length >= count) return false
+    if (used.has(key) || pairs.length >= count) return
     used.add(key)
     pairs.push({ word, type })
-    return pairs.length < count
   }
 
-  // Drain each batch word's weak skills round-robin so questions alternate
-  // between words; near-finished words lead each pass to reach learned sooner.
-  const queues = batch
-    .map((w) => ({ word: w, skills: shuffle(weakSkills(w)) }))
-    .filter((q) => q.skills.length > 0)
-    .sort((a, b) => a.skills.length - b.skills.length)
-  for (let progressed = true; progressed && pairs.length < count; ) {
-    progressed = false
-    for (const q of queues) {
-      const type = q.skills.shift()
-      if (type && add(q.word, type)) progressed = true
-      else if (type) return pairs
+  /**
+   * Round-robin one skill per word per pass, so consecutive questions land on
+   * different words instead of clustering every skill of a single word into a
+   * back-to-back run. Word order within a pass follows the queue order given.
+   */
+  type SkillQueue = { word: Word; skills: TestQuestionType[] }
+  const interleave = (queues: SkillQueue[]) => {
+    for (let progressed = true; progressed && pairs.length < count; ) {
+      progressed = false
+      for (const q of queues) {
+        if (pairs.length >= count) return
+        const type = q.skills.shift()
+        if (type === undefined) continue
+        add(q.word, type)
+        progressed = true
+      }
     }
   }
-  if (pairs.length >= count) return pairs
 
-  // Top up with retention on learned words (fair game once weak skills are done).
-  for (const w of shuffle(seenWords.filter(learned))) {
-    for (const t of shuffle([...TEST_QUESTION_TYPES])) if (!add(w, t)) return pairs
+  // Drain each batch word's weak skills first; near-finished words lead each
+  // pass so they reach "learned" sooner.
+  interleave(
+    batch
+      .map((w) => ({ word: w, skills: shuffle(weakSkills(w)) }))
+      .filter((q) => q.skills.length > 0)
+      .sort((a, b) => a.skills.length - b.skills.length),
+  )
+
+  // Top up with retention on learned words (fair game once weak skills are
+  // done), still interleaved so no single word monopolises a run.
+  if (pairs.length < count) {
+    interleave(shuffle(seenWords.filter(learned)).map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
   }
-  // Still short (a very small vocabulary): re-ask passed skills on batch words.
-  for (const w of shuffle(batch)) {
-    for (const t of shuffle([...TEST_QUESTION_TYPES])) if (!add(w, t)) return pairs
+  // Still short (a very small vocabulary): re-ask batch words' passed skills.
+  if (pairs.length < count) {
+    interleave(shuffle(batch).map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
   }
   return pairs
 }

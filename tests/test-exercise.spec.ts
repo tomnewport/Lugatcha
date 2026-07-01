@@ -139,6 +139,32 @@ describe('selectDailyPracticePairs', () => {
     const keys = pairs.map((p) => `${p.word.id}:${p.type}`)
     expect(new Set(keys).size).toBe(keys.length)
   })
+
+  it('interleaves words so retention top-up never clusters one word back-to-back', () => {
+    // A pure-retention session: every word learned, so the whole queue comes
+    // from the top-up path. With enough words to spread across, consecutive
+    // questions should hop between words rather than drill all four skills of
+    // one word in a row.
+    const prog = new Map<string, WordProgress | undefined>()
+    const learned = Array.from({ length: 8 }, (_, i) => themed(`L${i}`, `t${i}`))
+    for (const w of learned) prog.set(w.id, learnedProgress())
+    const pairs = selectDailyPracticePairs(learned, prog, 20)
+    expect(pairs).toHaveLength(20)
+    for (let i = 1; i < pairs.length; i++) {
+      expect(pairs[i].word.id).not.toBe(pairs[i - 1].word.id)
+    }
+  })
+
+  it('interleaves the active batch across small vocabularies', () => {
+    // One area, three unlearned words: the drain plus batch re-ask path still
+    // must not serve the same word twice in a row while others are available.
+    const prog = new Map<string, WordProgress | undefined>()
+    const words = Array.from({ length: 3 }, (_, i) => themed(`b${i}`, 'airport'))
+    const pairs = selectDailyPracticePairs(words, prog, 12)
+    for (let i = 1; i < pairs.length; i++) {
+      expect(pairs[i].word.id).not.toBe(pairs[i - 1].word.id)
+    }
+  })
 })
 
 describe('buildOptionBank', () => {
@@ -148,8 +174,8 @@ describe('buildOptionBank', () => {
     const correct = allWords[3]
     const bank = buildOptionBank(correct, allWords)
     expect(bank).toHaveLength(40)
-    expect(bank).toContain(correct.english)
-    expect(new Set(bank).size).toBe(bank.length) // no duplicates
+    expect(bank).toContain(correct)
+    expect(new Set(bank.map((w) => w.english)).size).toBe(bank.length) // no duplicate meanings
   })
 })
 

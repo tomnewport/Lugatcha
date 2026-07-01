@@ -14,7 +14,7 @@ const props = defineProps<{
    * 'read-cyrillic' shows the Cyrillic spelling.
    */
   mode: 'listen' | 'read' | 'read-cyrillic'
-  options: string[]
+  options: Word[]
 }>()
 
 const emit = defineEmits<{ answered: [correct: boolean] }>()
@@ -33,12 +33,12 @@ const instruction = computed(() => {
 })
 
 const query = ref('')
-const picked = ref<string | null>(null)
+const picked = ref<Word | null>(null)
 const answered = computed(() => picked.value !== null)
 
 const eq = (a: string, b: string) => a.toLowerCase() === b.toLowerCase()
 
-const isCorrect = computed(() => picked.value !== null && eq(picked.value, answer.value))
+const isCorrect = computed(() => picked.value !== null && eq(gloss(picked.value), answer.value))
 
 onMounted(() => {
   if (props.mode === 'listen') speakUzbek(props.word.uzbek)
@@ -46,26 +46,25 @@ onMounted(() => {
 
 const filtered = computed(() => {
   const q = query.value.trim().toLowerCase()
-  const list = q ? props.options.filter((o) => o.toLowerCase().includes(q)) : props.options
-  return list
+  return q ? props.options.filter((o) => gloss(o).toLowerCase().includes(q)) : props.options
 })
 
-function choose(option: string) {
+function choose(option: Word) {
   if (answered.value) return
   picked.value = option
-  emit('answered', eq(option, answer.value))
+  emit('answered', eq(gloss(option), answer.value))
 }
 
 /** After answering, collapse to just the chosen answer and (if wrong) the right one. */
 const revealed = computed(() => {
   if (!answered.value) return filtered.value
-  return isCorrect.value ? [picked.value!] : [picked.value!, answer.value]
+  return isCorrect.value ? [picked.value!] : [picked.value!, props.word]
 })
 
-function optionClass(option: string): string {
+function optionClass(option: Word): string {
   if (!answered.value) return ''
-  if (eq(option, answer.value)) return 'option--correct'
-  if (option === picked.value) return 'option--wrong'
+  if (eq(gloss(option), answer.value)) return 'option--correct'
+  if (option.id === picked.value?.id) return 'option--wrong'
   return 'option--muted'
 }
 </script>
@@ -99,14 +98,14 @@ function optionClass(option: string): string {
     <div class="choice-q__options" role="listbox">
       <button
         v-for="option in revealed"
-        :key="option"
+        :key="option.id"
         class="option"
         :class="optionClass(option)"
         type="button"
         :disabled="answered"
         @click="choose(option)"
       >
-        {{ option }}
+        {{ gloss(option) }}
       </button>
       <p v-if="!answered && filtered.length === 0" class="choice-q__empty">{{ $t('exercise.choice.noMatches') }}</p>
     </div>
