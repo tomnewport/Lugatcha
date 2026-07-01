@@ -202,37 +202,49 @@ export function selectDailyPracticePairs(
 
   const pairs: PracticePair[] = []
   const used = new Set<string>()
-  const add = (word: Word, type: TestQuestionType): boolean => {
+  const add = (word: Word, type: TestQuestionType) => {
     const key = `${word.id}:${type}`
-    if (used.has(key) || pairs.length >= count) return false
+    if (used.has(key) || pairs.length >= count) return
     used.add(key)
     pairs.push({ word, type })
-    return pairs.length < count
   }
 
-  // Drain each batch word's weak skills round-robin so questions alternate
-  // between words; near-finished words lead each pass to reach learned sooner.
-  const queues = batch
-    .map((w) => ({ word: w, skills: shuffle(weakSkills(w)) }))
-    .filter((q) => q.skills.length > 0)
-    .sort((a, b) => a.skills.length - b.skills.length)
-  for (let progressed = true; progressed && pairs.length < count; ) {
-    progressed = false
-    for (const q of queues) {
-      const type = q.skills.shift()
-      if (type && add(q.word, type)) progressed = true
-      else if (type) return pairs
+  /**
+   * Round-robin one skill per word per pass, so consecutive questions land on
+   * different words instead of clustering every skill of a single word into a
+   * back-to-back run. Word order within a pass follows the queue order given.
+   */
+  type SkillQueue = { word: Word; skills: TestQuestionType[] }
+  const interleave = (queues: SkillQueue[]) => {
+    for (let progressed = true; progressed && pairs.length < count; ) {
+      progressed = false
+      for (const q of queues) {
+        if (pairs.length >= count) return
+        const type = q.skills.shift()
+        if (type === undefined) continue
+        add(q.word, type)
+        progressed = true
+      }
     }
   }
-  if (pairs.length >= count) return pairs
 
-  // Top up with retention on learned words (fair game once weak skills are done).
-  for (const w of shuffle(seenWords.filter(learned))) {
-    for (const t of shuffle([...TEST_QUESTION_TYPES])) if (!add(w, t)) return pairs
+  // Drain each batch word's weak skills first; near-finished words lead each
+  // pass so they reach "learned" sooner.
+  interleave(
+    batch
+      .map((w) => ({ word: w, skills: shuffle(weakSkills(w)) }))
+      .filter((q) => q.skills.length > 0)
+      .sort((a, b) => a.skills.length - b.skills.length),
+  )
+
+  // Top up with retention on learned words (fair game once weak skills are
+  // done), still interleaved so no single word monopolises a run.
+  if (pairs.length < count) {
+    interleave(shuffle(seenWords.filter(learned)).map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
   }
-  // Still short (a very small vocabulary): re-ask passed skills on batch words.
-  for (const w of shuffle(batch)) {
-    for (const t of shuffle([...TEST_QUESTION_TYPES])) if (!add(w, t)) return pairs
+  // Still short (a very small vocabulary): re-ask batch words' passed skills.
+  if (pairs.length < count) {
+    interleave(shuffle(batch).map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
   }
   return pairs
 }
