@@ -148,8 +148,8 @@ describe('buildOptionBank', () => {
     const correct = allWords[3]
     const bank = buildOptionBank(correct, allWords)
     expect(bank).toHaveLength(40)
-    expect(bank).toContain(correct.english)
-    expect(new Set(bank).size).toBe(bank.length) // no duplicates
+    expect(bank).toContain(correct)
+    expect(new Set(bank.map((w) => w.english)).size).toBe(bank.length) // no duplicate meanings
   })
 })
 

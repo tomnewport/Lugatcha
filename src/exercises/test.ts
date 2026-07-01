@@ -1,7 +1,6 @@
 import type { Word, WordProgress, TestQuestionType } from '@/db/types'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import { shuffle } from './validate'
-import { glossNow } from '@/i18n/content'
 
 export const TEST_LENGTH = 5
 export const OPTION_BANK_SIZE = 40
@@ -96,25 +95,36 @@ export function selectTestWords(
   return result
 }
 
-/** A searchable bank of `size` meanings (base language), always including the answer. */
+/**
+ * A searchable bank of `size` option words, always including the answer.
+ *
+ * Holds the words themselves rather than pre-glossed strings so the choices
+ * re-render in the active base language — otherwise a test built in one
+ * language keeps showing its distractors in that language after the learner
+ * switches language. Deduplicated by the canonical English gloss so distinct
+ * meanings show regardless of which language is displayed.
+ */
 export function buildOptionBank(
   correct: Word,
   allWords: Word[],
   size = OPTION_BANK_SIZE,
-): string[] {
-  const options = new Set<string>([glossNow(correct)])
-  for (const meaning of shuffle(allWords.map((w) => glossNow(w)))) {
-    if (options.size >= size) break
-    options.add(meaning)
+): Word[] {
+  const seen = new Set<string>([correct.english])
+  const bank: Word[] = [correct]
+  for (const w of shuffle(allWords)) {
+    if (bank.length >= size) break
+    if (seen.has(w.english)) continue
+    seen.add(w.english)
+    bank.push(w)
   }
-  return shuffle([...options])
+  return shuffle(bank)
 }
 
 export interface TestQuestion {
   word: Word
   type: TestQuestionType
-  /** Base-language meanings for the choice question types; empty for 'type'. */
-  options: string[]
+  /** Option words for the choice question types (glossed at render); empty for 'type'. */
+  options: Word[]
 }
 
 /** A single thing to drill: one word tested through one skill (question type). */
