@@ -23,18 +23,25 @@ export const WELCOME_REQUIRED_EXERCISES: ExerciseType[] = [
 ]
 
 /**
- * Whether the Welcome Center is done. The learner must:
+ * Whether the Welcome Center is done. To earn it the learner must:
  *  - meet every basic word (New Words),
  *  - finish every practice activity at least once, and
- *  - learn every word — identified and spelled, i.e. all three test question
+ *  - learn every word — identified and spelled, i.e. all four test question
  *    types passed (the Exam isn't "done" until then).
  * Returns false while the database is still unseeded, so the city stays locked.
+ *
+ * Once earned, completion latches permanently (`graduatedAt`): daily practice
+ * re-tests learned welcome words and two misses un-learn one, which must send
+ * the word back into rotation — not silently lock the whole city behind
+ * onboarding again (and, before the daily-practice gate was fixed, hang
+ * startup in a redirect loop).
  */
 export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> {
   const [words, locationProgress] = await Promise.all([
     db.words.where('theme').equals(WELCOME_CENTER_ID).toArray(),
     db.locationProgress.get(WELCOME_CENTER_ID),
   ])
+  if (locationProgress?.graduatedAt) return true
   if (words.length === 0) return false
   const progress = await db.wordProgress.bulkGet(words.map((w) => w.id))
   const allWordsSeen = progress.every((p) => Boolean(p?.seenAt))
@@ -43,7 +50,39 @@ export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> 
   )
   const done = new Set(locationProgress?.completedExercises ?? [])
   const allActivitiesDone = WELCOME_REQUIRED_EXERCISES.every((e) => done.has(e))
-  return allWordsSeen && allWordsLearned && allActivitiesDone
+  const complete = allWordsSeen && allWordsLearned && allActivitiesDone
+
+  // Earned now — or provably earned before the latch existed: words beyond
+  // the Welcome Center are only reachable with the city open, so any such
+  // progress marks a past graduate whose welcome words have since lapsed.
+  if (complete || (await hasProgressBeyondWelcome(db))) {
+    await latchGraduation(db)
+    return true
+  }
+  return false
+}
+
+/** True when any seen word lies outside the Welcome Center's vocabulary. */
+async function hasProgressBeyondWelcome(db: LugatchaDB): Promise<boolean> {
+  const allProgress = await db.wordProgress.toArray()
+  const seenIds = allProgress.filter((p) => p.seenAt).map((p) => p.wordId)
+  if (seenIds.length === 0) return false
+  const seenWords = await db.words.bulkGet(seenIds)
+  return seenWords.some((w) => w && w.theme !== WELCOME_CENTER_ID)
+}
+
+/** Permanently records Welcome Center graduation. Idempotent. */
+async function latchGraduation(db: LugatchaDB): Promise<void> {
+  await db.transaction('rw', db.locationProgress, async () => {
+    const existing = await db.locationProgress.get(WELCOME_CENTER_ID)
+    if (existing?.graduatedAt) return
+    await db.locationProgress.put({
+      locationId: WELCOME_CENTER_ID,
+      completedExercises: existing?.completedExercises ?? [],
+      visits: existing?.visits,
+      graduatedAt: Date.now(),
+    })
+  })
 }
 
 /** Records first exposure to each word. No-op for words already seen. */
@@ -162,6 +201,7 @@ export async function completeExercise(
       locationId,
       completedExercises: completed,
       visits: existing?.visits,
+      graduatedAt: existing?.graduatedAt,
     })
   })
 }
@@ -180,6 +220,7 @@ export async function recordLocationVisit(
       locationId,
       completedExercises: existing?.completedExercises ?? [],
       visits: (existing?.visits ?? 0) + 1,
+      graduatedAt: existing?.graduatedAt,
     })
   })
 }

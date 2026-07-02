@@ -107,6 +107,13 @@ export interface LocationProgress {
    * test, instead of sticking on whichever exercise is first in the list.
    */
   visits?: number
+  /**
+   * When the Welcome Center was first fully completed (welcome-center row
+   * only). Graduation latches permanently: daily practice can later un-learn a
+   * welcome word (two misses), and that must send the word back into rotation —
+   * not lock the whole city behind onboarding again.
+   */
+  graduatedAt?: number
 }
 
 export type ExerciseType =

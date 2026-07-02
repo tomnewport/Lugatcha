@@ -79,4 +79,44 @@ describe('isWelcomeCenterComplete', () => {
     await finishAllPractice()
     expect(await isWelcomeCenterComplete(db)).toBe(true)
   })
+
+  it('latches: stays complete after a welcome word is later un-learned', async () => {
+    await learnAllWords()
+    await finishAllPractice()
+    expect(await isWelcomeCenterComplete(db)).toBe(true) // records graduatedAt
+
+    // Two outright misses in daily practice un-learn the word (issue #61) —
+    // the word returns to rotation, but the city must not lock again.
+    await recordTestResult(db, 'welcome-center.hello', 'read-choice', false)
+    await recordTestResult(db, 'welcome-center.hello', 'read-choice', false)
+    expect(await isWelcomeCenterComplete(db)).toBe(true)
+
+    const progress = await db.locationProgress.get(WELCOME_CENTER_ID)
+    expect(progress?.graduatedAt).toBeTypeOf('number')
+  })
+
+  it('keeps the latch when later location progress is recorded', async () => {
+    await learnAllWords()
+    await finishAllPractice()
+    expect(await isWelcomeCenterComplete(db)).toBe(true)
+
+    await completeExercise(db, WELCOME_CENTER_ID, 'test')
+    const progress = await db.locationProgress.get(WELCOME_CENTER_ID)
+    expect(progress?.graduatedAt).toBeTypeOf('number')
+  })
+
+  it('grandfathers users with progress beyond the Welcome Center', async () => {
+    // A pre-latch graduate: their welcome word lapsed before graduatedAt
+    // existed, but words outside the Welcome Center prove the city was open.
+    await db.words.put({ id: 'cafe.choy', uzbek: 'Choy', english: 'Tea', theme: 'cafe', level: 1 })
+    await finishAllPractice()
+    await markWordsSeen(db, [...words.map((w) => w.id), 'cafe.choy'])
+    expect(await isWelcomeCenterComplete(db)).toBe(true)
+  })
+
+  it('does not grandfather a learner still onboarding', async () => {
+    await markWordsSeen(db, words.map((w) => w.id))
+    await finishAllPractice()
+    expect(await isWelcomeCenterComplete(db)).toBe(false)
+  })
 })
