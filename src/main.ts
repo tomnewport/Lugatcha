@@ -26,16 +26,41 @@ try {
   // a blank content area with no toast. Capture it, and if it happens during
   // the very first navigation escalate to the fatal screen since there's
   // nothing else on the page for the user to see.
-  let started = false
+  let ready = false
   router.onError((error) => {
     captureError('router', error)
-    if (!started) showFatalError('router', error, 'while opening the app')
+    if (!ready) showFatalError('router', error, 'while opening the app')
   })
+
+  // Not every startup failure throws: a navigation guard can hang, or bounce
+  // between two routes forever (an alternating redirect loop). Then isReady()
+  // never resolves and no error fires — the page just stays blank. Startup
+  // guards only do local IndexedDB reads, so a healthy first navigation settles
+  // in well under a second; if it hasn't after a few, surface a diagnostic.
+  const STARTUP_TIMEOUT_MS = 8000
+  const watchdog = setTimeout(() => {
+    if (!ready) {
+      showFatalError(
+        'router',
+        new Error(
+          'The app did not finish loading. This usually means navigation is ' +
+            'stuck in a redirect loop, or the local database failed to open.',
+        ),
+        'startup timed out',
+      )
+    }
+  }, STARTUP_TIMEOUT_MS)
+
   router.isReady().then(
     () => {
-      started = true
+      ready = true
+      clearTimeout(watchdog)
     },
-    (error) => showFatalError('router', error, 'while opening the app'),
+    (error) => {
+      ready = true
+      clearTimeout(watchdog)
+      showFatalError('router', error, 'while opening the app')
+    },
   )
 
   // Apply the saved learning language to the interface before the first render.
