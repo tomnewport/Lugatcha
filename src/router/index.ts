@@ -76,6 +76,13 @@ router.beforeEach(async (to) => {
   // away for more than an hour and there are eligible (seen) words to practise.
   if (to.name === 'home') {
     try {
+      // Only gate on daily practice once the city is actually open. Before the
+      // Welcome Center is complete the 'practice' route is itself locked (see
+      // GATED_ROUTES above), so redirecting there would bounce straight back to
+      // 'home' and back to 'practice' forever — an alternating redirect loop
+      // that never settles, leaving a blank screen with no error.
+      if (!(await isWelcomeCenterComplete(db))) return true
+
       const stored = localStorage.getItem(LAST_PRACTICE_AT_KEY)
       const practiceOverdue =
         !stored || Date.now() - parseInt(stored, 10) > PRACTICE_REQUIRED_MS
