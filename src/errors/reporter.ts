@@ -33,27 +33,36 @@ export const capturedErrors = reactive<CapturedError[]>([])
 
 let nextId = 1
 
+/**
+ * Normalise any thrown value into a {@link CapturedError}. Shared by the toast
+ * pipeline and the startup fatal screen so both format messages identically.
+ */
+export function toCapturedError(source: string, error: unknown, context?: string): CapturedError {
+  const err = error instanceof Error ? error : new Error(String(error))
+  const message = [err.message || i18n.global.t('errors.unknown'), context].filter(Boolean).join(' — ')
+  return {
+    id: nextId++,
+    source,
+    message,
+    stack: err.stack,
+    route: typeof location !== 'undefined' ? location.hash || location.pathname : '',
+    time: new Date().toISOString(),
+    count: 1,
+  }
+}
+
 export function captureError(source: string, error: unknown, context?: string): void {
   try {
-    const err = error instanceof Error ? error : new Error(String(error))
-    const message = [err.message || i18n.global.t('errors.unknown'), context].filter(Boolean).join(' — ')
+    const entry = toCapturedError(source, error, context)
 
-    const existing = capturedErrors.find((e) => e.message === message)
+    const existing = capturedErrors.find((e) => e.message === entry.message)
     if (existing) {
       existing.count++
-      existing.time = new Date().toISOString()
+      existing.time = entry.time
       return
     }
 
-    capturedErrors.push({
-      id: nextId++,
-      source,
-      message,
-      stack: err.stack,
-      route: typeof location !== 'undefined' ? location.hash || location.pathname : '',
-      time: new Date().toISOString(),
-      count: 1,
-    })
+    capturedErrors.push(entry)
     if (capturedErrors.length > MAX_TOASTS) capturedErrors.shift()
   } catch {
     // Never let the error reporter itself take the app down
