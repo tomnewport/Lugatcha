@@ -81,26 +81,76 @@ describe('recordStreakDay', () => {
 
   it('starts a streak at one on the first practice', () => {
     const update = recordStreakDay(day('2026-06-29'))
-    expect(update).toEqual({ from: 0, to: 1, extended: true })
+    expect(update).toEqual({ from: 0, to: 1, extended: true, usedSkip: false })
     expect(currentStreak(day('2026-06-29'))).toBe(1)
   })
 
   it('grows the streak when practising on consecutive days', () => {
     recordStreakDay(day('2026-06-29'))
     const update = recordStreakDay(day('2026-06-30'))
-    expect(update).toEqual({ from: 1, to: 2, extended: true })
+    expect(update).toEqual({ from: 1, to: 2, extended: true, usedSkip: false })
   })
 
   it('does not double-count a second practice on the same day', () => {
     recordStreakDay(day('2026-06-29'))
     const update = recordStreakDay(day('2026-06-29'))
-    expect(update).toEqual({ from: 1, to: 1, extended: false })
+    expect(update).toEqual({ from: 1, to: 1, extended: false, usedSkip: false })
   })
 
   it('resets to one after a missed day', () => {
     recordStreakDay(day('2026-06-29'))
     const update = recordStreakDay(day('2026-07-02'))
-    expect(update).toEqual({ from: 0, to: 1, extended: true })
+    expect(update).toEqual({ from: 0, to: 1, extended: true, usedSkip: false })
+  })
+})
+
+describe('recordStreakDay — weekly skip allowance', () => {
+  const day = (iso: string) => new Date(`${iso}T12:00:00`)
+
+  it('forgives a single missed day, spending the weekly skip', () => {
+    recordStreakDay(day('2026-06-01'))
+    recordStreakDay(day('2026-06-02'))
+    // 06-03 skipped entirely.
+    const update = recordStreakDay(day('2026-06-04'))
+    expect(update).toEqual({ from: 2, to: 3, extended: true, usedSkip: true })
+  })
+
+  it('refuses a second skip within the same week', () => {
+    recordStreakDay(day('2026-06-01'))
+    recordStreakDay(day('2026-06-02'))
+    recordStreakDay(day('2026-06-04')) // skips 06-03, spends the allowance
+    // 06-05 skipped too — no allowance left this week.
+    const update = recordStreakDay(day('2026-06-06'))
+    expect(update).toEqual({ from: 0, to: 1, extended: true, usedSkip: false })
+  })
+
+  it('grants a fresh skip once the cooldown has elapsed', () => {
+    recordStreakDay(day('2026-06-01'))
+    recordStreakDay(day('2026-06-02'))
+    recordStreakDay(day('2026-06-04')) // spends the allowance
+    recordStreakDay(day('2026-06-05'))
+    recordStreakDay(day('2026-06-06'))
+    recordStreakDay(day('2026-06-07'))
+    recordStreakDay(day('2026-06-08'))
+    recordStreakDay(day('2026-06-09'))
+    recordStreakDay(day('2026-06-10'))
+    // A week has passed since the 06-04 skip; 06-11 is skipped.
+    const update = recordStreakDay(day('2026-06-12'))
+    expect(update.usedSkip).toBe(true)
+    expect(update.extended).toBe(true)
+  })
+
+  it('still lapses when two consecutive days are missed', () => {
+    recordStreakDay(day('2026-06-01'))
+    const update = recordStreakDay(day('2026-06-04'))
+    expect(update).toEqual({ from: 0, to: 1, extended: true, usedSkip: false })
+  })
+
+  it('reflects the forgiven streak through currentStreak', () => {
+    recordStreakDay(day('2026-06-01'))
+    recordStreakDay(day('2026-06-02'))
+    // 06-03 skipped; the skip allowance keeps the streak alive through 06-04.
+    expect(currentStreak(day('2026-06-04'))).toBe(2)
   })
 })
 
@@ -112,8 +162,13 @@ describe('currentStreak', () => {
     expect(currentStreak(day('2026-06-30'))).toBe(1) // still extendable today
   })
 
-  it('lapses to zero once a day is missed', () => {
+  it('is forgiven by the weekly skip when exactly one day is missed', () => {
     recordStreakDay(day('2026-06-29'))
-    expect(currentStreak(day('2026-07-01'))).toBe(0)
+    expect(currentStreak(day('2026-07-01'))).toBe(1)
+  })
+
+  it('lapses to zero once two or more days are missed', () => {
+    recordStreakDay(day('2026-06-29'))
+    expect(currentStreak(day('2026-07-02'))).toBe(0)
   })
 })

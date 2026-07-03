@@ -9,6 +9,10 @@
 
 const COUNT_KEY = 'lugatcha.streakCount'
 const DATE_KEY = 'lugatcha.streakLastDate'
+const SKIP_KEY = 'lugatcha.streakSkipDate'
+
+/** No two skipped days may be forgiven within this many days of each other. */
+const SKIP_COOLDOWN_DAYS = 7
 
 export type ChipTier = 0 | 1 | 2
 export type ChipColor = 'blue' | 'orange'
@@ -105,43 +109,61 @@ export function localDate(d: Date = new Date()): string {
   return d.toLocaleDateString('en-CA')
 }
 
-function dayBefore(d: Date): Date {
-  const y = new Date(d)
-  y.setDate(y.getDate() - 1)
-  return y
+/** Whole days between two YYYY-MM-DD dates (positive when `b` is later). */
+function daysBetween(a: string, b: string): number {
+  const da = new Date(`${a}T00:00:00`)
+  const db = new Date(`${b}T00:00:00`)
+  return Math.round((db.getTime() - da.getTime()) / 86400000)
 }
 
 interface StoredStreak {
   count: number
   lastDate: string | null
+  /** Date the weekly skipped-day allowance was last spent, if ever. */
+  skipDate: string | null
 }
 
 function load(): StoredStreak {
   try {
     const count = parseInt(localStorage.getItem(COUNT_KEY) ?? '0', 10) || 0
-    return { count, lastDate: localStorage.getItem(DATE_KEY) }
+    return {
+      count,
+      lastDate: localStorage.getItem(DATE_KEY),
+      skipDate: localStorage.getItem(SKIP_KEY),
+    }
   } catch {
-    return { count: 0, lastDate: null }
+    return { count: 0, lastDate: null, skipDate: null }
   }
 }
 
-function save(count: number, date: string): void {
+function save(count: number, date: string, skipDate: string | null): void {
   try {
     localStorage.setItem(COUNT_KEY, String(count))
     localStorage.setItem(DATE_KEY, date)
+    if (skipDate) localStorage.setItem(SKIP_KEY, skipDate)
+    else localStorage.removeItem(SKIP_KEY)
   } catch {
     // private mode — streak simply won't persist
   }
 }
 
+/** Whether a skipped day could still be forgiven, given the last one spent. */
+function skipAvailable(skipDate: string | null, today: string): boolean {
+  return !skipDate || daysBetween(skipDate, today) >= SKIP_COOLDOWN_DAYS
+}
+
 /**
  * The streak the learner can still see today: the stored count if the last
- * practice was today or yesterday, otherwise 0 (the streak has lapsed).
+ * practice was today or yesterday, or if exactly one day was missed and the
+ * weekly skip allowance can cover it. Otherwise 0 (the streak has lapsed).
  */
 export function currentStreak(now: Date = new Date()): number {
-  const { count, lastDate } = load()
+  const { count, lastDate, skipDate } = load()
   if (!lastDate) return 0
-  if (lastDate === localDate(now) || lastDate === localDate(dayBefore(now))) return count
+  const today = localDate(now)
+  const gap = daysBetween(lastDate, today)
+  if (gap <= 1) return count
+  if (gap === 2 && skipAvailable(skipDate, today)) return count
   return 0
 }
 
@@ -152,19 +174,26 @@ export interface StreakUpdate {
   to: number
   /** True only when this practice actually grew the streak (cue the celebration). */
   extended: boolean
+  /** True when today's practice was forgiven a missed day via the weekly skip. */
+  usedSkip: boolean
 }
 
 /**
  * Records that the learner practised today and returns the transition. Already
  * practised today → no change (`extended: false`). Practised yesterday →
- * streak grows by one. Otherwise the streak resets and starts again at one.
+ * streak grows by one. Missed exactly one day → still grows, spending the
+ * once-a-week skip allowance (if it hasn't already been spent this week).
+ * Otherwise the streak resets and starts again at one.
  */
 export function recordStreakDay(now: Date = new Date()): StreakUpdate {
   const today = localDate(now)
-  const { count, lastDate } = load()
-  if (lastDate === today) return { from: count, to: count, extended: false }
-  const base = lastDate === localDate(dayBefore(now)) ? count : 0
+  const { count, lastDate, skipDate } = load()
+  if (lastDate === today) return { from: count, to: count, extended: false, usedSkip: false }
+
+  const gap = lastDate ? daysBetween(lastDate, today) : Infinity
+  const usedSkip = gap === 2 && skipAvailable(skipDate, today)
+  const base = gap === 1 || usedSkip ? count : 0
   const to = base + 1
-  save(to, today)
-  return { from: base, to, extended: true }
+  save(to, today, usedSkip ? today : base === 0 ? null : skipDate)
+  return { from: base, to, extended: true, usedSkip }
 }
