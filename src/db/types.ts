@@ -1,3 +1,5 @@
+import type { ReviewSchedule } from '@/exercises/spacedRepetition'
+
 export interface Word {
   id: string // stable slug, e.g. "airport.passport"
   uzbek: string
@@ -96,6 +98,12 @@ export interface WordProgress {
   learnedAt?: number
   /** Failed test questions accrued since it was learned; two of them unlearns it. */
   failsSinceLearned?: number
+  /**
+   * Spaced-repetition schedule (SM-2). Set the first time the word is answered
+   * in a test/practice question and advanced on every answer; drives which
+   * words fall due for review. See src/exercises/spacedRepetition.ts.
+   */
+  review?: ReviewSchedule
 }
 
 export interface LocationProgress {

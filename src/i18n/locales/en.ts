@@ -31,6 +31,8 @@ export default {
     practice: 'Daily practice',
     practiceDone: 'Practised today',
     practiceAria: 'Daily vocabulary practice',
+    continue: 'Continue learning',
+    continueAria: 'Continue learning — pick your next place',
     streakDays: '{count}-day streak',
   },
 
@@ -38,6 +40,24 @@ export default {
     eyebrow: 'Daily practice',
     title: 'Words from across the city',
     empty: 'Meet some words first — explore the city, then come back to practise what you have learned.',
+  },
+
+  continue: {
+    title: 'Continue learning',
+    loading: 'Finding your next stop…',
+    resumeEyebrow: 'Pick up where you left off',
+    newEyebrow: 'Ready for somewhere new?',
+    progressWords: '{known} / {total} words learned',
+    go: "Let's go",
+    continueCta: 'Continue',
+    reviewEyebrow: 'Keep it fresh',
+    reviewTitle: 'Quick review',
+    reviewBody: '{count} learned words are ready for review',
+    elsewhere: 'Go somewhere else',
+    hidePicker: 'Hide places',
+    pickPrompt: 'Choose a place',
+    allDoneTitle: "You've learned the whole city!",
+    allDoneBody: 'Every area is complete. Keep your vocabulary sharp with a review whenever you like.',
   },
 
   streak: {
