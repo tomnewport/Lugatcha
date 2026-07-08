@@ -193,17 +193,18 @@
           },
           {
             "speaker": "npc",
-            "uzbek": "Faqat borishmi yoki borib-kelish?",
+            "uzbek": "Faqat borishmi yoki borib kelish?",
             "english": "One way only, or return?",
             "russian": "Только туда или туда и обратно?"
           },
           {
             "speaker": "user",
-            "uzbek": "Borib-kelish, iltimos.",
+            "uzbek": "Borib kelish, iltimos.",
             "english": "Return, please.",
             "russian": "Туда и обратно, пожалуйста.",
             "tokens": [
-              "Borib-kelish,",
+              "Borib",
+              "kelish,",
               "iltimos."
             ]
           },
