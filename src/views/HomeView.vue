@@ -10,11 +10,13 @@ import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
 import TravelTile from '@/components/TravelTile.vue'
 import TreasureChest from '@/components/TreasureChest.vue'
+import ContinueLearning from '@/components/ContinueLearning.vue'
 import AppLogo from '@/components/AppLogo.vue'
 import AppLogotype from '@/components/AppLogotype.vue'
 import { useAudioReady } from '@/audio/offline'
 import { currentStreak, streakChips } from '@/streak'
 import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
+import { MAP_MARKERS, markerStyle, markerCentre } from '@/map/cityMap'
 import homeCityMap from '@/assets/home-city-map.webp'
 
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
@@ -109,6 +111,9 @@ const welcomeComplete = computed(() => {
 const lastTried = ref<string | null>(null)
 const practicedToday = ref(false)
 const streak = ref(0)
+// Once the day's practice is done, the practice button becomes "Continue
+// learning", which opens the next-location chooser overlay.
+const continueOpen = ref(false)
 
 const streakSymbols = computed(() =>
   streakChips(streak.value)
@@ -208,51 +213,11 @@ const chipMap = computed(() => {
 
 /**
  * Marker placement is driven by the illustration, not by the location data's
- * gridRow/gridCol: the hand-drawn map fixes where each building sits, so these
- * constants are tuned to home-city-map.webp and must be re-tuned if the art
- * changes. The data grid is only used for DOM (reading/tab) order now.
- *
- * MAP_COLUMNS / MAP_ROWS are marker centres as a percentage of the stage;
- * MAP_BLOCK is the marker's footprint. A location absent from MAP_MARKERS has
- * no place on the art and is reported below rather than silently stacking.
+ * gridRow/gridCol. The geometry lives in src/map/cityMap.ts so LocationCrop can
+ * frame the same buildings; the data grid is only used for DOM (reading/tab)
+ * order now. A location absent from MAP_MARKERS has no place on the art and is
+ * reported by the dev warning above rather than silently stacking.
  */
-const MAP_COLUMNS = [26.8, 43.8, 60.8, 77.8]
-const MAP_ROWS = [28, 41.5, 55, 68.5, 82]
-const MAP_BLOCK = { w: 13.2, h: 9.2 }
-
-const MAP_MARKERS: Record<string, { col: number; row: number }> = {
-  'welcome-center': { col: 0, row: 0 },
-  'police-station': { col: 1, row: 0 },
-  'public-square': { col: 2, row: 0 },
-  hospital: { col: 3, row: 0 },
-  hotel: { col: 0, row: 1 },
-  museum: { col: 1, row: 1 },
-  'train-station': { col: 2, row: 1 },
-  'metro-station': { col: 3, row: 1 },
-  'bus-stop': { col: 0, row: 2 },
-  'gift-shop': { col: 1, row: 2 },
-  'grocery-store': { col: 2, row: 2 },
-  library: { col: 3, row: 2 },
-  restaurant: { col: 0, row: 3 },
-  cafe: { col: 1, row: 3 },
-  choyxona: { col: 2, row: 3 },
-  bank: { col: 3, row: 3 },
-  'mountain-park': { col: 0, row: 4 },
-  airport: { col: 1, row: 4 },
-  school: { col: 2, row: 4 },
-  travel: { col: 3, row: 4 },
-}
-
-function markerStyle(locationId: string) {
-  const marker = MAP_MARKERS[locationId]
-  if (!marker) return {}
-  return {
-    left: `${MAP_COLUMNS[marker.col]}%`,
-    top: `${MAP_ROWS[marker.row]}%`,
-    width: `${MAP_BLOCK.w}%`,
-    height: `${MAP_BLOCK.h}%`,
-  }
-}
 
 /**
  * Centre of the "fog of war" cutout, derived from the Welcome Center's marker
@@ -260,11 +225,11 @@ function markerStyle(locationId: string) {
  * frames the icon and its label rather than just the icon.
  */
 const veilStyle = computed(() => {
-  const marker = MAP_MARKERS[WELCOME_ID]
-  if (!marker) return {}
+  const centre = markerCentre(WELCOME_ID)
+  if (!centre) return {}
   return {
-    '--veil-cx': `${MAP_COLUMNS[marker.col]}%`,
-    '--veil-cy': `${MAP_ROWS[marker.row] - 0.5}%`,
+    '--veil-cx': `${centre.x}%`,
+    '--veil-cy': `${centre.y - 0.5}%`,
   }
 })
 
@@ -309,17 +274,24 @@ onMounted(async () => {
       </h1>
       <p class="home-header__subtitle" lang="uz">{{ $t('home.subtitle') }}</p>
 
+      <button
+        v-if="welcomeComplete && practicedToday"
+        class="practice-btn practice-btn--continue"
+        type="button"
+        :aria-label="$t('home.continueAria')"
+        @click="continueOpen = true"
+      >
+        <span class="practice-btn__icon" aria-hidden="true">🧭</span>
+        <span class="practice-btn__label">{{ $t('home.continue') }}</span>
+      </button>
       <RouterLink
-        v-if="welcomeComplete"
+        v-else-if="welcomeComplete"
         class="practice-btn"
-        :class="{ 'practice-btn--done': practicedToday }"
         to="/practice"
         :aria-label="$t('home.practiceAria')"
       >
-        <span class="practice-btn__icon" aria-hidden="true">{{ practicedToday ? '✓' : '🎯' }}</span>
-        <span class="practice-btn__label">
-          {{ practicedToday ? $t('home.practiceDone') : $t('home.practice') }}
-        </span>
+        <span class="practice-btn__icon" aria-hidden="true">🎯</span>
+        <span class="practice-btn__label">{{ $t('home.practice') }}</span>
       </RouterLink>
 
       <p v-if="welcomeComplete && streak > 0" class="streak-line" :title="$t('home.streakDays', { count: streak })">
@@ -407,6 +379,8 @@ onMounted(async () => {
     </div>
 
     <p v-else class="home-loading" aria-live="polite">{{ $t('home.loadingCity') }}</p>
+
+    <ContinueLearning v-if="continueOpen" @close="continueOpen = false" />
   </main>
 </template>
 
@@ -619,10 +593,11 @@ onMounted(async () => {
   box-shadow: var(--shadow-md);
 }
 
-.practice-btn--done {
+.practice-btn--continue {
   border-color: var(--color-teal);
-  background: var(--color-surface);
-  color: var(--color-teal);
+  background: var(--color-teal);
+  color: #fff;
+  cursor: pointer;
 }
 
 .practice-btn__icon {

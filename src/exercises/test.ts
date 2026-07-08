@@ -1,6 +1,7 @@
 import type { Word, WordProgress, TestQuestionType } from '@/db/types'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import { shuffle } from './validate'
+import { isDue, overdueRatio } from './spacedRepetition'
 
 export const TEST_LENGTH = 5
 export const OPTION_BANK_SIZE = 40
@@ -164,29 +165,34 @@ export const DAILY_PRACTICE_LENGTH = 20
 export const DAILY_BATCH_PER_THEME = 7
 
 /**
- * The Daily Practice queue: which (word, skill) pairs to drill, weakest first.
+ * The Daily Practice queue: which (word, skill) pairs to drill, spaced so words
+ * come round for review as they start to fade.
  *
  * A "skill" is a test question type; a word is learned once all four pass. Per
  * area we keep an active batch of up to seven seen-but-unlearned words — the
  * ones closest to learned lead, so finishing a word frees its slot for the next.
  * Practice drills only the skills those batch words have NOT passed yet,
  * interleaved across words for variety, so it never re-tests a skill already in
- * hand. Learned words are fair game only to top up once every weak skill is
- * covered, keeping retention light rather than re-asking things you reliably get
- * right.
+ * hand. Learned words are then folded back in for retention, but spaced: those
+ * whose spaced-repetition review has fallen due (see spacedRepetition.ts) lead,
+ * most-overdue first, and words reviewed recently are left alone — so practice
+ * reinforces what is fading rather than re-asking things you reliably get right.
  */
 export function selectDailyPracticePairs(
   seenWords: Word[],
   progress: Map<string, WordProgress | undefined>,
   count = DAILY_PRACTICE_LENGTH,
   batchPerTheme = DAILY_BATCH_PER_THEME,
+  now: number = Date.now(),
 ): PracticePair[] {
   const passedOf = (w: Word) => passedTypes(progress.get(w.id))
   const learned = (w: Word) => isWordLearned(progress.get(w.id))
   const weakSkills = (w: Word) => TEST_QUESTION_TYPES.filter((t) => !passedOf(w).includes(t))
+  const dueness = (w: Word) => overdueRatio(progress.get(w.id)?.review, now)
 
   // Active batch per area: seen, not yet learned, closest-to-learned first so
-  // started words get finished before fresh ones crowd in.
+  // started words get finished before fresh ones crowd in; ties broken by which
+  // word is most overdue for review.
   const byTheme = new Map<string, Word[]>()
   for (const w of seenWords) {
     if (learned(w)) continue
@@ -196,7 +202,9 @@ export function selectDailyPracticePairs(
   }
   const batch: Word[] = []
   for (const themeWords of byTheme.values()) {
-    const ordered = shuffle(themeWords).sort((a, b) => passedOf(b).length - passedOf(a).length)
+    const ordered = shuffle(themeWords).sort(
+      (a, b) => passedOf(b).length - passedOf(a).length || dueness(b) - dueness(a),
+    )
     batch.push(...ordered.slice(0, batchPerTheme))
   }
 
@@ -238,9 +246,17 @@ export function selectDailyPracticePairs(
   )
 
   // Top up with retention on learned words (fair game once weak skills are
-  // done), still interleaved so no single word monopolises a run.
+  // done), spaced: words whose review has fallen due lead, most-overdue first,
+  // so reinforcement lands on what is fading. Interleaved so no single word
+  // monopolises a run.
   if (pairs.length < count) {
-    interleave(shuffle(seenWords.filter(learned)).map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
+    const learnedWords = seenWords.filter(learned)
+    const due = shuffle(learnedWords.filter((w) => isDue(progress.get(w.id)?.review, now))).sort(
+      (a, b) => dueness(b) - dueness(a),
+    )
+    const notDue = shuffle(learnedWords.filter((w) => !isDue(progress.get(w.id)?.review, now)))
+    // Due words first; only reach for not-yet-due ones if the queue is still short.
+    interleave([...due, ...notDue].map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
   }
   // Still short (a very small vocabulary): re-ask batch words' passed skills.
   if (pairs.length < count) {

@@ -1,6 +1,7 @@
 import type { LugatchaDB } from './LugatchaDB'
 import type { ExerciseType, TestQuestionType } from './types'
 import { TEST_QUESTION_TYPES } from './types'
+import { scheduleReview, gradeFromResult } from '@/exercises/spacedRepetition'
 
 const MAX_RESULTS = 4
 /** Failed questions on a learned word before it's unlearned (issue #61). */
@@ -174,6 +175,10 @@ export async function recordTestResult(
       }
     }
 
+    // Advance the spaced-repetition schedule so the word falls due for review
+    // at a stretch matched to how well it was just recalled.
+    const review = scheduleReview(existing?.review, gradeFromResult(result))
+
     await db.wordProgress.put({
       wordId,
       seenAt: existing?.seenAt ?? Date.now(),
@@ -182,6 +187,7 @@ export async function recordTestResult(
       spellMastery,
       learnedAt,
       failsSinceLearned: fails,
+      review,
     })
     return { newlyLearned, unlearned }
   })
