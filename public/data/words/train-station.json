@@ -75,8 +75,8 @@
   },
   {
     "id": "train-station.return",
-    "uzbek": "borib-kelish",
-    "cyrillic": "бориб-келиш",
+    "uzbek": "borib kelish",
+    "cyrillic": "бориб келиш",
     "english": "return (round trip)",
     "russian": "туда и обратно",
     "theme": "train-station",

@@ -35,18 +35,19 @@
           },
           {
             "speaker": "npc",
-            "uzbek": "Borib-kelishmi?",
+            "uzbek": "Borib kelishmi?",
             "english": "Return?",
             "russian": "Туда-обратно?"
           },
           {
             "speaker": "user",
-            "uzbek": "Ha, borib-kelish.",
+            "uzbek": "Ha, borib kelish.",
             "english": "Yes, return.",
             "russian": "Да, туда-обратно.",
             "tokens": [
               "Ha,",
-              "borib-kelish."
+              "borib",
+              "kelish."
             ]
           },
           {
