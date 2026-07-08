@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { db, useLiveQuery } from '@/db/useDb'
 import { isWordLearned, isWordPartiallyLearned, passedTypes } from '@/exercises/test'
+import { overdueRatio, reviewStatus, relativeDue, type ReviewStage } from '@/exercises/spacedRepetition'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
@@ -13,42 +15,84 @@ interface ChestWord {
   english: string
   russian?: string
   passed: number
-  learnedAt: number
+  learned: boolean
+  /** Spaced-repetition snapshot, precomputed so rows don't re-read the clock. */
+  stage: ReviewStage
+  strength: number
+  due: boolean
+  dueValue: number
+  dueUnit: 'm' | 'h' | 'd' | 'w'
+  /** Sort keys: when the next review lands, and how overdue it already is. */
+  dueAt: number
+  overdue: number
 }
 
 const { gloss } = useContentLang()
+const { t } = useI18n()
 const open = ref(false)
 
-/** Learned and partially-learned words, joined with their text, for the chest. */
-const chest = useLiveQuery<{ learned: ChestWord[]; partial: ChestWord[] }>(async () => {
+/**
+ * Every word the learner has started (one or more test types passed), joined
+ * with its text and a spaced-repetition snapshot. A single list — no learned /
+ * in-progress split — ordered so words due for review surface first (most
+ * overdue leading), then by soonest upcoming review, so the chest doubles as an
+ * at-a-glance "how retention is going" view.
+ */
+const chest = useLiveQuery<{ items: ChestWord[]; learnedCount: number; dueCount: number }>(async () => {
+  const now = Date.now()
   const progress = await db.wordProgress.toArray()
   const relevant = progress.filter((p) => passedTypes(p).length > 0)
   const words = await db.words.bulkGet(relevant.map((p) => p.wordId))
   const byId = new Map(words.filter(Boolean).map((w) => [w!.id, w!]))
 
-  const learned: ChestWord[] = []
-  const partial: ChestWord[] = []
+  const items: ChestWord[] = []
+  let learnedCount = 0
+  let dueCount = 0
   for (const p of relevant) {
     const word = byId.get(p.wordId)
     if (!word) continue
-    const entry: ChestWord = {
+    const learned = isWordLearned(p)
+    const partial = isWordPartiallyLearned(p)
+    if (!learned && !partial) continue
+    const status = reviewStatus(p.review, now)
+    const { value, unit } = relativeDue(status.dueInMs)
+    items.push({
       id: word.id,
       uzbek: word.uzbek,
       english: word.english,
       russian: word.russian,
       passed: passedTypes(p).length,
-      learnedAt: p.learnedAt ?? 0,
-    }
-    if (isWordLearned(p)) learned.push(entry)
-    else if (isWordPartiallyLearned(p)) partial.push(entry)
+      learned,
+      stage: status.stage,
+      strength: status.strength,
+      due: status.due,
+      dueValue: value,
+      dueUnit: unit,
+      dueAt: p.review?.dueAt ?? now,
+      overdue: overdueRatio(p.review, now),
+    })
+    if (learned) learnedCount++
+    if (status.due) dueCount++
   }
-  learned.sort((a, b) => b.learnedAt - a.learnedAt)
-  partial.sort((a, b) => b.passed - a.passed)
-  return { learned, partial }
-}, { learned: [], partial: [] })
 
-const learnedCount = computed(() => chest.value.learned.length)
+  // Due words first (most overdue leading), then upcoming by soonest review.
+  items.sort((a, b) => {
+    if (a.due !== b.due) return a.due ? -1 : 1
+    if (a.due) return b.overdue - a.overdue
+    return a.dueAt - b.dueAt
+  })
+
+  return { items, learnedCount, dueCount }
+}, { items: [], learnedCount: 0, dueCount: 0 })
+
+const learnedCount = computed(() => chest.value.learnedCount)
 const totalTypes = TEST_QUESTION_TYPES.length
+
+/** Short due label for a row: "Review now" or "in 3d". */
+function dueLabel(w: ChestWord): string {
+  if (w.due) return t('chest.review.dueNow')
+  return t('chest.review.dueIn', { time: `${w.dueValue}${t(`chest.review.units.${w.dueUnit}`)}` })
+}
 </script>
 
 <template>
@@ -73,36 +117,54 @@ const totalTypes = TEST_QUESTION_TYPES.length
             </button>
           </header>
 
-          <p v-if="learnedCount === 0 && chest.partial.length === 0" class="chest-panel__empty">
+          <p v-if="chest.items.length === 0" class="chest-panel__empty">
             {{ $t('chest.empty') }}
           </p>
 
-          <section v-if="chest.learned.length" class="chest-section">
-            <h3 class="chest-section__head">{{ $t('chest.learnedSection', { count: chest.learned.length }) }}</h3>
-            <ul class="chest-list">
-              <li v-for="w in chest.learned" :key="w.id" class="chest-item">
-                <AudioButton :text="w.uzbek" />
-                <span class="chest-item__word">
-                  <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
-                  <CyrillicSub :latin="w.uzbek" />
-                </span>
-                <span class="chest-item__en">{{ gloss(w) }}</span>
-                <span class="chest-item__badge chest-item__badge--learned" aria-hidden="true">✓</span>
-              </li>
-            </ul>
-          </section>
+          <p v-else-if="chest.dueCount > 0" class="chest-panel__summary">
+            <span class="chest-panel__summary-dot" aria-hidden="true" />
+            {{ $t('chest.reviewSummary', { count: chest.dueCount }, chest.dueCount) }}
+          </p>
 
-          <section v-if="chest.partial.length" class="chest-section">
-            <h3 class="chest-section__head">{{ $t('chest.partialSection', { count: chest.partial.length }) }}</h3>
+          <section v-if="chest.items.length" class="chest-section">
             <ul class="chest-list">
-              <li v-for="w in chest.partial" :key="w.id" class="chest-item">
+              <li v-for="w in chest.items" :key="w.id" class="chest-item">
                 <AudioButton :text="w.uzbek" />
-                <span class="chest-item__word">
-                  <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
-                  <CyrillicSub :latin="w.uzbek" />
+                <span class="chest-item__main">
+                  <span class="chest-item__top">
+                    <span class="chest-item__word">
+                      <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
+                      <CyrillicSub :latin="w.uzbek" />
+                    </span>
+                    <span class="chest-item__en">{{ gloss(w) }}</span>
+                    <span
+                      v-if="w.learned"
+                      class="chest-item__badge chest-item__badge--learned"
+                      :aria-label="$t('chest.learnedBadge')"
+                    >✓</span>
+                    <span v-else class="chest-item__badge">{{ w.passed }}/{{ totalTypes }}</span>
+                  </span>
+                  <!-- Second line: concise spaced-repetition status. -->
+                  <span class="chest-item__srs">
+                    <span
+                      class="chest-item__meter"
+                      role="img"
+                      :aria-label="$t('chest.review.strengthAria', { stage: $t(`chest.review.stages.${w.stage}`) })"
+                    >
+                      <span
+                        v-for="n in 4"
+                        :key="n"
+                        class="chest-item__pip"
+                        :class="{ 'chest-item__pip--on': n <= w.strength }"
+                      />
+                    </span>
+                    <span class="chest-item__stage">{{ $t(`chest.review.stages.${w.stage}`) }}</span>
+                    <span
+                      class="chest-item__due"
+                      :class="{ 'chest-item__due--now': w.due }"
+                    >{{ dueLabel(w) }}</span>
+                  </span>
                 </span>
-                <span class="chest-item__en">{{ gloss(w) }}</span>
-                <span class="chest-item__badge">{{ w.passed }}/{{ totalTypes }}</span>
               </li>
             </ul>
           </section>
@@ -230,6 +292,20 @@ const totalTypes = TEST_QUESTION_TYPES.length
   border-radius: var(--radius-sm);
 }
 
+.chest-item__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chest-item__top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
 .chest-item__word {
   display: flex;
   flex-direction: column;
@@ -260,6 +336,76 @@ const totalTypes = TEST_QUESTION_TYPES.length
 
 .chest-item__badge--learned {
   color: var(--color-teal);
+}
+
+/* Second line: spaced-repetition status */
+.chest-item__srs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.chest-item__meter {
+  display: inline-flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.chest-item__pip {
+  width: 12px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-border);
+}
+
+.chest-item__pip--on {
+  background: var(--color-teal);
+}
+
+.chest-item__stage {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.chest-item__due {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chest-item__due::before {
+  content: '·';
+  margin-right: 0.4rem;
+  color: var(--color-border);
+}
+
+.chest-item__due--now {
+  color: var(--color-terracotta);
+  font-weight: 700;
+}
+
+/* Review summary line under the title */
+.chest-panel__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-terracotta);
+}
+
+.chest-panel__summary-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-terracotta);
+  flex-shrink: 0;
 }
 
 .chest-fade-enter-active,

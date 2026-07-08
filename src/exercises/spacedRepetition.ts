@@ -121,3 +121,73 @@ export function overdueRatio(
   const intervalMs = Math.max(schedule.intervalDays, LAPSE_INTERVAL_DAYS) * DAY_MS
   return (now - schedule.dueAt) / intervalMs
 }
+
+/**
+ * A word's memory stage, coarsened from its review interval — how firmly it has
+ * settled into long-term memory. Drives the concise "how it's going" chip in the
+ * treasure chest.
+ *   new      — never reviewed
+ *   learning — just met or lapsed (sub-day step)
+ *   young    — sticking, days between reviews
+ *   growing  — a week or more between reviews
+ *   strong   — weeks between reviews, well embedded
+ */
+export type ReviewStage = 'new' | 'learning' | 'young' | 'growing' | 'strong'
+
+/** Strength pips (0–4) to show for each stage. */
+export const STAGE_STRENGTH: Record<ReviewStage, number> = {
+  new: 0,
+  learning: 1,
+  young: 2,
+  growing: 3,
+  strong: 4,
+}
+
+export function reviewStage(schedule: ReviewSchedule | undefined): ReviewStage {
+  if (!schedule) return 'new'
+  const d = schedule.intervalDays
+  if (d < 1) return 'learning'
+  if (d < 7) return 'young'
+  if (d < 21) return 'growing'
+  return 'strong'
+}
+
+export interface ReviewStatus {
+  stage: ReviewStage
+  /** 0–4, how many strength pips to fill. */
+  strength: number
+  /** True when the word is due (or overdue) for review right now. */
+  due: boolean
+  /** Milliseconds until the next review; negative once overdue, 0 when unscheduled. */
+  dueInMs: number
+}
+
+/** A compact snapshot of where a word sits in its spaced-repetition cycle. */
+export function reviewStatus(
+  schedule: ReviewSchedule | undefined,
+  now: number = Date.now(),
+): ReviewStatus {
+  const stage = reviewStage(schedule)
+  return {
+    stage,
+    strength: STAGE_STRENGTH[stage],
+    due: isDue(schedule, now),
+    dueInMs: schedule ? schedule.dueAt - now : 0,
+  }
+}
+
+/**
+ * The time until a review, bucketed into the largest sensible unit for a short
+ * label ("in 3d", "in 2w"). Never returns less than 1 of a unit. The component
+ * localizes the unit abbreviation.
+ */
+export function relativeDue(dueInMs: number): { value: number; unit: 'm' | 'h' | 'd' | 'w' } {
+  const ms = Math.max(0, dueInMs)
+  const minutes = Math.round(ms / 60_000)
+  if (minutes < 60) return { value: Math.max(1, minutes), unit: 'm' }
+  const hours = Math.round(ms / (60 * 60_000))
+  if (hours < 24) return { value: hours, unit: 'h' }
+  const days = Math.round(ms / DAY_MS)
+  if (days < 14) return { value: Math.max(1, days), unit: 'd' }
+  return { value: Math.round(days / 7), unit: 'w' }
+}
