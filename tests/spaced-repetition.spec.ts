@@ -4,6 +4,9 @@ import {
   gradeFromResult,
   isDue,
   overdueRatio,
+  reviewStage,
+  reviewStatus,
+  relativeDue,
   DAY_MS,
   MIN_EASE,
   DEFAULT_EASE,
@@ -91,5 +94,73 @@ describe('isDue / overdueRatio', () => {
     const slightlyLate = overdueRatio(s, s.dueAt + DAY_MS)
     const veryLate = overdueRatio(s, s.dueAt + 10 * DAY_MS)
     expect(veryLate).toBeGreaterThan(slightlyLate)
+  })
+})
+
+describe('reviewStage', () => {
+  const withInterval = (intervalDays: number): ReviewSchedule => ({
+    reps: 3,
+    intervalDays,
+    ease: DEFAULT_EASE,
+    dueAt: T0,
+    lastReviewedAt: T0,
+  })
+
+  it('classifies memory strength by interval', () => {
+    expect(reviewStage(undefined)).toBe('new')
+    expect(reviewStage(withInterval(LAPSE_INTERVAL_DAYS))).toBe('learning')
+    expect(reviewStage(withInterval(3))).toBe('young')
+    expect(reviewStage(withInterval(10))).toBe('growing')
+    expect(reviewStage(withInterval(30))).toBe('strong')
+  })
+
+  it('grows the stage as a word is repeatedly recalled', () => {
+    let s = scheduleReview(undefined, 5, T0)
+    const stages: string[] = []
+    for (let i = 0; i < 6; i++) {
+      stages.push(reviewStage(s))
+      s = scheduleReview(s, 5, s.dueAt)
+    }
+    // Never regresses while consistently recalled, and reaches 'strong'.
+    const order = ['new', 'learning', 'young', 'growing', 'strong']
+    for (let i = 1; i < stages.length; i++) {
+      expect(order.indexOf(stages[i])).toBeGreaterThanOrEqual(order.indexOf(stages[i - 1]))
+    }
+    expect(stages).toContain('strong')
+  })
+})
+
+describe('reviewStatus', () => {
+  it('reports strength and due-ness together', () => {
+    const s = scheduleReview(undefined, 5, T0) // young-ish, due in 1 day
+    const before = reviewStatus(s, s.dueAt - DAY_MS / 2)
+    expect(before.due).toBe(false)
+    expect(before.strength).toBeGreaterThan(0)
+    expect(before.dueInMs).toBeGreaterThan(0)
+
+    const after = reviewStatus(s, s.dueAt + DAY_MS)
+    expect(after.due).toBe(true)
+    expect(after.dueInMs).toBeLessThan(0)
+  })
+
+  it('treats an unscheduled word as new and due', () => {
+    const st = reviewStatus(undefined, T0)
+    expect(st.stage).toBe('new')
+    expect(st.strength).toBe(0)
+    expect(st.due).toBe(true)
+  })
+})
+
+describe('relativeDue', () => {
+  it('buckets into the largest sensible unit', () => {
+    expect(relativeDue(30 * 60_000)).toEqual({ value: 30, unit: 'm' })
+    expect(relativeDue(5 * 60 * 60_000)).toEqual({ value: 5, unit: 'h' })
+    expect(relativeDue(3 * DAY_MS)).toEqual({ value: 3, unit: 'd' })
+    expect(relativeDue(21 * DAY_MS)).toEqual({ value: 3, unit: 'w' })
+  })
+
+  it('never returns less than one unit for a positive wait', () => {
+    expect(relativeDue(10_000)).toEqual({ value: 1, unit: 'm' })
+    expect(relativeDue(-5000).value).toBe(1) // clamped
   })
 })

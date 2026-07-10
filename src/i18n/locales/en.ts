@@ -220,8 +220,21 @@ export default {
     title: '🏆 Your chest',
     empty:
       'No words learned yet. Take a Test at any location — pass all three question types for a word and it lands here.',
-    learnedSection: 'Learned · {count}',
-    partialSection: 'In progress · {count}',
+    learnedBadge: 'Learned',
+    reviewSummary: '{count} word ready to review | {count} words ready to review',
+    review: {
+      dueNow: 'Review now',
+      dueIn: 'in {time}',
+      units: { m: 'm', h: 'h', d: 'd', w: 'w' },
+      stages: {
+        new: 'New',
+        learning: 'Learning',
+        young: 'Settling',
+        growing: 'Growing',
+        strong: 'Strong',
+      },
+      strengthAria: 'Memory strength: {stage}',
+    },
   },
 
   exercise: {

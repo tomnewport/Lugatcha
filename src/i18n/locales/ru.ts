@@ -221,8 +221,22 @@ const ru: MessageSchema = {
     title: '🏆 Ваш сундук',
     empty:
       'Пока нет выученных слов. Пройдите тест в любом месте — ответьте на все три типа вопросов о слове, и оно попадёт сюда.',
-    learnedSection: 'Выучено · {count}',
-    partialSection: 'В процессе · {count}',
+    learnedBadge: 'Выучено',
+    reviewSummary:
+      '{count} слово готово к повторению | {count} слова готовы к повторению | {count} слов готовы к повторению',
+    review: {
+      dueNow: 'Повторить',
+      dueIn: 'через {time}',
+      units: { m: 'м', h: 'ч', d: 'д', w: 'нед' },
+      stages: {
+        new: 'Новое',
+        learning: 'Учим',
+        young: 'Закрепляем',
+        growing: 'Растёт',
+        strong: 'Прочно',
+      },
+      strengthAria: 'Прочность памяти: {stage}',
+    },
   },
 
   exercise: {
