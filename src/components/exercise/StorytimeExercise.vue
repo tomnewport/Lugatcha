@@ -2,7 +2,10 @@
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { db } from '@/db'
 import type { Story } from '@/db/types'
-import { tokenize, buildDecoys, contentWords, normalizeToken, shuffle } from '@/exercises/validate'
+import { tokenize, buildDecoys, contentWords, normalizeToken } from '@/exercises/validate'
+import { pickLeastRecentlyShown } from '@/exercises/contentPicker'
+import { loadStoryShownMap } from '@/db/progress'
+import { useProgressStore } from '@/stores/progress'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
@@ -12,6 +15,7 @@ import { speakUzbek, stopSpeaking } from '@/audio/audio'
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 const { base, name, gloss, pick } = useContentLang()
+const progressStore = useProgressStore()
 
 const story = ref<Story | null>(null)
 const index = ref(0)
@@ -27,9 +31,12 @@ onMounted(async () => {
     db.stories.where('theme').equals(props.locationId).toArray(),
     db.words.toArray(),
   ])
-  // A location can have several stories — serve a random one each session
-  const found = shuffle(themeStories)[0]
+  // A location can have several stories — serve the one least recently shown so
+  // a story isn't suggested again until every other story here has been seen.
+  const shownAt = await loadStoryShownMap(db, themeStories.map((s) => s.id))
+  const found = pickLeastRecentlyShown(themeStories, shownAt) ?? undefined
   story.value = found ?? null
+  if (found) void progressStore.recordStoryShown(found.id)
   const map = new Map<string, string>()
   for (const word of allWords) {
     map.set(normalizeToken(word.uzbek), gloss(word))

@@ -2,12 +2,21 @@
 import { exerciseLabel } from '@/exercises/potluck'
 import type { ExerciseType } from '@/db/types'
 
-defineProps<{
-  exercise: ExerciseType
-  locationName: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    exercise: ExerciseType
+    locationName: string
+    /** Position within a Continue Learning chain (1-based); 0 when not chaining. */
+    chainStep?: number
+    /** Length of the chain; 0 when this isn't a chained visit. */
+    chainTotal?: number
+  }>(),
+  { chainStep: 0, chainTotal: 0 },
+)
 
 const emit = defineEmits<{ exit: [] }>()
+
+const showChain = () => props.chainTotal > 0 && props.chainStep > 0
 </script>
 
 <template>
@@ -26,7 +35,12 @@ const emit = defineEmits<{ exit: [] }>()
       </button>
 
       <div class="exercise-header__titles">
-        <span class="exercise-header__location">{{ locationName }}</span>
+        <span class="exercise-header__location">
+          {{ locationName }}
+          <span v-if="showChain()" class="exercise-header__chain">
+            · {{ $t('locationMenu.chainStep', { step: chainStep, total: chainTotal }) }}
+          </span>
+        </span>
         <h1 class="exercise-header__title">{{ exerciseLabel(exercise) }}</h1>
       </div>
     </header>
@@ -91,6 +105,11 @@ const emit = defineEmits<{ exit: [] }>()
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.exercise-header__chain {
+  color: var(--color-teal);
+  font-weight: 700;
 }
 
 .exercise-header__title {

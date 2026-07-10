@@ -24,6 +24,17 @@ const EXERCISE_KEY: Record<ExerciseType, string> = {
   test: 'test',
 }
 
+/** Emoji representing each exercise type, shown on map chips and the location menu. */
+export const EXERCISE_EMOJI: Record<ExerciseType, string> = {
+  intro: '📝',
+  flashcards: '🃏',
+  listening: '🎧',
+  'phrase-assembly': '🔤',
+  roleplay: '🤝',
+  storytime: '📖',
+  test: '🎯',
+}
+
 /** Localized short label for an exercise (reactive when used in a template). */
 export function exerciseLabel(type: ExerciseType): string {
   return i18n.global.t(`exercise.labels.${EXERCISE_KEY[type]}`)

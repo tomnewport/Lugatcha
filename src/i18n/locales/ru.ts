@@ -145,6 +145,14 @@ const ru: MessageSchema = {
     nothingNew: 'Здесь пока нечего делать — сначала познакомьтесь с новыми словами в других местах.',
   },
 
+  locationMenu: {
+    wordsLearned: 'Выучено слов: {known} из {total}',
+    suggested: 'Рекомендуем далее',
+    choose: 'Выберите занятие',
+    orChoose: 'Или выберите другое занятие',
+    chainStep: '{step} из {total}',
+  },
+
   school: {
     title: 'Языковая школа',
     subtitle: 'Til maktabi',
@@ -275,13 +283,10 @@ const ru: MessageSchema = {
     roleplay: {
       loading: 'Загрузка сценария…',
       empty: 'Для этого места пока нет диалога — он появится в обновлении контента.',
-      chooseHow: 'Выберите, как пойдёт разговор:',
-      startHere: 'Начните здесь',
-      twist: 'Поворот',
       say: 'Скажите:',
       sayIt: 'Сказать',
       done: 'Suhbat tugadi — разговор окончен! 🎉',
-      tryAnother: 'Попробовать другой вариант',
+      tryAnother: 'Попробовать другой сценарий',
     },
     storytime: {
       loading: 'Загрузка истории…',
