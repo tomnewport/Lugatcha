@@ -28,6 +28,25 @@ export function typingTarget(uzbek: string): string {
     .trim()
 }
 
+/**
+ * Whether picking `picked` for a question about `target` is close enough to
+ * accept as correct — a curated near-synonym, such as the everyday "Salom"
+ * ("Hello") for the formal "Assalomu alaykum" ("Peace be upon you"). Both
+ * greetings, so a learner who picks one for the other has the gist; we accept
+ * it but still surface the precise meaning.
+ *
+ * Symmetric: either word may name the other in its `accepts` list. Matched on
+ * Uzbek form (folded) rather than gloss so it holds regardless of which base
+ * language is displayed and which theme's copy of a word is in play.
+ */
+export function isCloseEnough(target: Word, picked: Word): boolean {
+  const targetForm = foldTyping(target.uzbek)
+  const pickedForm = foldTyping(picked.uzbek)
+  if (targetForm === pickedForm) return false
+  const lists = (w: Word, form: string) => (w.accepts ?? []).some((a) => foldTyping(a) === form)
+  return lists(target, pickedForm) || lists(picked, targetForm)
+}
+
 export function passedTypes(progress: WordProgress | undefined): TestQuestionType[] {
   return progress?.testPassed ?? []
 }

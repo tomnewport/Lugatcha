@@ -330,6 +330,7 @@ export default {
       searchPlaceholder: 'Search the answers…',
       searchLabel: 'Search answers',
       correct: '✓ Correct',
+      closeEnough: '✓ Close enough — the exact meaning is “{answer}”',
       answer: '✗ Answer: {answer}',
       noMatches: 'No matches.',
     },

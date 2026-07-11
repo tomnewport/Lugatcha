@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import type { Word } from '@/db/types'
 import { speakUzbek } from '@/audio/audio'
 import { latinToCyrillic } from '@/exercises/transliterate'
+import { isCloseEnough } from '@/exercises/test'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
@@ -38,7 +39,18 @@ const answered = computed(() => picked.value !== null)
 
 const eq = (a: string, b: string) => a.toLowerCase() === b.toLowerCase()
 
-const isCorrect = computed(() => picked.value !== null && eq(gloss(picked.value), answer.value))
+/**
+ * 'right' exact meaning; 'close' a curated near-synonym we accept (e.g. "Hello"
+ * for the formal "Assalomu alaykum") while still showing the precise answer;
+ * 'wrong' otherwise. Both 'right' and 'close' pass the question.
+ */
+type Verdict = 'right' | 'close' | 'wrong'
+const verdict = computed<Verdict>(() => {
+  if (picked.value === null) return 'wrong'
+  if (eq(gloss(picked.value), answer.value)) return 'right'
+  if (isCloseEnough(props.word, picked.value)) return 'close'
+  return 'wrong'
+})
 
 onMounted(() => {
   if (props.mode === 'listen') speakUzbek(props.word.uzbek)
@@ -52,19 +64,24 @@ const filtered = computed(() => {
 function choose(option: Word) {
   if (answered.value) return
   picked.value = option
-  emit('answered', eq(gloss(option), answer.value))
+  const right = eq(gloss(option), answer.value)
+  emit('answered', right || isCloseEnough(props.word, option))
 }
 
-/** After answering, collapse to just the chosen answer and (if wrong) the right one. */
+/**
+ * After answering, collapse to just the chosen answer when it was exactly
+ * right; otherwise show it alongside the precise answer — including the
+ * close-enough case, where the note points to the exact meaning.
+ */
 const revealed = computed(() => {
   if (!answered.value) return filtered.value
-  return isCorrect.value ? [picked.value!] : [picked.value!, props.word]
+  return verdict.value === 'right' ? [picked.value!] : [picked.value!, props.word]
 })
 
 function optionClass(option: Word): string {
   if (!answered.value) return ''
   if (eq(gloss(option), answer.value)) return 'option--correct'
-  if (option.id === picked.value?.id) return 'option--wrong'
+  if (option.id === picked.value?.id) return verdict.value === 'close' ? 'option--close' : 'option--wrong'
   return 'option--muted'
 }
 </script>
@@ -91,8 +108,10 @@ function optionClass(option: Word): string {
       :aria-label="$t('exercise.choice.searchLabel')"
     />
 
-    <p v-if="answered" class="choice-q__result" :class="isCorrect ? 'is-right' : 'is-wrong'">
-      {{ isCorrect ? $t('exercise.choice.correct') : $t('exercise.choice.answer', { answer }) }}
+    <p v-if="answered" class="choice-q__result" :class="`is-${verdict}`">
+      <template v-if="verdict === 'right'">{{ $t('exercise.choice.correct') }}</template>
+      <template v-else-if="verdict === 'close'">{{ $t('exercise.choice.closeEnough', { answer }) }}</template>
+      <template v-else>{{ $t('exercise.choice.answer', { answer }) }}</template>
     </p>
 
     <div class="choice-q__options" role="listbox">
@@ -174,6 +193,10 @@ function optionClass(option: Word): string {
   color: var(--color-teal);
 }
 
+.choice-q__result.is-close {
+  color: var(--color-gold);
+}
+
 .choice-q__result.is-wrong {
   color: var(--color-terracotta);
 }
@@ -213,6 +236,12 @@ function optionClass(option: Word): string {
   border-color: var(--color-terracotta);
   background: #fbf1ec;
   color: var(--color-terracotta);
+}
+
+.option--close {
+  border-color: var(--color-gold);
+  background: #fbf7ec;
+  color: var(--color-gold);
 }
 
 .option--muted {

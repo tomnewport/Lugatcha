@@ -10,6 +10,15 @@ export interface Word {
   /** Russian usage notes; falls back to `usageNotes` when absent. */
   usageNotesRu?: string
   inflections?: string[]
+  /**
+   * Uzbek forms of other words whose meaning is close enough that picking them
+   * in a choice question should be accepted (with a note revealing this word's
+   * precise meaning) rather than marked wrong — e.g. the casual "Salom" for the
+   * formal "Assalomu alaykum". Matched on Uzbek form (see isCloseEnough), so it
+   * survives duplicate glosses across themes and base-language switches. The
+   * relation is treated as symmetric: either word may list the other.
+   */
+  accepts?: string[]
   theme: string // location id or 'core'
   /** 1 = essential, 2 = useful, 3 = nice-to-have. Intro serves level 1 first. */
   level?: 1 | 2 | 3

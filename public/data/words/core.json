@@ -5,6 +5,7 @@
     "cyrillic": "Салом",
     "english": "Hello",
     "russian": "Здравствуйте",
+    "accepts": ["Assalomu alaykum"],
     "theme": "core",
     "level": 1
   },

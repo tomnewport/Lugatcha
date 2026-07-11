@@ -11,6 +11,7 @@ import {
   buildTest,
   typingTarget,
   foldTyping,
+  isCloseEnough,
 } from '@/exercises/test'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import type { Word, WordProgress } from '@/db/types'
@@ -187,6 +188,33 @@ describe('buildOptionBank', () => {
     expect(bank).toContain(correct)
     expect(bank).not.toContain(twin)
     expect(bank.some((w) => w.uzbek === 'Kechirasiz' && w.id !== 'a')).toBe(false)
+  })
+})
+
+describe('isCloseEnough', () => {
+  const salom: Word = { id: 'core.hello', uzbek: 'Salom', english: 'Hello', accepts: ['Assalomu alaykum'], theme: 'core', level: 1 }
+  const formal: Word = { id: 'wc.assalomu', uzbek: 'Assalomu alaykum', english: 'Peace be upon you (formal hello)', accepts: ['Salom'], theme: 'welcome-center', level: 1 }
+  const goodbye: Word = { id: 'wc.goodbye', uzbek: 'Xayr', english: 'Goodbye', theme: 'welcome-center', level: 1 }
+
+  it('accepts a curated near-synonym in both directions', () => {
+    expect(isCloseEnough(formal, salom)).toBe(true)
+    expect(isCloseEnough(salom, formal)).toBe(true)
+  })
+
+  it('accepts even when only one side lists the other (symmetric)', () => {
+    const oneSided: Word = { ...salom, accepts: undefined }
+    expect(isCloseEnough(formal, oneSided)).toBe(true)
+    expect(isCloseEnough(oneSided, formal)).toBe(true)
+  })
+
+  it('matches on Uzbek form regardless of apostrophe or case variants', () => {
+    const variant: Word = { ...salom, uzbek: 'SALOM' }
+    expect(isCloseEnough(formal, variant)).toBe(true)
+  })
+
+  it('rejects an unrelated word and never accepts a word for itself', () => {
+    expect(isCloseEnough(formal, goodbye)).toBe(false)
+    expect(isCloseEnough(salom, { ...salom })).toBe(false)
   })
 })
 

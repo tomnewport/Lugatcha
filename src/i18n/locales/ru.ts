@@ -332,6 +332,7 @@ const ru: MessageSchema = {
       searchPlaceholder: 'Искать среди ответов…',
       searchLabel: 'Искать ответы',
       correct: '✓ Верно',
+      closeEnough: '✓ Почти верно — точное значение: «{answer}»',
       answer: '✗ Ответ: {answer}',
       noMatches: 'Ничего не найдено.',
     },
