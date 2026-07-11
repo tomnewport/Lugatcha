@@ -84,6 +84,14 @@ async function onComplete() {
 </script>
 
 <template>
+  <!--
+    Single stable root. App.vue's route <Transition> animates this view's root
+    element; if the root swapped between the exercise, article, and loading
+    branches, the transition would latch onto the swapped-in element and strand
+    it in its enter-from state (position: fixed, translated a full viewport
+    off-screen) — a blank page where nothing is tappable.
+  -->
+  <div class="place-screen">
   <!-- The exercise, once started -->
   <ExerciseLayout
     v-if="place && phase === 'exercise' && activeExercise"
@@ -122,6 +130,7 @@ async function onComplete() {
   <main v-else class="place">
     <p class="place-loading" aria-live="polite">{{ $t('common.loading') }}</p>
   </main>
+  </div>
 </template>
 
 <style scoped>

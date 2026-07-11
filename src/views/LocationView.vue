@@ -188,6 +188,14 @@ const chainStep = computed(() =>
 </script>
 
 <template>
+  <!--
+    Single stable root. App.vue's route <Transition> animates this view's root
+    element; if the root swapped between the exercise, induction, menu, and
+    loading branches, the transition would latch onto the swapped-in element
+    and strand it in its enter-from state (position: fixed, translated a full
+    viewport off-screen) — a blank page where nothing is tappable.
+  -->
+  <div class="location-screen">
   <!-- Active exercise -->
   <ExerciseLayout
     v-if="location && activeExercise"
@@ -222,6 +230,7 @@ const chainStep = computed(() =>
   <main v-else class="location-view">
     <p class="loading" aria-live="polite">{{ $t('common.loading') }}</p>
   </main>
+  </div>
 </template>
 
 <style scoped>
