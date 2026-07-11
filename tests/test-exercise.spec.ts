@@ -177,6 +177,17 @@ describe('buildOptionBank', () => {
     expect(bank).toContain(correct)
     expect(new Set(bank.map((w) => w.english)).size).toBe(bank.length) // no duplicate meanings
   })
+
+  it('excludes distractors sharing the answer’s Uzbek form', () => {
+    // Same Uzbek word, different gloss: an equally valid answer to a listen/
+    // read prompt, so it must not appear as a "wrong" option.
+    const correct: Word = { id: 'a', uzbek: 'Kechirasiz', english: 'Excuse me / sorry', theme: 'airport', level: 1 }
+    const twin: Word = { id: 'b', uzbek: 'Kechirasiz', english: 'Excuse me', theme: 'airport', level: 1 }
+    const bank = buildOptionBank(correct, [correct, twin, ...allWords])
+    expect(bank).toContain(correct)
+    expect(bank).not.toContain(twin)
+    expect(bank.some((w) => w.uzbek === 'Kechirasiz' && w.id !== 'a')).toBe(false)
+  })
 })
 
 describe('buildTest', () => {
