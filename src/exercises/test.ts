@@ -3,11 +3,14 @@ import { TEST_QUESTION_TYPES } from '@/db/types'
 import { shuffle } from './validate'
 import { isDue, overdueRatio } from './spacedRepetition'
 
-export const TEST_LENGTH = 5
+export const TEST_LENGTH = 20
 export const OPTION_BANK_SIZE = 40
-/** A test usually mixes new words with a couple of learned ones to re-test. */
-export const NEW_WORDS_PER_TEST = 3
-export const RETEST_WORDS_PER_TEST = TEST_LENGTH - NEW_WORDS_PER_TEST
+/**
+ * Not-yet-learned words drilled per session. Each is served every question type
+ * it hasn't passed yet, so a fresh word (four skills × four questions) can reach
+ * "learned" within a single sitting instead of needing one visit per skill.
+ */
+export const NEW_WORDS_PER_TEST = 4
 
 const APOSTROPHES = /[‘’ʻʼ`´']/g
 
@@ -59,19 +62,54 @@ export function pickQuestionType(
   return pool[Math.floor(rng() * pool.length)]
 }
 
+/** A single thing to drill: one word tested through one skill (question type). */
+export interface PracticePair {
+  word: Word
+  type: TestQuestionType
+}
+
+/** One word's queue of skills still to be served this session. */
+type SkillQueue = { word: Word; skills: TestQuestionType[] }
+
 /**
- * Selects the five words for a test: up to three "new" (not-yet-learned) words —
- * partially-learned ones first — plus up to two learned words to re-test, then
- * tops up from whichever pool has spares. With no learned words yet, it's all new.
+ * Round-robin one skill per word per pass, so consecutive questions land on
+ * different words instead of clustering every skill of a single word into a
+ * back-to-back run. Word order within a pass follows the queue order given.
  */
-export function selectTestWords(
+function interleavePairs(
+  queues: SkillQueue[],
+  add: (word: Word, type: TestQuestionType) => void,
+  full: () => boolean,
+): void {
+  for (let progressed = true; progressed && !full(); ) {
+    progressed = false
+    for (const q of queues) {
+      if (full()) return
+      const type = q.skills.shift()
+      if (type === undefined) continue
+      add(q.word, type)
+      progressed = true
+    }
+  }
+}
+
+/**
+ * Selects the (word, skill) pairs for a vocabulary session: a batch of
+ * not-yet-learned words — partially-learned ones first — each drilled through
+ * every question type it still needs, interleaved so no word runs back-to-back.
+ * The remaining questions re-test learned words for retention, one question
+ * each before any word gets a second. With no learned words yet, it's all new.
+ */
+export function selectTestPairs(
   candidates: Word[],
   learnedPool: Word[],
   progress: Map<string, WordProgress | undefined>,
   count = TEST_LENGTH,
-): Word[] {
+): PracticePair[] {
   const learned = (w: Word) => isWordLearned(progress.get(w.id))
   const partial = (w: Word) => isWordPartiallyLearned(progress.get(w.id))
+  const weakSkills = (w: Word) =>
+    TEST_QUESTION_TYPES.filter((t) => !passedTypes(progress.get(w.id)).includes(t))
 
   const newPool = [
     ...shuffle(candidates.filter(partial)),
@@ -79,21 +117,42 @@ export function selectTestWords(
   ]
   const retestPool = shuffle(learnedPool.filter(learned))
 
-  const result: Word[] = []
+  const pairs: PracticePair[] = []
   const used = new Set<string>()
-  const push = (w: Word) => {
-    if (result.length < count && !used.has(w.id)) {
-      used.add(w.id)
-      result.push(w)
-    }
+  const add = (word: Word, type: TestQuestionType) => {
+    const key = `${word.id}:${type}`
+    if (used.has(key) || pairs.length >= count) return
+    used.add(key)
+    pairs.push({ word, type })
   }
+  const full = () => pairs.length >= count
+  const weakQueue = (w: Word): SkillQueue => ({ word: w, skills: shuffle(weakSkills(w)) })
 
-  newPool.slice(0, NEW_WORDS_PER_TEST).forEach(push)
-  retestPool.slice(0, RETEST_WORDS_PER_TEST).forEach(push)
-  // Top up if either pool was short of its quota.
-  newPool.forEach(push)
-  retestPool.forEach(push)
-  return result
+  // The batch: near-finished words lead each pass so they reach "learned" sooner.
+  interleavePairs(
+    newPool
+      .slice(0, NEW_WORDS_PER_TEST)
+      .map(weakQueue)
+      .sort((a, b) => a.skills.length - b.skills.length),
+    add,
+    full,
+  )
+  // Retention: one question per learned word before any word gets a second.
+  interleavePairs(
+    retestPool.map((w) => ({ word: w, skills: [pickQuestionType(progress.get(w.id))] })),
+    add,
+    full,
+  )
+  // Still short: touch further new words (their skills spread one per pass,
+  // seeding partials the next session's batch will prioritise)…
+  interleavePairs(newPool.slice(NEW_WORDS_PER_TEST).map(weakQueue), add, full)
+  // …then deeper re-tests (the used-set skips each word's first question).
+  interleavePairs(
+    retestPool.map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })),
+    add,
+    full,
+  )
+  return pairs
 }
 
 /**
@@ -136,12 +195,6 @@ export interface TestQuestion {
   options: Word[]
 }
 
-/** A single thing to drill: one word tested through one skill (question type). */
-export interface PracticePair {
-  word: Word
-  type: TestQuestionType
-}
-
 /** Turns explicit (word, skill) pairs into questions, building option banks. */
 export function buildQuestionsFromPairs(pairs: PracticePair[], allWords: Word[]): TestQuestion[] {
   return pairs.map(({ word, type }) => ({
@@ -149,19 +202,6 @@ export function buildQuestionsFromPairs(pairs: PracticePair[], allWords: Word[])
     type,
     options: type === 'type' ? [] : buildOptionBank(word, allWords),
   }))
-}
-
-export function buildTest(
-  words: Word[],
-  progress: Map<string, WordProgress | undefined>,
-  allWords: Word[],
-  rng: () => number = Math.random,
-): TestQuestion[] {
-  const pairs = words.map((word) => ({
-    word,
-    type: pickQuestionType(progress.get(word.id), rng),
-  }))
-  return buildQuestionsFromPairs(pairs, allWords)
 }
 
 /** How many questions a Daily Practice session serves. */
@@ -224,25 +264,8 @@ export function selectDailyPracticePairs(
     used.add(key)
     pairs.push({ word, type })
   }
-
-  /**
-   * Round-robin one skill per word per pass, so consecutive questions land on
-   * different words instead of clustering every skill of a single word into a
-   * back-to-back run. Word order within a pass follows the queue order given.
-   */
-  type SkillQueue = { word: Word; skills: TestQuestionType[] }
-  const interleave = (queues: SkillQueue[]) => {
-    for (let progressed = true; progressed && pairs.length < count; ) {
-      progressed = false
-      for (const q of queues) {
-        if (pairs.length >= count) return
-        const type = q.skills.shift()
-        if (type === undefined) continue
-        add(q.word, type)
-        progressed = true
-      }
-    }
-  }
+  const interleave = (queues: SkillQueue[]) =>
+    interleavePairs(queues, add, () => pairs.length >= count)
 
   // Drain each batch word's weak skills first; near-finished words lead each
   // pass so they reach "learned" sooner.

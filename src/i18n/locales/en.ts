@@ -80,7 +80,7 @@ export default {
         'Each place — the café, the bank, the airport — teaches the words you need there. Tourist Information is your first area.',
       activitiesTitle: 'Every visit is one activity',
       activitiesBody:
-        'Areas serve a different activity each visit and rotate through them: New Words, Matching, Listening, Phrase Assembly, Roleplay, Storytime, and a Test.',
+        'Areas serve a different activity each visit and rotate through them: New Words, Matching, Listening, Phrase Assembly, Roleplay, Storytime, and Learn Vocabulary.',
       ringTitle: 'The rings track your progress',
       ringBody:
         'The gold ring fills as you meet words; the inner ring fills as you learn them. Learned words drop into the treasure chest.',
@@ -90,13 +90,14 @@ export default {
     },
     activitiesTitle: 'Complete your first area',
     activitiesIntro:
-      'Meet all the basics, finish each activity, and learn every word in the exam — identified and spelled — to open the city.',
+      'Meet all the basics and finish each activity once — including your first Learn Vocabulary session — to open the city.',
     progressCount: '{done} of {total} done',
     continue: 'Continue learning',
     nextUp: 'Next up: {activity}',
+    vocabProgress: '{learned} of {total} words learned — each visit locks in more',
     completeTitle: "That's your first area complete!",
     completeBody:
-      'You now know the essentials and how an area works — words met, practice done, exam passed. The rest of the city is open.',
+      'You now know the essentials and how an area works — words met, every activity tried. The rest of the city is open; keep visiting Learn Vocabulary anywhere to master the words.',
     toCity: 'Explore the city',
     resit: "Curious? Re-sit any activity any time — it won't lock the city again.",
   },
@@ -230,7 +231,7 @@ export default {
     dialogLabel: 'Learned words',
     title: '🏆 Your chest',
     empty:
-      'No words learned yet. Take a Test at any location — pass all three question types for a word and it lands here.',
+      'No words learned yet. Do Learn Vocabulary at any location — pass all four question types for a word and it lands here.',
     learnedBadge: 'Learned',
     reviewSummary: '{count} word ready to review | {count} words ready to review',
     review: {
@@ -257,7 +258,7 @@ export default {
       phraseAssembly: 'Phrase Assembly',
       roleplay: 'Roleplay',
       storytime: 'Storytime',
-      test: 'Test',
+      test: 'Learn Vocabulary',
     },
     descriptions: {
       intro: 'Meet five new words and hear them spoken',
@@ -266,7 +267,7 @@ export default {
       phraseAssembly: 'Build phrases from a word bank',
       roleplay: 'Hold a conversation, turn by turn',
       storytime: 'Read a short story and translate it',
-      test: 'Prove you know five words to learn them',
+      test: 'Answer 20 quick questions to lock words in',
     },
     flashcards: {
       pairSound: 'Listen, then pair each <strong>sound</strong> with its meaning.',
@@ -315,13 +316,13 @@ export default {
       nextSentence: 'Next sentence',
     },
     test: {
-      preparing: 'Preparing your test…',
+      preparing: 'Preparing your questions…',
       counter: 'Question {current} of {total}',
       learned: '{word} — learned!',
       learnedCount: '{count} learned',
-      finishTest: 'Finish test',
+      finishTest: 'Finish session',
       nextQuestion: 'Next question',
-      empty: 'Meet a few more words before testing here.',
+      empty: 'Meet a few more words before learning them here.',
     },
     choice: {
       listenChoose: 'Listen, then choose the meaning',

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useLiveQuery, db } from '@/db/useDb'
 import { WELCOME_CENTER_ID } from '@/db/progress'
@@ -16,22 +17,24 @@ import type { ExerciseType } from '@/db/types'
 /**
  * The city's front door. It inducts a new learner — explaining how an area of
  * the city works — and then walks them through completing one, activity by
- * activity (meeting the basics, the practice exercises, and the exam) before the
- * rest of the city opens. It stays available afterwards to re-sit any of them.
+ * activity (meeting the basics, the practice exercises, and a first Learn
+ * Vocabulary session) before the rest of the city opens. It stays available
+ * afterwards to re-sit any of them.
  */
 const emit = defineEmits<{ start: [type: ExerciseType] }>()
 
 const route = useRoute()
 const router = useRouter()
+const { t } = useI18n()
 
 const stats = useLiveQuery<LocationStats | null>(
   () => loadLocationStats(db, WELCOME_CENTER_ID),
   null,
 )
 
-// The Exam is only "done" once every word is learned — identified and spelled,
-// i.e. all three test question types passed. Tracked separately from the stats'
-// flashcard-based "known" count.
+// Words fully learned here (all four test question types passed) — shown on
+// the Learn Vocabulary step so repeat sittings visibly move the count, even
+// though only one finished session is required to graduate.
 const learned = useLiveQuery(
   async () => {
     const words = await db.words.where('theme').equals(WELCOME_CENTER_ID).toArray()
@@ -63,10 +66,6 @@ const allWordsSeen = computed(() => {
   return !!s && s.totalWords > 0 && s.seenWords >= s.totalWords
 })
 
-const allWordsLearned = computed(
-  () => learned.value.total > 0 && learned.value.learned >= learned.value.total,
-)
-
 const steps = computed<Step[]>(() => {
   const s = stats.value
   if (!s) return []
@@ -76,10 +75,8 @@ const steps = computed<Step[]>(() => {
     if (a.type === 'intro') {
       return { type: a.type, state: 'available', done: allWordsSeen.value }
     }
-    // The Exam is "done" only once every word is learned, not after one sitting.
-    if (a.type === 'test') {
-      return { type: a.type, state: a.state, done: allWordsLearned.value, hint: a.hint }
-    }
+    // Everything else — including Learn Vocabulary — counts after one sitting;
+    // mastering every word continues at the learner's pace once the city opens.
     return { type: a.type, state: a.state, done: a.done, hint: a.hint }
   })
 })
@@ -90,7 +87,7 @@ const complete = computed(() => steps.value.length > 0 && steps.value.every((s) 
 /**
  * The next valid part of the induction: the first launchable activity the
  * learner hasn't finished yet. Because the steps follow the activity order
- * (New Words → practice → Exam) and unlock as words are met, this walks the
+ * (New Words → practice → Learn Vocabulary) and unlock as words are met, this walks the
  * learner straight through onboarding without making them pick each activity.
  */
 const nextStep = computed<Step | null>(
@@ -129,8 +126,10 @@ function subtitle(step: Step): string {
   if (step.type === 'intro' && stats.value) {
     return `${exerciseDescription(step.type)} · ${stats.value.seenWords}/${stats.value.totalWords}`
   }
+  // Learn Vocabulary keeps paying off after the required first sitting, so its
+  // line shows the running learned count rather than the generic description.
   if (step.type === 'test') {
-    return `${exerciseDescription(step.type)} · ${learned.value.learned}/${learned.value.total}`
+    return t('welcome.vocabProgress', { learned: learned.value.learned, total: learned.value.total })
   }
   return exerciseDescription(step.type)
 }

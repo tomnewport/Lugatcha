@@ -11,9 +11,9 @@ const FAILS_TO_UNLEARN = 2
 export const WELCOME_CENTER_ID = 'welcome-center'
 
 /**
- * Practice activities the learner must finish at the Welcome Center before the
- * city opens. New Words and the Exam are tracked by word progress instead (every
- * word met, and every word learned), so they're not listed here.
+ * Activities the learner must finish at the Welcome Center before the city
+ * opens — each once, including one Learn Vocabulary session. New Words is
+ * tracked by word progress instead (every word met), so it's not listed here.
  */
 export const WELCOME_REQUIRED_EXERCISES: ExerciseType[] = [
   'flashcards',
@@ -21,14 +21,15 @@ export const WELCOME_REQUIRED_EXERCISES: ExerciseType[] = [
   'phrase-assembly',
   'roleplay',
   'storytime',
+  'test',
 ]
 
 /**
  * Whether the Welcome Center is done. To earn it the learner must:
- *  - meet every basic word (New Words),
- *  - finish every practice activity at least once, and
- *  - learn every word — identified and spelled, i.e. all four test question
- *    types passed (the Exam isn't "done" until then).
+ *  - meet every basic word (New Words), and
+ *  - finish every activity at least once, including one Learn Vocabulary
+ *    session. Learning every word to full mastery is NOT required — that
+ *    would take many sittings and continues after the city opens.
  * Returns false while the database is still unseeded, so the city stays locked.
  *
  * Once earned, completion latches permanently (`graduatedAt`): daily practice
@@ -46,12 +47,9 @@ export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> 
   if (words.length === 0) return false
   const progress = await db.wordProgress.bulkGet(words.map((w) => w.id))
   const allWordsSeen = progress.every((p) => Boolean(p?.seenAt))
-  const allWordsLearned = progress.every((p) =>
-    TEST_QUESTION_TYPES.every((t) => p?.testPassed?.includes(t)),
-  )
   const done = new Set(locationProgress?.completedExercises ?? [])
   const allActivitiesDone = WELCOME_REQUIRED_EXERCISES.every((e) => done.has(e))
-  const complete = allWordsSeen && allWordsLearned && allActivitiesDone
+  const complete = allWordsSeen && allActivitiesDone
 
   // Earned now — or provably earned before the latch existed: words beyond
   // the Welcome Center are only reachable with the city open, so any such
