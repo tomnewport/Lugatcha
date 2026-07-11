@@ -104,17 +104,25 @@ export function selectTestWords(
  * language keeps showing its distractors in that language after the learner
  * switches language. Deduplicated by the canonical English gloss so distinct
  * meanings show regardless of which language is displayed.
+ *
+ * Distractors that share the answer's Uzbek form are excluded: every choice
+ * prompt shows the Uzbek word (heard, or read in Latin/Cyrillic), so a word
+ * spelled the same is an equally valid meaning and would be marked wrong for a
+ * learner who picks it (e.g. "Kechirasiz" → both "Excuse me" and
+ * "Excuse me / sorry").
  */
 export function buildOptionBank(
   correct: Word,
   allWords: Word[],
   size = OPTION_BANK_SIZE,
 ): Word[] {
+  const answerForm = foldTyping(correct.uzbek)
   const seen = new Set<string>([correct.english])
   const bank: Word[] = [correct]
   for (const w of shuffle(allWords)) {
     if (bank.length >= size) break
     if (seen.has(w.english)) continue
+    if (foldTyping(w.uzbek) === answerForm) continue
     seen.add(w.english)
     bank.push(w)
   }
