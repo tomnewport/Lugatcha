@@ -125,9 +125,9 @@ const EXERCISE_COMPONENTS = {
 async function onComplete() {
   playChime()
   const finished = activeExercise.value
-  // Normally the Test is a recurring activity and never marked permanently done.
-  // The Welcome Center is the exception: finishing the exam (and every other
-  // activity) is required to complete it, so record the Test there too.
+  // Normally Learn Vocabulary is a recurring activity and never marked
+  // permanently done. The Welcome Center is the exception: one finished session
+  // (like every other activity) is required to graduate, so record it there.
   if (finished && (isWelcome.value || finished !== 'test')) {
     await progressStore.completeExercise(locationId.value, finished)
   }

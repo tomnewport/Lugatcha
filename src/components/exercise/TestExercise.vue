@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { db, useLiveQuery } from '@/db/useDb'
 import { loadTestData, loadPoolTestData } from '@/exercises/words'
-import { buildTest, selectTestWords, type TestQuestion } from '@/exercises/test'
+import { buildQuestionsFromPairs, selectTestPairs, type TestQuestion } from '@/exercises/test'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import type { Word } from '@/db/types'
@@ -54,8 +54,8 @@ onMounted(async () => {
   const { candidates, learnedPool, allWords, progress: prog } = props.pool
     ? await loadPoolTestData(props.pool)
     : await loadTestData(props.locationId ?? '')
-  const words = selectTestWords(candidates, learnedPool, prog)
-  questions.value = buildTest(words, prog, allWords)
+  const pairs = selectTestPairs(candidates, learnedPool, prog)
+  questions.value = buildQuestionsFromPairs(pairs, allWords)
   loading.value = false
 })
 

@@ -5,12 +5,14 @@ import {
   isWordLearned,
   isWordPartiallyLearned,
   pickQuestionType,
-  selectTestWords,
+  selectTestPairs,
   selectDailyPracticePairs,
   buildOptionBank,
-  buildTest,
+  buildQuestionsFromPairs,
   typingTarget,
   foldTyping,
+  TEST_LENGTH,
+  NEW_WORDS_PER_TEST,
 } from '@/exercises/test'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import type { Word, WordProgress } from '@/db/types'
@@ -54,34 +56,69 @@ describe('pickQuestionType', () => {
   })
 })
 
-describe('selectTestWords', () => {
-  const prog = new Map<string, WordProgress | undefined>()
-  const partial = word('partial')
-  const fresh1 = word('fresh1')
-  const fresh2 = word('fresh2')
-  const fresh3 = word('fresh3')
-  const learnedA = word('learnedA')
-  const learnedB = word('learnedB')
-  prog.set('partial', progress(['type']))
-  prog.set('learnedA', progress([...TEST_QUESTION_TYPES]))
-  prog.set('learnedB', progress([...TEST_QUESTION_TYPES]))
+describe('selectTestPairs', () => {
+  const freshWords = (n: number) => Array.from({ length: n }, (_, i) => word(`fresh${i}`))
 
-  it('mixes three new words with two learned re-tests', () => {
-    const candidates = [partial, fresh1, fresh2, fresh3, learnedA, learnedB]
-    const learnedPool = [learnedA, learnedB]
-    const picked = selectTestWords(candidates, learnedPool, prog)
-    expect(picked).toHaveLength(5)
-    const learnedPicked = picked.filter((w) => isWordLearned(prog.get(w.id)))
-    expect(learnedPicked).toHaveLength(2)
-    // Partially-learned word is always prioritised into the new slots.
-    expect(picked.map((w) => w.id)).toContain('partial')
+  it('serves a full session, drilling a batch of new words through every skill', () => {
+    const pairs = selectTestPairs(freshWords(13), [], new Map())
+    expect(pairs).toHaveLength(TEST_LENGTH)
+    const perWord = new Map<string, number>()
+    for (const p of pairs) perWord.set(p.word.id, (perWord.get(p.word.id) ?? 0) + 1)
+    // The batch words each get all four question types, so they can reach
+    // "learned" within this one sitting.
+    const fullyDrilled = [...perWord.values()].filter((n) => n === TEST_QUESTION_TYPES.length)
+    expect(fullyDrilled.length).toBe(NEW_WORDS_PER_TEST)
   })
 
-  it('fills entirely with new words when nothing is learned yet', () => {
-    const candidates = [fresh1, fresh2, fresh3, word('fresh4'), word('fresh5')]
-    const picked = selectTestWords(candidates, [], new Map())
-    expect(picked).toHaveLength(5)
-    expect(picked.every(() => !isWordLearned(undefined))).toBe(true)
+  it('asks only the skills a word has not passed yet', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    prog.set('partial', progress(['type', 'read-choice']))
+    const pairs = selectTestPairs([word('partial'), ...freshWords(2)], [], prog)
+    const partialPairs = pairs.filter((p) => p.word.id === 'partial')
+    expect(partialPairs).toHaveLength(2)
+    for (const p of partialPairs) {
+      expect(['read-cyrillic-choice', 'listen-choice']).toContain(p.type)
+    }
+  })
+
+  it('prioritises partially-learned words into the batch', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    prog.set('partial', progress(['type']))
+    const candidates = [...freshWords(NEW_WORDS_PER_TEST + 2), word('partial')]
+    const pairs = selectTestPairs(candidates, [], prog)
+    // All three of its remaining skills are served, so it finishes this sitting.
+    expect(pairs.filter((p) => p.word.id === 'partial')).toHaveLength(3)
+  })
+
+  it('fills remaining questions with learned-word re-tests, one question each first', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    const learnedWords = Array.from({ length: 8 }, (_, i) => word(`L${i}`))
+    for (const w of learnedWords) prog.set(w.id, progress([...TEST_QUESTION_TYPES]))
+    const pairs = selectTestPairs(freshWords(NEW_WORDS_PER_TEST), learnedWords, prog)
+    expect(pairs).toHaveLength(TEST_LENGTH)
+    const retests = pairs.filter((p) => isWordLearned(prog.get(p.word.id)))
+    expect(retests).toHaveLength(TEST_LENGTH - NEW_WORDS_PER_TEST * TEST_QUESTION_TYPES.length)
+    // Spread across distinct learned words rather than re-drilling one.
+    expect(new Set(retests.map((p) => p.word.id)).size).toBe(retests.length)
+  })
+
+  it('never repeats a (word, skill) pair, even across the re-test top-ups', () => {
+    const prog = new Map<string, WordProgress | undefined>()
+    prog.set('L', progress([...TEST_QUESTION_TYPES]))
+    const pairs = selectTestPairs(freshWords(2), [word('L')], prog)
+    const keys = pairs.map((p) => `${p.word.id}:${p.type}`)
+    expect(new Set(keys).size).toBe(keys.length)
+  })
+
+  it('interleaves the batch so no word runs back-to-back', () => {
+    const pairs = selectTestPairs(freshWords(NEW_WORDS_PER_TEST), [], new Map())
+    for (let i = 1; i < pairs.length; i++) {
+      expect(pairs[i].word.id).not.toBe(pairs[i - 1].word.id)
+    }
+  })
+
+  it('respects a custom question count', () => {
+    expect(selectTestPairs(freshWords(13), [], new Map(), 5)).toHaveLength(5)
   })
 })
 
@@ -190,16 +227,19 @@ describe('buildOptionBank', () => {
   })
 })
 
-describe('buildTest', () => {
+describe('buildQuestionsFromPairs', () => {
   it('builds option banks for choice questions and none for typing', () => {
     const allWords = Array.from({ length: 60 }, (_, i) => word(`w${i}`, `m${i}`))
-    const words = [word('w0', 'm0')]
-    const prog = new Map<string, WordProgress | undefined>([
-      ['w0', progress(['listen-choice', 'read-choice', 'read-cyrillic-choice'])], // forces 'type'
-    ])
-    const [q] = buildTest(words, prog, allWords)
-    expect(q.type).toBe('type')
-    expect(q.options).toEqual([])
+    const [typed, choice] = buildQuestionsFromPairs(
+      [
+        { word: allWords[0], type: 'type' },
+        { word: allWords[1], type: 'read-choice' },
+      ],
+      allWords,
+    )
+    expect(typed.options).toEqual([])
+    expect(choice.options).toHaveLength(40)
+    expect(choice.options).toContain(allWords[1])
   })
 })
 
