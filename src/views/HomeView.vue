@@ -282,6 +282,16 @@ onMounted(async () => {
         <span class="practice-btn__icon" aria-hidden="true">🎯</span>
         <span class="practice-btn__label">{{ $t('home.practice') }}</span>
       </RouterLink>
+      <!-- Still in Tourist Information onboarding: jump straight to the next activity. -->
+      <RouterLink
+        v-else-if="statsReady"
+        class="practice-btn practice-btn--continue"
+        :to="`/location/${WELCOME_ID}?start=1`"
+        :aria-label="$t('home.continueLessonAria')"
+      >
+        <span class="practice-btn__icon" aria-hidden="true">🧭</span>
+        <span class="practice-btn__label">{{ $t('home.continue') }}</span>
+      </RouterLink>
 
       <p v-if="welcomeComplete && streak > 0" class="streak-line" :title="$t('home.streakDays', { count: streak })">
         <span class="streak-line__chips" aria-hidden="true">{{ streakSymbols }}</span>

@@ -33,6 +33,7 @@ export default {
     practiceAria: 'Daily vocabulary practice',
     continue: 'Continue learning',
     continueAria: 'Continue learning — pick your next place',
+    continueLessonAria: 'Continue learning — your next activity',
     streakDays: '{count}-day streak',
   },
 
@@ -91,6 +92,8 @@ export default {
     activitiesIntro:
       'Meet all the basics, finish each activity, and learn every word in the exam — identified and spelled — to open the city.',
     progressCount: '{done} of {total} done',
+    continue: 'Continue learning',
+    nextUp: 'Next up: {activity}',
     completeTitle: "That's your first area complete!",
     completeBody:
       'You now know the essentials and how an area works — words met, practice done, exam passed. The rest of the city is open.',

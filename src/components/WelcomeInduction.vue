@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useLiveQuery, db } from '@/db/useDb'
 import { WELCOME_CENTER_ID } from '@/db/progress'
 import { isWordLearned } from '@/exercises/test'
@@ -21,6 +21,7 @@ import type { ExerciseType } from '@/db/types'
  */
 const emit = defineEmits<{ start: [type: ExerciseType] }>()
 
+const route = useRoute()
 const router = useRouter()
 
 const stats = useLiveQuery<LocationStats | null>(
@@ -86,9 +87,39 @@ const steps = computed<Step[]>(() => {
 const doneCount = computed(() => steps.value.filter((s) => s.done).length)
 const complete = computed(() => steps.value.length > 0 && steps.value.every((s) => s.done))
 
+/**
+ * The next valid part of the induction: the first launchable activity the
+ * learner hasn't finished yet. Because the steps follow the activity order
+ * (New Words → practice → Exam) and unlock as words are met, this walks the
+ * learner straight through onboarding without making them pick each activity.
+ */
+const nextStep = computed<Step | null>(
+  () => steps.value.find((s) => canLaunch(s) && !s.done) ?? null,
+)
+
 function canLaunch(step: Step): boolean {
   return step.state === 'available' || step.done
 }
+
+/**
+ * Arriving via the home "Continue learning" button (`?start=1`) drops the
+ * learner straight into the next activity rather than the checklist. Consumed
+ * once — the flag is cleared from the URL so returning here after finishing an
+ * activity shows the induction again, not another auto-launch. Waits for the
+ * live stats to resolve so `nextStep` is real before firing.
+ */
+const autoStart = ref(route.query.start === '1')
+watch(
+  nextStep,
+  (step) => {
+    if (autoStart.value && step) {
+      autoStart.value = false
+      router.replace({ query: {} })
+      emit('start', step.type)
+    }
+  },
+  { immediate: true },
+)
 
 function pick(step: Step) {
   if (canLaunch(step)) emit('start', step.type)
@@ -134,6 +165,22 @@ function goToCity() {
           }}</span>
         </div>
         <p class="checklist__intro">{{ $t('welcome.activitiesIntro') }}</p>
+
+        <button
+          v-if="nextStep && !complete"
+          class="continue"
+          type="button"
+          @click="pick(nextStep)"
+        >
+          <span class="continue__icon" aria-hidden="true">{{ EMOJI[nextStep.type] }}</span>
+          <span class="continue__text">
+            <span class="continue__label">{{ $t('welcome.continue') }}</span>
+            <span class="continue__next">{{
+              $t('welcome.nextUp', { activity: exerciseLabel(nextStep.type) })
+            }}</span>
+          </span>
+          <span class="continue__go" aria-hidden="true">›</span>
+        </button>
 
         <ul class="steps">
           <li v-for="step in steps" :key="step.type">
@@ -327,6 +374,61 @@ function goToCity() {
   line-height: 1.5;
   color: var(--color-text-muted);
   margin: 0 0 0.2rem;
+}
+
+/* Primary "Continue learning" call to action — jumps straight to the next
+   valid activity so the learner doesn't have to pick each one by hand. */
+.continue {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  border: 1.5px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: #fff;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.12s ease;
+}
+
+.continue:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.continue__icon {
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.continue__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.continue__label {
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.continue__next {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  line-height: 1.35;
+}
+
+.continue__go {
+  flex-shrink: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .steps {
