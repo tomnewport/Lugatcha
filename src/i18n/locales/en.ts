@@ -144,6 +144,14 @@ export default {
     nothingNew: 'Nothing new to do here yet — meet more words at other locations first.',
   },
 
+  locationMenu: {
+    wordsLearned: '{known} / {total} words learned',
+    suggested: 'Suggested next',
+    choose: 'Choose an activity',
+    orChoose: 'Or choose another activity',
+    chainStep: '{step} of {total}',
+  },
+
   school: {
     title: 'Language School',
     subtitle: 'Til maktabi',
@@ -287,13 +295,10 @@ export default {
     roleplay: {
       loading: 'Loading scenario…',
       empty: "No roleplay for this location yet — it'll arrive in a content update.",
-      chooseHow: 'Choose how it goes:',
-      startHere: 'Start here',
-      twist: 'Twist',
       say: 'Say:',
       sayIt: 'Say it',
       done: 'Suhbat tugadi — conversation complete! 🎉',
-      tryAnother: 'Try another variant',
+      tryAnother: 'Try another scenario',
     },
     storytime: {
       loading: 'Loading story…',

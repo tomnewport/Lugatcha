@@ -5,7 +5,7 @@ import { loadLocations } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
 import { isWordLearned } from '@/exercises/test'
 import { WELCOME_CENTER_ID, WELCOME_REQUIRED_EXERCISES } from '@/db/progress'
-import type { Location, LocationProgress, ExerciseType } from '@/db/types'
+import type { Location, LocationProgress } from '@/db/types'
 import LocationTile from '@/components/LocationTile.vue'
 import SchoolTile from '@/components/SchoolTile.vue'
 import TravelTile from '@/components/TravelTile.vue'
@@ -15,7 +15,7 @@ import AppLogo from '@/components/AppLogo.vue'
 import AppLogotype from '@/components/AppLogotype.vue'
 import { useAudioReady } from '@/audio/offline'
 import { currentStreak, streakChips } from '@/streak'
-import { selectAutoExercise, type LocationStats } from '@/exercises/potluck'
+import { selectAutoExercise, EXERCISE_EMOJI, type LocationStats } from '@/exercises/potluck'
 import { MAP_MARKERS, markerStyle, markerCentre } from '@/map/cityMap'
 import homeCityMap from '@/assets/home-city-map.webp'
 
@@ -157,17 +157,6 @@ function seededShuffle<T>(items: T[], seed: number): T[] {
   return copy
 }
 
-/** Emoji representing each exercise type shown on city-map chips. */
-const EXERCISE_EMOJIS: Record<ExerciseType, string> = {
-  intro: '📝',
-  flashcards: '🃏',
-  listening: '🎧',
-  'phrase-assembly': '🔤',
-  roleplay: '🤝',
-  storytime: '📖',
-  test: '🎯',
-}
-
 /** Returns the emoji for the exercise LocationView would actually serve next. */
 function nextExerciseEmoji(locationId: string): string {
   const progress = progressMap.value.get(locationId)
@@ -184,7 +173,7 @@ function nextExerciseEmoji(locationId: string): string {
     visits: progress?.visits ?? 0,
   }
   const next = selectAutoExercise(stats)
-  return next ? EXERCISE_EMOJIS[next] : '✨'
+  return next ? EXERCISE_EMOJI[next] : '✨'
 }
 
 /**

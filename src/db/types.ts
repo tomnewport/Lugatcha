@@ -106,6 +106,18 @@ export interface WordProgress {
   review?: ReviewSchedule
 }
 
+/**
+ * Which stories the learner has already been shown, so Storytime doesn't keep
+ * serving the same one (issue: "getting a lot of the same story"). A story is
+ * only reshown once every other story for its location has been seen; `shownAt`
+ * lets the picker fall back to the least-recently-shown when they run out.
+ */
+export interface StoryProgress {
+  storyId: string
+  /** Unix timestamp the story was last served. */
+  shownAt: number
+}
+
 export interface LocationProgress {
   locationId: string
   completedExercises: ExerciseType[]

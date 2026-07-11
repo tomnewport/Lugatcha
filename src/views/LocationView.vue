@@ -5,7 +5,6 @@ import { getLocation } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
 import type { Location, ExerciseType } from '@/db/types'
 import {
-  buildPotluck,
   loadLocationStats,
   selectAutoExercise,
   type LocationStats,
@@ -15,6 +14,7 @@ import { useContentLang } from '@/i18n/content'
 import { playChime } from '@/audio/audio'
 import { WELCOME_CENTER_ID } from '@/db/progress'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
+import LocationMenu from '@/components/LocationMenu.vue'
 import WelcomeInduction from '@/components/WelcomeInduction.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
 import FlashcardsExercise from '@/components/exercise/FlashcardsExercise.vue'
@@ -35,8 +35,27 @@ const location = ref<Location | null>(null)
 const activeExercise = ref<ExerciseType | null>(null)
 const sessionKey = ref(0)
 
+/**
+ * Continue Learning launches a location with `?chain=N`, asking for N activities
+ * back-to-back before returning to the city. `chainTotal` is that N (for the
+ * "2 of 3" header); `chainRemaining` counts down as each activity finishes.
+ * When zero, the location is a menu the learner picks from instead.
+ */
+const chainTotal = ref(0)
+const chainRemaining = ref(0)
+
 const locationId = computed(() => route.params.id as string)
 const isWelcome = computed(() => locationId.value === WELCOME_CENTER_ID)
+const chaining = computed(() => chainRemaining.value > 0)
+
+// Parse the chain length synchronously in setup so it's known before the stats
+// watch first fires — otherwise a fast liveQuery could resolve before an async
+// onMounted set it, and the chain would never auto-launch.
+const initialChain = parseInt((route.query.chain as string) ?? '', 10)
+if (Number.isFinite(initialChain) && initialChain > 0) {
+  chainTotal.value = initialChain
+  chainRemaining.value = initialChain
+}
 
 const stats = useLiveQuery<LocationStats | null>(
   () => loadLocationStats(db, route.params.id as string),
@@ -65,25 +84,29 @@ onMounted(async () => {
   }
 })
 
-const potluck = computed(() => (stats.value ? buildPotluck(stats.value) : []))
+/** The activity the location menu recommends next (its highlighted card). */
+const suggested = computed(() => (stats.value ? selectAutoExercise(stats.value) : null))
 
-// Auto-launch the visit's exercise once stats load (only if no exercise is running).
-// The Welcome Center is the city's onboarding gate: instead of auto-launching, it
-// opens on its induction screen, which then starts the basic-vocabulary intro.
+// A chained visit (Continue Learning) auto-launches each activity in turn; the
+// Welcome Center runs its own induction; every other visit is a menu the learner
+// chooses from, so nothing auto-launches there.
 watch(
   stats,
   (newStats) => {
-    if (activeExercise.value || !newStats || isWelcome.value) return
+    if (activeExercise.value || !newStats || isWelcome.value || !chaining.value) return
     const next = selectAutoExercise(newStats)
     if (next) {
       sessionKey.value++
       activeExercise.value = next
+    } else {
+      // Nothing left to serve — drop the chain and fall through to the menu.
+      chainRemaining.value = 0
     }
   },
   { immediate: true },
 )
 
-/** The Welcome Center induction launches whichever activity the learner picks. */
+/** The Welcome Center induction (and the location menu) launch a chosen activity. */
 function startWelcomeActivity(type: ExerciseType) {
   sessionKey.value++
   activeExercise.value = type
@@ -118,7 +141,28 @@ async function onComplete() {
     activeExercise.value = null
     return
   }
-  router.push('/')
+
+  // A Continue Learning chain runs the next few activities back-to-back.
+  if (chaining.value) {
+    chainRemaining.value--
+    if (chainRemaining.value > 0) {
+      // Read fresh stats — the just-recorded visit advances the rotation — and
+      // launch the next activity in the chain.
+      const fresh = await loadLocationStats(db, locationId.value)
+      const next = selectAutoExercise(fresh)
+      if (next) {
+        sessionKey.value++
+        activeExercise.value = next
+        return
+      }
+    }
+    router.push('/')
+    return
+  }
+
+  // A single activity chosen from the location menu: return to the menu so the
+  // learner sees updated progress and can pick what to do next.
+  activeExercise.value = null
 }
 
 function exitExercise() {
@@ -127,8 +171,20 @@ function exitExercise() {
     activeExercise.value = null
     return
   }
-  router.push('/')
+  // Bailing out of a chain abandons the rest of it and returns to the city.
+  if (chaining.value) {
+    chainRemaining.value = 0
+    router.push('/')
+    return
+  }
+  // Otherwise drop back to the location menu.
+  activeExercise.value = null
 }
+
+/** 1-based position of the current activity within a Continue Learning chain. */
+const chainStep = computed(() =>
+  chainTotal.value > 0 ? chainTotal.value - chainRemaining.value + 1 : 0,
+)
 </script>
 
 <template>
@@ -137,6 +193,8 @@ function exitExercise() {
     v-if="location && activeExercise"
     :exercise="activeExercise"
     :location-name="name(location.name)"
+    :chain-step="chainStep"
+    :chain-total="chainTotal"
     @exit="exitExercise"
   >
     <component
@@ -150,27 +208,17 @@ function exitExercise() {
   <!-- Welcome Center induction: explains the city, then guides through each activity -->
   <WelcomeInduction v-else-if="location && isWelcome" @start="startWelcomeActivity" />
 
-  <!-- Fallback: nothing available at this location -->
-  <main v-else-if="location && stats && potluck.every(a => a.state === 'locked')" class="location-view">
-    <button class="back-btn" :aria-label="$t('common.backToCity')" type="button" @click="router.push('/')">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
-      </svg>
-      {{ $t('common.city') }}
-    </button>
-    <div class="location-body">
-      <h1 class="location-name">{{ name(location.name) }}</h1>
-      <p class="location-name-uz" lang="uz">{{ location.name.uz }}</p>
-      <p class="nothing-here">
-        {{ $t('location.nothingNew') }}
-      </p>
-      <p class="nothing-hint" v-if="potluck.find(a => a.state === 'locked' && a.hint)">
-        {{ potluck.find(a => a.state === 'locked' && a.hint)?.hint }}
-      </p>
-    </div>
-  </main>
+  <!-- Location menu: opened from the city map, the learner picks what to do -->
+  <LocationMenu
+    v-else-if="location && stats && !chaining"
+    :location="location"
+    :stats="stats"
+    :suggested="suggested"
+    @select="startWelcomeActivity"
+    @back="router.push('/')"
+  />
 
-  <!-- Loading -->
+  <!-- Loading (also the brief gap between chained activities) -->
   <main v-else class="location-view">
     <p class="loading" aria-live="polite">{{ $t('common.loading') }}</p>
   </main>
@@ -184,66 +232,6 @@ function exitExercise() {
   padding: 1rem 1.25rem 2rem;
   background: var(--color-bg);
   gap: 1.25rem;
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.75rem 0.4rem 0.5rem;
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 0.9rem;
-  box-shadow: var(--shadow-sm);
-  align-self: flex-start;
-}
-
-.back-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.back-btn:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.location-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  width: 100%;
-  max-width: 480px;
-  margin: 2rem auto 0;
-  text-align: center;
-}
-
-.location-name {
-  font-size: clamp(1.7rem, 6vw, 2.4rem);
-  font-weight: 800;
-  color: var(--color-primary);
-  margin: 0;
-}
-
-.location-name-uz {
-  font-size: 1.05rem;
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
-.nothing-here {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin: 0.75rem 0 0;
-}
-
-.nothing-hint {
-  font-size: 0.82rem;
-  color: var(--color-terracotta);
-  font-style: italic;
-  margin: 0;
 }
 
 .loading {

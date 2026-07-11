@@ -231,6 +231,22 @@ export async function recordLocationVisit(
   })
 }
 
+/** Records that a story was just served, timestamped so the picker can rotate. */
+export async function recordStoryShown(db: LugatchaDB, storyId: string): Promise<void> {
+  await db.storyProgress.put({ storyId, shownAt: Date.now() })
+}
+
+/** When each of the given stories was last shown (absent = never shown). */
+export async function loadStoryShownMap(
+  db: LugatchaDB,
+  storyIds: string[],
+): Promise<Map<string, number>> {
+  const rows = await db.storyProgress.bulkGet(storyIds)
+  const map = new Map<string, number>()
+  for (const row of rows) if (row) map.set(row.storyId, row.shownAt)
+  return map
+}
+
 /** Records a passed lesson exercise. Idempotent. */
 export async function recordLessonExercise(
   db: LugatchaDB,
@@ -268,5 +284,6 @@ export async function resetAllProgress(db: LugatchaDB): Promise<void> {
     db.wordProgress.clear(),
     db.locationProgress.clear(),
     db.lessonProgress.clear(),
+    db.storyProgress.clear(),
   ])
 }

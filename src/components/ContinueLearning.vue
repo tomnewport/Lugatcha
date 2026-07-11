@@ -15,6 +15,8 @@ import LocationCrop from '@/components/LocationCrop.vue'
 /** How many Continue Learning sessions have been launched — drives the review rotation. */
 const CONTINUE_COUNT_KEY = 'lugatcha.continueCount'
 const LAST_TRIED_KEY = 'lugatcha.lastTriedLocation'
+/** Continue Learning runs a short streak of activities at the chosen place. */
+const CONTINUE_CHAIN = 3
 
 const emit = defineEmits<{ close: [] }>()
 
@@ -73,7 +75,8 @@ function goLocation(id: string) {
   } catch {
     // private mode
   }
-  router.push(`/location/${id}`)
+  // Chain the next few activities together rather than serving just one.
+  router.push(`/location/${id}?chain=${CONTINUE_CHAIN}`)
 }
 </script>
 

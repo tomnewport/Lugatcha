@@ -14,22 +14,47 @@ const emit = defineEmits<{ complete: [] }>()
 const { name, pick } = useContentLang()
 
 const roleplay = ref<Roleplay | null>(null)
-const stage = ref<'select' | 'play' | 'done'>('select')
+const stage = ref<'play' | 'done'>('play')
 const turns = ref<RoleplayTurn[]>([])
 const currentIndex = ref(0)
 const npcSpeaking = ref(false)
 const loading = ref(true)
 const logEl = ref<HTMLElement | null>(null)
 
+/** All scenarios at this location, kept so "try another" can reshuffle. */
+const scenarios = ref<Roleplay[]>([])
+
 /** Bumped on restart/unmount so stale async NPC turns stop advancing. */
 let runId = 0
 
 onMounted(async () => {
-  // A location can have several scenarios — serve a random one each session
-  const scenarios = await db.roleplay.where('theme').equals(props.locationId).toArray()
-  roleplay.value = shuffle(scenarios)[0] ?? null
+  // The learner no longer picks how it goes. The very first roleplay at a
+  // location runs the smooth "start here" path of the first scenario so it's a
+  // gentle introduction; every visit after that picks a scenario and a path at
+  // random for variety.
+  const [found, progress] = await Promise.all([
+    db.roleplay.where('theme').equals(props.locationId).toArray(),
+    db.locationProgress.get(props.locationId),
+  ])
+  scenarios.value = found
   loading.value = false
+  if (found.length === 0) return
+  const firstTime = !(progress?.completedExercises ?? []).includes('roleplay')
+  if (firstTime) {
+    roleplay.value = found[0]
+    startVariant(found[0].variants[0])
+  } else {
+    playRandom()
+  }
 })
+
+/** Pick a random scenario and one of its paths, then play it through. */
+function playRandom() {
+  const scenario = shuffle(scenarios.value)[0]
+  if (!scenario) return
+  roleplay.value = scenario
+  startVariant(shuffle(scenario.variants)[0])
+}
 
 onUnmounted(() => {
   runId++
@@ -98,7 +123,7 @@ async function onUserResult(result: AssemblyResult) {
 function restart() {
   runId++
   stopSpeaking()
-  stage.value = 'select'
+  playRandom()
 }
 </script>
 
@@ -113,29 +138,14 @@ function restart() {
       <button class="btn btn--primary" type="button" @click="emit('complete')">{{ $t('common.continue') }}</button>
     </div>
 
-    <!-- Variant selector -->
-    <template v-else-if="stage === 'select'">
+    <!-- Conversation -->
+    <template v-else>
       <div class="scenario-card">
         <h2 class="scenario-card__title">{{ name(roleplay.title) }}</h2>
         <p class="scenario-card__title-uz" lang="uz">{{ roleplay.title.uz }}</p>
         <p class="scenario-card__desc">{{ pick(roleplay.scenario, roleplay.scenarioRu) }}</p>
       </div>
 
-      <p class="roleplay__pick-label">{{ $t('exercise.roleplay.chooseHow') }}</p>
-      <ul class="variant-list">
-        <li v-for="(variant, i) in roleplay.variants" :key="variant.id">
-          <button class="variant-btn" type="button" @click="startVariant(variant)">
-            <span class="variant-btn__tag" :class="{ 'variant-btn__tag--base': i === 0 }">
-              {{ i === 0 ? $t('exercise.roleplay.startHere') : $t('exercise.roleplay.twist') }}
-            </span>
-            <span class="variant-btn__desc">{{ pick(variant.description, variant.descriptionRu) }}</span>
-          </button>
-        </li>
-      </ul>
-    </template>
-
-    <!-- Conversation -->
-    <template v-else>
       <div ref="logEl" class="chat-log" aria-live="polite">
         <div
           v-for="(turn, i) in visibleTurns"
@@ -232,65 +242,6 @@ function restart() {
   font-size: 0.92rem;
   color: var(--color-text);
   margin: 0;
-}
-
-.roleplay__pick-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
-.variant-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.variant-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  width: 100%;
-  padding: 0.75rem 0.9rem;
-  background: var(--color-surface);
-  border: 1.5px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  text-align: left;
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease;
-}
-
-.variant-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-.variant-btn__tag {
-  flex-shrink: 0;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.2rem 0.5rem;
-  border-radius: 999px;
-  background: var(--color-bg);
-  color: var(--color-text-muted);
-  border: 1px solid var(--color-border);
-}
-
-.variant-btn__tag--base {
-  background: var(--color-gold);
-  color: #fff;
-  border-color: var(--color-gold);
-}
-
-.variant-btn__desc {
-  font-size: 0.88rem;
-  color: var(--color-text);
 }
 
 .chat-log {
