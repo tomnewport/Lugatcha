@@ -33,6 +33,7 @@ export default {
     practiceAria: 'Daily vocabulary practice',
     continue: 'Continue learning',
     continueAria: 'Continue learning — pick your next place',
+    continueLessonAria: 'Continue learning — your next activity',
     streakDays: '{count}-day streak',
   },
 

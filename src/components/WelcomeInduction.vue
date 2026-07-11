@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useLiveQuery, db } from '@/db/useDb'
 import { WELCOME_CENTER_ID } from '@/db/progress'
 import { isWordLearned } from '@/exercises/test'
@@ -21,6 +21,7 @@ import type { ExerciseType } from '@/db/types'
  */
 const emit = defineEmits<{ start: [type: ExerciseType] }>()
 
+const route = useRoute()
 const router = useRouter()
 
 const stats = useLiveQuery<LocationStats | null>(
@@ -99,6 +100,26 @@ const nextStep = computed<Step | null>(
 function canLaunch(step: Step): boolean {
   return step.state === 'available' || step.done
 }
+
+/**
+ * Arriving via the home "Continue learning" button (`?start=1`) drops the
+ * learner straight into the next activity rather than the checklist. Consumed
+ * once — the flag is cleared from the URL so returning here after finishing an
+ * activity shows the induction again, not another auto-launch. Waits for the
+ * live stats to resolve so `nextStep` is real before firing.
+ */
+const autoStart = ref(route.query.start === '1')
+watch(
+  nextStep,
+  (step) => {
+    if (autoStart.value && step) {
+      autoStart.value = false
+      router.replace({ query: {} })
+      emit('start', step.type)
+    }
+  },
+  { immediate: true },
+)
 
 function pick(step: Step) {
   if (canLaunch(step)) emit('start', step.type)

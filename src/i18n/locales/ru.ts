@@ -34,6 +34,7 @@ const ru: MessageSchema = {
     practiceAria: 'Ежедневная практика слов',
     continue: 'Продолжить обучение',
     continueAria: 'Продолжить обучение — выберите следующее место',
+    continueLessonAria: 'Продолжить обучение — следующее задание',
     streakDays: 'Серия: {count} дн.',
   },
 
