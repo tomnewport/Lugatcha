@@ -6,6 +6,8 @@ import {
   recordMatchResult,
   completeExercise,
   recordLocationVisit,
+  recordRoleplayShown,
+  loadRoleplayShownMap,
   resetAllProgress,
 } from '@/db/progress'
 import { isWordKnown } from '@/db/useDb'
@@ -155,13 +157,24 @@ describe('recordLocationVisit', () => {
   })
 })
 
+describe('roleplay shown tracking', () => {
+  it('records when a variant was shown and reads it back', async () => {
+    expect((await loadRoleplayShownMap(db, ['base'])).has('base')).toBe(false)
+    await recordRoleplayShown(db, 'base')
+    const map = await loadRoleplayShownMap(db, ['base'])
+    expect(map.get('base')).toBeTypeOf('number')
+  })
+})
+
 describe('resetAllProgress', () => {
   it('clears progress but keeps content', async () => {
     await markWordsSeen(db, ['core.hello'])
     await completeExercise(db, 'airport', 'intro')
+    await recordRoleplayShown(db, 'base')
     await resetAllProgress(db)
     expect(await db.wordProgress.count()).toBe(0)
     expect(await db.locationProgress.count()).toBe(0)
+    expect(await db.roleplayProgress.count()).toBe(0)
     expect(await db.words.count()).toBe(2)
   })
 })

@@ -7,6 +7,7 @@ import type {
   LocationProgress,
   LessonProgress,
   StoryProgress,
+  RoleplayProgress,
   PhraseProgress,
 } from './types'
 import { seedDatabase } from './seed'
@@ -19,6 +20,7 @@ export class LugatchaDB extends Dexie {
   locationProgress!: Table<LocationProgress, string>
   lessonProgress!: Table<LessonProgress, string>
   storyProgress!: Table<StoryProgress, string>
+  roleplayProgress!: Table<RoleplayProgress, string>
   phraseProgress!: Table<PhraseProgress, string>
 
   constructor() {
@@ -49,6 +51,11 @@ export class LugatchaDB extends Dexie {
     // v6: phrase spaced-repetition state — Daily Practice drills phrases too
     this.version(6).stores({
       phraseProgress: 'phraseKey',
+    })
+    // v7: track which roleplay variants have been shown so Continue Learning
+    // serves each once instead of re-rolling the same scenario at random
+    this.version(7).stores({
+      roleplayProgress: 'variantId',
     })
     // Fires only on first-ever open of this DB in the browser
     this.on('populate', () => seedDatabase(this))

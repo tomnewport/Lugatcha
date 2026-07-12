@@ -267,6 +267,22 @@ export async function loadStoryShownMap(
   return map
 }
 
+/** Records that a roleplay variant was just served, timestamped for rotation. */
+export async function recordRoleplayShown(db: LugatchaDB, variantId: string): Promise<void> {
+  await db.roleplayProgress.put({ variantId, shownAt: Date.now() })
+}
+
+/** When each of the given roleplay variants was last shown (absent = never shown). */
+export async function loadRoleplayShownMap(
+  db: LugatchaDB,
+  variantIds: string[],
+): Promise<Map<string, number>> {
+  const rows = await db.roleplayProgress.bulkGet(variantIds)
+  const map = new Map<string, number>()
+  for (const row of rows) if (row) map.set(row.variantId, row.shownAt)
+  return map
+}
+
 /** Records a passed lesson exercise. Idempotent. */
 export async function recordLessonExercise(
   db: LugatchaDB,
@@ -305,6 +321,7 @@ export async function resetAllProgress(db: LugatchaDB): Promise<void> {
     db.locationProgress.clear(),
     db.lessonProgress.clear(),
     db.storyProgress.clear(),
+    db.roleplayProgress.clear(),
     db.phraseProgress.clear(),
   ])
 }

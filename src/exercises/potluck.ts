@@ -1,6 +1,7 @@
 import type { ExerciseType, LocationProgress } from '@/db/types'
 import type { LugatchaDB } from '@/db/LugatchaDB'
 import { isWordKnown } from '@/db/useDb'
+import { loadStoryShownMap, loadRoleplayShownMap } from '@/db/progress'
 import { i18n } from '@/i18n'
 
 export const ACTIVITY_ORDER: ExerciseType[] = [
@@ -64,6 +65,14 @@ export interface LocationStats {
   completed: ExerciseType[]
   /** Exercises finished here across repeats; the auto-launch rotation cursor. */
   visits: number
+  /**
+   * Stories here the learner has never been shown — 0 means storytime is
+   * exhausted. Only the Continue Learning chain reads it (see selectAutoExercise
+   * `chain`); lightweight callers that never chain may leave it undefined.
+   */
+  unseenStories?: number
+  /** Roleplay variants here never shown — 0 means roleplay is exhausted. */
+  unseenRoleplayVariants?: number
 }
 
 export interface Activity {
@@ -114,9 +123,11 @@ export async function loadLocationStats(
   db: LugatchaDB,
   locationId: string,
 ): Promise<LocationStats> {
-  const [themeWords, locationProgress] = await Promise.all([
+  const [themeWords, locationProgress, themeStories, themeRoleplay] = await Promise.all([
     db.words.where('theme').equals(locationId).toArray(),
     db.locationProgress.get(locationId) as Promise<LocationProgress | undefined>,
+    db.stories.where('theme').equals(locationId).toArray(),
+    db.roleplay.where('theme').equals(locationId).toArray(),
   ])
   const progress = await db.wordProgress.bulkGet(themeWords.map((w) => w.id))
 
@@ -127,6 +138,17 @@ export async function loadLocationStats(
     if (isWordKnown(p)) knownWords++
   }
 
+  // How much rich content remains unseen, so the Continue Learning chain can
+  // retire storytime/roleplay once every piece here has been served (the
+  // learner can still replay them from the location menu).
+  const variantIds = themeRoleplay.flatMap((r) => r.variants.map((v) => v.id))
+  const [storyShown, roleplayShown] = await Promise.all([
+    loadStoryShownMap(db, themeStories.map((s) => s.id)),
+    loadRoleplayShownMap(db, variantIds),
+  ])
+  const unseenStories = themeStories.filter((s) => !storyShown.has(s.id)).length
+  const unseenRoleplayVariants = variantIds.filter((id) => !roleplayShown.has(id)).length
+
   return {
     locationId,
     totalWords: themeWords.length,
@@ -134,6 +156,8 @@ export async function loadLocationStats(
     knownWords,
     completed: locationProgress?.completedExercises ?? [],
     visits: locationProgress?.visits ?? 0,
+    unseenStories,
+    unseenRoleplayVariants,
   }
 }
 
@@ -180,6 +204,16 @@ const VISIT_PLAYLIST: PlaylistSlot[] = [
   { primary: 'test' }, //                        12
 ]
 
+export interface SelectOptions {
+  /**
+   * Continue Learning chain: retire storytime/roleplay once their content here
+   * is exhausted, so the auto-assigned flow never re-serves a story or roleplay
+   * variant the learner has already seen. The location menu leaves this off, so
+   * finished content stays replayable there for review.
+   */
+  chain?: boolean
+}
+
 /**
  * The single exercise a location auto-launches on a given visit. Walks the
  * visit playlist by how many exercises have been finished here (`stats.visits`)
@@ -188,10 +222,20 @@ const VISIT_PLAYLIST: PlaylistSlot[] = [
  * instead of sticking on whichever exercise comes first and only ever doing the
  * first five words.
  */
-export function selectAutoExercise(stats: LocationStats): ExerciseType | null {
+export function selectAutoExercise(
+  stats: LocationStats,
+  opts: SelectOptions = {},
+): ExerciseType | null {
   const potluck = buildPotluck(stats)
   const byType = new Map(potluck.map((a) => [a.type, a]))
-  const available = (type: ExerciseType) => byType.get(type)?.state === 'available'
+  // In a chain, a story or roleplay with no unseen content left is treated as
+  // unavailable so the flow moves on rather than repeating it.
+  const exhausted = (type: ExerciseType) =>
+    opts.chain === true &&
+    ((type === 'storytime' && stats.unseenStories <= 0) ||
+      (type === 'roleplay' && stats.unseenRoleplayVariants <= 0))
+  const available = (type: ExerciseType) =>
+    byType.get(type)?.state === 'available' && !exhausted(type)
 
   const slot = VISIT_PLAYLIST[stats.visits % VISIT_PLAYLIST.length]
   const wanted =
@@ -202,5 +246,5 @@ export function selectAutoExercise(stats: LocationStats): ExerciseType | null {
   // words are met): take the next unlocked thing — meet words, then practise,
   // then test — so a tile always has something to offer.
   const fallback: ExerciseType[] = ['intro', ...PRACTICE_EXERCISES, 'test']
-  return fallback.find(available) ?? potluck.find((a) => a.state === 'available')?.type ?? null
+  return fallback.find(available) ?? potluck.find((a) => available(a.type))?.type ?? null
 }

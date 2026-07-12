@@ -168,3 +168,66 @@ describe('selectAutoExercise', () => {
     expect(selectAutoExercise(stats({ totalWords: 1, seenWords: 1, visits: 7 }))).not.toBeNull()
   })
 })
+
+describe('selectAutoExercise — Continue Learning chain', () => {
+  it('retires storytime once every story here has been shown', () => {
+    // Visit 2 schedules storytime (the intro slot becomes storytime once met).
+    const base = stats({
+      totalWords: 10,
+      seenWords: 10,
+      visits: 2,
+      unseenStories: 0,
+      unseenRoleplayVariants: 2,
+    })
+    // From the location menu (no chain) storytime is still served for review.
+    expect(selectAutoExercise(base)).toBe('storytime')
+    // In a chain, an exhausted story is retired so it isn't assigned again.
+    expect(selectAutoExercise(base, { chain: true })).not.toBe('storytime')
+  })
+
+  it('retires roleplay once every variant here has been shown', () => {
+    // Visit 0 schedules roleplay (the intro slot becomes roleplay once met).
+    const base = stats({
+      totalWords: 10,
+      seenWords: 10,
+      visits: 0,
+      unseenStories: 2,
+      unseenRoleplayVariants: 0,
+    })
+    expect(selectAutoExercise(base)).toBe('roleplay')
+    expect(selectAutoExercise(base, { chain: true })).not.toBe('roleplay')
+  })
+
+  it('still serves rich content while some remains unseen', () => {
+    const base = stats({
+      totalWords: 10,
+      seenWords: 10,
+      visits: 0,
+      unseenStories: 1,
+      unseenRoleplayVariants: 1,
+    })
+    expect(selectAutoExercise(base, { chain: true })).toBe('roleplay')
+  })
+
+  it('never repeats an exhausted story/roleplay across a whole chain walk', () => {
+    // Every rich piece already seen: a long chain must never re-serve one.
+    let seenWords = 5
+    const completed = new Set<ExerciseType>(['intro', 'roleplay', 'storytime'])
+    for (let visits = 0; visits < 24; visits++) {
+      const next = selectAutoExercise(
+        stats({
+          totalWords: 15,
+          seenWords,
+          completed: [...completed],
+          visits,
+          unseenStories: 0,
+          unseenRoleplayVariants: 0,
+        }),
+        { chain: true },
+      )
+      expect(next, `visits=${visits}`).not.toBe('storytime')
+      expect(next, `visits=${visits}`).not.toBe('roleplay')
+      if (next === 'intro') seenWords = Math.min(15, seenWords + 5)
+    }
+  })
+})
