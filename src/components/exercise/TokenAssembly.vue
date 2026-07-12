@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import { validateStrictOrder, validateLoose, shuffle } from '@/exercises/validate'
 
 export interface AssemblyResult {
@@ -34,7 +34,6 @@ const bank = ref<Tile[]>(
 const answer = ref<Tile[]>([])
 const attempts = ref(0)
 const feedback = ref<'none' | 'wrong' | 'correct' | 'revealed'>('none')
-const dragIndex = ref<number | null>(null)
 
 const settled = computed(() => feedback.value === 'correct' || feedback.value === 'revealed')
 const showReveal = computed(() => attempts.value >= 2 && !settled.value)
@@ -53,17 +52,164 @@ function unpick(tile: Tile) {
   feedback.value = 'none'
 }
 
-function onDragStart(index: number) {
-  dragIndex.value = index
+// --- Pointer-based drag and drop ---------------------------------------
+// Works with mouse and touch alike. Dragging past a small threshold starts a
+// live drag: the tile follows the pointer as a floating ghost while the real
+// tiles reflow to show where it would land. A tap that never crosses the
+// threshold falls through to the button's click handler (pick / unpick), so
+// keyboard and tap interaction keep working unchanged.
+
+const DRAG_THRESHOLD = 6
+
+const answerEl = ref<HTMLElement | null>(null)
+
+interface DragState {
+  tile: Tile
+  origin: 'bank' | 'answer'
+  startX: number
+  startY: number
+  offsetX: number
+  offsetY: number
+  width: number
+  x: number
+  y: number
+  moved: boolean
+  inAnswer: boolean
 }
 
-function onDrop(index: number) {
-  if (dragIndex.value === null || settled.value) return
-  const moved = answer.value.splice(dragIndex.value, 1)[0]
-  answer.value.splice(index, 0, moved)
-  dragIndex.value = null
-  feedback.value = 'none'
+const drag = ref<DragState | null>(null)
+// Set when a drag ends so the synthetic click that follows pointerup is ignored.
+let suppressClick = false
+
+const ghostStyle = computed(() => {
+  const d = drag.value
+  if (!d) return {}
+  return {
+    left: `${d.x - d.offsetX}px`,
+    top: `${d.y - d.offsetY}px`,
+    width: `${d.width}px`,
+  }
+})
+
+function isDragging(tile: Tile): boolean {
+  return !!drag.value && drag.value.moved && drag.value.tile.id === tile.id
 }
+
+function onPointerDown(event: PointerEvent, tile: Tile, origin: 'bank' | 'answer') {
+  // Only react to the primary (left) mouse button; touch/pen report button 0 too.
+  if (settled.value || event.button !== 0) return
+  // Clear any stale suppression from a drag that ended over a different element
+  // (which fires no synthetic click), so this fresh gesture's tap isn't eaten.
+  suppressClick = false
+  const el = event.currentTarget as HTMLElement
+  const rect = el.getBoundingClientRect()
+  drag.value = {
+    tile,
+    origin,
+    startX: event.clientX,
+    startY: event.clientY,
+    offsetX: event.clientX - rect.left,
+    offsetY: event.clientY - rect.top,
+    width: rect.width,
+    x: event.clientX,
+    y: event.clientY,
+    moved: false,
+    inAnswer: origin === 'answer',
+  }
+  window.addEventListener('pointermove', onPointerMove)
+  window.addEventListener('pointerup', onPointerUp)
+  window.addEventListener('pointercancel', onPointerUp)
+}
+
+/**
+ * Where, in the answer row, would a drop at (x, y) land? Returns an insertion
+ * index into the answer array with `excludeId` removed, so it maps cleanly onto
+ * a splice whether the tile comes from the bank or is being re-sorted in place.
+ */
+function insertionIndex(x: number, y: number, excludeId: number): number {
+  const container = answerEl.value
+  if (!container) return answer.value.length
+  const nodes = Array.from(container.querySelectorAll<HTMLElement>('[data-token-id]'))
+  let index = 0
+  for (const node of nodes) {
+    if (Number(node.dataset.tokenId) === excludeId) continue
+    const r = node.getBoundingClientRect()
+    if (y < r.top || (y <= r.bottom && x < r.left + r.width / 2)) return index
+    index++
+  }
+  return index
+}
+
+function isOverAnswer(x: number, y: number): boolean {
+  const container = answerEl.value
+  if (!container) return false
+  const r = container.getBoundingClientRect()
+  const pad = 16
+  return x >= r.left - pad && x <= r.right + pad && y >= r.top - pad && y <= r.bottom + pad
+}
+
+function onPointerMove(event: PointerEvent) {
+  const d = drag.value
+  if (!d) return
+  d.x = event.clientX
+  d.y = event.clientY
+
+  if (!d.moved) {
+    const dist = Math.hypot(event.clientX - d.startX, event.clientY - d.startY)
+    if (dist < DRAG_THRESHOLD) return
+    d.moved = true
+  }
+  // Stop the browser from scrolling / selecting text while a drag is live.
+  event.preventDefault()
+
+  if (isOverAnswer(d.x, d.y)) {
+    const target = insertionIndex(d.x, d.y, d.tile.id)
+    if (!d.inAnswer) {
+      bank.value = bank.value.filter((t) => t.id !== d.tile.id)
+      answer.value.splice(target, 0, d.tile)
+      d.inAnswer = true
+    } else {
+      const cur = answer.value.findIndex((t) => t.id === d.tile.id)
+      if (cur !== -1 && cur !== target) {
+        answer.value.splice(cur, 1)
+        answer.value.splice(target, 0, d.tile)
+      }
+    }
+  } else if (d.inAnswer) {
+    answer.value = answer.value.filter((t) => t.id !== d.tile.id)
+    if (!bank.value.some((t) => t.id === d.tile.id)) bank.value.push(d.tile)
+    d.inAnswer = false
+  }
+}
+
+function onPointerUp() {
+  window.removeEventListener('pointermove', onPointerMove)
+  window.removeEventListener('pointerup', onPointerUp)
+  window.removeEventListener('pointercancel', onPointerUp)
+  const d = drag.value
+  drag.value = null
+  if (!d) return
+  if (d.moved) {
+    // The live drag already left the arrays in their final state.
+    suppressClick = true
+    feedback.value = 'none'
+  }
+}
+
+function onTileClick(tile: Tile, origin: 'bank' | 'answer') {
+  if (suppressClick) {
+    suppressClick = false
+    return
+  }
+  if (origin === 'bank') pick(tile)
+  else unpick(tile)
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('pointermove', onPointerMove)
+  window.removeEventListener('pointerup', onPointerUp)
+  window.removeEventListener('pointercancel', onPointerUp)
+})
 
 function check() {
   if (settled.value) return
@@ -92,25 +238,26 @@ function reveal() {
 <template>
   <div class="assembly">
     <div
+      ref="answerEl"
       class="assembly__answer"
       :class="{
         'assembly__answer--wrong': feedback === 'wrong',
         'assembly__answer--correct': feedback === 'correct',
+        'assembly__answer--dropzone': drag?.moved,
       }"
       :aria-label="$t('exercise.token.answerLabel')"
     >
       <TransitionGroup name="tile">
         <button
-          v-for="(tile, i) in answer"
+          v-for="tile in answer"
           :key="tile.id"
           class="token token--placed"
+          :class="{ 'token--dragging': isDragging(tile) }"
           type="button"
-          draggable="true"
+          :data-token-id="tile.id"
           :disabled="settled"
-          @click="unpick(tile)"
-          @dragstart="onDragStart(i)"
-          @dragover.prevent
-          @drop.prevent="onDrop(i)"
+          @pointerdown="onPointerDown($event, tile, 'answer')"
+          @click="onTileClick(tile, 'answer')"
         >
           {{ tile.text }}
         </button>
@@ -124,13 +271,20 @@ function reveal() {
           v-for="tile in bank"
           :key="tile.id"
           class="token"
+          :class="{ 'token--dragging': isDragging(tile) }"
           type="button"
+          :data-token-id="tile.id"
           :disabled="settled"
-          @click="pick(tile)"
+          @pointerdown="onPointerDown($event, tile, 'bank')"
+          @click="onTileClick(tile, 'bank')"
         >
           {{ tile.text }}
         </button>
       </TransitionGroup>
+    </div>
+
+    <div v-if="drag?.moved" class="token token--ghost" :style="ghostStyle" aria-hidden="true">
+      {{ drag.tile.text }}
     </div>
 
     <p
@@ -194,6 +348,11 @@ function reveal() {
   background: #f0f7f5;
 }
 
+.assembly__answer--dropzone {
+  border-color: var(--color-primary-light);
+  background: #f2f7fc;
+}
+
 @keyframes shake {
   0%,
   100% {
@@ -233,7 +392,9 @@ function reveal() {
   transition:
     transform 0.12s ease,
     box-shadow 0.12s ease;
-  touch-action: manipulation;
+  /* Let us own touch gestures so a drag doesn't turn into a page scroll. */
+  touch-action: none;
+  cursor: grab;
 }
 
 .token:not(:disabled):hover {
@@ -244,7 +405,30 @@ function reveal() {
 .token--placed {
   border-color: var(--color-primary-light);
   background: #f2f7fc;
-  cursor: grab;
+}
+
+/* The tile left behind in the flow while its ghost follows the pointer. */
+.token--dragging {
+  opacity: 0.35;
+  box-shadow: none;
+}
+
+.token--dragging:hover {
+  transform: none;
+}
+
+/* The floating copy that tracks the pointer. */
+.token--ghost {
+  position: fixed;
+  z-index: 1000;
+  margin: 0;
+  pointer-events: none;
+  cursor: grabbing;
+  border-color: var(--color-primary);
+  background: #f2f7fc;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px) scale(1.04);
+  transition: none;
 }
 
 .tile-enter-active,
@@ -252,6 +436,10 @@ function reveal() {
   transition:
     opacity 0.15s ease,
     transform 0.15s ease;
+}
+
+.tile-move {
+  transition: transform 0.18s ease;
 }
 
 .tile-enter-from,
