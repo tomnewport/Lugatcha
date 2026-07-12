@@ -107,6 +107,19 @@ export interface WordProgress {
 }
 
 /**
+ * Spaced-repetition state for a roleplay phrase, keyed by its folded Uzbek text
+ * (see src/exercises/phrases.ts). Phrases have no learned/unlearned state —
+ * the review schedule alone decides when Daily Practice re-serves them.
+ */
+export interface PhraseProgress {
+  phraseKey: string
+  /** Unix ms of first exposure in any phrase-building exercise. */
+  seenAt?: number
+  /** SM-2 schedule, advanced by every graded phrase-building answer. */
+  review?: ReviewSchedule
+}
+
+/**
  * Which stories the learner has already been shown, so Storytime doesn't keep
  * serving the same one (issue: "getting a lot of the same story"). A story is
  * only reshown once every other story for its location has been seen; `shownAt`

@@ -2,7 +2,11 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { loadDailyPracticeData } from '@/exercises/words'
-import { selectDailyPracticePairs, buildQuestionsFromPairs, type TestQuestion } from '@/exercises/test'
+import {
+  buildDailyPracticeSession,
+  buildPracticeSessionQuestions,
+  type PracticeQuestion,
+} from '@/exercises/practice'
 import { playChime } from '@/audio/audio'
 import { recordStreakDay, type StreakUpdate } from '@/streak'
 import TestExercise from '@/components/exercise/TestExercise.vue'
@@ -19,15 +23,15 @@ const route = useRoute()
 // True when the router redirected here as a mandatory gate before the city.
 const isRequired = computed(() => route.query.required === '1')
 
-const questions = ref<TestQuestion[] | null>(null)
+const questions = ref<PracticeQuestion[] | null>(null)
 
 // Set when a finished session grows the streak, driving the celebration overlay.
 const celebration = ref<StreakUpdate | null>(null)
 
 onMounted(async () => {
-  const { seenWords, allWords, progress } = await loadDailyPracticeData()
-  const pairs = selectDailyPracticePairs(seenWords, progress)
-  questions.value = buildQuestionsFromPairs(pairs, allWords)
+  const data = await loadDailyPracticeData()
+  const items = buildDailyPracticeSession(data)
+  questions.value = buildPracticeSessionQuestions(items, data.allWords, data.phrases)
 })
 
 function recordPracticeAt() {

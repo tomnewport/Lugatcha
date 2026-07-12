@@ -324,6 +324,12 @@ export default {
       nextQuestion: 'Next question',
       empty: 'Meet a few more words before learning them here.',
     },
+    practiceNew: {
+      word: '✨ New word',
+      phrase: '✨ New phrase',
+      intro: "You're on top of your reviews, so here's something new — meet it, then answer.",
+      continue: 'Got it — ask me',
+    },
     choice: {
       listenChoose: 'Listen, then choose the meaning',
       choose: 'Read the Latin, then choose the meaning',

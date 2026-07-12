@@ -1,7 +1,8 @@
 import { db } from '@/db'
-import type { Word, WordProgress } from '@/db/types'
+import type { PhraseProgress, Word, WordProgress } from '@/db/types'
 import { shuffle, normalizeToken } from './validate'
 import { isWordLearned } from './test'
+import { loadPracticePhrases, type PracticePhrase } from './phrases'
 import { WELCOME_CENTER_ID } from '@/db/progress'
 
 async function seenWordIds(): Promise<Set<string>> {
@@ -74,24 +75,43 @@ export async function pickFlashcardWords(theme: string, count = 5): Promise<Word
 export interface DailyPracticeData {
   /** Every word the learner has met anywhere — the Daily Practice pool. */
   seenWords: Word[]
+  /** Words never met — introduction candidates when the session has room. */
+  unseenWords: Word[]
   /** All vocabulary, for the choice questions' option banks. */
   allWords: Word[]
+  /** The roleplay phrase corpus, for phrase-building questions. */
+  phrases: PracticePhrase[]
   /** Progress keyed by word id, for weak-skill and learned classification. */
   progress: Map<string, WordProgress | undefined>
+  /** Phrase review schedules keyed by phrase key. */
+  phraseProgress: Map<string, PhraseProgress | undefined>
 }
 
 /**
  * Loads everything Daily Practice needs in one pass. Unlike a location test it
- * draws on all seen vocabulary, so a session can range across the whole city.
+ * draws on all seen vocabulary — and the whole phrase corpus — so a session can
+ * range across the whole city.
  */
 export async function loadDailyPracticeData(): Promise<DailyPracticeData> {
-  const [allWords, allProgress] = await Promise.all([
+  const [allWords, allProgress, phrases, allPhraseProgress] = await Promise.all([
     db.words.toArray(),
     db.wordProgress.toArray(),
+    loadPracticePhrases(db),
+    db.phraseProgress.toArray(),
   ])
   const progress = new Map<string, WordProgress | undefined>(allProgress.map((p) => [p.wordId, p]))
+  const phraseProgress = new Map<string, PhraseProgress | undefined>(
+    allPhraseProgress.map((p) => [p.phraseKey, p]),
+  )
   const seenIds = new Set(allProgress.filter((p) => p.seenAt).map((p) => p.wordId))
-  return { seenWords: allWords.filter((w) => seenIds.has(w.id)), allWords, progress }
+  return {
+    seenWords: allWords.filter((w) => seenIds.has(w.id)),
+    unseenWords: allWords.filter((w) => !seenIds.has(w.id)),
+    allWords,
+    phrases,
+    progress,
+    phraseProgress,
+  }
 }
 
 export interface TestData {
