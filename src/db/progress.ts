@@ -229,6 +229,28 @@ export async function recordLocationVisit(
   })
 }
 
+/**
+ * Grades one phrase-building answer into that phrase's spaced-repetition
+ * schedule (and marks it met on first contact). Phrases carry no
+ * learned/unlearned state — the schedule alone decides when Daily Practice
+ * re-serves them. `phraseKey` is the folded Uzbek text (exercises/phrases.ts).
+ */
+export async function recordPhraseResult(
+  db: LugatchaDB,
+  phraseKey: string,
+  correct: boolean,
+): Promise<void> {
+  const now = Date.now()
+  await db.transaction('rw', db.phraseProgress, async () => {
+    const existing = await db.phraseProgress.get(phraseKey)
+    await db.phraseProgress.put({
+      phraseKey,
+      seenAt: existing?.seenAt ?? now,
+      review: scheduleReview(existing?.review, gradeFromResult(correct), now),
+    })
+  })
+}
+
 /** Records that a story was just served, timestamped so the picker can rotate. */
 export async function recordStoryShown(db: LugatchaDB, storyId: string): Promise<void> {
   await db.storyProgress.put({ storyId, shownAt: Date.now() })
@@ -283,5 +305,6 @@ export async function resetAllProgress(db: LugatchaDB): Promise<void> {
     db.locationProgress.clear(),
     db.lessonProgress.clear(),
     db.storyProgress.clear(),
+    db.phraseProgress.clear(),
   ])
 }

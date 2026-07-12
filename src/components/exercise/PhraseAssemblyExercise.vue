@@ -2,8 +2,10 @@
 import { ref, computed, onMounted } from 'vue'
 import { db } from '@/db'
 import { tokenize, shuffle, buildDecoys, normalizeToken } from '@/exercises/validate'
+import { PHRASE_DECOYS, phraseKey } from '@/exercises/phrases'
 import { speakUzbek } from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
+import { useProgressStore } from '@/stores/progress'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
@@ -11,6 +13,7 @@ import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 const { pick } = useContentLang()
+const progress = useProgressStore()
 
 type PromptMode = 'english' | 'uzbek-to-english' | 'audio'
 
@@ -71,14 +74,16 @@ const activeTokens = computed(() =>
 const decoys = computed(() => {
   if (!current.value) return []
   return isEnglishAssembly.value
-    ? buildDecoys(current.value.englishTokens, englishDecoyPool.value, 3)
-    : buildDecoys(current.value.tokens, decoyPool.value, 3)
+    ? buildDecoys(current.value.englishTokens, englishDecoyPool.value, PHRASE_DECOYS)
+    : buildDecoys(current.value.tokens, decoyPool.value, PHRASE_DECOYS)
 })
 const isLast = computed(() => index.value >= phrases.value.length - 1)
 
 function onResult(result: AssemblyResult) {
   solved.value = true
   if (result.correct) speakUzbek(current.value.uzbek)
+  // Enrols the phrase in spaced repetition, so Daily Practice re-serves it.
+  void progress.recordPhraseResult(phraseKey(current.value.uzbek), result.correct && !result.revealed)
 }
 
 function next() {

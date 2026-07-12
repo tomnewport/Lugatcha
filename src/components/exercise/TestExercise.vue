@@ -2,28 +2,39 @@
 import { ref, computed, onMounted } from 'vue'
 import { db, useLiveQuery } from '@/db/useDb'
 import { loadTestData, loadPoolTestData } from '@/exercises/words'
-import { buildQuestionsFromPairs, selectTestPairs, type TestQuestion } from '@/exercises/test'
+import { buildQuestionsFromPairs, selectTestPairs } from '@/exercises/test'
+import type { PracticeQuestion } from '@/exercises/practice'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
-import type { Word } from '@/db/types'
+import type { Word, TestQuestionType } from '@/db/types'
 import TestChoiceQuestion from './TestChoiceQuestion.vue'
 import TestTypeQuestion from './TestTypeQuestion.vue'
+import PracticePhraseQuestion from './PracticePhraseQuestion.vue'
 import ConfettiBurst from '@/components/ConfettiBurst.vue'
+import AudioButton from '@/components/AudioButton.vue'
+import UzbekSentence from '@/components/UzbekSentence.vue'
+import CyrillicSub from '@/components/CyrillicSub.vue'
 
 const emit = defineEmits<{ complete: [] }>()
 /**
  * Three ways to source questions: a location test by theme, a focused test over
- * an explicit word pool (#62), or a ready-built question list (Daily Practice).
+ * an explicit word pool (#62), or a ready-built question list (Daily Practice —
+ * which may mix in phrase-building and brand-new material).
  */
-const props = defineProps<{ locationId?: string; pool?: Word[]; presetQuestions?: TestQuestion[] }>()
+const props = defineProps<{
+  locationId?: string
+  pool?: Word[]
+  presetQuestions?: PracticeQuestion[]
+}>()
 
 const progress = useProgressStore()
-const { gloss } = useContentLang()
+const { gloss, pick } = useContentLang()
 
-const questions = ref<TestQuestion[]>([])
+const questions = ref<PracticeQuestion[]>([])
 const index = ref(0)
 const loading = ref(true)
-const phase = ref<'answering' | 'feedback'>('answering')
+// 'meet' introduces brand-new material (isNew) before its question is asked.
+const phase = ref<'meet' | 'answering' | 'feedback'>('answering')
 
 /** A just-learned word to celebrate before moving on. */
 const celebrate = ref<{ uzbek: string; meaning: string } | null>(null)
@@ -36,33 +47,56 @@ const learnedCount = useLiveQuery(
 )
 
 const current = computed(() => questions.value[index.value])
+/** Narrowed views of the current question, for template type safety. */
+const wordQ = computed(() => (current.value?.kind === 'word' ? current.value : null))
+const phraseQ = computed(() => (current.value?.kind === 'phrase' ? current.value : null))
 const isLast = computed(() => index.value >= questions.value.length - 1)
 
 /** Maps a choice question type to the prompt mode the choice component shows. */
-function choiceMode(type: TestQuestion['type']): 'listen' | 'read' | 'read-cyrillic' {
+function choiceMode(type: TestQuestionType): 'listen' | 'read' | 'read-cyrillic' {
   if (type === 'listen-choice') return 'listen'
   if (type === 'read-cyrillic-choice') return 'read-cyrillic'
   return 'read'
 }
 
+function phaseFor(question: PracticeQuestion | undefined): 'meet' | 'answering' {
+  return question?.isNew ? 'meet' : 'answering'
+}
+
 onMounted(async () => {
   if (props.presetQuestions) {
     questions.value = props.presetQuestions
-    loading.value = false
-    return
+  } else {
+    const { candidates, learnedPool, allWords, progress: prog } = props.pool
+      ? await loadPoolTestData(props.pool)
+      : await loadTestData(props.locationId ?? '')
+    const pairs = selectTestPairs(candidates, learnedPool, prog)
+    questions.value = buildQuestionsFromPairs(pairs, allWords).map((q) => ({
+      kind: 'word' as const,
+      ...q,
+    }))
   }
-  const { candidates, learnedPool, allWords, progress: prog } = props.pool
-    ? await loadPoolTestData(props.pool)
-    : await loadTestData(props.locationId ?? '')
-  const pairs = selectTestPairs(candidates, learnedPool, prog)
-  questions.value = buildQuestionsFromPairs(pairs, allWords)
+  phase.value = phaseFor(questions.value[0])
   loading.value = false
 })
+
+/** The meet card is dismissed: the new word now counts as met, and we ask. */
+async function startNewQuestion() {
+  if (current.value?.kind === 'word') {
+    await progress.markWordsSeen([current.value.word.id])
+  }
+  phase.value = 'answering'
+}
 
 /** Choice questions report a boolean; the typing question reports a 0–1 score. */
 async function onAnswered(result: boolean | number) {
   if (phase.value !== 'answering' || !current.value) return
   phase.value = 'feedback'
+  if (current.value.kind === 'phrase') {
+    // Feeds the phrase's spaced-repetition schedule; no learned state to celebrate.
+    await progress.recordPhraseResult(current.value.phrase.key, result === true)
+    return
+  }
   const { word, type } = current.value
   const outcome = await progress.recordTestResult(word.id, type, result)
   if (outcome.newlyLearned) {
@@ -78,7 +112,7 @@ function next() {
     return
   }
   index.value++
-  phase.value = 'answering'
+  phase.value = phaseFor(questions.value[index.value])
 }
 </script>
 
@@ -89,18 +123,50 @@ function next() {
     <template v-else-if="current">
       <p class="test__counter">{{ $t('exercise.test.counter', { current: index + 1, total: questions.length }) }}</p>
 
-      <TestTypeQuestion
-        v-if="current.type === 'type'"
+      <!-- Brand-new material: meet it before it's asked. -->
+      <div v-if="phase === 'meet'" class="test__meet">
+        <span class="test__meet-eyebrow">{{
+          current.kind === 'word' ? $t('exercise.practiceNew.word') : $t('exercise.practiceNew.phrase')
+        }}</span>
+        <template v-if="wordQ">
+          <span class="test__meet-uz" lang="uz">{{ wordQ.word.uzbek }}</span>
+          <CyrillicSub :latin="wordQ.word.uzbek" :cyrillic="wordQ.word.cyrillic" />
+          <span class="test__meet-gloss">{{ gloss(wordQ.word) }}</span>
+          <AudioButton :text="wordQ.word.uzbek" large />
+        </template>
+        <template v-else-if="phraseQ">
+          <span class="test__meet-uz"><UzbekSentence :uzbek="phraseQ.phrase.uzbek" /></span>
+          <span class="test__meet-gloss">{{ pick(phraseQ.phrase.english, phraseQ.phrase.russian) }}</span>
+          <AudioButton :text="phraseQ.phrase.uzbek" large :label="$t('audio.playPhrase')" />
+        </template>
+        <p class="test__meet-hint">{{ $t('exercise.practiceNew.intro') }}</p>
+        <button class="btn btn--primary" type="button" @click="startNewQuestion">
+          {{ $t('exercise.practiceNew.continue') }}
+        </button>
+      </div>
+
+      <template v-else-if="wordQ">
+        <TestTypeQuestion
+          v-if="wordQ.type === 'type'"
+          :key="`q-${index}`"
+          :word="wordQ.word"
+          @answered="onAnswered"
+        />
+        <TestChoiceQuestion
+          v-else
+          :key="`q-${index}`"
+          :word="wordQ.word"
+          :mode="choiceMode(wordQ.type)"
+          :options="wordQ.options"
+          @answered="onAnswered"
+        />
+      </template>
+      <PracticePhraseQuestion
+        v-else-if="phraseQ"
         :key="`q-${index}`"
-        :word="current.word"
-        @answered="onAnswered"
-      />
-      <TestChoiceQuestion
-        v-else
-        :key="`q-${index}`"
-        :word="current.word"
-        :mode="choiceMode(current.type)"
-        :options="current.options"
+        :phrase="phraseQ.phrase"
+        :mode="phraseQ.mode"
+        :pool="phraseQ.pool"
         @answered="onAnswered"
       />
 
@@ -152,6 +218,51 @@ function next() {
   letter-spacing: 0.05em;
   text-align: center;
   margin: 0;
+}
+
+/* Meet card for brand-new words and phrases introduced mid-practice. */
+.test__meet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 1.4rem 1.1rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.test__meet-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.test__meet-uz {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.test__meet-gloss {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.test__meet-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0.4rem 0 0;
+  line-height: 1.5;
+}
+
+.test__meet .btn {
+  margin-top: 0.4rem;
+  align-self: stretch;
 }
 
 .test__celebrate {

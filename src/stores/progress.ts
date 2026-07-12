@@ -5,6 +5,7 @@ import {
   markWordsSeen,
   recordMatchResult,
   recordTestResult,
+  recordPhraseResult,
   completeExercise,
   recordLocationVisit,
   recordStoryShown,
@@ -28,6 +29,9 @@ export const useProgressStore = defineStore('progress', {
     },
     recordTestResult(wordId: string, type: TestQuestionType, result: boolean | number) {
       return recordTestResult(db, wordId, type, result)
+    },
+    recordPhraseResult(phraseKey: string, correct: boolean) {
+      return recordPhraseResult(db, phraseKey, correct)
     },
     completeExercise(locationId: string, exercise: ExerciseType) {
       return completeExercise(db, locationId, exercise)

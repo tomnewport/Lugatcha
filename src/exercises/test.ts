@@ -232,6 +232,13 @@ export function selectDailyPracticePairs(
   count = DAILY_PRACTICE_LENGTH,
   batchPerTheme = DAILY_BATCH_PER_THEME,
   now: number = Date.now(),
+  /**
+   * Whether a short queue may be padded with busywork — re-testing learned
+   * words that aren't due and re-asking passed skills. The mixed practice
+   * session builder passes false so spare room goes to introducing new
+   * material instead (exercises/practice.ts), with this filler as last resort.
+   */
+  fillWithRetests = true,
 ): PracticePair[] {
   const passedOf = (w: Word) => passedTypes(progress.get(w.id))
   const learned = (w: Word) => isWordLearned(progress.get(w.id))
@@ -285,12 +292,14 @@ export function selectDailyPracticePairs(
     const due = shuffle(learnedWords.filter((w) => isDue(progress.get(w.id)?.review, now))).sort(
       (a, b) => dueness(b) - dueness(a),
     )
-    const notDue = shuffle(learnedWords.filter((w) => !isDue(progress.get(w.id)?.review, now)))
     // Due words first; only reach for not-yet-due ones if the queue is still short.
+    const notDue = fillWithRetests
+      ? shuffle(learnedWords.filter((w) => !isDue(progress.get(w.id)?.review, now)))
+      : []
     interleave([...due, ...notDue].map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
   }
   // Still short (a very small vocabulary): re-ask batch words' passed skills.
-  if (pairs.length < count) {
+  if (fillWithRetests && pairs.length < count) {
     interleave(shuffle(batch).map((w) => ({ word: w, skills: shuffle([...TEST_QUESTION_TYPES]) })))
   }
   return pairs

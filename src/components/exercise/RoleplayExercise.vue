@@ -3,8 +3,10 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { db } from '@/db'
 import type { Roleplay, RoleplayVariant, RoleplayTurn } from '@/db/types'
 import { tokenize, buildDecoys, shuffle } from '@/exercises/validate'
+import { phraseKey } from '@/exercises/phrases'
 import { speakUzbek, stopSpeaking } from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
+import { useProgressStore } from '@/stores/progress'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
@@ -12,6 +14,7 @@ import UzbekSentence from '@/components/UzbekSentence.vue'
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 const { name, pick } = useContentLang()
+const progress = useProgressStore()
 
 const roleplay = ref<Roleplay | null>(null)
 const stage = ref<'play' | 'done'>('play')
@@ -112,6 +115,8 @@ async function processTurn() {
 async function onUserResult(result: AssemblyResult) {
   const myRun = runId
   const turn = currentTurn.value
+  // A built turn is a phrase-building answer — enrol it in spaced repetition.
+  void progress.recordPhraseResult(phraseKey(turn.uzbek), result.correct && !result.revealed)
   if (result.correct) {
     await speakUzbek(turn.uzbek)
     if (myRun !== runId) return
