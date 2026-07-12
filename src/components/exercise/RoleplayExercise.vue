@@ -2,7 +2,9 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { db } from '@/db'
 import type { Roleplay, RoleplayVariant, RoleplayTurn } from '@/db/types'
-import { tokenize, buildDecoys, shuffle } from '@/exercises/validate'
+import { tokenize, buildDecoys } from '@/exercises/validate'
+import { pickLeastRecentlyShown } from '@/exercises/contentPicker'
+import { loadRoleplayShownMap } from '@/db/progress'
 import { phraseKey } from '@/exercises/phrases'
 import { speakUzbek, stopSpeaking } from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
@@ -24,39 +26,45 @@ const npcSpeaking = ref(false)
 const loading = ref(true)
 const logEl = ref<HTMLElement | null>(null)
 
-/** All scenarios at this location, kept so "try another" can reshuffle. */
-const scenarios = ref<Roleplay[]>([])
+/** Every conversation path across the location's scenarios, tagged with its scenario. */
+interface VariantRef {
+  id: string
+  scenario: Roleplay
+  variant: RoleplayVariant
+}
+const variantRefs = ref<VariantRef[]>([])
 
 /** Bumped on restart/unmount so stale async NPC turns stop advancing. */
 let runId = 0
 
 onMounted(async () => {
-  // The learner no longer picks how it goes. The very first roleplay at a
-  // location runs the smooth "start here" path of the first scenario so it's a
-  // gentle introduction; every visit after that picks a scenario and a path at
-  // random for variety.
-  const [found, progress] = await Promise.all([
-    db.roleplay.where('theme').equals(props.locationId).toArray(),
-    db.locationProgress.get(props.locationId),
-  ])
-  scenarios.value = found
+  const found = await db.roleplay.where('theme').equals(props.locationId).toArray()
+  variantRefs.value = found.flatMap((scenario) =>
+    scenario.variants.map((variant) => ({ id: variant.id, scenario, variant })),
+  )
   loading.value = false
-  if (found.length === 0) return
-  const firstTime = !(progress?.completedExercises ?? []).includes('roleplay')
-  if (firstTime) {
-    roleplay.value = found[0]
-    startVariant(found[0].variants[0])
-  } else {
-    playRandom()
-  }
+  await pickAndPlay()
 })
 
-/** Pick a random scenario and one of its paths, then play it through. */
-function playRandom() {
-  const scenario = shuffle(scenarios.value)[0]
-  if (!scenario) return
-  roleplay.value = scenario
-  startVariant(shuffle(scenario.variants)[0])
+/**
+ * Play the least-recently-shown path across every scenario here, then record it
+ * so it isn't served again until the rest have been seen. Nothing is shown on a
+ * first visit, so the picker returns the opening scenario's first path in list
+ * order — a gentle introduction — and "try another" walks on to the next unseen
+ * path rather than re-rolling one at random.
+ */
+async function pickAndPlay() {
+  const refs = variantRefs.value
+  if (refs.length === 0) return
+  const shownAt = await loadRoleplayShownMap(
+    db,
+    refs.map((r) => r.id),
+  )
+  const chosen = pickLeastRecentlyShown(refs, shownAt)
+  if (!chosen) return
+  roleplay.value = chosen.scenario
+  void progress.recordRoleplayShown(chosen.id)
+  startVariant(chosen.variant)
 }
 
 onUnmounted(() => {
@@ -128,7 +136,7 @@ async function onUserResult(result: AssemblyResult) {
 function restart() {
   runId++
   stopSpeaking()
-  playRandom()
+  void pickAndPlay()
 }
 </script>
 

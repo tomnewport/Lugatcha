@@ -94,7 +94,7 @@ watch(
   stats,
   (newStats) => {
     if (activeExercise.value || !newStats || isWelcome.value || !chaining.value) return
-    const next = selectAutoExercise(newStats)
+    const next = selectAutoExercise(newStats, { chain: true })
     if (next) {
       sessionKey.value++
       activeExercise.value = next
@@ -149,7 +149,7 @@ async function onComplete() {
       // Read fresh stats — the just-recorded visit advances the rotation — and
       // launch the next activity in the chain.
       const fresh = await loadLocationStats(db, locationId.value)
-      const next = selectAutoExercise(fresh)
+      const next = selectAutoExercise(fresh, { chain: true })
       if (next) {
         sessionKey.value++
         activeExercise.value = next

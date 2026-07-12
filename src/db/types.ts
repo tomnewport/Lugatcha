@@ -131,6 +131,19 @@ export interface StoryProgress {
   shownAt: number
 }
 
+/**
+ * Which roleplay variants (individual conversation paths) the learner has
+ * already been shown, so the auto-assigned Continue Learning flow serves each
+ * once rather than re-rolling the same scenario at random. Keyed by the
+ * variant's id; `shownAt` lets the picker fall back to the least-recently-shown
+ * once every variant at a location has been seen.
+ */
+export interface RoleplayProgress {
+  variantId: string
+  /** Unix timestamp the variant was last served. */
+  shownAt: number
+}
+
 export interface LocationProgress {
   locationId: string
   completedExercises: ExerciseType[]
