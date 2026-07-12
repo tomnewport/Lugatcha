@@ -27,7 +27,8 @@ export default {
     dismiss: 'Dismiss',
     loadingCity: 'Loading city…',
     lockedTitle: 'This area is not open yet',
-    lockedBody: 'Finish Tourist Information first. Once your first area is complete, the rest of the city opens.',
+    lockedBody:
+      'Finish Tourist Information first. Once your first area is complete, the rest of the city opens.',
     practice: 'Daily practice',
     practiceDone: 'Practised today',
     practiceAria: 'Daily vocabulary practice',
@@ -40,7 +41,8 @@ export default {
   practice: {
     eyebrow: 'Daily practice',
     title: 'Words from across the city',
-    empty: 'Meet some words first — explore the city, then come back to practise what you have learned.',
+    empty:
+      'Meet some words first — explore the city, then come back to practise what you have learned.',
   },
 
   continue: {
@@ -58,7 +60,8 @@ export default {
     hidePicker: 'Hide places',
     pickPrompt: 'Choose a place',
     allDoneTitle: "You've learned the whole city!",
-    allDoneBody: 'Every area is complete. Keep your vocabulary sharp with a review whenever you like.',
+    allDoneBody:
+      'Every area is complete. Keep your vocabulary sharp with a review whenever you like.',
   },
 
   streak: {
@@ -125,6 +128,18 @@ export default {
       error: 'Stopped at an error ({message}). Resume to retry — progress is kept.',
       done: 'All {count} recordings cached for offline use. ✓',
       none: "No prebuilt recordings are bundled yet, so Lugʻatcha uses your device's speech synthesis to read Uzbek aloud. Quality varies by device; recordings will arrive with a future update and download automatically.",
+    },
+    backup: {
+      title: 'Backup & restore',
+      desc: 'Save your progress, streak, and settings to a file. On a phone you can send it straight to iCloud Drive, Google Drive, Dropbox, or Files — no account with us needed. Keep it in a synced folder to back up to the cloud, or use it to move to a new device.',
+      backup: 'Back up now',
+      backingUp: 'Preparing…',
+      done: 'Backup ready. ✓',
+      restore: 'Restore from a file…',
+      restoreConfirm: 'Restoring replaces all progress on this device with the backup. Continue?',
+      restoreYes: 'Choose backup file',
+      restoring: 'Restoring…',
+      restoreFailed: "Couldn't restore that file. Please try another backup.",
     },
     progress: {
       title: 'Progress',

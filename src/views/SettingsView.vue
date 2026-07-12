@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useSettingsStore, type BaseLanguage } from '@/stores/settings'
 import { useProgressStore } from '@/stores/progress'
 import { getAudioManifest, type AudioManifest } from '@/audio/audio'
 import { useAudioDownload } from '@/audio/offline'
 import { clearAllLocalData } from '@/db/clearAll'
+import { db } from '@/db'
+import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/db/backup'
+import { saveBackup, pickBackupText } from '@/db/backupIO'
 
 const router = useRouter()
+const { t } = useI18n()
 const settings = useSettingsStore()
 const progress = useProgressStore()
 
@@ -57,11 +62,59 @@ async function clearAllData() {
   // Reload from the app root so it re-seeds from scratch, like a fresh install.
   window.location.assign(import.meta.env.BASE_URL)
 }
+
+const backingUp = ref(false)
+const backupDone = ref(false)
+const restoring = ref(false)
+const restoreError = ref('')
+const confirmingRestore = ref(false)
+
+async function backupNow() {
+  backingUp.value = true
+  backupDone.value = false
+  try {
+    const shared = await saveBackup(await collectBackup(db))
+    if (shared) {
+      backupDone.value = true
+      setTimeout(() => (backupDone.value = false), 4000)
+    }
+  } finally {
+    backingUp.value = false
+  }
+}
+
+async function restoreFromFile() {
+  restoreError.value = ''
+  const text = await pickBackupText()
+  if (text === null) return // picker cancelled
+  let backup
+  try {
+    backup = parseBackup(text)
+  } catch (err) {
+    restoreError.value =
+      err instanceof InvalidBackupError ? err.message : t('settings.backup.restoreFailed')
+    return
+  }
+  restoring.value = true
+  try {
+    await applyBackup(db, backup)
+    // Reload so live queries, settings, and the streak re-read the restored state.
+    window.location.assign(import.meta.env.BASE_URL)
+  } catch {
+    restoreError.value = t('settings.backup.restoreFailed')
+    restoring.value = false
+  }
+}
 </script>
 
 <template>
   <main class="settings">
-    <button class="back-btn" :aria-label="$t('common.backToCity')" type="button" @click="router.push('/')">
+    <button
+      class="back-btn"
+      :aria-label="$t('common.backToCity')"
+      type="button"
+      @click="router.push('/')"
+    >
       <svg
         viewBox="0 0 16 16"
         fill="none"
@@ -79,7 +132,11 @@ async function clearAllData() {
     <section class="settings-card">
       <h2 class="settings-card__title">{{ $t('settings.learningLanguage.title') }}</h2>
       <p class="settings-card__desc">{{ $t('settings.learningLanguage.desc') }}</p>
-      <div class="lang-toggle" role="radiogroup" :aria-label="$t('settings.learningLanguage.groupLabel')">
+      <div
+        class="lang-toggle"
+        role="radiogroup"
+        :aria-label="$t('settings.learningLanguage.groupLabel')"
+      >
         <button
           class="lang-toggle__btn"
           :class="{ 'lang-toggle__btn--active': settings.baseLanguage === 'en' }"
@@ -124,7 +181,13 @@ async function clearAllData() {
           <div class="dl-bar__fill" :style="{ width: `${audioPercent}%` }" />
         </div>
         <p v-if="audioStatus !== 'idle'" class="settings-card__desc">
-          {{ $t('settings.audio.progress', { done: audioDone, total: audioTotal, percent: audioPercent }) }}
+          {{
+            $t('settings.audio.progress', {
+              done: audioDone,
+              total: audioTotal,
+              percent: audioPercent,
+            })
+          }}
         </p>
 
         <div class="dl-actions">
@@ -135,7 +198,11 @@ async function clearAllData() {
             :disabled="audioStatus === 'done'"
             @click="startAudio()"
           >
-            {{ audioStatus === 'done' ? $t('settings.audio.allDownloaded') : $t('settings.audio.downloadAll') }}
+            {{
+              audioStatus === 'done'
+                ? $t('settings.audio.allDownloaded')
+                : $t('settings.audio.downloadAll')
+            }}
           </button>
           <button
             v-else-if="audioStatus === 'running'"
@@ -165,6 +232,56 @@ async function clearAllData() {
     </section>
 
     <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.backup.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.backup.desc') }}</p>
+      <div class="dl-actions">
+        <button class="btn btn--primary" type="button" :disabled="backingUp" @click="backupNow">
+          {{ backingUp ? $t('settings.backup.backingUp') : $t('settings.backup.backup') }}
+        </button>
+        <button
+          v-if="!confirmingRestore"
+          class="btn btn--ghost"
+          type="button"
+          :disabled="restoring"
+          @click="confirmingRestore = true"
+        >
+          {{ $t('settings.backup.restore') }}
+        </button>
+      </div>
+      <div v-if="confirmingRestore" class="reset-confirm">
+        <p class="reset-confirm__msg">{{ $t('settings.backup.restoreConfirm') }}</p>
+        <div class="reset-confirm__actions">
+          <button
+            class="btn btn--danger"
+            type="button"
+            :disabled="restoring"
+            @click="restoreFromFile"
+          >
+            {{ restoring ? $t('settings.backup.restoring') : $t('settings.backup.restoreYes') }}
+          </button>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            :disabled="restoring"
+            @click="confirmingRestore = false"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
+      </div>
+      <p v-if="backupDone" class="settings-card__note" aria-live="polite">
+        {{ $t('settings.backup.done') }}
+      </p>
+      <p
+        v-if="restoreError"
+        class="settings-card__note settings-card__note--error"
+        aria-live="polite"
+      >
+        {{ restoreError }}
+      </p>
+    </section>
+
+    <section class="settings-card">
       <h2 class="settings-card__title">{{ $t('settings.progress.title') }}</h2>
       <p class="settings-card__desc">
         {{ $t('settings.progress.desc') }}
@@ -180,13 +297,17 @@ async function clearAllData() {
       <div v-else class="reset-confirm">
         <p class="reset-confirm__msg">{{ $t('settings.progress.confirm') }}</p>
         <div class="reset-confirm__actions">
-          <button class="btn btn--danger" type="button" @click="resetProgress">{{ $t('settings.progress.confirmYes') }}</button>
+          <button class="btn btn--danger" type="button" @click="resetProgress">
+            {{ $t('settings.progress.confirmYes') }}
+          </button>
           <button class="btn btn--ghost" type="button" @click="confirmingReset = false">
             {{ $t('common.cancel') }}
           </button>
         </div>
       </div>
-      <p v-if="resetDone" class="settings-card__note" aria-live="polite">{{ $t('settings.progress.done') }}</p>
+      <p v-if="resetDone" class="settings-card__note" aria-live="polite">
+        {{ $t('settings.progress.done') }}
+      </p>
     </section>
 
     <section class="settings-card">
@@ -208,7 +329,12 @@ async function clearAllData() {
           <button class="btn btn--danger" type="button" :disabled="clearing" @click="clearAllData">
             {{ clearing ? $t('settings.data.clearing') : $t('settings.data.confirmYes') }}
           </button>
-          <button class="btn btn--ghost" type="button" :disabled="clearing" @click="confirmingClear = false">
+          <button
+            class="btn btn--ghost"
+            type="button"
+            :disabled="clearing"
+            @click="confirmingClear = false"
+          >
             {{ $t('common.cancel') }}
           </button>
         </div>
