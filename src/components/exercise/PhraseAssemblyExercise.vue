@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { db } from '@/db'
-import { tokenize, shuffle, buildDecoys, normalizeToken } from '@/exercises/validate'
+import { tokenize, parseOptional, shuffle, buildDecoys, normalizeToken } from '@/exercises/validate'
 import { PHRASE_DECOYS, phraseKey } from '@/exercises/phrases'
 import { speakUzbek } from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
@@ -22,6 +22,7 @@ interface Phrase {
   english: string
   tokens: string[]
   englishTokens: string[]
+  englishOptional: string[]
   mode: PromptMode
 }
 
@@ -47,11 +48,13 @@ onMounted(async () => {
         if (seen.has(key)) continue
         seen.add(key)
         const translation = pick(turn.english, turn.russian)
+        const parsed = parseOptional(translation)
         userPhrases.push({
           uzbek: turn.uzbek,
           english: translation,
           tokens: turn.tokens ?? tokenize(turn.uzbek),
-          englishTokens: tokenize(translation),
+          englishTokens: parsed.tokens,
+          englishOptional: [...parsed.optional],
         })
       }
     }
@@ -124,6 +127,7 @@ function next() {
         :key="index"
         :tokens="activeTokens"
         :decoys="decoys"
+        :optional="isEnglishAssembly ? current.englishOptional : []"
         :mode="isEnglishAssembly ? 'loose' : 'strict'"
         @result="onResult"
       />

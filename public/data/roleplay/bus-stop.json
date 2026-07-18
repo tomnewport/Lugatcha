@@ -173,8 +173,8 @@
           {
             "speaker": "user",
             "uzbek": "Bozorda tushaman. Ayta olasizmi?",
-            "english": "I get off at the bazaar. Can you tell me?",
-            "russian": "Я выхожу на базаре. Вы можете подсказать?",
+            "english": "I'm getting off at the bazaar. Can you tell me [when we get there]?",
+            "russian": "Я выхожу на базаре. Скажете, [когда доедем]?",
             "tokens": [
               "Bozorda",
               "tushaman.",
