@@ -9,6 +9,8 @@ import {
 } from '@/exercises/practice'
 import { playChime } from '@/audio/audio'
 import { recordStreakDay, type StreakUpdate } from '@/streak'
+import { useActivityContext } from '@/feedback/activityContext'
+import { i18n } from '@/i18n'
 import TestExercise from '@/components/exercise/TestExercise.vue'
 import StreakCelebration from '@/components/StreakCelebration.vue'
 
@@ -27,6 +29,12 @@ const questions = ref<PracticeQuestion[] | null>(null)
 
 // Set when a finished session grows the streak, driving the celebration overlay.
 const celebration = ref<StreakUpdate | null>(null)
+
+// Scope any "Raise an issue" report to the daily practice session.
+useActivityContext(() => ({
+  label: `Daily practice · ${i18n.global.t('practice.title')}`,
+  details: [{ label: 'Questions', value: String(questions.value?.length ?? 0) }],
+}))
 
 onMounted(async () => {
   const data = await loadDailyPracticeData()

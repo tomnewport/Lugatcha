@@ -6,6 +6,7 @@ import { useProgressStore } from '@/stores/progress'
 import { db } from '@/db'
 import type { Lesson, LessonExercise, LessonSection } from '@/db/types'
 import { useContentLang } from '@/i18n/content'
+import { useActivityContext } from '@/feedback/activityContext'
 import LessonSectionCard from '@/components/school/LessonSectionCard.vue'
 import ChoiceExercise from '@/components/school/ChoiceExercise.vue'
 import BuildExercise from '@/components/school/BuildExercise.vue'
@@ -52,6 +53,22 @@ const steps = computed<Step[]>(() => {
 const current = computed(() => steps.value[stepIndex.value])
 const isFirst = computed(() => stepIndex.value === 0)
 const isLast = computed(() => stepIndex.value >= steps.value.length - 1)
+
+// Scope any "Raise an issue" report to this lesson and the step being viewed.
+useActivityContext(() => {
+  if (!lesson.value) return null
+  const step = current.value
+  const stepKind =
+    step?.kind === 'section' ? 'Section' : step?.kind === 'exercise' ? 'Exercise' : 'Wrap-up'
+  return {
+    label: `School lesson · ${name(lesson.value.title)}`,
+    details: [
+      { label: 'Lesson', value: name(lesson.value.title) },
+      { label: 'Lesson ID', value: lesson.value.id },
+      { label: 'Step', value: `${stepKind} (${stepIndex.value + 1} of ${steps.value.length})` },
+    ],
+  }
+})
 
 function back() {
   if (isFirst.value) {

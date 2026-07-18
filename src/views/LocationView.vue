@@ -7,8 +7,10 @@ import type { Location, ExerciseType } from '@/db/types'
 import {
   loadLocationStats,
   selectAutoExercise,
+  exerciseLabel,
   type LocationStats,
 } from '@/exercises/potluck'
+import { useActivityContext } from '@/feedback/activityContext'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import { playChime } from '@/audio/audio'
@@ -185,6 +187,33 @@ function exitExercise() {
 const chainStep = computed(() =>
   chainTotal.value > 0 ? chainTotal.value - chainRemaining.value + 1 : 0,
 )
+
+// Describe what the learner is doing here so "Raise an issue" can scope a report
+// to this exact activity (which location, which exercise) rather than the app as
+// a whole.
+useActivityContext(() => {
+  if (!location.value) return null
+  const locationName = name(location.value.name)
+  if (activeExercise.value) {
+    return {
+      label: `${exerciseLabel(activeExercise.value)} · ${locationName}`,
+      details: [
+        { label: 'Location', value: locationName },
+        { label: 'Location ID', value: locationId.value },
+        { label: 'Exercise', value: exerciseLabel(activeExercise.value) },
+        { label: 'Exercise type', value: activeExercise.value },
+      ],
+    }
+  }
+  return {
+    label: locationName,
+    details: [
+      { label: 'Location', value: locationName },
+      { label: 'Location ID', value: locationId.value },
+      { label: 'Screen', value: isWelcome.value ? 'Welcome Center induction' : 'Location menu' },
+    ],
+  }
+})
 </script>
 
 <template>

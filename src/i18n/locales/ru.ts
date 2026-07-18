@@ -234,6 +234,31 @@ const ru: MessageSchema = {
     unknown: 'Неизвестная ошибка',
   },
 
+  feedback: {
+    button: 'Сообщить о проблеме',
+    buttonAria: 'Сообщить о проблеме или оставить отзыв',
+    dialogTitle: 'Сообщить о проблеме',
+    scopeQuestion: 'О чём ваш отзыв?',
+    scopeActivity: 'О том, что я сейчас делаю',
+    scopeActivityNone: 'На этом экране нет конкретного задания',
+    scopeGeneral: 'О приложении в целом',
+    scopeGeneralHint: 'Что-то о Lugʻatcha в целом',
+    commentLabel: 'Ваши комментарии',
+    commentPlaceholder: 'Опишите проблему или идею. Что вы ожидали и что произошло?',
+    includedTitle: 'Прилагается автоматически',
+    includedNote:
+      'Мы приложим сведения об этом экране и вашем устройстве, чтобы воспроизвести проблему. Личные данные не собираются.',
+    submit: 'Продолжить на GitHub',
+    submitHint: 'Откроет заполненную заявку на GitHub в новой вкладке',
+    issue: {
+      intro: 'Отправлено из формы «Сообщить о проблеме» в приложении.',
+      commentHeading: 'Что произошло',
+      activityHeading: 'Задание',
+      contextHeading: 'Окружение',
+      noComment: '_(комментарий не указан)_',
+    },
+  },
+
   audio: {
     play: 'Воспроизвести: {text}',
     playSlow: 'Медленно (0.75×)',

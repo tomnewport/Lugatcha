@@ -4,9 +4,15 @@ import { useRoute, useRouter } from 'vue-router'
 import { getTravelPlace, recordTravelVisit } from '@/db/travel'
 import { useLiveQuery, db } from '@/db/useDb'
 import type { TravelPlace, ExerciseType } from '@/db/types'
-import { loadLocationStats, selectAutoExercise, type LocationStats } from '@/exercises/potluck'
+import {
+  loadLocationStats,
+  selectAutoExercise,
+  exerciseLabel,
+  type LocationStats,
+} from '@/exercises/potluck'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
+import { useActivityContext } from '@/feedback/activityContext'
 import { playChime } from '@/audio/audio'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
@@ -68,6 +74,23 @@ function startExercise() {
   activeExercise.value = next
   phase.value = 'exercise'
 }
+
+// Scope any "Raise an issue" report to this travel place and what's on screen.
+useActivityContext(() => {
+  if (!place.value) return null
+  const placeName = name(place.value.name)
+  const details = [
+    { label: 'Travel place', value: placeName },
+    { label: 'Place ID', value: placeId.value },
+  ]
+  if (phase.value === 'exercise' && activeExercise.value) {
+    details.push({ label: 'Exercise', value: exerciseLabel(activeExercise.value) })
+    details.push({ label: 'Exercise type', value: activeExercise.value })
+    return { label: `${exerciseLabel(activeExercise.value)} · ${placeName}`, details }
+  }
+  details.push({ label: 'Screen', value: 'Reading the place article' })
+  return { label: `Travel · ${placeName}`, details }
+})
 
 async function onComplete() {
   playChime()

@@ -232,6 +232,31 @@ export default {
     unknown: 'Unknown error',
   },
 
+  feedback: {
+    button: 'Raise an issue',
+    buttonAria: 'Raise an issue or send feedback',
+    dialogTitle: 'Raise an issue',
+    scopeQuestion: 'What is your feedback about?',
+    scopeActivity: "What I'm doing right now",
+    scopeActivityNone: 'No specific activity on this screen',
+    scopeGeneral: 'The app in general',
+    scopeGeneralHint: 'Something about Lugʻatcha as a whole',
+    commentLabel: 'Your comments',
+    commentPlaceholder: 'Describe the problem or idea. What did you expect, and what happened?',
+    includedTitle: 'Included automatically',
+    includedNote:
+      "We'll attach details about this screen and your device so we can reproduce it. Nothing personal is collected.",
+    submit: 'Continue on GitHub',
+    submitHint: 'Opens a prefilled GitHub issue in a new tab',
+    issue: {
+      intro: 'Submitted from the in-app "Raise an issue" form.',
+      commentHeading: 'What happened',
+      activityHeading: 'Activity',
+      contextHeading: 'Environment',
+      noComment: '_(no comment provided)_',
+    },
+  },
+
   audio: {
     play: 'Play audio: {text}',
     playSlow: 'Play slow (0.75×)',
