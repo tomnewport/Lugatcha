@@ -6,6 +6,7 @@
  * the Web Speech API, requesting an Uzbek voice where the device has one.
  */
 import { audioKey } from './key'
+import { noteUzbekViewed } from '@/feedback/activityContext'
 
 const base = import.meta.env.BASE_URL
 
@@ -141,6 +142,8 @@ export function playChime(): void {
  * file is available.
  */
 export async function speakUzbek(text: string, { slow = false } = {}): Promise<void> {
+  // Record the word/phrase in view so the "Raise an issue" form can attach it.
+  noteUzbekViewed(text)
   stopSpeaking()
   const gen = speakGen
   const manifest = await getAudioManifest()
