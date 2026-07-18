@@ -6,7 +6,7 @@
  */
 
 const APOSTROPHES = /[‘’ʻʼ`´']/g
-const PUNCTUATION = /[.,!?;:"«»()—–]/g
+const PUNCTUATION = /[.,!?;:"«»()\[\]—–]/g
 
 export function normalizeToken(token: string): string {
   return token
@@ -19,6 +19,22 @@ export function normalizeToken(token: string): string {
 
 export function tokenize(sentence: string): string[] {
   return sentence.split(/\s+/).filter((t) => normalizeToken(t).length > 0)
+}
+
+/**
+ * A translation can mark clarifying words as optional by wrapping them in
+ * [square brackets] — e.g. "Can you tell me [when we get there]?". Bracketed
+ * words render as part of the sentence but may be built or omitted when
+ * assembling the phrase. Returns the ordered display tokens (brackets removed)
+ * and the set of normalised words that were marked optional.
+ */
+export function parseOptional(sentence: string): { tokens: string[]; optional: Set<string> } {
+  const optional = new Set<string>()
+  for (const match of sentence.matchAll(/\[([^\]]*)\]/g)) {
+    for (const token of tokenize(match[1])) optional.add(normalizeToken(token))
+  }
+  const tokens = tokenize(sentence.replace(/[[\]]/g, ' '))
+  return { tokens, optional }
 }
 
 const EDGE_PUNCT = /^[\s.,!?;:"«»()\[\]{}—–…·+\-“”]+|[\s.,!?;:"«»()\[\]{}—–…·+\-“”]+$/g
@@ -118,16 +134,20 @@ export function contentWords(tokens: string[]): string[] {
 }
 
 /**
- * Loose matching for story translations: every content word of the canonical
- * sentence must be present, no foreign (decoy) content words may be included,
- * and word order is ignored.
+ * Loose matching for story translations: every required content word of the
+ * canonical sentence must be present, no foreign (decoy) content words may be
+ * included, and word order is ignored. Words in `optional` (normalised) are
+ * neither required nor counted as foreign, so they may be built or left out.
  */
-export function validateLoose(assembled: string[], canonical: string[]): boolean {
-  const wanted = new Set(contentWords(canonical))
+export function validateLoose(
+  assembled: string[],
+  canonical: string[],
+  optional: Set<string> = new Set(),
+): boolean {
+  const wanted = new Set(contentWords(canonical).filter((word) => !optional.has(word)))
   const got = new Set(contentWords(assembled))
-  if (wanted.size === 0) return got.size === 0
   for (const word of wanted) if (!got.has(word)) return false
-  for (const word of got) if (!wanted.has(word)) return false
+  for (const word of got) if (!wanted.has(word) && !optional.has(word)) return false
   return true
 }
 

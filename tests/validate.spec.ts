@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   normalizeToken,
   tokenize,
+  parseOptional,
   validateStrictOrder,
   validateLoose,
   contentWords,
@@ -86,6 +87,30 @@ describe('validateLoose', () => {
 
   it('rejects decoy content words', () => {
     expect(validateLoose(['arrived', 'Tashkent', 'airport', 'luggage'], canonical)).toBe(false)
+  })
+
+  it('accepts an answer with or without optional words', () => {
+    const { tokens, optional } = parseOptional('Can you tell me [when we get there]?')
+    // Required content words only.
+    expect(validateLoose(['tell'], tokens, optional)).toBe(true)
+    // Optional content words included too.
+    expect(validateLoose(['tell', 'when', 'get'], tokens, optional)).toBe(true)
+    // A foreign content word is still rejected.
+    expect(validateLoose(['tell', 'luggage'], tokens, optional)).toBe(false)
+  })
+})
+
+describe('parseOptional', () => {
+  it('strips brackets from display tokens and collects optional words', () => {
+    const { tokens, optional } = parseOptional('Can you tell me [when we get there]?')
+    expect(tokens).toEqual(['Can', 'you', 'tell', 'me', 'when', 'we', 'get', 'there'])
+    expect([...optional].sort()).toEqual(['get', 'there', 'we', 'when'])
+  })
+
+  it('returns no optional words when there are no brackets', () => {
+    const { tokens, optional } = parseOptional('I arrived at the airport.')
+    expect(tokens).toEqual(['I', 'arrived', 'at', 'the', 'airport.'])
+    expect(optional.size).toBe(0)
   })
 })
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { tokenize, buildDecoys } from '@/exercises/validate'
+import { parseOptional, buildDecoys } from '@/exercises/validate'
 import { PHRASE_DECOYS, type PhrasePromptMode, type PracticePhrase } from '@/exercises/phrases'
 import { useContentLang } from '@/i18n/content'
 import { speakUzbek } from '@/audio/audio'
@@ -19,12 +19,14 @@ const { pick } = useContentLang()
 
 const translation = computed(() => pick(props.phrase.english, props.phrase.russian))
 const isEnglishAssembly = computed(() => props.mode === 'uzbek-to-english')
+const parsed = computed(() => parseOptional(translation.value))
 const targetTokens = computed(() =>
-  isEnglishAssembly.value ? tokenize(translation.value) : props.phrase.tokens,
+  isEnglishAssembly.value ? parsed.value.tokens : props.phrase.tokens,
 )
+const optional = computed(() => (isEnglishAssembly.value ? [...parsed.value.optional] : []))
 const decoys = computed(() => {
   const pool = isEnglishAssembly.value
-    ? props.pool.flatMap((p) => tokenize(pick(p.english, p.russian)))
+    ? props.pool.flatMap((p) => parseOptional(pick(p.english, p.russian)).tokens)
     : props.pool.flatMap((p) => p.tokens)
   return buildDecoys(targetTokens.value, pool, PHRASE_DECOYS)
 })
@@ -60,6 +62,7 @@ function onResult(result: AssemblyResult) {
     <TokenAssembly
       :tokens="targetTokens"
       :decoys="decoys"
+      :optional="optional"
       :mode="isEnglishAssembly ? 'loose' : 'strict'"
       @result="onResult"
     />

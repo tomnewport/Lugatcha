@@ -16,9 +16,11 @@ const props = withDefaults(
     decoys?: string[]
     /** strict = exact order (Uzbek phrases); loose = content words, any order (English translations). */
     mode?: 'strict' | 'loose'
+    /** Normalised words that may be built or omitted (loose mode only). */
+    optional?: string[]
     checkLabel?: string
   }>(),
-  { decoys: () => [], mode: 'strict', checkLabel: '' },
+  { decoys: () => [], mode: 'strict', optional: () => [], checkLabel: '' },
 )
 
 const emit = defineEmits<{ result: [AssemblyResult] }>()
@@ -216,7 +218,7 @@ function check() {
   const assembled = answer.value.map((t) => t.text)
   const ok =
     props.mode === 'loose'
-      ? validateLoose(assembled, props.tokens)
+      ? validateLoose(assembled, props.tokens, new Set(props.optional))
       : validateStrictOrder(assembled, props.tokens)
   attempts.value++
   if (ok) {
