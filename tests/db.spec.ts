@@ -3,6 +3,8 @@ import { LugatchaDB } from '@/db/LugatchaDB'
 import { ensureSeeded } from '@/db/seed'
 import {
   markWordsSeen,
+  forgetWord,
+  recordTestResult,
   recordMatchResult,
   completeExercise,
   recordLocationVisit,
@@ -93,6 +95,30 @@ describe('markWordsSeen', () => {
     await markWordsSeen(db, ['core.hello'])
     const second = await db.wordProgress.get('core.hello')
     expect(second?.seenAt).toBe(first?.seenAt)
+  })
+})
+
+describe('forgetWord', () => {
+  it('drops the word progress row so the word is unseen again', async () => {
+    await markWordsSeen(db, ['core.hello'])
+    expect(await db.wordProgress.get('core.hello')).toBeDefined()
+
+    await forgetWord(db, 'core.hello')
+    expect(await db.wordProgress.get('core.hello')).toBeUndefined()
+  })
+
+  it('clears partial learning too, and leaves other words untouched', async () => {
+    await markWordsSeen(db, ['core.hello', 'airport.passport'])
+    await recordTestResult(db, 'core.hello', 'read-choice', true)
+    expect((await db.wordProgress.get('core.hello'))?.testPassed).toContain('read-choice')
+
+    await forgetWord(db, 'core.hello')
+    expect(await db.wordProgress.get('core.hello')).toBeUndefined()
+    expect(await db.wordProgress.get('airport.passport')).toBeDefined()
+  })
+
+  it('is a no-op for a word with no progress', async () => {
+    await expect(forgetWord(db, 'core.hello')).resolves.toBeUndefined()
   })
 })
 

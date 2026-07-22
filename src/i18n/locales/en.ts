@@ -273,6 +273,20 @@ export default {
     empty:
       'No words learned yet. Do Learn Vocabulary at any location — pass all four question types for a word and it lands here.',
     learnedBadge: 'Learned',
+    tabs: {
+      learned: 'Learned',
+      learning: 'Learning',
+    },
+    learning: {
+      empty: 'Nothing on the go. Words you meet but haven’t finished learning show up here.',
+      intro: 'Words you’ve met but not fully learned. Reset any you’d rather not keep learning right now.',
+      metBadge: 'Just met',
+      forget: 'Reset',
+      forgetAria: 'Reset {word} — forget it and clear its progress',
+      confirm: 'Reset this word?',
+      confirmYes: 'Reset',
+      confirmNo: 'Keep',
+    },
     reviewSummary: '{count} word ready to review | {count} words ready to review',
     review: {
       dueNow: 'Review now',

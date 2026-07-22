@@ -100,6 +100,17 @@ export async function markWordsSeen(db: LugatchaDB, wordIds: string[]): Promise<
   })
 }
 
+/**
+ * Forgets a single word: drops its progress row entirely, so the word is no
+ * longer "seen" and any partial learning (passed skills, review schedule) is
+ * cleared. It falls back out of every review and daily-practice queue, and can
+ * be met again from scratch. Used by the chest to prune words met by accident —
+ * only offered on not-yet-learned words, so mastery can't be wiped this way.
+ */
+export async function forgetWord(db: LugatchaDB, wordId: string): Promise<void> {
+  await db.wordProgress.delete(wordId)
+}
+
 /** Prepends a flashcard match result, keeping only the most recent four. */
 export async function recordMatchResult(
   db: LugatchaDB,
