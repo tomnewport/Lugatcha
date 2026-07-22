@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { db, useLiveQuery } from '@/db/useDb'
-import { isWordLearned, isWordPartiallyLearned, passedTypes } from '@/exercises/test'
+import { isWordLearned, passedTypes } from '@/exercises/test'
 import { overdueRatio, reviewStatus, relativeDue, type ReviewStage } from '@/exercises/spacedRepetition'
 import { TEST_QUESTION_TYPES } from '@/db/types'
+import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import CyrillicSub from '@/components/CyrillicSub.vue'
 
-interface ChestWord {
+/** A fully-learned word, with its spaced-repetition snapshot for the retention view. */
+interface LearnedWord {
   id: string
   uzbek: string
   english: string
   russian?: string
-  passed: number
-  learned: boolean
   /** Spaced-repetition snapshot, precomputed so rows don't re-read the clock. */
   stage: ReviewStage
   strength: number
@@ -27,71 +27,110 @@ interface ChestWord {
   overdue: number
 }
 
+/** A word met but not yet fully learned — resettable from the Learning tab. */
+interface LearningWord {
+  id: string
+  uzbek: string
+  english: string
+  russian?: string
+  /** Skills passed so far (0 = only just met by browsing). */
+  passed: number
+}
+
 const { gloss } = useContentLang()
 const { t } = useI18n()
+const progress = useProgressStore()
 const open = ref(false)
+type Tab = 'learned' | 'learning'
+const tab = ref<Tab>('learned')
+/** The Learning row currently asking to confirm a reset (one at a time). */
+const confirmingId = ref<string | null>(null)
 
 /**
- * Every word the learner has started (one or more test types passed), joined
- * with its text and a spaced-repetition snapshot. A single list — no learned /
- * in-progress split — ordered so words due for review surface first (most
- * overdue leading), then by soonest upcoming review, so the chest doubles as an
- * at-a-glance "how retention is going" view.
+ * Every word the learner has met, split into two views:
+ *  - `learned`: fully learned words, joined with a spaced-repetition snapshot
+ *    and ordered so words due for review surface first (most overdue leading),
+ *    then by soonest upcoming review — the "how retention is going" view.
+ *  - `learning`: words met but not yet learned (including ones only just met by
+ *    browsing a vocabulary set, with no skills passed). Just-met words lead so
+ *    the ones swept in by accident are easy to find and reset.
  */
-const chest = useLiveQuery<{ items: ChestWord[]; learnedCount: number; dueCount: number }>(async () => {
+const chest = useLiveQuery<{
+  learned: LearnedWord[]
+  learning: LearningWord[]
+  dueCount: number
+}>(async () => {
   const now = Date.now()
-  const progress = await db.wordProgress.toArray()
-  const relevant = progress.filter((p) => passedTypes(p).length > 0)
+  const allProgress = await db.wordProgress.toArray()
+  // A word belongs in the chest once met (seen, or with any skill passed).
+  const relevant = allProgress.filter((p) => p.seenAt != null || passedTypes(p).length > 0)
   const words = await db.words.bulkGet(relevant.map((p) => p.wordId))
   const byId = new Map(words.filter(Boolean).map((w) => [w!.id, w!]))
 
-  const items: ChestWord[] = []
-  let learnedCount = 0
+  const learned: LearnedWord[] = []
+  const learning: LearningWord[] = []
   let dueCount = 0
   for (const p of relevant) {
     const word = byId.get(p.wordId)
     if (!word) continue
-    const learned = isWordLearned(p)
-    const partial = isWordPartiallyLearned(p)
-    if (!learned && !partial) continue
-    const status = reviewStatus(p.review, now)
-    const { value, unit } = relativeDue(status.dueInMs)
-    items.push({
-      id: word.id,
-      uzbek: word.uzbek,
-      english: word.english,
-      russian: word.russian,
-      passed: passedTypes(p).length,
-      learned,
-      stage: status.stage,
-      strength: status.strength,
-      due: status.due,
-      dueValue: value,
-      dueUnit: unit,
-      dueAt: p.review?.dueAt ?? now,
-      overdue: overdueRatio(p.review, now),
-    })
-    if (learned) learnedCount++
-    if (status.due) dueCount++
+    if (isWordLearned(p)) {
+      const status = reviewStatus(p.review, now)
+      const { value, unit } = relativeDue(status.dueInMs)
+      learned.push({
+        id: word.id,
+        uzbek: word.uzbek,
+        english: word.english,
+        russian: word.russian,
+        stage: status.stage,
+        strength: status.strength,
+        due: status.due,
+        dueValue: value,
+        dueUnit: unit,
+        dueAt: p.review?.dueAt ?? now,
+        overdue: overdueRatio(p.review, now),
+      })
+      if (status.due) dueCount++
+    } else {
+      learning.push({
+        id: word.id,
+        uzbek: word.uzbek,
+        english: word.english,
+        russian: word.russian,
+        passed: passedTypes(p).length,
+      })
+    }
   }
 
   // Due words first (most overdue leading), then upcoming by soonest review.
-  items.sort((a, b) => {
+  learned.sort((a, b) => {
     if (a.due !== b.due) return a.due ? -1 : 1
     if (a.due) return b.overdue - a.overdue
     return a.dueAt - b.dueAt
   })
+  // Just-met words (0 skills) first, then alphabetically within each rung.
+  learning.sort((a, b) => a.passed - b.passed || a.uzbek.localeCompare(b.uzbek))
 
-  return { items, learnedCount, dueCount }
-}, { items: [], learnedCount: 0, dueCount: 0 })
+  return { learned, learning, dueCount }
+}, { learned: [], learning: [], dueCount: 0 })
 
-const learnedCount = computed(() => chest.value.learnedCount)
+const learnedCount = computed(() => chest.value.learned.length)
+const learningCount = computed(() => chest.value.learning.length)
 const totalTypes = TEST_QUESTION_TYPES.length
 
+// Closing the panel, or leaving the Learning tab, drops any pending confirm.
+watch([open, tab], () => {
+  confirmingId.value = null
+})
+
 /** Short due label for a row: "Review now" or "in 3d". */
-function dueLabel(w: ChestWord): string {
+function dueLabel(w: LearnedWord): string {
   if (w.due) return t('chest.review.dueNow')
   return t('chest.review.dueIn', { time: `${w.dueValue}${t(`chest.review.units.${w.dueUnit}`)}` })
+}
+
+async function forget(id: string) {
+  await progress.forgetWord(id)
+  confirmingId.value = null
 }
 </script>
 
@@ -117,57 +156,128 @@ function dueLabel(w: ChestWord): string {
             </button>
           </header>
 
-          <p v-if="chest.items.length === 0" class="chest-panel__empty">
+          <p v-if="learnedCount === 0 && learningCount === 0" class="chest-panel__empty">
             {{ $t('chest.empty') }}
           </p>
 
-          <p v-else-if="chest.dueCount > 0" class="chest-panel__summary">
-            <span class="chest-panel__summary-dot" aria-hidden="true" />
-            {{ $t('chest.reviewSummary', { count: chest.dueCount }, chest.dueCount) }}
-          </p>
+          <template v-else>
+            <div class="chest-tabs" role="tablist">
+              <button
+                class="chest-tab"
+                :class="{ 'chest-tab--active': tab === 'learned' }"
+                type="button"
+                role="tab"
+                :aria-selected="tab === 'learned'"
+                @click="tab = 'learned'"
+              >
+                {{ $t('chest.tabs.learned') }} <span class="chest-tab__count">{{ learnedCount }}</span>
+              </button>
+              <button
+                class="chest-tab"
+                :class="{ 'chest-tab--active': tab === 'learning' }"
+                type="button"
+                role="tab"
+                :aria-selected="tab === 'learning'"
+                @click="tab = 'learning'"
+              >
+                {{ $t('chest.tabs.learning') }} <span class="chest-tab__count">{{ learningCount }}</span>
+              </button>
+            </div>
 
-          <section v-if="chest.items.length" class="chest-section">
-            <ul class="chest-list">
-              <li v-for="w in chest.items" :key="w.id" class="chest-item">
-                <AudioButton :text="w.uzbek" />
-                <span class="chest-item__main">
-                  <span class="chest-item__top">
-                    <span class="chest-item__word">
-                      <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
-                      <CyrillicSub :latin="w.uzbek" />
+            <!-- Learned: the retention / spaced-repetition view. -->
+            <template v-if="tab === 'learned'">
+              <p v-if="chest.dueCount > 0" class="chest-panel__summary">
+                <span class="chest-panel__summary-dot" aria-hidden="true" />
+                {{ $t('chest.reviewSummary', { count: chest.dueCount }, chest.dueCount) }}
+              </p>
+              <p v-if="learnedCount === 0" class="chest-panel__empty">{{ $t('chest.empty') }}</p>
+              <section v-else class="chest-section">
+                <ul class="chest-list">
+                  <li v-for="w in chest.learned" :key="w.id" class="chest-item">
+                    <AudioButton :text="w.uzbek" />
+                    <span class="chest-item__main">
+                      <span class="chest-item__top">
+                        <span class="chest-item__word">
+                          <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
+                          <CyrillicSub :latin="w.uzbek" />
+                        </span>
+                        <span class="chest-item__en">{{ gloss(w) }}</span>
+                        <span
+                          class="chest-item__badge chest-item__badge--learned"
+                          :aria-label="$t('chest.learnedBadge')"
+                        >✓</span>
+                      </span>
+                      <!-- Second line: concise spaced-repetition status. -->
+                      <span class="chest-item__srs">
+                        <span
+                          class="chest-item__meter"
+                          role="img"
+                          :aria-label="$t('chest.review.strengthAria', { stage: $t(`chest.review.stages.${w.stage}`) })"
+                        >
+                          <span
+                            v-for="n in 4"
+                            :key="n"
+                            class="chest-item__pip"
+                            :class="{ 'chest-item__pip--on': n <= w.strength }"
+                          />
+                        </span>
+                        <span class="chest-item__stage">{{ $t(`chest.review.stages.${w.stage}`) }}</span>
+                        <span
+                          class="chest-item__due"
+                          :class="{ 'chest-item__due--now': w.due }"
+                        >{{ dueLabel(w) }}</span>
+                      </span>
                     </span>
-                    <span class="chest-item__en">{{ gloss(w) }}</span>
-                    <span
-                      v-if="w.learned"
-                      class="chest-item__badge chest-item__badge--learned"
-                      :aria-label="$t('chest.learnedBadge')"
-                    >✓</span>
-                    <span v-else class="chest-item__badge">{{ w.passed }}/{{ totalTypes }}</span>
-                  </span>
-                  <!-- Second line: concise spaced-repetition status. -->
-                  <span class="chest-item__srs">
-                    <span
-                      class="chest-item__meter"
-                      role="img"
-                      :aria-label="$t('chest.review.strengthAria', { stage: $t(`chest.review.stages.${w.stage}`) })"
-                    >
-                      <span
-                        v-for="n in 4"
-                        :key="n"
-                        class="chest-item__pip"
-                        :class="{ 'chest-item__pip--on': n <= w.strength }"
-                      />
-                    </span>
-                    <span class="chest-item__stage">{{ $t(`chest.review.stages.${w.stage}`) }}</span>
-                    <span
-                      class="chest-item__due"
-                      :class="{ 'chest-item__due--now': w.due }"
-                    >{{ dueLabel(w) }}</span>
-                  </span>
-                </span>
-              </li>
-            </ul>
-          </section>
+                  </li>
+                </ul>
+              </section>
+            </template>
+
+            <!-- Learning: words met but not yet learned, each resettable. -->
+            <template v-else>
+              <p v-if="learningCount === 0" class="chest-panel__empty">{{ $t('chest.learning.empty') }}</p>
+              <template v-else>
+                <p class="chest-panel__intro">{{ $t('chest.learning.intro') }}</p>
+                <section class="chest-section">
+                  <ul class="chest-list">
+                    <li v-for="w in chest.learning" :key="w.id" class="chest-item">
+                      <AudioButton :text="w.uzbek" />
+                      <span class="chest-item__main">
+                        <span class="chest-item__top">
+                          <span class="chest-item__word">
+                            <span class="chest-item__uz" lang="uz">{{ w.uzbek }}</span>
+                            <CyrillicSub :latin="w.uzbek" />
+                          </span>
+                          <span class="chest-item__en">{{ gloss(w) }}</span>
+                          <span v-if="w.passed > 0" class="chest-item__badge">{{ w.passed }}/{{ totalTypes }}</span>
+                          <span v-else class="chest-item__badge chest-item__badge--met">{{ $t('chest.learning.metBadge') }}</span>
+                        </span>
+                      </span>
+                      <!-- Reset control, with an inline confirm to avoid mis-taps. -->
+                      <span v-if="confirmingId === w.id" class="chest-item__confirm">
+                        <span class="chest-item__confirm-q">{{ $t('chest.learning.confirm') }}</span>
+                        <button class="chest-item__confirm-yes" type="button" @click="forget(w.id)">
+                          {{ $t('chest.learning.confirmYes') }}
+                        </button>
+                        <button class="chest-item__confirm-no" type="button" @click="confirmingId = null">
+                          {{ $t('chest.learning.confirmNo') }}
+                        </button>
+                      </span>
+                      <button
+                        v-else
+                        class="chest-item__forget"
+                        type="button"
+                        :aria-label="$t('chest.learning.forgetAria', { word: w.uzbek })"
+                        @click="confirmingId = w.id"
+                      >
+                        {{ $t('chest.learning.forget') }}
+                      </button>
+                    </li>
+                  </ul>
+                </section>
+              </template>
+            </template>
+          </template>
         </div>
       </div>
     </Transition>
@@ -260,6 +370,52 @@ function dueLabel(w: ChestWord): string {
   padding: 1rem 0.25rem 1.5rem;
 }
 
+.chest-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+.chest-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.chest-tab--active {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-bg);
+}
+
+.chest-tab__count {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.chest-tab--active .chest-tab__count {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.chest-panel__intro {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin: 0 0.25rem 0.6rem;
+}
+
 .chest-section {
   overflow-y: auto;
 }
@@ -336,6 +492,65 @@ function dueLabel(w: ChestWord): string {
 
 .chest-item__badge--learned {
   color: var(--color-teal);
+}
+
+.chest-item__badge--met {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  opacity: 0.75;
+}
+
+/* Reset control on Learning rows */
+.chest-item__forget {
+  flex-shrink: 0;
+  padding: 0.3rem 0.6rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.chest-item__forget:hover {
+  border-color: var(--color-terracotta);
+  color: var(--color-terracotta);
+}
+
+.chest-item__confirm {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chest-item__confirm-q {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.chest-item__confirm-yes,
+.chest-item__confirm-no {
+  padding: 0.3rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1.5px solid var(--color-border);
+}
+
+.chest-item__confirm-yes {
+  background: var(--color-terracotta);
+  border-color: var(--color-terracotta);
+  color: #fff;
+}
+
+.chest-item__confirm-no {
+  background: var(--color-surface);
+  color: var(--color-text-muted);
 }
 
 /* Second line: spaced-repetition status */
