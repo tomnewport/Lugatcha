@@ -211,15 +211,26 @@ export const DAILY_PRACTICE_LENGTH = 20
  * this many seen-but-unlearned words; finishing one frees its slot for the next.
  */
 export const DAILY_BATCH_PER_THEME = 7
+/**
+ * Total seen-but-unlearned words drilled at once across every area. Meeting a
+ * whole vocabulary set (or dipping into several city areas) marks many words
+ * seen in one go; without a ceiling on top of the per-area batch, practice would
+ * try to teach them all at once. This caps the active load so the learner
+ * finishes a manageable set — the words closest to learned lead — before the
+ * next ones enter rotation.
+ */
+export const DAILY_ACTIVE_WORDS = 8
 
 /**
  * The Daily Practice queue: which (word, skill) pairs to drill, spaced so words
  * come round for review as they start to fade.
  *
  * A "skill" is a test question type; a word is learned once all four pass. Per
- * area we keep an active batch of up to seven seen-but-unlearned words — the
- * ones closest to learned lead, so finishing a word frees its slot for the next.
- * Practice drills only the skills those batch words have NOT passed yet,
+ * area we keep an active batch of up to seven seen-but-unlearned words, and only
+ * DAILY_ACTIVE_WORDS of them across all areas together — the ones closest to
+ * learned lead, so finishing a word frees its slot for the next and meeting a
+ * whole vocabulary set doesn't flood practice with more than can be learned at
+ * once. Practice drills only the skills those batch words have NOT passed yet,
  * interleaved across words for variety, so it never re-tests a skill already in
  * hand. Learned words are then folded back in for retention, but spaced: those
  * whose spaced-repetition review has fallen due (see spacedRepetition.ts) lead,
@@ -239,6 +250,7 @@ export function selectDailyPracticePairs(
    * material instead (exercises/practice.ts), with this filler as last resort.
    */
   fillWithRetests = true,
+  activeWordLimit = DAILY_ACTIVE_WORDS,
 ): PracticePair[] {
   const passedOf = (w: Word) => passedTypes(progress.get(w.id))
   const learned = (w: Word) => isWordLearned(progress.get(w.id))
@@ -255,13 +267,20 @@ export function selectDailyPracticePairs(
     arr.push(w)
     byTheme.set(w.theme, arr)
   }
-  const batch: Word[] = []
+  const themeBatches: Word[] = []
   for (const themeWords of byTheme.values()) {
     const ordered = shuffle(themeWords).sort(
       (a, b) => passedOf(b).length - passedOf(a).length || dueness(b) - dueness(a),
     )
-    batch.push(...ordered.slice(0, batchPerTheme))
+    themeBatches.push(...ordered.slice(0, batchPerTheme))
   }
+  // Global cap across every area: meeting a whole vocabulary set (or dipping
+  // into several areas) can mark far more words seen than can be learned at
+  // once. Keep only the closest-to-learned / most-overdue ones active so the
+  // learner finishes a manageable set before the rest enter rotation.
+  const batch = themeBatches
+    .sort((a, b) => passedOf(b).length - passedOf(a).length || dueness(b) - dueness(a))
+    .slice(0, activeWordLimit)
 
   const pairs: PracticePair[] = []
   const used = new Set<string>()

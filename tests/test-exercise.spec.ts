@@ -13,6 +13,7 @@ import {
   foldTyping,
   TEST_LENGTH,
   NEW_WORDS_PER_TEST,
+  DAILY_ACTIVE_WORDS,
 } from '@/exercises/test'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import type { Word, WordProgress } from '@/db/types'
@@ -142,6 +143,26 @@ describe('selectDailyPracticePairs', () => {
     const words = Array.from({ length: 12 }, (_, i) => themed(`a${i}`, 'airport'))
     const pairs = selectDailyPracticePairs(words, prog, 100)
     expect(new Set(pairs.map((p) => p.word.id)).size).toBeLessThanOrEqual(7)
+  })
+
+  it('caps the active batch across areas so meeting many sets at once does not flood practice', () => {
+    // Two whole vocabulary sets met in one go: 10 + 11 seen-but-unlearned words.
+    const prog = new Map<string, WordProgress | undefined>()
+    const colours = Array.from({ length: 10 }, (_, i) => themed(`c${i}`, 'colours'))
+    const animals = Array.from({ length: 11 }, (_, i) => themed(`a${i}`, 'animals'))
+    const pairs = selectDailyPracticePairs([...colours, ...animals], prog, 100)
+    // Without a global cap this would drill 7 per area = 14 words at once.
+    expect(new Set(pairs.map((p) => p.word.id)).size).toBeLessThanOrEqual(DAILY_ACTIVE_WORDS)
+  })
+
+  it('leads the active batch with the words closest to learned', () => {
+    // A word one skill from learned should be inside the cap ahead of fresh ones.
+    const prog = new Map<string, WordProgress | undefined>()
+    const fresh = Array.from({ length: DAILY_ACTIVE_WORDS + 4 }, (_, i) => themed(`f${i}`, 'animals'))
+    const nearlyDone = themed('nearly', 'colours')
+    prog.set('nearly', progress(['read-choice', 'listen-choice', 'type']))
+    const pairs = selectDailyPracticePairs([nearlyDone, ...fresh], prog, 100)
+    expect(pairs.some((p) => p.word.id === 'nearly')).toBe(true)
   })
 
   it('serves the requested number of questions when there is enough to drill', () => {
