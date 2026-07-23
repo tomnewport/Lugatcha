@@ -17,8 +17,27 @@ import { isDue } from './spacedRepetition'
 /** Places that are their own flow (onboarding gate, School, Travel) — never a Continue target. */
 const SPECIAL_LOCATIONS = new Set<string>(['school', 'travel', WELCOME_CENTER_ID])
 
-/** Two practice activities a location must have done to count as complete. */
-const COMPLETION_EXERCISES = ['roleplay', 'storytime'] as const
+/**
+ * Every practised activity type an area must complete once to count as done —
+ * the same set the Welcome Center requires (New Words / intro is excluded, since
+ * meeting the words is tracked as "all words seen" instead).
+ */
+const COMPLETION_EXERCISES = [
+  'flashcards',
+  'listening',
+  'phrase-assembly',
+  'roleplay',
+  'storytime',
+  'test',
+] as const
+
+/**
+ * Most met-but-not-learned words an area may still carry and count as complete.
+ * Seeing every word and doing every activity finishes an area, but a big backlog
+ * of unlearned words shouldn't be waved through as "done" — keep it to a
+ * manageable handful. Measured per area (its own seen-minus-learned count).
+ */
+export const MAX_UNLEARNED_TO_COMPLETE = 10
 
 export interface LocationSummary {
   location: Location
@@ -31,11 +50,19 @@ export interface LocationSummary {
   progress: LocationProgress | undefined
 }
 
-/** Complete = every word learned and the roleplay and story both done (matches the map tile). */
+/**
+ * Complete = every word met, every activity type done once, and no more than a
+ * handful of met-but-not-learned words still outstanding (matches the map tile).
+ * Keyed on words *seen* rather than *learned*: learned words can lapse back to
+ * unlearned in daily practice, so a learned-count gate made completion flicker.
+ */
 export function isLocationComplete(s: LocationSummary): boolean {
   if (s.totalWords === 0) return false
   const done = new Set(s.progress?.completedExercises ?? [])
-  return s.knownWords >= s.totalWords && COMPLETION_EXERCISES.every((e) => done.has(e))
+  const allSeen = s.seenWords >= s.totalWords
+  const allActivities = COMPLETION_EXERCISES.every((e) => done.has(e))
+  const unlearned = s.seenWords - s.knownWords
+  return allSeen && allActivities && unlearned <= MAX_UNLEARNED_TO_COMPLETE
 }
 
 /** Started = the learner has met a word here or finished at least one activity. */
@@ -44,17 +71,18 @@ export function isLocationStarted(s: LocationSummary): boolean {
 }
 
 /**
- * How close a location is to complete, 0–1. Weighted toward words learned (the
- * bulk of the work) with a nudge for the two activities completion also needs,
- * so "closest to finishing" ranks a nearly-learned area above a barely-started
- * one.
+ * How close a location is to complete, 0–1. Weighted toward words seen (the bulk
+ * of the work, and the count completion now turns on) with a nudge for the
+ * activities completion also needs, so "closest to finishing" ranks a
+ * nearly-explored area above a barely-started one — and stays steady rather than
+ * jumping as learned words lapse.
  */
 export function completionScore(s: LocationSummary): number {
   if (s.totalWords === 0) return 0
-  const known = Math.min(1, s.knownWords / s.totalWords)
+  const seen = Math.min(1, s.seenWords / s.totalWords)
   const done = new Set(s.progress?.completedExercises ?? [])
   const activities = COMPLETION_EXERCISES.filter((e) => done.has(e)).length / COMPLETION_EXERCISES.length
-  return 0.75 * known + 0.25 * activities
+  return 0.75 * seen + 0.25 * activities
 }
 
 export interface ContinueSuggestion {

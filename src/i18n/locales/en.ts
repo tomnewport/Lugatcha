@@ -50,7 +50,7 @@ export default {
     loading: 'Finding your next stop…',
     resumeEyebrow: 'Pick up where you left off',
     newEyebrow: 'Ready for somewhere new?',
-    progressWords: '{known} / {total} words learned',
+    progressWords: '{seen} / {total} words seen',
     go: "Let's go",
     continueCta: 'Continue',
     reviewEyebrow: 'Keep it fresh',
