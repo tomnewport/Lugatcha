@@ -2,7 +2,8 @@
 """Generate prebuilt Uzbek audio for Lugʻatcha.
 
 Enumerates every spoken string in public/data (word entries, story sentences,
-roleplay turns), synthesises each one with Yandex SpeechKit, and writes
+roleplay turns, lesson audio) plus the counting-quiz number readings generated
+in code, synthesises each one with Yandex SpeechKit, and writes
 content-addressed MP3s plus public/audio/yandex/manifest.json. The app looks
 clips up by the same text hash (src/audio/key.ts) and falls back to the Web
 Speech API for anything missing, so partial runs are safe.
@@ -91,6 +92,63 @@ def _has_letter(text: str) -> bool:
     return any(ch.isalpha() for ch in text)
 
 
+# ---------------------------------------------------------------------------
+# Uzbek cardinals — MUST stay identical to src/exercises/numbers.ts.
+#
+# The counting quiz (src/components/school/CountingQuiz.vue) speaks numbers it
+# generates at runtime via numberToUzbek(), so those readings live in code, not
+# in public/data — without enumerating them here the whole 0–100 range falls
+# through to the Web Speech fallback. NUMBER_SELF_TEST pins a few anchors (the
+# same ones tests/numbers.spec.ts checks) so this port can't silently drift.
+# ---------------------------------------------------------------------------
+
+_ONES = ["nol", "bir", "ikki", "uch", "to'rt", "besh", "olti", "yetti", "sakkiz", "to'qqiz"]
+# Index = the tens digit; index 1 is o'n (10), 2 is yigirma (20), …
+_TENS = ["", "o'n", "yigirma", "o'ttiz", "qirq", "ellik", "oltmish", "yetmish", "sakson", "to'qson"]
+
+# generateCountingQuiz defaults to max=100 and CountingQuiz.vue uses that
+# default, so the quiz never speaks a number outside 0–100 inclusive.
+COUNTING_QUIZ_MAX = 100
+
+NUMBER_SELF_TEST = {
+    0: "nol",
+    7: "yetti",
+    10: "o'n",
+    11: "o'n bir",
+    21: "yigirma bir",
+    99: "to'qson to'qqiz",
+    100: "yuz",
+}
+
+
+def number_to_uzbek(n: int) -> str:
+    """Render 0–9999 as its spoken Uzbek cardinal (mirrors numberToUzbek)."""
+    if not (0 <= n <= 9999):
+        raise ValueError(f"number_to_uzbek supports 0–9999, got {n}")
+    if n == 0:
+        return "nol"
+    parts: list[str] = []
+    thousands, hundreds, tens, ones = n // 1000, (n % 1000) // 100, (n % 100) // 10, n % 10
+    if thousands:
+        if thousands > 1:
+            parts.append(number_to_uzbek(thousands))
+        parts.append("ming")
+    if hundreds:
+        if hundreds > 1:
+            parts.append(_ONES[hundreds])
+        parts.append("yuz")
+    if tens:
+        parts.append(_TENS[tens])
+    if ones:
+        parts.append(_ONES[ones])
+    return " ".join(parts)
+
+
+def counting_quiz_texts() -> list[str]:
+    """Every Uzbek number reading the counting quiz can speak (0–max inclusive)."""
+    return [number_to_uzbek(n) for n in range(COUNTING_QUIZ_MAX + 1)]
+
+
 def self_test() -> None:
     fixtures = json.loads(FIXTURES.read_text(encoding="utf-8"))
     failures = [
@@ -100,9 +158,19 @@ def self_test() -> None:
     ]
     for text, expected, got in failures:
         print(f"MISMATCH {text!r}: expected {expected}, got {got}", file=sys.stderr)
-    if failures:
+    number_failures = [
+        (n, expected, number_to_uzbek(n))
+        for n, expected in NUMBER_SELF_TEST.items()
+        if number_to_uzbek(n) != expected
+    ]
+    for n, expected, got in number_failures:
+        print(f"MISMATCH number {n}: expected {expected!r}, got {got!r}", file=sys.stderr)
+    if failures or number_failures:
         sys.exit(1)
-    print(f"self-test OK — {len(fixtures)} fixtures match src/audio/key.ts")
+    print(
+        f"self-test OK — {len(fixtures)} fixtures match src/audio/key.ts, "
+        f"{len(NUMBER_SELF_TEST)} number readings match src/exercises/numbers.ts"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -154,6 +222,10 @@ def collect_texts() -> dict[str, str]:
                 if exercise["engine"] == "build":
                     joiner = exercise.get("joiner", " ")
                     phrases.append(exercise.get("audioText") or joiner.join(exercise["tokens"]))
+
+    # Counting quiz: number readings are generated in code, not in public/data,
+    # so enumerate the range the quiz can speak (mirrors numbers.ts).
+    phrases.extend(counting_quiz_texts())
 
     collected: dict[str, str] = {}
 
