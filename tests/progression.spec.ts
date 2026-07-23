@@ -34,23 +34,44 @@ const bothActivities = (id: string) => ({
   locationId: id,
   completedExercises: ['roleplay', 'storytime'] as const as never,
 })
+/** Every activity type completion now requires. */
+const allActivities = (id: string) => ({
+  locationId: id,
+  completedExercises: ['flashcards', 'listening', 'phrase-assembly', 'roleplay', 'storytime', 'test'] as const as never,
+})
 
 describe('location completion classification', () => {
-  it('is complete only when all words learned and both activities done', () => {
+  it('completes on all words seen + every activity, even without full mastery', () => {
+    // All seen, every activity, only a few unlearned → done (needn't master all).
     expect(
-      isLocationComplete(summary('a', { knownWords: 10, progress: bothActivities('a') })),
+      isLocationComplete(summary('a', { seenWords: 10, knownWords: 4, progress: allActivities('a') })),
     ).toBe(true)
-    // Missing an activity
+  })
+
+  it('needs every activity type, not just some', () => {
     expect(
-      isLocationComplete(
-        summary('a', { knownWords: 10, progress: { locationId: 'a', completedExercises: ['roleplay'] } }),
-      ),
+      isLocationComplete(summary('a', { seenWords: 10, knownWords: 10, progress: bothActivities('a') })),
     ).toBe(false)
-    // Words not all learned
+  })
+
+  it('needs every word seen', () => {
     expect(
-      isLocationComplete(summary('a', { knownWords: 9, progress: bothActivities('a') })),
+      isLocationComplete(summary('a', { seenWords: 9, knownWords: 9, progress: allActivities('a') })),
     ).toBe(false)
-    // Empty location is never "complete"
+  })
+
+  it('is not complete while more than ten words remain unlearned', () => {
+    // 16 seen, only 3 learned → 13 unlearned, over the cap.
+    expect(
+      isLocationComplete(summary('a', { totalWords: 16, seenWords: 16, knownWords: 3, progress: allActivities('a') })),
+    ).toBe(false)
+    // Learn enough to bring unlearned down to the cap → complete.
+    expect(
+      isLocationComplete(summary('a', { totalWords: 16, seenWords: 16, knownWords: 6, progress: allActivities('a') })),
+    ).toBe(true)
+  })
+
+  it('is never complete for an empty location', () => {
     expect(isLocationComplete(summary('a', { totalWords: 0 }))).toBe(false)
   })
 
@@ -85,7 +106,7 @@ describe('pickContinueTarget', () => {
 
   it('never resumes a completed location', () => {
     const summaries = [
-      summary('done', { seenWords: 10, knownWords: 10, progress: bothActivities('done') }),
+      summary('done', { seenWords: 10, knownWords: 10, progress: allActivities('done') }),
       summary('a', { seenWords: 4, knownWords: 3 }),
     ]
     expect(pickContinueTarget(summaries)?.location.id).toBe('a')
@@ -93,7 +114,7 @@ describe('pickContinueTarget', () => {
 
   it('suggests the first unstarted location when nothing is in progress', () => {
     const summaries = [
-      summary('done', { seenWords: 10, knownWords: 10, progress: bothActivities('done') }),
+      summary('done', { seenWords: 10, knownWords: 10, progress: allActivities('done') }),
       summary('next'),
       summary('later'),
     ]
@@ -104,8 +125,8 @@ describe('pickContinueTarget', () => {
 
   it('returns null when every location is complete', () => {
     const summaries = [
-      summary('a', { seenWords: 10, knownWords: 10, progress: bothActivities('a') }),
-      summary('b', { seenWords: 10, knownWords: 10, progress: bothActivities('b') }),
+      summary('a', { seenWords: 10, knownWords: 10, progress: allActivities('a') }),
+      summary('b', { seenWords: 10, knownWords: 10, progress: allActivities('b') }),
     ]
     expect(pickContinueTarget(summaries)).toBeNull()
   })

@@ -51,7 +51,7 @@ const ru: MessageSchema = {
     loading: 'Ищем следующую остановку…',
     resumeEyebrow: 'Продолжите с того места, где остановились',
     newEyebrow: 'Готовы к новому месту?',
-    progressWords: '{known} / {total} слов выучено',
+    progressWords: '{seen} / {total} слов встречено',
     go: 'Вперёд',
     continueCta: 'Продолжить',
     reviewEyebrow: 'Держим в памяти',

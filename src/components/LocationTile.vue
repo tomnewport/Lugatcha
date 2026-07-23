@@ -31,12 +31,26 @@ const RADIUS = 18
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 const completedCount = computed(() => props.progress?.completedExercises.length ?? 0)
+// Completion mirrors progression.isLocationComplete (kept in sync): every word
+// seen, every activity type done once, and no big backlog of unlearned words.
+const COMPLETION_EXERCISES = [
+  'flashcards',
+  'listening',
+  'phrase-assembly',
+  'roleplay',
+  'storytime',
+  'test',
+] as const
+const MAX_UNLEARNED_TO_COMPLETE = 10
 const isComplete = computed(() => {
   const total = props.totalWords ?? 0
   if (total === 0) return false
-  const allKnown = (props.knownWords ?? 0) >= total
+  const seen = props.seenWords ?? 0
+  const known = props.knownWords ?? 0
   const done = new Set(props.progress?.completedExercises ?? [])
-  return allKnown && done.has('roleplay') && done.has('storytime')
+  const allSeen = seen >= total
+  const allActivities = COMPLETION_EXERCISES.every((e) => done.has(e))
+  return allSeen && allActivities && seen - known <= MAX_UNLEARNED_TO_COMPLETE
 })
 
 const seenFraction = computed(() => {

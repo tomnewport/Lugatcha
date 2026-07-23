@@ -50,7 +50,7 @@ onMounted(async () => {
 /** Locations still worth visiting — the override picker (excludes finished areas). */
 const pickable = computed(() => summaries.value.filter((s) => !isLocationComplete(s)))
 
-/** A short "8 / 12 words learned" line for the suggested location. */
+/** A short "8 / 12 words seen" line for the suggested location. */
 const targetSummary = computed(() =>
   target.value ? summaries.value.find((s) => s.location.id === target.value!.location.id) ?? null : null,
 )
@@ -124,7 +124,7 @@ function goLocation(id: string) {
             <span class="cl__place-name" lang="uz">{{ target.location.name.uz }}</span>
             <span class="cl__place-sub">{{ name(target.location.name) }}</span>
             <span v-if="targetSummary && targetSummary.totalWords > 0" class="cl__progress">
-              {{ $t('continue.progressWords', { known: targetSummary.knownWords, total: targetSummary.totalWords }) }}
+              {{ $t('continue.progressWords', { seen: targetSummary.seenWords, total: targetSummary.totalWords }) }}
             </span>
             <button class="btn btn--primary cl__go" type="button" @click="goLocation(target.location.id)">
               {{ target.kind === 'new' ? $t('continue.go') : $t('continue.continueCta') }}
