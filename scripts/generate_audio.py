@@ -223,6 +223,18 @@ def collect_texts() -> dict[str, str]:
                     joiner = exercise.get("joiner", " ")
                     phrases.append(exercise.get("audioText") or joiner.join(exercise["tokens"]))
 
+    # Vocabulary groups (School): each groups/<id>.json embeds its own word
+    # gallery (spoken per word in GroupReview) and an `article` of lesson-style
+    # sections (examples spoken in LessonSectionCard). These live outside
+    # public/data/words, so scan them here too.
+    groups_dir = DATA_DIR / "groups"
+    if groups_dir.exists():
+        for meta in json.loads((groups_dir / "index.json").read_text(encoding="utf-8")):
+            group = json.loads((groups_dir / f"{meta['id']}.json").read_text(encoding="utf-8"))
+            entries.extend(word["uzbek"] for word in group.get("words", []))
+            for section in group.get("article", []):
+                phrases.extend(ex["uzbek"] for ex in section.get("examples", []))
+
     # Counting quiz: number readings are generated in code, not in public/data,
     # so enumerate the range the quiz can speak (mirrors numbers.ts).
     phrases.extend(counting_quiz_texts())
