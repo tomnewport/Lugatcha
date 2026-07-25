@@ -62,6 +62,7 @@ function onKeydown(event: KeyboardEvent) {
     class="raise-btn"
     type="button"
     :aria-label="$t('feedback.buttonAria')"
+    :title="$t('feedback.button')"
     @click="openForm"
   >
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -73,7 +74,6 @@ function onKeydown(event: KeyboardEvent) {
       <path d="M12 7v4" stroke-linecap="round" />
       <circle cx="12" cy="14.5" r="0.6" fill="currentColor" stroke="none" />
     </svg>
-    <span class="raise-btn__label">{{ $t('feedback.button') }}</span>
   </button>
 
   <Teleport to="body">
@@ -200,22 +200,27 @@ function onKeydown(event: KeyboardEvent) {
 </template>
 
 <style scoped>
+/* A compact icon-only button, tucked into the bottom-right corner beneath the
+   primary action lane. The full-width "Continue / Next" CTA sits ~4.5rem up and
+   the language footer is horizontally centred, so this corner stays clear —
+   fixing the accidental taps reported when the old wide pill overlapped the
+   CTA (issue #151). The accessible name lives in aria-label/title. */
 .raise-btn {
   position: fixed;
-  right: 0.75rem;
-  bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  right: 0.85rem;
+  bottom: calc(1rem + env(safe-area-inset-bottom));
   z-index: 40;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.7rem;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  padding: 0;
   border: 1.5px solid var(--color-border);
-  border-radius: 999px;
+  border-radius: 50%;
   background: var(--color-surface);
   color: var(--color-text-muted);
   box-shadow: var(--shadow-sm);
-  font-size: 0.78rem;
-  font-weight: 700;
 }
 
 .raise-btn:hover {
@@ -224,13 +229,9 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 .raise-btn svg {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
-}
-
-.raise-btn__label {
-  line-height: 1;
 }
 
 .raise-overlay {
