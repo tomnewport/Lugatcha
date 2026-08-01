@@ -21,7 +21,7 @@ import type { ExerciseType } from '@/db/types'
  * Vocabulary session) before the rest of the city opens. It stays available
  * afterwards to re-sit any of them.
  */
-const emit = defineEmits<{ start: [type: ExerciseType] }>()
+const emit = defineEmits<{ start: [type: ExerciseType]; restore: [] }>()
 
 const route = useRoute()
 const router = useRouter()
@@ -215,6 +215,17 @@ function goToCity() {
           </button>
           <p class="checklist__resit">{{ $t('welcome.resit') }}</p>
         </template>
+
+        <!-- Recovery: a returning learner who lost their progress can reinstate
+             what they already know instead of redoing the whole induction. -->
+        <button v-if="!complete" class="restore-link" type="button" @click="emit('restore')">
+          <span class="restore-link__icon" aria-hidden="true">♻️</span>
+          <span class="restore-link__text">
+            <span class="restore-link__label">{{ $t('restore.entryLabel') }}</span>
+            <span class="restore-link__desc">{{ $t('restore.entryDesc') }}</span>
+          </span>
+          <span class="restore-link__chevron" aria-hidden="true">›</span>
+        </button>
       </section>
 
       <section class="how">
@@ -535,6 +546,55 @@ function goToCity() {
   font-style: italic;
   text-align: center;
   margin: 0;
+}
+
+.restore-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  text-align: left;
+  margin-top: 0.2rem;
+  padding: 0.6rem 0.7rem;
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+}
+
+.restore-link:hover {
+  border-color: var(--color-teal);
+}
+
+.restore-link__icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.restore-link__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.restore-link__label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.restore-link__desc {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.restore-link__chevron {
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  color: var(--color-text-muted);
 }
 
 /* How the city works */

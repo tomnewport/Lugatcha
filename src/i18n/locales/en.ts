@@ -36,6 +36,13 @@ export default {
     continueAria: 'Continue learning — pick your next place',
     continueLessonAria: 'Continue learning — your next activity',
     streakDays: '{count}-day streak',
+    backupNowAria: 'Back up your progress',
+    backupDone: 'Backup ready ✓',
+    backupReminder:
+      'Your progress lives only on this device. Back it up now and again so a cleared browser or a new phone never loses it.',
+    backupNow: 'Back up now',
+    backingUp: 'Preparing…',
+    backupLater: 'Later',
   },
 
   practice: {
@@ -169,6 +176,24 @@ export default {
     choose: 'Choose an activity',
     orChoose: 'Or choose another activity',
     chainStep: '{step} of {total}',
+  },
+
+  restore: {
+    entryLabel: 'Already know some of this?',
+    entryDesc: 'Restore words you know and skip activities you have done',
+    title: 'Restore your progress',
+    intro:
+      "Lost your progress? Tick the words you already know to mark them learned, and tick the activities you've already done to skip them — no need to start over.",
+    wordsTitle: 'Words you already know',
+    wordsDesc: 'Only tick words you can genuinely recall — they will be marked as learned.',
+    selectAll: 'Select all',
+    clearAll: 'Clear all',
+    known: 'Known',
+    activitiesTitle: "Activities you've done",
+    activitiesDesc: 'Tick anything you have already completed here so it counts as done.',
+    done: 'Done',
+    apply: 'Restore selected',
+    applying: 'Restoring…',
   },
 
   school: {

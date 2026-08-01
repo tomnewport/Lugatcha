@@ -27,6 +27,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   select: [ExerciseType]
   back: []
+  restore: []
 }>()
 
 const { name } = useContentLang()
@@ -118,6 +119,16 @@ function emoji(type: ExerciseType): string {
     </ul>
 
     <p v-if="!anyAvailable" class="menu__nothing">{{ $t('location.nothingNew') }}</p>
+
+    <!-- Recovery: reinstate words you already know without re-learning them. -->
+    <button class="restore-link" type="button" @click="emit('restore')">
+      <span class="restore-link__icon" aria-hidden="true">♻️</span>
+      <span class="restore-link__text">
+        <span class="restore-link__label">{{ $t('restore.entryLabel') }}</span>
+        <span class="restore-link__desc">{{ $t('restore.entryDesc') }}</span>
+      </span>
+      <span class="restore-link__chevron" aria-hidden="true">›</span>
+    </button>
   </main>
 </template>
 
@@ -288,5 +299,54 @@ function emoji(type: ExerciseType): string {
   color: var(--color-text-muted);
   text-align: center;
   margin: 0.5rem 0 0;
+}
+
+.restore-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  text-align: left;
+  margin-top: 0.35rem;
+  padding: 0.6rem 0.7rem;
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  cursor: pointer;
+}
+
+.restore-link:hover {
+  border-color: var(--color-teal);
+}
+
+.restore-link__icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.restore-link__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.restore-link__label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.restore-link__desc {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.restore-link__chevron {
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  color: var(--color-text-muted);
 }
 </style>

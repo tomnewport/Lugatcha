@@ -17,6 +17,7 @@ import { playChime } from '@/audio/audio'
 import { WELCOME_CENTER_ID } from '@/db/progress'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import LocationMenu from '@/components/LocationMenu.vue'
+import LocationRestore from '@/components/LocationRestore.vue'
 import WelcomeInduction from '@/components/WelcomeInduction.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
 import FlashcardsExercise from '@/components/exercise/FlashcardsExercise.vue'
@@ -36,6 +37,8 @@ const { name } = useContentLang()
 const location = ref<Location | null>(null)
 const activeExercise = ref<ExerciseType | null>(null)
 const sessionKey = ref(0)
+/** The manual-recovery panel is open (reinstate known words / done activities). */
+const restoring = ref(false)
 
 /**
  * Continue Learning launches a location with `?chain=N`, asking for N activities
@@ -242,8 +245,20 @@ useActivityContext(() => {
     />
   </ExerciseLayout>
 
+  <!-- Manual recovery: reinstate already-known words and completed activities -->
+  <LocationRestore
+    v-else-if="location && restoring"
+    :location="location"
+    @done="restoring = false"
+    @back="restoring = false"
+  />
+
   <!-- Welcome Center induction: explains the city, then guides through each activity -->
-  <WelcomeInduction v-else-if="location && isWelcome" @start="startWelcomeActivity" />
+  <WelcomeInduction
+    v-else-if="location && isWelcome"
+    @start="startWelcomeActivity"
+    @restore="restoring = true"
+  />
 
   <!-- Location menu: opened from the city map, the learner picks what to do -->
   <LocationMenu
@@ -253,6 +268,7 @@ useActivityContext(() => {
     :suggested="suggested"
     @select="startWelcomeActivity"
     @back="router.push('/')"
+    @restore="restoring = true"
   />
 
   <!-- Loading (also the brief gap between chained activities) -->

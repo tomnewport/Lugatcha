@@ -10,6 +10,7 @@ import { clearAllLocalData } from '@/db/clearAll'
 import { db } from '@/db'
 import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/db/backup'
 import { saveBackup, pickBackupText } from '@/db/backupIO'
+import { markBackedUp } from '@/db/backupReminder'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -75,6 +76,7 @@ async function backupNow() {
   try {
     const shared = await saveBackup(await collectBackup(db))
     if (shared) {
+      markBackedUp()
       backupDone.value = true
       setTimeout(() => (backupDone.value = false), 4000)
     }
