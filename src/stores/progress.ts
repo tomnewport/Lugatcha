@@ -3,6 +3,8 @@ import { db } from '@/db'
 import type { ExerciseType, TestQuestionType } from '@/db/types'
 import {
   markWordsSeen,
+  markWordsKnown,
+  markExercisesDone,
   forgetWord,
   recordMatchResult,
   recordTestResult,
@@ -25,6 +27,12 @@ export const useProgressStore = defineStore('progress', {
   actions: {
     markWordsSeen(wordIds: string[]) {
       return markWordsSeen(db, wordIds)
+    },
+    markWordsKnown(wordIds: string[]) {
+      return markWordsKnown(db, wordIds)
+    },
+    markExercisesDone(locationId: string, exercises: ExerciseType[]) {
+      return markExercisesDone(db, locationId, exercises)
     },
     forgetWord(wordId: string) {
       return forgetWord(db, wordId)

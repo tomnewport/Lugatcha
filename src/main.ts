@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import { db, ensureSeeded } from './db'
+import { requestPersistentStorage } from './db/persist'
 import { installErrorHandlers, captureError } from './errors/reporter'
 import { showFatalError } from './errors/fatalScreen'
 import { i18n, setI18nLocale } from './i18n'
@@ -74,6 +75,10 @@ try {
     console.error(error)
     captureError('seed', error, 'while loading vocabulary')
   })
+
+  // Best-effort: ask the browser not to evict a learner's progress (see
+  // db/persist.ts). Fire-and-forget — startup never depends on the answer.
+  void requestPersistentStorage()
 } catch (error) {
   showFatalError('bootstrap', error, 'while starting the app')
 }

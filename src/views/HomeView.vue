@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { loadLocations } from '@/db/locations'
 import { useLiveQuery, db } from '@/db/useDb'
@@ -14,6 +14,14 @@ import ContinueLearning from '@/components/ContinueLearning.vue'
 import AppLogo from '@/components/AppLogo.vue'
 import AppLogotype from '@/components/AppLogotype.vue'
 import { useAudioReady } from '@/audio/offline'
+import { collectBackup } from '@/db/backup'
+import { saveBackup } from '@/db/backupIO'
+import {
+  isBackupReminderDue,
+  ensureReminderBaseline,
+  markBackedUp,
+  snoozeReminder,
+} from '@/db/backupReminder'
 import { currentStreak, streakChips } from '@/streak'
 import { selectAutoExercise, EXERCISE_EMOJI, type LocationStats } from '@/exercises/potluck'
 import { MAP_MARKERS, markerStyle, markerCentre } from '@/map/cityMap'
@@ -65,6 +73,52 @@ onMounted(async () => {
 })
 
 const allProgress = useLiveQuery(() => db.locationProgress.toArray(), [] as LocationProgress[])
+
+// --- Backup: an always-available button plus a couple-of-days reminder ---------
+// Progress lives only on this device, so a browser wipe (notably WebKit's ~7-day
+// eviction of an un-installed PWA) loses everything. A backup file kept in a
+// synced folder is the safety net; this nudges the learner to keep one fresh.
+const hasProgress = useLiveQuery(async () => (await db.wordProgress.count()) > 0, false)
+const backupReminderVisible = ref(false)
+const backingUp = ref(false)
+const backupJustDone = ref(false)
+
+watch(
+  hasProgress,
+  (has) => {
+    if (!has) {
+      backupReminderVisible.value = false
+      return
+    }
+    // Start the grace clock on first progress; then surface the nudge when due.
+    ensureReminderBaseline(true)
+    backupReminderVisible.value = isBackupReminderDue(true)
+  },
+  { immediate: true },
+)
+
+// The reminder shares the banner slot with the audio prompt; show one at a time.
+const showBackupReminder = computed(() => backupReminderVisible.value && !showBanner.value)
+
+async function backupNow() {
+  backingUp.value = true
+  try {
+    const shared = await saveBackup(await collectBackup(db))
+    if (shared) {
+      markBackedUp()
+      backupReminderVisible.value = false
+      backupJustDone.value = true
+      setTimeout(() => (backupJustDone.value = false), 4000)
+    }
+  } finally {
+    backingUp.value = false
+  }
+}
+
+function remindLater() {
+  snoozeReminder()
+  backupReminderVisible.value = false
+}
 
 /** Seen-word, known-word, and total-word counts keyed by location theme. */
 const wordStats = useLiveQuery(
@@ -238,6 +292,25 @@ onMounted(async () => {
   <main class="home">
     <TreasureChest />
 
+    <button
+      class="backup-link"
+      type="button"
+      :disabled="backingUp"
+      :aria-label="$t('home.backupNowAria')"
+      :title="$t('home.backupNowAria')"
+      @click="backupNow"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M7 10l5 5 5-5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M12 15V3" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <p v-if="backupJustDone" class="backup-toast" role="status" aria-live="polite">
+      {{ $t('home.backupDone') }}
+    </p>
+
     <RouterLink class="settings-link" to="/settings" :aria-label="audioReady ? $t('home.settings') : $t('home.settingsAudioPending')">
       <svg
         viewBox="0 0 24 24"
@@ -307,10 +380,25 @@ onMounted(async () => {
       <button class="audio-banner__close" type="button" :aria-label="$t('home.dismiss')" @click="dismissBanner">✕</button>
     </div>
 
+    <div v-if="showBackupReminder" class="audio-banner backup-reminder">
+      <div class="audio-banner__body">
+        <p class="audio-banner__text">{{ $t('home.backupReminder') }}</p>
+        <div class="backup-reminder__actions">
+          <button class="btn btn--primary audio-banner__btn" type="button" :disabled="backingUp" @click="backupNow">
+            {{ backingUp ? $t('home.backingUp') : $t('home.backupNow') }}
+          </button>
+          <button class="btn btn--ghost audio-banner__btn" type="button" @click="remindLater">
+            {{ $t('home.backupLater') }}
+          </button>
+        </div>
+      </div>
+      <button class="audio-banner__close" type="button" :aria-label="$t('home.dismiss')" @click="remindLater">✕</button>
+    </div>
+
     <div
       v-if="lockedNoticeVisible"
       class="locked-notice"
-      :class="{ 'locked-notice--below-banner': showBanner }"
+      :class="{ 'locked-notice--below-banner': showBanner || showBackupReminder }"
       role="alert"
       aria-live="polite"
     >
@@ -440,6 +528,65 @@ onMounted(async () => {
   border-radius: 50%;
   background: var(--color-terracotta);
   border: 2px solid var(--color-bg);
+}
+
+/* Always-available backup shortcut, mirroring the settings gear on the left. */
+.backup-link {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  box-shadow: var(--shadow-sm);
+  z-index: 4;
+}
+
+.backup-link svg {
+  width: 19px;
+  height: 19px;
+}
+
+.backup-link:hover:not(:disabled) {
+  box-shadow: var(--shadow-md);
+  color: var(--color-teal);
+}
+
+.backup-link:disabled {
+  opacity: 0.6;
+}
+
+.backup-toast {
+  position: absolute;
+  top: calc(1rem + 46px);
+  left: 1rem;
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-teal);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  z-index: 5;
+}
+
+/* The backup reminder reuses the audio-banner shell with a teal accent. */
+.backup-reminder {
+  border-left-color: var(--color-teal);
+}
+
+.backup-reminder__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .audio-banner {

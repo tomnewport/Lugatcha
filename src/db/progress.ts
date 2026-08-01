@@ -1,7 +1,8 @@
 import type { LugatchaDB } from './LugatchaDB'
 import type { ExerciseType, TestQuestionType } from './types'
 import { TEST_QUESTION_TYPES } from './types'
-import { scheduleReview, gradeFromResult } from '@/exercises/spacedRepetition'
+import { scheduleReview, gradeFromResult, DAY_MS, DEFAULT_EASE } from '@/exercises/spacedRepetition'
+import type { ReviewSchedule } from '@/exercises/spacedRepetition'
 
 const MAX_RESULTS = 4
 /** Failed questions on a learned word before it's unlearned (issue #61). */
@@ -321,6 +322,82 @@ export async function completeLesson(db: LugatchaDB, lessonId: string): Promise<
       completedAt: existing?.completedAt ?? Date.now(),
       exercisesPassed: existing?.exercisesPassed ?? [],
       visitCount: (existing?.visitCount ?? 0) + 1,
+    })
+  })
+}
+
+/**
+ * A review schedule for a word declared already-known during recovery: a few
+ * reps in and spaced a few days out, so restored words settle into retention
+ * review instead of all falling due at once. A short spread keeps a big batch
+ * from crowding the very next Daily Practice.
+ */
+function restoredReview(now: number, spreadDays = 0): ReviewSchedule {
+  const intervalDays = 3 + spreadDays
+  return {
+    reps: 2,
+    intervalDays,
+    ease: DEFAULT_EASE,
+    dueAt: now + intervalDays * DAY_MS,
+    lastReviewedAt: now,
+  }
+}
+
+/**
+ * Manual recovery (issue: a learner lost all their progress with no backup).
+ * Marks each word as already learned — seen, all four test skills passed,
+ * spelt — so a returning learner can reinstate what they know by ticking it
+ * rather than grinding every exercise again. Restored words are given a spaced
+ * review schedule so they surface for retention gradually. Existing rows keep
+ * their real `seenAt`/`learnedAt`/`review`, so re-running never rewrites a
+ * genuine learning history — it only fills in the skills a known word is
+ * missing. Words already fully learned are left untouched.
+ */
+export async function markWordsKnown(
+  db: LugatchaDB,
+  wordIds: string[],
+  now: number = Date.now(),
+): Promise<void> {
+  await db.transaction('rw', db.wordProgress, async () => {
+    let index = 0
+    for (const wordId of wordIds) {
+      const existing = await db.wordProgress.get(wordId)
+      const alreadyLearned = TEST_QUESTION_TYPES.every((t) => existing?.testPassed?.includes(t))
+      if (alreadyLearned) continue
+      await db.wordProgress.put({
+        wordId,
+        seenAt: existing?.seenAt ?? now,
+        lastResults:
+          existing?.lastResults && existing.lastResults.length >= 4
+            ? existing.lastResults
+            : [true, true, true, true],
+        testPassed: [...TEST_QUESTION_TYPES],
+        spellMastery: 1,
+        learnedAt: existing?.learnedAt ?? now,
+        failsSinceLearned: 0,
+        // Spread the batch's due dates over a few days so retention review
+        // trickles in rather than arriving all at once the day after recovery.
+        review: existing?.review ?? restoredReview(now, index++ % 4),
+      })
+    }
+  })
+}
+
+/** Marks several exercises complete for a location in one go. Idempotent. */
+export async function markExercisesDone(
+  db: LugatchaDB,
+  locationId: string,
+  exercises: ExerciseType[],
+): Promise<void> {
+  await db.transaction('rw', db.locationProgress, async () => {
+    const existing = await db.locationProgress.get(locationId)
+    const completed = new Set(existing?.completedExercises ?? [])
+    for (const exercise of exercises) completed.add(exercise)
+    await db.locationProgress.put({
+      locationId,
+      completedExercises: [...completed],
+      visits: existing?.visits,
+      graduatedAt: existing?.graduatedAt,
     })
   })
 }
