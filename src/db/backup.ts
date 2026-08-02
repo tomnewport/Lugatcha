@@ -40,6 +40,18 @@ const LOCALSTORAGE_PREFIX = 'lugatcha.'
  */
 const LOCALSTORAGE_EXCLUDE = new Set(['lugatcha.contentVersion'])
 
+/**
+ * Per-device diagnostic markers (db/diagnostics.ts) also stay behind: they
+ * describe *this* physical store's lifetime, so carrying them into a restore on
+ * another device would misreport how old that device's store is.
+ */
+const DIAGNOSTIC_PREFIX = 'lugatcha.diag.'
+
+/** A `lugatcha.*` key that should never be captured or written by backup. */
+function isExcludedKey(key: string): boolean {
+  return LOCALSTORAGE_EXCLUDE.has(key) || key.startsWith(DIAGNOSTIC_PREFIX)
+}
+
 export interface BackupFile {
   format: typeof BACKUP_FORMAT
   version: number
@@ -57,7 +69,7 @@ function collectLocalStorage(): Record<string, string> {
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i)
-      if (!key || !key.startsWith(LOCALSTORAGE_PREFIX) || LOCALSTORAGE_EXCLUDE.has(key)) continue
+      if (!key || !key.startsWith(LOCALSTORAGE_PREFIX) || isExcludedKey(key)) continue
       const value = localStorage.getItem(key)
       if (value !== null) out[key] = value
     }
@@ -128,7 +140,7 @@ function restoreLocalStorage(entries: Record<string, string> | undefined): void 
   if (!entries) return
   try {
     for (const [key, value] of Object.entries(entries)) {
-      if (!key.startsWith(LOCALSTORAGE_PREFIX) || LOCALSTORAGE_EXCLUDE.has(key)) continue
+      if (!key.startsWith(LOCALSTORAGE_PREFIX) || isExcludedKey(key)) continue
       localStorage.setItem(key, value)
     }
   } catch {

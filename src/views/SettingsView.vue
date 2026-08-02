@@ -11,6 +11,12 @@ import { db } from '@/db'
 import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/db/backup'
 import { saveBackup, pickBackupText } from '@/db/backupIO'
 import { markBackedUp } from '@/db/backupReminder'
+import {
+  gatherDiagnostics,
+  formatDiagnosticsReport,
+  type DiagnosticsReport,
+  type FindingSeverity,
+} from '@/db/diagnostics'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -44,7 +50,64 @@ onMounted(async () => {
   audioManifest.value = await getAudioManifest()
   audioChecked.value = true
   await prepareAudio()
+  await loadDiagnostics()
 })
+
+// ── Diagnostics ─────────────────────────────────────────────────────────────
+const diagnostics = ref<DiagnosticsReport | null>(null)
+const diagLoading = ref(false)
+const diagCopied = ref(false)
+const diagCopyFailed = ref(false)
+const showDiagDetails = ref(false)
+
+const canShareDiagnostics = computed(
+  () => typeof navigator !== 'undefined' && typeof navigator.share === 'function',
+)
+
+const severityLabels: Record<FindingSeverity, string> = {
+  high: 'settings.diagnostics.severityHigh',
+  medium: 'settings.diagnostics.severityMedium',
+  info: 'settings.diagnostics.severityInfo',
+}
+
+async function loadDiagnostics() {
+  diagLoading.value = true
+  diagCopied.value = false
+  diagCopyFailed.value = false
+  try {
+    diagnostics.value = await gatherDiagnostics()
+  } finally {
+    diagLoading.value = false
+  }
+}
+
+function diagnosticsText(): string {
+  return diagnostics.value ? formatDiagnosticsReport(diagnostics.value) : ''
+}
+
+async function copyDiagnostics() {
+  diagCopied.value = false
+  diagCopyFailed.value = false
+  const text = diagnosticsText()
+  try {
+    await navigator.clipboard.writeText(text)
+    diagCopied.value = true
+    setTimeout(() => (diagCopied.value = false), 3000)
+  } catch {
+    // Clipboard blocked (insecure context, permissions) — reveal the raw text
+    // so the learner can select and copy it by hand.
+    diagCopyFailed.value = true
+    showDiagDetails.value = true
+  }
+}
+
+async function shareDiagnostics() {
+  try {
+    await navigator.share({ title: 'Lugʻatcha diagnostics', text: diagnosticsText() })
+  } catch {
+    // Share sheet cancelled or unavailable — no-op; Copy remains the fallback.
+  }
+}
 
 function setBaseLanguage(lang: BaseLanguage) {
   settings.setBaseLanguage(lang)
@@ -342,6 +405,94 @@ async function restoreFromFile() {
         </div>
       </div>
     </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.diagnostics.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.diagnostics.desc') }}</p>
+
+      <p v-if="diagLoading" class="settings-card__desc">
+        {{ $t('settings.diagnostics.loading') }}
+      </p>
+
+      <template v-else-if="diagnostics">
+        <!-- Likely-cause findings, highest severity first. -->
+        <div class="diag-findings" aria-live="polite">
+          <h3 class="diag-findings__title">{{ $t('settings.diagnostics.findingsTitle') }}</h3>
+          <p v-if="!diagnostics.findings.length" class="settings-card__note">
+            {{ $t('settings.diagnostics.noFindings') }}
+          </p>
+          <ul v-else class="diag-findings__list">
+            <li
+              v-for="(f, i) in diagnostics.findings"
+              :key="i"
+              class="diag-finding"
+              :class="`diag-finding--${f.severity}`"
+            >
+              <span class="diag-finding__tag">{{ $t(severityLabels[f.severity]) }}</span>
+              <span class="diag-finding__text">{{ f.text }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dl-actions dl-actions--wrap">
+          <button class="btn btn--primary" type="button" @click="copyDiagnostics">
+            {{ diagCopied ? $t('settings.diagnostics.copied') : $t('settings.diagnostics.copy') }}
+          </button>
+          <button
+            v-if="canShareDiagnostics"
+            class="btn btn--ghost"
+            type="button"
+            @click="shareDiagnostics"
+          >
+            {{ $t('settings.diagnostics.share') }}
+          </button>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            :disabled="diagLoading"
+            @click="loadDiagnostics"
+          >
+            {{ $t('settings.diagnostics.refresh') }}
+          </button>
+        </div>
+
+        <p
+          v-if="diagCopyFailed"
+          class="settings-card__note settings-card__note--error"
+          aria-live="polite"
+        >
+          {{ $t('settings.diagnostics.copyFailed') }}
+        </p>
+
+        <!-- Full details: the raw report, grouped and copy-selectable. -->
+        <button
+          type="button"
+          class="diag-details__toggle"
+          :aria-expanded="showDiagDetails"
+          @click="showDiagDetails = !showDiagDetails"
+        >
+          <span
+            class="diag-details__chevron"
+            :class="{ 'diag-details__chevron--open': showDiagDetails }"
+            aria-hidden="true"
+            >▸</span
+          >
+          {{ $t('settings.diagnostics.detailsToggle') }}
+        </button>
+
+        <div v-if="showDiagDetails" class="diag-report">
+          <div v-for="group in diagnostics.groups" :key="group.title" class="diag-group">
+            <h4 class="diag-group__title">{{ group.title }}</h4>
+            <dl class="diag-group__list">
+              <div v-for="row in group.rows" :key="row.label" class="diag-row">
+                <dt>{{ row.label }}</dt>
+                <dd>{{ row.value }}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </template>
+    </section>
   </main>
 </template>
 
@@ -436,6 +587,141 @@ async function restoreFromFile() {
 .dl-actions {
   display: flex;
   gap: 0.5rem;
+}
+
+.dl-actions--wrap {
+  flex-wrap: wrap;
+}
+
+/* ── Diagnostics ──────────────────────────────────────────────────────────── */
+.diag-findings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diag-findings__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.diag-findings__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diag-finding {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.6rem 0.7rem;
+  border: 1.5px solid var(--color-border);
+  border-left-width: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.diag-finding--high {
+  border-left-color: var(--color-terracotta);
+}
+
+.diag-finding--medium {
+  border-left-color: var(--color-primary);
+}
+
+.diag-finding--info {
+  border-left-color: var(--color-border);
+}
+
+.diag-finding__tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.diag-finding--high .diag-finding__tag {
+  color: var(--color-terracotta);
+}
+
+.diag-finding__text {
+  font-size: 0.82rem;
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+.diag-details__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  align-self: flex-start;
+}
+
+.diag-details__chevron {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.diag-details__chevron--open {
+  transform: rotate(90deg);
+}
+
+.diag-report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.diag-group__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.35rem;
+}
+
+.diag-group__list {
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.diag-row {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.76rem;
+}
+
+.diag-row dt {
+  flex-shrink: 0;
+  min-width: 9rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.diag-row dd {
+  margin: 0;
+  color: var(--color-text);
+  word-break: break-word;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .lang-toggle {
