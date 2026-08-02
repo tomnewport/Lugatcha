@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import { db, ensureSeeded } from './db'
 import { requestPersistentStorage } from './db/persist'
+import { recordAppOpen } from './db/diagnostics'
 import { installErrorHandlers, captureError } from './errors/reporter'
 import { showFatalError } from './errors/fatalScreen'
 import { i18n, setI18nLocale } from './i18n'
@@ -79,6 +80,11 @@ try {
   // Best-effort: ask the browser not to evict a learner's progress (see
   // db/persist.ts). Fire-and-forget — startup never depends on the answer.
   void requestPersistentStorage()
+
+  // Best-effort: stamp this open so the Settings diagnostics can later show
+  // whether the store looks freshly created, or the engine/persistence changed
+  // across an update — the fingerprints of a wipe (see db/diagnostics.ts).
+  void recordAppOpen()
 } catch (error) {
   showFatalError('bootstrap', error, 'while starting the app')
 }

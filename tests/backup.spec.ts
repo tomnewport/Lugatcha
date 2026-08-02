@@ -65,6 +65,15 @@ describe('collectBackup', () => {
     const backup = await collectBackup(db)
     expect('lugatcha.contentVersion' in backup.localStorage).toBe(false)
   })
+
+  it('never carries per-device diagnostic markers', async () => {
+    await seedSomeProgress()
+    localStorage.setItem('lugatcha.diag.firstOpenAt', '123')
+    localStorage.setItem('lugatcha.diag.openCount', '5')
+    const backup = await collectBackup(db)
+    expect('lugatcha.diag.firstOpenAt' in backup.localStorage).toBe(false)
+    expect('lugatcha.diag.openCount' in backup.localStorage).toBe(false)
+  })
 })
 
 describe('applyBackup', () => {

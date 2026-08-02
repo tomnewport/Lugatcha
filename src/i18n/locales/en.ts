@@ -164,6 +164,22 @@ export default {
       confirmYes: 'Delete everything',
       clearing: 'Clearing…',
     },
+    diagnostics: {
+      title: 'Diagnostics',
+      desc: 'Lost your progress after an update? This report shows how your progress is stored on this device and flags the likely cause. Copy it and send it to us — or paste it into a bug report — so we can help.',
+      loading: 'Gathering diagnostics…',
+      findingsTitle: 'Likely causes',
+      noFindings: 'No obvious storage problems detected right now.',
+      severityHigh: 'Likely cause',
+      severityMedium: 'Possible cause',
+      severityInfo: 'Note',
+      copy: 'Copy report',
+      copied: 'Copied ✓',
+      copyFailed: "Couldn't copy — select the text below and copy it manually.",
+      share: 'Share…',
+      refresh: 'Refresh',
+      detailsToggle: 'Full details',
+    },
   },
 
   location: {
