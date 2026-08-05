@@ -9,6 +9,7 @@
 import { reactive } from 'vue'
 import type { App } from 'vue'
 import { i18n } from '@/i18n'
+import { recoverFromStaleChunk } from './chunkReload'
 
 const REPO_ISSUES_URL = 'https://github.com/tomnewport/Lugatcha/issues/new'
 const MAX_TOASTS = 3
@@ -111,10 +112,13 @@ export function installErrorHandlers(app: App): void {
   }
 
   window.addEventListener('error', (event) => {
-    captureError('window', event.error ?? event.message)
+    const error = event.error ?? event.message
+    if (recoverFromStaleChunk(error)) return
+    captureError('window', error)
   })
 
   window.addEventListener('unhandledrejection', (event) => {
+    if (recoverFromStaleChunk(event.reason)) return
     captureError('promise', event.reason)
   })
 }

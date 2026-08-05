@@ -7,6 +7,7 @@ import { requestPersistentStorage } from './db/persist'
 import { recordAppOpen } from './db/diagnostics'
 import { installErrorHandlers, captureError } from './errors/reporter'
 import { showFatalError } from './errors/fatalScreen'
+import { recoverFromStaleChunk } from './errors/chunkReload'
 import { i18n, setI18nLocale } from './i18n'
 import { useSettingsStore } from './stores/settings'
 import './assets/main.css'
@@ -28,8 +29,20 @@ try {
   // a blank content area with no toast. Capture it, and if it happens during
   // the very first navigation escalate to the fatal screen since there's
   // nothing else on the page for the user to see.
+  // A lazy view chunk that fails to load is almost always a stale build: a new
+  // version was deployed and the service worker purged this tab's old chunks.
+  // Reload once to pick up the fresh build before treating it as a real error,
+  // so navigation recovers instead of stranding the user (see chunkReload.ts).
+  window.addEventListener('vite:preloadError', (event) => {
+    // Stop Vite's default unhandled rejection; we own the recovery from here.
+    event.preventDefault()
+    const error = (event as Event & { payload?: unknown }).payload
+    if (!recoverFromStaleChunk(error)) captureError('router', error)
+  })
+
   let ready = false
   router.onError((error) => {
+    if (recoverFromStaleChunk(error)) return
     captureError('router', error)
     if (!ready) showFatalError('router', error, 'while opening the app')
   })
