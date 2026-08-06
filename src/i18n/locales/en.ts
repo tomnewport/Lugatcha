@@ -71,6 +71,28 @@ export default {
       'Every area is complete. Keep your vocabulary sharp with a review whenever you like.',
   },
 
+  snake: {
+    aria: 'Number snake bonus game',
+    eyebrow: 'Bonus round',
+    title: 'Number snake',
+    howTo:
+      'Count in Uzbek! Swipe to steer the snake and eat the numbers in order — it only grows on the right one.',
+    tapToStart: 'Swipe or tap to start',
+    next: 'Next',
+    score: 'Score',
+    best: 'Best',
+    over: 'Game over',
+    overSelf: 'The snake ran into itself.',
+    overWrong: 'You ate {picked} — you needed {expected}.',
+    finalScore: 'You counted to {score}.',
+    newBest: 'New best!',
+    again: 'Play again',
+    done: 'Done',
+    skip: 'Close the game',
+    paused: 'Paused',
+    resume: 'Resume',
+  },
+
   streak: {
     aria: 'Daily practice streak celebration',
     started: 'Streak started!',

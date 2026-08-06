@@ -13,6 +13,7 @@ import { useActivityContext } from '@/feedback/activityContext'
 import { i18n } from '@/i18n'
 import TestExercise from '@/components/exercise/TestExercise.vue'
 import StreakCelebration from '@/components/StreakCelebration.vue'
+import SnakeGame from '@/components/SnakeGame.vue'
 
 // Mirrors the key HomeView reads to show the "practised today" state.
 const DAILY_PRACTICE_DATE_KEY = 'lugatcha.dailyPracticeDate'
@@ -29,6 +30,10 @@ const questions = ref<PracticeQuestion[] | null>(null)
 
 // Set when a finished session grows the streak, driving the celebration overlay.
 const celebration = ref<StreakUpdate | null>(null)
+
+// The counting mini-game that rewards a finished session (after any streak
+// celebration). Closing it takes the learner home.
+const game = ref(false)
 
 // Scope any "Raise an issue" report to the daily practice session.
 useActivityContext(() => ({
@@ -65,16 +70,21 @@ function onComplete() {
   }
   recordPracticeAt()
   const update = recordStreakDay()
-  // Celebrate a growing streak; the overlay takes the learner home when done.
+  // Celebrate a growing streak first; either way the session ends in the game.
   if (update.extended) {
     celebration.value = update
   } else {
-    home()
+    game.value = true
   }
 }
 
 function onCelebrationDone() {
   celebration.value = null
+  game.value = true
+}
+
+function onGameDone() {
+  game.value = false
   home()
 }
 
@@ -120,6 +130,8 @@ function onEmptyBack() {
       :to="celebration.to"
       @done="onCelebrationDone"
     />
+
+    <SnakeGame v-if="game" @done="onGameDone" />
   </div>
 </template>
 
