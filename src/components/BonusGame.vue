@@ -1,7 +1,10 @@
 <script setup lang="ts">
 /**
  * The bonus round that rewards a finished daily practice: one of the
- * mini-games in the roster, picked at random when this mounts.
+ * mini-games in the roster, picked at random when this mounts — or a named
+ * one, when the caller wants a particular game (Settings offers both, so a
+ * learner can go straight to the one they meant rather than reroll until it
+ * turns up).
  *
  * Bubble trouble always draws its ten colours from the Colours vocabulary set,
  * whatever the session happened to drill — the game teaches that set, not the
@@ -16,11 +19,13 @@ import { coloursFromWords } from '@/exercises/bubbles'
 import SnakeGame from '@/components/SnakeGame.vue'
 import BubbleGame from '@/components/BubbleGame.vue'
 
+/** Omit to toss for it, which is what the post-practice bonus round does. */
+const props = defineProps<{ game?: MiniGameId }>()
 const emit = defineEmits<{ done: [] }>()
 
 const COLOURS_GROUP = 'colours'
 
-const game = ref<MiniGameId>(pickMiniGame())
+const game = ref<MiniGameId>(props.game ?? pickMiniGame())
 const colourWords = ref<Word[] | null>(null)
 
 onMounted(async () => {
