@@ -12,6 +12,7 @@ import {
   startGame,
   queueTurn,
   advance,
+  segmentNumbers,
   tickInterval,
   readHighScore,
   recordHighScore,
@@ -221,6 +222,17 @@ function segStyle(p: Point) {
   }
 }
 
+/** The count worn by the body, head first — null on the segments without one. */
+const segNumbers = computed(() => segmentNumbers(state.value))
+
+/** Longer numbers set smaller, so four digits still sit inside a segment. */
+const NUMERAL_SCALE: Record<number, number> = { 1: 0.5, 2: 0.4, 3: 0.3 }
+
+function numeralStyle(value: number) {
+  const scale = NUMERAL_SCALE[String(value).length] ?? 0.24
+  return { fontSize: `${Math.max(7, Math.round(cell.value * scale))}px` }
+}
+
 const fruitSize = computed(() => `${Math.round(cell.value * 0.68)}px`)
 const labelSize = computed(() => `${Math.max(8, Math.round(cell.value * 0.3))}px`)
 
@@ -297,7 +309,14 @@ onBeforeUnmount(() => {
             class="snake__seg"
             :class="{ 'snake__seg--head': i === 0 }"
             :style="segStyle(seg)"
-          ></div>
+          >
+            <span
+              v-if="segNumbers[i] !== null"
+              class="snake__seg-num"
+              :style="numeralStyle(segNumbers[i]!)"
+              >{{ segNumbers[i] }}</span
+            >
+          </div>
 
           <TransitionGroup name="food">
             <div
@@ -474,8 +493,20 @@ onBeforeUnmount(() => {
 
 .snake__seg {
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--color-primary-light);
   border-radius: 30%;
+}
+
+/* The number swallowed here, so the body reads back as the count so far. */
+.snake__seg-num {
+  color: var(--color-surface);
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
 }
 
 .snake__seg--head {
