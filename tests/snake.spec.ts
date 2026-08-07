@@ -4,6 +4,7 @@ import {
   pickDecoys,
   placeFoods,
   buildRound,
+  pathAhead,
   createGame,
   startGame,
   queueTurn,
@@ -82,7 +83,7 @@ describe('placeFoods', () => {
       { x: 4, y: 7 },
       { x: 3, y: 7 },
     ]
-    const foods = buildRound(7, board, snake, seeded(11))
+    const foods = buildRound(7, board, snake, { dir: 'right' }, seeded(11))
 
     expect(foods).toHaveLength(FOOD_COUNT)
     expect(foods.filter((f) => f.correct)).toHaveLength(1)
@@ -101,6 +102,69 @@ describe('placeFoods', () => {
     }
     // Distinct fruit so two numbers are never told apart by their label alone.
     expect(new Set(foods.map((f) => f.emoji)).size).toBe(FOOD_COUNT)
+  })
+
+  it('leaves the five cells ahead of the head clear, whichever way it faces', () => {
+    for (const dir of ['up', 'down', 'left', 'right'] as Direction[]) {
+      const snake = [{ x: 5, y: 7 }]
+      const ahead = pathAhead(snake[0], { dir }, board)
+      expect(ahead).toHaveLength(5)
+
+      for (let seed = 1; seed <= 25; seed++) {
+        const foods = buildRound(12, board, snake, { dir }, seeded(seed))
+        for (const cell of ahead) {
+          expect(foods.some((f) => f.x === cell.x && f.y === cell.y)).toBe(false)
+        }
+      }
+    }
+  })
+
+  it('clears the path across a wrapped edge too', () => {
+    // Heading down off the bottom row: the clear stretch reappears at the top.
+    const snake = [{ x: 5, y: board.rows - 1 }]
+    const ahead = pathAhead(snake[0], { dir: 'down' }, board)
+    expect(ahead).toEqual([0, 1, 2, 3, 4].map((y) => ({ x: 5, y })))
+
+    for (let seed = 1; seed <= 25; seed++) {
+      const foods = buildRound(12, board, snake, { dir: 'down' }, seeded(seed))
+      for (const cell of ahead) {
+        expect(foods.some((f) => f.x === cell.x && f.y === cell.y)).toBe(false)
+      }
+    }
+  })
+
+  it('follows queued turns when clearing the path', () => {
+    // Swiped down then left: the cleared stretch bends with the snake.
+    const snake = [{ x: 5, y: 5 }]
+    const course = { dir: 'right' as Direction, queued: ['down', 'left'] as Direction[] }
+    expect(pathAhead(snake[0], course, board)).toEqual([
+      { x: 5, y: 6 },
+      { x: 4, y: 6 },
+      { x: 3, y: 6 },
+      { x: 2, y: 6 },
+      { x: 1, y: 6 },
+    ])
+
+    for (let seed = 1; seed <= 25; seed++) {
+      const foods = buildRound(12, board, snake, course, seeded(seed))
+      for (const cell of pathAhead(snake[0], course, board)) {
+        expect(foods.some((f) => f.x === cell.x && f.y === cell.y)).toBe(false)
+      }
+    }
+  })
+
+  it('clears the path from where the head lands after a bite', () => {
+    const rng = seeded(21)
+    let state = startGame(createGame(board, rng))
+    const correct = state.foods.find((f) => f.correct)!
+    state = { ...state, snake: [{ x: correct.x - 1, y: correct.y }], dir: 'right' }
+
+    const tick = advance(state, rng)
+    expect(tick.ate).not.toBeNull() // the round really was re-dealt
+    const after = tick.state
+    for (const cell of pathAhead(after.snake[0], { dir: after.dir, queued: after.queued }, board)) {
+      expect(after.foods.some((f) => f.x === cell.x && f.y === cell.y)).toBe(false)
+    }
   })
 
   it('keeps the correct fruit even when the board has too few cells', () => {
