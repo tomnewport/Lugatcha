@@ -12,6 +12,7 @@ import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/d
 import { readHighScore as readSnakeBest } from '@/exercises/snake'
 import { readHighScore as readBubblesBest } from '@/exercises/bubbles'
 import BonusGame from '@/components/BonusGame.vue'
+import type { MiniGameId } from '@/exercises/miniGames'
 import { saveBackup, pickBackupText } from '@/db/backupIO'
 import { markBackedUp } from '@/db/backupReminder'
 import {
@@ -118,14 +119,16 @@ function setBaseLanguage(lang: BaseLanguage) {
 
 // ── Mini-games ──────────────────────────────────────────────────────────────
 // Soft-launched: off until opted in here, and playable here without waiting
-// for the next daily practice to finish. "Play one now" rolls the same dice
-// the bonus round does, so it shows off the roster rather than one game.
-const playingGame = ref(false)
+// for the next daily practice to finish. "Surprise me" rolls the same dice the
+// bonus round does; the named buttons go straight to one game, so trying a
+// particular one is not a matter of rerolling until it comes up.
+// `null` means nothing is open; 'random' defers the choice to BonusGame.
+const playingGame = ref<MiniGameId | 'random' | null>(null)
 const snakeBest = ref(readSnakeBest())
 const bubblesBest = ref(readBubblesBest())
 
 function closeGame() {
-  playingGame.value = false
+  playingGame.value = null
   snakeBest.value = readSnakeBest()
   bubblesBest.value = readBubblesBest()
 }
@@ -338,9 +341,15 @@ async function restoreFromFile() {
           {{ $t('settings.game.off') }}
         </button>
       </div>
-      <div class="dl-actions">
-        <button class="btn btn--primary" type="button" @click="playingGame = true">
+      <div class="dl-actions dl-actions--wrap">
+        <button class="btn btn--primary" type="button" @click="playingGame = 'random'">
           {{ $t('settings.game.play') }}
+        </button>
+        <button class="btn btn--ghost" type="button" @click="playingGame = 'snake'">
+          {{ $t('snake.title') }}
+        </button>
+        <button class="btn btn--ghost" type="button" @click="playingGame = 'bubbles'">
+          {{ $t('bubbles.title') }}
         </button>
       </div>
       <p v-if="snakeBest > 0" class="settings-card__note">
@@ -549,7 +558,11 @@ async function restoreFromFile() {
       </template>
     </section>
 
-    <BonusGame v-if="playingGame" @done="closeGame" />
+    <BonusGame
+      v-if="playingGame"
+      :game="playingGame === 'random' ? undefined : playingGame"
+      @done="closeGame"
+    />
   </main>
 </template>
 

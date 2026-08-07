@@ -194,7 +194,7 @@ const ru: MessageSchema = {
       groupLabel: 'Мини-игра после практики дня',
       on: 'Вкл.',
       off: 'Выкл.',
-      play: 'Сыграть сейчас',
+      play: 'Наугад',
       bestSnake: 'Числовая змейка — лучший счёт: {score}',
       bestBubbles: 'Цветные шары — больше всего шаров: {score}',
     },

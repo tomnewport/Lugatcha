@@ -194,7 +194,7 @@ export default {
       groupLabel: 'Mini-game after daily practice',
       on: 'On',
       off: 'Off',
-      play: 'Play one now',
+      play: 'Surprise me',
       bestSnake: 'Number snake — best count: {score}',
       bestBubbles: 'Bubble trouble — most bubbles popped: {score}',
     },
