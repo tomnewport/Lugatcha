@@ -112,6 +112,7 @@ const ru: MessageSchema = {
     left: 'Влево',
     right: 'Вправо',
     fire: 'Огонь',
+    avatar: 'Перетащите, чтобы двигаться; коснитесь, чтобы выстрелить',
     cleared: 'Уровень {level} пройден!',
     over: 'Игра окончена',
     finalScore: 'Вы лопнули шаров: {count}.',

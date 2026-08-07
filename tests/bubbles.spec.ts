@@ -10,6 +10,8 @@ import {
   createGame,
   startGame,
   setMove,
+  setAim,
+  clearAim,
   fire,
   step,
   nextLevel,
@@ -18,6 +20,7 @@ import {
   ARENA_WIDTH,
   SIZE_COUNT,
   PLAYER_SIZE,
+  PLAYER_SPEED,
   type Arena,
   type Bubble,
   type BubbleColour,
@@ -374,6 +377,13 @@ describe('the physics', () => {
     expect(heights).toEqual([...heights].sort((a, b) => b - a))
   })
 
+  it('walks at the advertised speed', () => {
+    let state = setMove(gameWith([bubble(1, colour('c.red'), { y: 15 })], { playerX: 20 }), 1)
+    // A second of walking, in the sub-steps the loop would really take.
+    for (let i = 0; i < 60; i++) state = step(state, 1 / 60, seeded()).state
+    expect(state.playerX - 20).toBeCloseTo(PLAYER_SPEED, 1)
+  })
+
   it('walks the player without letting them leave the arena', () => {
     let state = setMove(gameWith([bubble(1, colour('c.red'), { y: 15 })]), -1)
     for (let i = 0; i < 300; i++) state = step(state, 1 / 60, seeded()).state
@@ -382,6 +392,88 @@ describe('the physics', () => {
     state = setMove(state, 1)
     for (let i = 0; i < 300; i++) state = step(state, 1 / 60, seeded()).state
     expect(state.playerX).toBeCloseTo(arena.width - PLAYER_SIZE.width / 2, 5)
+  })
+})
+
+describe('dragging the avatar', () => {
+  /** A quiet board, so only the steering moves the player. */
+  function walker(playerX: number) {
+    return gameWith([bubble(1, colour('c.red'), { x: 50, y: 12, vx: 0, vy: 0 })], { playerX })
+  }
+
+  it('follows behind the finger instead of snapping to it', () => {
+    const state = setAim(walker(20), 90)
+    const after = step(state, 1 / 60, seeded()).state
+    // One frame closes one frame's worth of the gap, no more.
+    expect(after.playerX).toBeGreaterThan(20)
+    expect(after.playerX - 20).toBeCloseTo(PLAYER_SPEED / 60, 3)
+    expect(after.playerX).toBeLessThan(90)
+  })
+
+  it('is held to the same speed limit as the pads', () => {
+    let dragged = setAim(walker(20), 95)
+    let walked = setMove(walker(20), 1)
+    for (let i = 0; i < 30; i++) {
+      dragged = step(dragged, 1 / 60, seeded()).state
+      walked = step(walked, 1 / 60, seeded()).state
+    }
+    expect(dragged.playerX).toBeCloseTo(walked.playerX, 5)
+  })
+
+  it('arrives on the finger and settles there without jittering', () => {
+    let state = setAim(walker(50), 62)
+    for (let i = 0; i < 60; i++) state = step(state, 1 / 60, seeded()).state
+    expect(state.playerX).toBeCloseTo(62, 5)
+    // Still exactly there many frames later — no overshoot-and-correct.
+    for (let i = 0; i < 30; i++) state = step(state, 1 / 60, seeded()).state
+    expect(state.playerX).toBeCloseTo(62, 5)
+  })
+
+  it('walks the shorter way when the finger is to the left', () => {
+    const after = step(setAim(walker(80), 30), 1 / 60, seeded()).state
+    expect(after.playerX).toBeLessThan(80)
+  })
+
+  it('will not drag the player out of the arena', () => {
+    let state = setAim(walker(50), 500)
+    for (let i = 0; i < 200; i++) state = step(state, 1 / 60, seeded()).state
+    expect(state.playerX).toBeCloseTo(arena.width - PLAYER_SIZE.width / 2, 5)
+
+    state = setAim(state, -500)
+    for (let i = 0; i < 200; i++) state = step(state, 1 / 60, seeded()).state
+    expect(state.playerX).toBeCloseTo(PLAYER_SIZE.width / 2, 5)
+  })
+
+  it('overrides the pads while the drag is live', () => {
+    // Pad says left, finger says right: the finger wins.
+    const state = setAim(setMove(walker(50), -1), 90)
+    const after = step(state, 1 / 60, seeded()).state
+    expect(after.playerX).toBeGreaterThan(50)
+  })
+
+  it('hands steering back to the pads when the drag ends', () => {
+    let state = clearAim(setAim(setMove(walker(50), -1), 90))
+    expect(state.aimX).toBeNull()
+    state = step(state, 1 / 60, seeded()).state
+    expect(state.playerX).toBeLessThan(50)
+  })
+
+  it('drops a stale aim when a hit re-deals the level', () => {
+    // Mid-drag, and flattened by a bubble dropping on where they were headed.
+    const struck = setAim(
+      gameWith(
+        [bubble(1, colour('c.blue'), { x: 50, y: arena.height - PLAYER_SIZE.height - 8 })],
+        { playerX: 50, lives: 2 },
+      ),
+      54,
+    )
+    let state = struck
+    for (let i = 0; i < 200 && state.lives === 2; i++) {
+      state = step(state, 1 / 60, seeded()).state
+    }
+    expect(state.lives).toBe(1)
+    expect(state.aimX).toBeNull()
+    expect(state.playerX).toBeCloseTo(arena.width / 2, 5)
   })
 })
 
