@@ -293,6 +293,8 @@ export interface VocabGroup extends VocabGroupMeta {
   words: Word[]
   /** Swaps the standard word test for the bespoke counting quiz. */
   quiz?: 'counting'
+  /** Offers a bespoke arcade game alongside review and test. */
+  game?: 'bubbles'
 }
 
 

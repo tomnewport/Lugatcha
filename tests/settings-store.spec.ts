@@ -11,37 +11,74 @@ function reload() {
 describe('settings store', () => {
   beforeEach(() => setActivePinia(createPinia()))
 
-  it('leaves the snake mini-game off by default', () => {
-    expect(useSettingsStore().snakeGame).toBe(false)
+  it('leaves the mini-games off by default', () => {
+    expect(useSettingsStore().miniGames).toBe(false)
   })
 
   it('remembers the opt-in, and the opt back out', () => {
-    useSettingsStore().setSnakeGame(true)
-    expect(reload().snakeGame).toBe(true)
+    useSettingsStore().setMiniGames(true)
+    expect(reload().miniGames).toBe(true)
 
-    useSettingsStore().setSnakeGame(false)
-    expect(reload().snakeGame).toBe(false)
+    useSettingsStore().setMiniGames(false)
+    expect(reload().miniGames).toBe(false)
   })
 
-  it('keeps the other settings when the game is toggled', () => {
+  it('keeps the other settings when the games are toggled', () => {
     const settings = useSettingsStore()
     settings.languageChosen = true
     settings.persist()
-    settings.setSnakeGame(true)
+    settings.setMiniGames(true)
 
     const reloaded = reload()
     expect(reloaded.languageChosen).toBe(true)
     expect(reloaded.baseLanguage).toBe('en')
-    expect(reloaded.snakeGame).toBe(true)
+    expect(reloaded.miniGames).toBe(true)
   })
 
-  it('defaults the game to off for settings saved before it existed', () => {
+  it('defaults the games to off for settings saved before they existed', () => {
     localStorage.setItem(
       'lugatcha.settings',
       JSON.stringify({ baseLanguage: 'ru', languageChosen: true }),
     )
     const settings = reload()
     expect(settings.baseLanguage).toBe('ru')
-    expect(settings.snakeGame).toBe(false)
+    expect(settings.miniGames).toBe(false)
+  })
+
+  describe('the rename from snakeGame', () => {
+    it('carries an existing snake opt-in over to the whole roster', () => {
+      localStorage.setItem(
+        'lugatcha.settings',
+        JSON.stringify({ baseLanguage: 'en', languageChosen: true, snakeGame: true }),
+      )
+      expect(reload().miniGames).toBe(true)
+    })
+
+    it('carries an explicit opt-out over too', () => {
+      localStorage.setItem(
+        'lugatcha.settings',
+        JSON.stringify({ baseLanguage: 'en', languageChosen: true, snakeGame: false }),
+      )
+      expect(reload().miniGames).toBe(false)
+    })
+
+    it('drops the old key once the settings are saved again', () => {
+      localStorage.setItem(
+        'lugatcha.settings',
+        JSON.stringify({ baseLanguage: 'en', languageChosen: true, snakeGame: true }),
+      )
+      reload().persist()
+      const stored = JSON.parse(localStorage.getItem('lugatcha.settings')!)
+      expect(stored.miniGames).toBe(true)
+      expect('snakeGame' in stored).toBe(false)
+    })
+
+    it('prefers the new key when both are present', () => {
+      localStorage.setItem(
+        'lugatcha.settings',
+        JSON.stringify({ baseLanguage: 'en', miniGames: false, snakeGame: true }),
+      )
+      expect(reload().miniGames).toBe(false)
+    })
   })
 })

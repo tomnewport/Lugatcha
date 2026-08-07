@@ -14,7 +14,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/i18n'
 import TestExercise from '@/components/exercise/TestExercise.vue'
 import StreakCelebration from '@/components/StreakCelebration.vue'
-import SnakeGame from '@/components/SnakeGame.vue'
+import BonusGame from '@/components/BonusGame.vue'
 
 // Mirrors the key HomeView reads to show the "practised today" state.
 const DAILY_PRACTICE_DATE_KEY = 'lugatcha.dailyPracticeDate'
@@ -33,9 +33,9 @@ const questions = ref<PracticeQuestion[] | null>(null)
 // Set when a finished session grows the streak, driving the celebration overlay.
 const celebration = ref<StreakUpdate | null>(null)
 
-// The counting mini-game that rewards a finished session (after any streak
-// celebration), for learners who have opted into it in Settings. Closing it
-// takes the learner home.
+// The mini-game that rewards a finished session (after any streak
+// celebration), for learners who have opted into it in Settings. Which game it
+// is, is picked at random. Closing it takes the learner home.
 const game = ref(false)
 
 // Scope any "Raise an issue" report to the daily practice session.
@@ -82,7 +82,7 @@ function onComplete() {
 }
 
 function finishSession() {
-  if (settings.snakeGame) {
+  if (settings.miniGames) {
     game.value = true
   } else {
     home()
@@ -142,7 +142,7 @@ function onEmptyBack() {
       @done="onCelebrationDone"
     />
 
-    <SnakeGame v-if="game" @done="onGameDone" />
+    <BonusGame v-if="game" @done="onGameDone" />
   </div>
 </template>
 
