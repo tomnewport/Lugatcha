@@ -8,6 +8,7 @@ import { useContentLang } from '@/i18n/content'
 import GroupReview from '@/components/school/GroupReview.vue'
 import CountingQuiz from '@/components/school/CountingQuiz.vue'
 import TestExercise from '@/components/exercise/TestExercise.vue'
+import BubbleGame from '@/components/BubbleGame.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -17,6 +18,8 @@ const group = ref<VocabGroup | null>(null)
 const missing = ref(false)
 type Stage = 'menu' | 'review' | 'test'
 const stage = ref<Stage>('menu')
+/** The group's bespoke arcade game, opened over the menu rather than in it. */
+const playing = ref(false)
 
 onMounted(async () => {
   const found = await loadGroup(route.params.id as string)
@@ -97,6 +100,18 @@ function back() {
               }}</span>
             </span>
           </button>
+          <button
+            v-if="group.game === 'bubbles'"
+            class="action action--game"
+            type="button"
+            @click="playing = true"
+          >
+            <span class="action__emoji" aria-hidden="true">🎈</span>
+            <span class="action__text">
+              <span class="action__title">{{ $t('group.bubbleGame') }}</span>
+              <span class="action__sub">{{ $t('group.bubbleGameDesc') }}</span>
+            </span>
+          </button>
         </div>
       </template>
 
@@ -118,6 +133,8 @@ function back() {
         :pool="group.words"
         @complete="stage = 'menu'"
       />
+
+      <BubbleGame v-if="group && playing" :words="group.words" @done="playing = false" />
     </div>
   </div>
 </template>
@@ -270,6 +287,10 @@ function back() {
 
 .action--test {
   border-color: var(--color-teal);
+}
+
+.action--game {
+  border-color: var(--color-gold);
 }
 
 .action__emoji {
