@@ -367,6 +367,26 @@ export function advance(state: GameState, rng: () => number = Math.random): Tick
   }
 }
 
+/**
+ * The numeral each segment wears, head first.
+ *
+ * The snake *is* the count it has eaten: the number swallowed most recently
+ * rides at the head and the sequence runs back down the body to where counting
+ * began. Since a bite grows the snake by exactly one, the segments it set off
+ * with are the only unnumbered ones — they trail the count as a blank tail. The
+ * head is blank too when the run ended on a wrong fruit: that bite never
+ * counted.
+ */
+export function segmentNumbers(state: GameState): (number | null)[] {
+  // A wrong bite still puts the head on the fruit, so the count shifts back one.
+  const offset = state.over?.kind === 'wrong' ? 1 : 0
+  const first = state.target - state.score
+  return state.snake.map((_, i) => {
+    const n = state.target - 1 - i + offset
+    return i >= offset && n >= first ? n : null
+  })
+}
+
 /** Milliseconds per tick — the snake speeds up as the count climbs. */
 export function tickInterval(score: number): number {
   return Math.max(120, 260 - score * 8)

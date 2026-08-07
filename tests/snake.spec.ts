@@ -9,6 +9,7 @@ import {
   startGame,
   queueTurn,
   advance,
+  segmentNumbers,
   tickInterval,
   readHighScore,
   recordHighScore,
@@ -285,6 +286,40 @@ describe('game rules', () => {
     state = advance(state, rng).state
     expect(state.dir).toBe('left')
     expect(state.queued).toEqual([])
+  })
+
+  it('wears the count on its body, newest at the head and blanks on the starting tail', () => {
+    const rng = seeded(17)
+    let state = startGame(createGame(board, rng))
+    expect(segmentNumbers(state)).toEqual([null, null, null])
+
+    for (let expected = 1; expected <= 4; expected++) {
+      state = eat(state, state.foods.find((f) => f.correct)!, rng)
+      expect(state.score).toBe(expected)
+      // Head carries the number just eaten, counting back down to one.
+      const counted = Array.from({ length: expected }, (_, i) => expected - i)
+      expect(segmentNumbers(state)).toEqual([...counted, null, null, null])
+    }
+  })
+
+  it('leaves the head blank when the run ended on the wrong fruit', () => {
+    const rng = seeded(19)
+    const start = startGame(createGame(board, rng))
+    const decoy = start.foods.find((f) => !f.correct)!
+    // One number already eaten, head parked a cell short of a decoy.
+    const primed: GameState = {
+      ...start,
+      target: 2,
+      score: 1,
+      dir: 'right',
+      snake: [0, 1, 2, 3].map((i) => ({ x: (decoy.x - 1 - i + board.cols) % board.cols, y: decoy.y })),
+    }
+    expect(segmentNumbers(primed)).toEqual([1, null, null, null])
+
+    const after = advance(primed, rng).state
+    expect(after.over).toEqual({ kind: 'wrong', picked: decoy, expected: 2 })
+    // The fatal bite never counted, so the 1 it did eat stays put behind it.
+    expect(segmentNumbers(after)).toEqual([null, 1, null, null, null])
   })
 
   it('speeds up as the score climbs, down to a floor', () => {
