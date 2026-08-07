@@ -9,8 +9,9 @@ import { useAudioDownload } from '@/audio/offline'
 import { clearAllLocalData } from '@/db/clearAll'
 import { db } from '@/db'
 import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/db/backup'
-import { readHighScore } from '@/exercises/snake'
-import SnakeGame from '@/components/SnakeGame.vue'
+import { readHighScore as readSnakeBest } from '@/exercises/snake'
+import { readHighScore as readBubblesBest } from '@/exercises/bubbles'
+import BonusGame from '@/components/BonusGame.vue'
 import { saveBackup, pickBackupText } from '@/db/backupIO'
 import { markBackedUp } from '@/db/backupReminder'
 import {
@@ -115,15 +116,18 @@ function setBaseLanguage(lang: BaseLanguage) {
   settings.setBaseLanguage(lang)
 }
 
-// ── Number Snake ────────────────────────────────────────────────────────────
+// ── Mini-games ──────────────────────────────────────────────────────────────
 // Soft-launched: off until opted in here, and playable here without waiting
-// for the next daily practice to finish.
-const playingSnake = ref(false)
-const snakeBest = ref(readHighScore())
+// for the next daily practice to finish. "Play one now" rolls the same dice
+// the bonus round does, so it shows off the roster rather than one game.
+const playingGame = ref(false)
+const snakeBest = ref(readSnakeBest())
+const bubblesBest = ref(readBubblesBest())
 
-function closeSnake() {
-  playingSnake.value = false
-  snakeBest.value = readHighScore()
+function closeGame() {
+  playingGame.value = false
+  snakeBest.value = readSnakeBest()
+  bubblesBest.value = readBubblesBest()
 }
 
 async function resetProgress() {
@@ -315,32 +319,35 @@ async function restoreFromFile() {
       <div class="opt-toggle" role="radiogroup" :aria-label="$t('settings.game.groupLabel')">
         <button
           class="opt-toggle__btn"
-          :class="{ 'opt-toggle__btn--active': settings.snakeGame }"
+          :class="{ 'opt-toggle__btn--active': settings.miniGames }"
           type="button"
           role="radio"
-          :aria-checked="settings.snakeGame"
-          @click="settings.setSnakeGame(true)"
+          :aria-checked="settings.miniGames"
+          @click="settings.setMiniGames(true)"
         >
           {{ $t('settings.game.on') }}
         </button>
         <button
           class="opt-toggle__btn"
-          :class="{ 'opt-toggle__btn--active': !settings.snakeGame }"
+          :class="{ 'opt-toggle__btn--active': !settings.miniGames }"
           type="button"
           role="radio"
-          :aria-checked="!settings.snakeGame"
-          @click="settings.setSnakeGame(false)"
+          :aria-checked="!settings.miniGames"
+          @click="settings.setMiniGames(false)"
         >
           {{ $t('settings.game.off') }}
         </button>
       </div>
       <div class="dl-actions">
-        <button class="btn btn--primary" type="button" @click="playingSnake = true">
+        <button class="btn btn--primary" type="button" @click="playingGame = true">
           {{ $t('settings.game.play') }}
         </button>
       </div>
       <p v-if="snakeBest > 0" class="settings-card__note">
-        {{ $t('settings.game.best', { score: snakeBest }) }}
+        {{ $t('settings.game.bestSnake', { score: snakeBest }) }}
+      </p>
+      <p v-if="bubblesBest > 0" class="settings-card__note">
+        {{ $t('settings.game.bestBubbles', { score: bubblesBest }) }}
       </p>
     </section>
 
@@ -542,7 +549,7 @@ async function restoreFromFile() {
       </template>
     </section>
 
-    <SnakeGame v-if="playingSnake" @done="closeSnake" />
+    <BonusGame v-if="playingGame" @done="closeGame" />
   </main>
 </template>
 

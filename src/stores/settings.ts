@@ -16,21 +16,33 @@ interface PersistedSettings {
   /** False until the learner has picked their language in the first-run modal. */
   languageChosen: boolean
   /**
-   * Number Snake, the counting mini-game that can follow daily practice. Off
-   * until the learner opts in from Settings — it is soft-launched.
+   * The bonus mini-game that can follow daily practice — one of the roster,
+   * picked at random. Off until the learner opts in from Settings.
    */
-  snakeGame: boolean
+  miniGames: boolean
+}
+
+/** The pre-roster name for `miniGames`, back when the snake was the only game. */
+interface LegacySettings {
+  snakeGame?: boolean
 }
 
 function load(): PersistedSettings {
   const defaults: PersistedSettings = {
     baseLanguage: 'en',
     languageChosen: false,
-    snakeGame: false,
+    miniGames: false,
   }
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (raw) return { ...defaults, ...(JSON.parse(raw) as Partial<PersistedSettings>) }
+    if (!raw) return defaults
+    const { snakeGame, ...stored } = JSON.parse(raw) as Partial<PersistedSettings> & LegacySettings
+    return {
+      ...defaults,
+      ...stored,
+      // Someone who opted into the snake has opted into the roster it became.
+      miniGames: stored.miniGames ?? snakeGame ?? defaults.miniGames,
+    }
   } catch {
     // fall through to defaults
   }
@@ -60,16 +72,16 @@ export const useSettingsStore = defineStore('settings', {
       this.languageChosen = true
       this.setBaseLanguage(lang)
     },
-    /** Opt in (or back out of) the post-practice mini-game. */
-    setSnakeGame(on: boolean) {
-      this.snakeGame = on
+    /** Opt in (or back out of) the post-practice mini-games. */
+    setMiniGames(on: boolean) {
+      this.miniGames = on
       this.persist()
     },
     persist() {
       save({
         baseLanguage: this.baseLanguage,
         languageChosen: this.languageChosen,
-        snakeGame: this.snakeGame,
+        miniGames: this.miniGames,
       })
     },
   },

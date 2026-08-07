@@ -189,13 +189,14 @@ export default {
       none: "No prebuilt recordings are bundled yet, so Lugʻatcha uses your device's speech synthesis to read Uzbek aloud. Quality varies by device; recordings will arrive with a future update and download automatically.",
     },
     game: {
-      title: 'Number snake',
-      desc: 'A counting mini-game after each daily practice: steer a snake and eat the numbers in order, read aloud in Uzbek. New — try it here first.',
-      groupLabel: 'Number snake after daily practice',
+      title: 'Mini-games',
+      desc: 'A mini-game after each daily practice, picked at random: count in Uzbek in Number snake, or burst the named colour in Bubble trouble. New — try one here first.',
+      groupLabel: 'Mini-game after daily practice',
       on: 'On',
       off: 'Off',
-      play: 'Play now',
-      best: 'Best count so far: {score}',
+      play: 'Play one now',
+      bestSnake: 'Number snake — best count: {score}',
+      bestBubbles: 'Bubble trouble — most bubbles popped: {score}',
     },
 
     backup: {
