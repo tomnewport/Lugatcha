@@ -42,6 +42,13 @@ const START_LENGTH = 3
 const EDGE_MARGIN_X = 1
 const EDGE_MARGIN_Y = 1
 
+/**
+ * Cells directly ahead of the head that stay empty when a round is dealt. A
+ * number appearing right under the snake's nose is unfair: there is no time to
+ * read it, and a decoy there is an ambush rather than a mistake.
+ */
+const PATH_CLEARANCE = 5
+
 export interface Point {
   x: number
   y: number
@@ -217,14 +224,43 @@ export function placeFoods(
   }))
 }
 
-/** A fresh set of five fruits for `target`, avoiding the snake's own cells. */
+/** Where the snake is headed: its current direction plus any swiped turns. */
+export interface Course {
+  dir: Direction
+  /** Turns already swiped and waiting their tick; consumed one per step. */
+  queued?: Direction[]
+}
+
+/**
+ * The next PATH_CLEARANCE cells the head will cross on its present course —
+ * following any queued turns first, then carrying straight on.
+ */
+export function pathAhead(head: Point, course: Course, board: Board): Point[] {
+  const cells: Point[] = []
+  const turns = [...(course.queued ?? [])]
+  let heading = course.dir
+  let cell = head
+  for (let i = 0; i < PATH_CLEARANCE; i++) {
+    if (turns.length) heading = turns.shift()!
+    cell = wrap(moved(cell, heading), board)
+    cells.push(cell)
+  }
+  return cells
+}
+
+/**
+ * A fresh set of five fruits for `target`, off the snake's own cells and off
+ * the stretch of board it is about to drive through.
+ */
 export function buildRound(
   target: number,
   board: Board,
   snake: Point[],
+  course: Course,
   rng: () => number = Math.random,
 ): Food[] {
-  return placeFoods([target, ...pickDecoys(target, rng)], board, snake, rng)
+  const blocked = [...snake, ...pathAhead(snake[0], course, board)]
+  return placeFoods([target, ...pickDecoys(target, rng)], board, blocked, rng)
 }
 
 // --- Game rules -------------------------------------------------------------
@@ -262,7 +298,7 @@ export function createGame(board: Board, rng: () => number = Math.random, start 
     dir: 'right',
     queued: [],
     target: start,
-    foods: buildRound(start, board, snake, rng),
+    foods: buildRound(start, board, snake, { dir: 'right' }, rng),
     score: 0,
     status: 'ready',
     over: null,
@@ -324,7 +360,7 @@ export function advance(state: GameState, rng: () => number = Math.random): Tick
       snake,
       score: state.score + 1,
       target,
-      foods: buildRound(target, state.board, snake, rng),
+      foods: buildRound(target, state.board, snake, { dir, queued }, rng),
     },
     ate: food,
     over: null,
