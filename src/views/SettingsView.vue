@@ -9,6 +9,8 @@ import { useAudioDownload } from '@/audio/offline'
 import { clearAllLocalData } from '@/db/clearAll'
 import { db } from '@/db'
 import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/db/backup'
+import { readHighScore } from '@/exercises/snake'
+import SnakeGame from '@/components/SnakeGame.vue'
 import { saveBackup, pickBackupText } from '@/db/backupIO'
 import { markBackedUp } from '@/db/backupReminder'
 import {
@@ -113,6 +115,17 @@ function setBaseLanguage(lang: BaseLanguage) {
   settings.setBaseLanguage(lang)
 }
 
+// ── Number Snake ────────────────────────────────────────────────────────────
+// Soft-launched: off until opted in here, and playable here without waiting
+// for the next daily practice to finish.
+const playingSnake = ref(false)
+const snakeBest = ref(readHighScore())
+
+function closeSnake() {
+  playingSnake.value = false
+  snakeBest.value = readHighScore()
+}
+
 async function resetProgress() {
   await progress.resetAllProgress()
   confirmingReset.value = false
@@ -198,13 +211,13 @@ async function restoreFromFile() {
       <h2 class="settings-card__title">{{ $t('settings.learningLanguage.title') }}</h2>
       <p class="settings-card__desc">{{ $t('settings.learningLanguage.desc') }}</p>
       <div
-        class="lang-toggle"
+        class="opt-toggle"
         role="radiogroup"
         :aria-label="$t('settings.learningLanguage.groupLabel')"
       >
         <button
-          class="lang-toggle__btn"
-          :class="{ 'lang-toggle__btn--active': settings.baseLanguage === 'en' }"
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': settings.baseLanguage === 'en' }"
           type="button"
           role="radio"
           :aria-checked="settings.baseLanguage === 'en'"
@@ -213,8 +226,8 @@ async function restoreFromFile() {
           {{ $t('settings.learningLanguage.english') }}
         </button>
         <button
-          class="lang-toggle__btn"
-          :class="{ 'lang-toggle__btn--active': settings.baseLanguage === 'ru' }"
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': settings.baseLanguage === 'ru' }"
           type="button"
           role="radio"
           :aria-checked="settings.baseLanguage === 'ru'"
@@ -294,6 +307,41 @@ async function restoreFromFile() {
           {{ $t('settings.audio.none') }}
         </p>
       </template>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.game.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.game.desc') }}</p>
+      <div class="opt-toggle" role="radiogroup" :aria-label="$t('settings.game.groupLabel')">
+        <button
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': settings.snakeGame }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.snakeGame"
+          @click="settings.setSnakeGame(true)"
+        >
+          {{ $t('settings.game.on') }}
+        </button>
+        <button
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': !settings.snakeGame }"
+          type="button"
+          role="radio"
+          :aria-checked="!settings.snakeGame"
+          @click="settings.setSnakeGame(false)"
+        >
+          {{ $t('settings.game.off') }}
+        </button>
+      </div>
+      <div class="dl-actions">
+        <button class="btn btn--primary" type="button" @click="playingSnake = true">
+          {{ $t('settings.game.play') }}
+        </button>
+      </div>
+      <p v-if="snakeBest > 0" class="settings-card__note">
+        {{ $t('settings.game.best', { score: snakeBest }) }}
+      </p>
     </section>
 
     <section class="settings-card">
@@ -493,6 +541,8 @@ async function restoreFromFile() {
         </div>
       </template>
     </section>
+
+    <SnakeGame v-if="playingSnake" @done="closeSnake" />
   </main>
 </template>
 
@@ -724,13 +774,13 @@ async function restoreFromFile() {
   overflow-wrap: anywhere;
 }
 
-.lang-toggle {
+.opt-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
 }
 
-.lang-toggle__btn {
+.opt-toggle__btn {
   padding: 0.6rem 0.5rem;
   font-size: 0.88rem;
   font-weight: 600;
@@ -740,7 +790,7 @@ async function restoreFromFile() {
   border-radius: var(--radius-sm);
 }
 
-.lang-toggle__btn--active {
+.opt-toggle__btn--active {
   background: var(--color-primary);
   border-color: var(--color-primary);
   color: #fff;

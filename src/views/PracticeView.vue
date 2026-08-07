@@ -10,9 +10,11 @@ import {
 import { playChime } from '@/audio/audio'
 import { recordStreakDay, type StreakUpdate } from '@/streak'
 import { useActivityContext } from '@/feedback/activityContext'
+import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/i18n'
 import TestExercise from '@/components/exercise/TestExercise.vue'
 import StreakCelebration from '@/components/StreakCelebration.vue'
+import SnakeGame from '@/components/SnakeGame.vue'
 
 // Mirrors the key HomeView reads to show the "practised today" state.
 const DAILY_PRACTICE_DATE_KEY = 'lugatcha.dailyPracticeDate'
@@ -21,6 +23,7 @@ const LAST_PRACTICE_AT_KEY = 'lugatcha.lastPracticeAt'
 
 const router = useRouter()
 const route = useRoute()
+const settings = useSettingsStore()
 
 // True when the router redirected here as a mandatory gate before the city.
 const isRequired = computed(() => route.query.required === '1')
@@ -29,6 +32,11 @@ const questions = ref<PracticeQuestion[] | null>(null)
 
 // Set when a finished session grows the streak, driving the celebration overlay.
 const celebration = ref<StreakUpdate | null>(null)
+
+// The counting mini-game that rewards a finished session (after any streak
+// celebration), for learners who have opted into it in Settings. Closing it
+// takes the learner home.
+const game = ref(false)
 
 // Scope any "Raise an issue" report to the daily practice session.
 useActivityContext(() => ({
@@ -65,9 +73,17 @@ function onComplete() {
   }
   recordPracticeAt()
   const update = recordStreakDay()
-  // Celebrate a growing streak; the overlay takes the learner home when done.
+  // Celebrate a growing streak first, then hand over to the game if it is on.
   if (update.extended) {
     celebration.value = update
+  } else {
+    finishSession()
+  }
+}
+
+function finishSession() {
+  if (settings.snakeGame) {
+    game.value = true
   } else {
     home()
   }
@@ -75,6 +91,11 @@ function onComplete() {
 
 function onCelebrationDone() {
   celebration.value = null
+  finishSession()
+}
+
+function onGameDone() {
+  game.value = false
   home()
 }
 
@@ -120,6 +141,8 @@ function onEmptyBack() {
       :to="celebration.to"
       @done="onCelebrationDone"
     />
+
+    <SnakeGame v-if="game" @done="onGameDone" />
   </div>
 </template>
 

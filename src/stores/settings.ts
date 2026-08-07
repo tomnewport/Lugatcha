@@ -15,12 +15,18 @@ interface PersistedSettings {
   baseLanguage: BaseLanguage
   /** False until the learner has picked their language in the first-run modal. */
   languageChosen: boolean
+  /**
+   * Number Snake, the counting mini-game that can follow daily practice. Off
+   * until the learner opts in from Settings — it is soft-launched.
+   */
+  snakeGame: boolean
 }
 
 function load(): PersistedSettings {
   const defaults: PersistedSettings = {
     baseLanguage: 'en',
     languageChosen: false,
+    snakeGame: false,
   }
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -54,10 +60,16 @@ export const useSettingsStore = defineStore('settings', {
       this.languageChosen = true
       this.setBaseLanguage(lang)
     },
+    /** Opt in (or back out of) the post-practice mini-game. */
+    setSnakeGame(on: boolean) {
+      this.snakeGame = on
+      this.persist()
+    },
     persist() {
       save({
         baseLanguage: this.baseLanguage,
         languageChosen: this.languageChosen,
+        snakeGame: this.snakeGame,
       })
     },
   },
