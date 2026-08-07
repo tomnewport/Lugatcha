@@ -14,6 +14,8 @@ import {
   createGame,
   startGame,
   setMove,
+  setAim,
+  clearAim,
   fire,
   step,
   nextLevel,
@@ -138,6 +140,54 @@ function reroll() {
 /** Tapping the name hears it again — the word is the thing being learned. */
 function sayTarget() {
   void speakUzbek(state.value.target.uzbek)
+}
+
+// --- Dragging the avatar ----------------------------------------------------
+
+/**
+ * Grabbing the player and sliding steers them; letting go without having slid
+ * anywhere is a tap, which fires. Below this many pixels of travel the gesture
+ * is still a tap, so a slightly shaky finger still shoots.
+ */
+const TAP_SLOP = 8
+
+const arenaEl = ref<HTMLElement | null>(null)
+let dragPointer: number | null = null
+let dragStartX = 0
+let dragged = false
+
+/** Pointer clientX to an arena x. */
+function toArenaX(clientX: number): number {
+  const rect = arenaEl.value?.getBoundingClientRect()
+  if (!rect) return state.value.playerX
+  return (clientX - rect.left) / scale.value
+}
+
+function onGrab(event: PointerEvent) {
+  if (state.value.status === 'over' || paused.value) return
+  begin()
+  dragPointer = event.pointerId
+  dragStartX = event.clientX
+  dragged = false
+  // Keep receiving moves once the finger slides off the avatar itself.
+  ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+  event.preventDefault()
+}
+
+function onDrag(event: PointerEvent) {
+  if (dragPointer !== event.pointerId) return
+  if (!dragged && Math.abs(event.clientX - dragStartX) < TAP_SLOP) return
+  dragged = true
+  state.value = setAim(state.value, toArenaX(event.clientX))
+}
+
+function onRelease(event: PointerEvent) {
+  if (dragPointer !== event.pointerId) return
+  dragPointer = null
+  state.value = clearAim(state.value)
+  // A grab that never went anywhere was a tap on the avatar: shoot.
+  if (!dragged) shoot()
+  dragged = false
 }
 
 function onKeyDown(event: KeyboardEvent) {
@@ -310,7 +360,7 @@ onBeforeUnmount(() => {
       </div>
 
       <div ref="stage" class="bt__stage">
-        <div class="bt__arena" :style="arenaStyle">
+        <div ref="arenaEl" class="bt__arena" :style="arenaStyle">
           <div
             v-for="b in state.bubbles"
             :key="b.id"
@@ -323,7 +373,17 @@ onBeforeUnmount(() => {
             <span class="bt__harpoon-tip"></span>
           </div>
 
-          <div class="bt__player" :style="playerStyle"></div>
+          <div
+            class="bt__player"
+            :style="playerStyle"
+            role="button"
+            tabindex="-1"
+            :aria-label="$t('bubbles.avatar')"
+            @pointerdown="onGrab"
+            @pointermove="onDrag"
+            @pointerup="onRelease"
+            @pointercancel="onRelease"
+          ></div>
 
           <div v-if="state.status === 'ready'" class="bt__overlay">
             <p class="bt__howto">{{ $t('bubbles.howTo') }}</p>
@@ -612,6 +672,20 @@ onBeforeUnmount(() => {
   background: var(--color-primary);
   border-radius: 35% 35% 20% 20%;
   box-shadow: 0 0 0 2px rgba(27, 79, 138, 0.25);
+  touch-action: none;
+  cursor: grab;
+}
+
+.bt__player:active {
+  cursor: grabbing;
+}
+
+/* The avatar is only a few arena units wide, which is a cruel touch target.
+   This widens the grab area to a comfortable thumb without redrawing it. */
+.bt__player::before {
+  content: '';
+  position: absolute;
+  inset: -16px -22px;
 }
 
 .bt__overlay {

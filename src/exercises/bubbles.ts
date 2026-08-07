@@ -84,7 +84,8 @@ export const GRAVITY = 95
 
 const PLAYER_WIDTH = 5.5
 const PLAYER_HEIGHT = 8
-const PLAYER_SPEED = 36
+/** Arena units per second on foot. The same cap applies however you steer. */
+export const PLAYER_SPEED = 54
 /** Arena heights per second, so the shot takes the same time on any screen. */
 const HARPOON_SPEED_FACTOR = 1.25
 
@@ -144,6 +145,12 @@ export interface BubbleGame {
   /** Player centre on the floor. */
   playerX: number
   move: Move
+  /**
+   * Where a dragging finger is asking the player to stand. The walk there is
+   * still capped at PLAYER_SPEED, so the avatar follows behind the finger
+   * rather than snapping to it. `null` hands steering back to `move`.
+   */
+  aimX: number | null
   harpoon: Harpoon | null
   /** The colour named at the bottom; always present on the board. */
   target: BubbleColour
@@ -284,6 +291,7 @@ export function createGame(
     bubbles: [],
     playerX: arena.width / 2,
     move: 0,
+    aimX: null,
     harpoon: null,
     target: first,
     popped: 0,
@@ -310,7 +318,8 @@ export function nextLevel(state: BubbleGame, rng: () => number = Math.random): B
 
 /** Re-deals the level after a hit, at the same difficulty. */
 function redealLevel(state: BubbleGame, rng: () => number): BubbleGame {
-  const reset = { ...state, harpoon: null, playerX: state.arena.width / 2, move: 0 }
+  // A stale aim would march the player off to wherever the last drag ended.
+  const reset = { ...state, harpoon: null, playerX: state.arena.width / 2, move: 0, aimX: null }
   const { bubbles, nextId } = dealLevel(reset, rng)
   return ensureTarget({ ...reset, bubbles, nextId }, rng)
 }
@@ -319,6 +328,19 @@ function redealLevel(state: BubbleGame, rng: () => number): BubbleGame {
 
 export function setMove(state: BubbleGame, move: Move): BubbleGame {
   return { ...state, move }
+}
+
+/**
+ * Points the player at an arena x — the drag. Steering this way overrides the
+ * pads and the keyboard until `clearAim`, but obeys the same speed limit.
+ */
+export function setAim(state: BubbleGame, aimX: number): BubbleGame {
+  return { ...state, aimX }
+}
+
+/** Ends a drag, handing steering back to the pads and the keyboard. */
+export function clearAim(state: BubbleGame): BubbleGame {
+  return state.aimX === null ? state : { ...state, aimX: null }
 }
 
 /** One rope at a time — the core constraint of the original. */
@@ -403,9 +425,16 @@ function stepOnce(
 
   // --- Player ---
   const halfPlayer = PLAYER_WIDTH / 2
+  const reach = PLAYER_SPEED * dt
+  // A drag closes the gap to the finger at walking pace, landing exactly on it
+  // once within reach rather than overshooting and jittering.
+  const stride =
+    state.aimX === null
+      ? state.move * reach
+      : Math.max(-reach, Math.min(reach, state.aimX - state.playerX))
   const playerX = Math.min(
     arena.width - halfPlayer,
-    Math.max(halfPlayer, state.playerX + state.move * PLAYER_SPEED * dt),
+    Math.max(halfPlayer, state.playerX + stride),
   )
 
   // --- Bubbles ---

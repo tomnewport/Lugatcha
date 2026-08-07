@@ -112,6 +112,7 @@ export default {
     left: 'Move left',
     right: 'Move right',
     fire: 'Fire',
+    avatar: 'Drag to move, tap to fire',
     cleared: 'Level {level} cleared!',
     over: 'Game over',
     finalScore: 'You popped {count}.',
