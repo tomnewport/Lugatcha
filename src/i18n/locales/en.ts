@@ -158,6 +158,16 @@ export default {
       done: 'All {count} recordings cached for offline use. ✓',
       none: "No prebuilt recordings are bundled yet, so Lugʻatcha uses your device's speech synthesis to read Uzbek aloud. Quality varies by device; recordings will arrive with a future update and download automatically.",
     },
+    game: {
+      title: 'Number snake',
+      desc: 'A counting mini-game after each daily practice: steer a snake and eat the numbers in order, read aloud in Uzbek. New — try it here first.',
+      groupLabel: 'Number snake after daily practice',
+      on: 'On',
+      off: 'Off',
+      play: 'Play now',
+      best: 'Best count so far: {score}',
+    },
+
     backup: {
       title: 'Backup & restore',
       desc: 'Save your progress, streak, and settings to a file. On a phone you can send it straight to iCloud Drive, Google Drive, Dropbox, or Files — no account with us needed. Keep it in a synced folder to back up to the cloud, or use it to move to a new device.',

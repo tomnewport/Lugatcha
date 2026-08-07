@@ -10,6 +10,7 @@ import {
 import { playChime } from '@/audio/audio'
 import { recordStreakDay, type StreakUpdate } from '@/streak'
 import { useActivityContext } from '@/feedback/activityContext'
+import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/i18n'
 import TestExercise from '@/components/exercise/TestExercise.vue'
 import StreakCelebration from '@/components/StreakCelebration.vue'
@@ -22,6 +23,7 @@ const LAST_PRACTICE_AT_KEY = 'lugatcha.lastPracticeAt'
 
 const router = useRouter()
 const route = useRoute()
+const settings = useSettingsStore()
 
 // True when the router redirected here as a mandatory gate before the city.
 const isRequired = computed(() => route.query.required === '1')
@@ -32,7 +34,8 @@ const questions = ref<PracticeQuestion[] | null>(null)
 const celebration = ref<StreakUpdate | null>(null)
 
 // The counting mini-game that rewards a finished session (after any streak
-// celebration). Closing it takes the learner home.
+// celebration), for learners who have opted into it in Settings. Closing it
+// takes the learner home.
 const game = ref(false)
 
 // Scope any "Raise an issue" report to the daily practice session.
@@ -70,17 +73,25 @@ function onComplete() {
   }
   recordPracticeAt()
   const update = recordStreakDay()
-  // Celebrate a growing streak first; either way the session ends in the game.
+  // Celebrate a growing streak first, then hand over to the game if it is on.
   if (update.extended) {
     celebration.value = update
   } else {
+    finishSession()
+  }
+}
+
+function finishSession() {
+  if (settings.snakeGame) {
     game.value = true
+  } else {
+    home()
   }
 }
 
 function onCelebrationDone() {
   celebration.value = null
-  game.value = true
+  finishSession()
 }
 
 function onGameDone() {
