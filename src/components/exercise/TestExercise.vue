@@ -56,8 +56,12 @@ const spellCard = computed(() => (current.value?.kind === 'spell-card' ? current
 const isLast = computed(() => index.value >= questions.value.length - 1)
 
 /**
- * Spelling info cards are steps, not questions, so the counter skips them —
- * while a card is up it reads as the question it leads into.
+ * Spelling info cards are steps, not questions, so the counter skips them.
+ * While a card is up it shows the number of the question that follows it —
+ * which is deliberately not the spelling the card prepares, that being
+ * SPELL_CARD_GAP questions later. The counter tracks progress through the
+ * session; the card's own copy ("in a few questions' time") sets the
+ * expectation about when the spelling actually lands.
  */
 const isQuestion = (q: PracticeQuestion) => q.kind !== 'spell-card'
 const questionTotal = computed(() => questions.value.filter(isQuestion).length)

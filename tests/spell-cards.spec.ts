@@ -103,6 +103,30 @@ describe('withSpellCards', () => {
     expect(out.every((i) => i.kind !== 'word' || !i.noCredit)).toBe(true)
   })
 
+  it('spaces every card in a session that opens with a run of spellings', () => {
+    // Every spelling is deferred, so they splice back in as one block — the
+    // shape that would break spacing if cards counted as filler between them.
+    const items = [
+      ...Array.from({ length: 10 }, (_, i) => item(`t${i}`, 'type')),
+      item('c0', 'read-choice'),
+      item('c1', 'listen-choice'),
+      item('c2', 'read-cyrillic-choice'),
+    ]
+    const out = withSpellCards(items, progressOf({}))
+    for (let i = 0; i < 10; i++) {
+      const gap = questionsBetween(out, cardIndex(out, `t${i}`), questionIndex(out, `t${i}`))
+      expect(gap).toBe(SPELL_CARD_GAP)
+    }
+    expect(out.every((i) => i.kind !== 'word' || !i.noCredit)).toBe(true)
+    // Questions keep their relative order; only cards were woven in.
+    expect(out.filter((i) => i.kind !== 'spell-card')).toEqual([
+      items[10],
+      items[11],
+      items[12],
+      ...items.slice(0, 10),
+    ])
+  })
+
   it('still shows the card when the session is too short to space it, for no credit', () => {
     const items = [item('a', 'type'), item('b', 'read-choice')]
     const out = withSpellCards(items, progressOf({}))
@@ -155,13 +179,22 @@ describe('recordTestResult spelling history', () => {
     expect((await db.wordProgress.get('w'))?.lastSpellFailed).toBe(true)
   })
 
-  it('banks nothing from an uncredited answer but still schedules review', async () => {
+  it('banks nothing from an uncredited answer, and does not reschedule it', async () => {
     await recordTestResult(db, 'w', 'type', 1, false)
     const p = await db.wordProgress.get('w')
     expect(p?.testPassed).toEqual([])
     expect(p?.spellMastery).toBe(0)
-    expect(p?.review).toBeDefined()
+    // Grading it a success would push the next review out, making the learner
+    // wait longer for the chance to bank the skill this answer was denied.
+    expect(p?.review).toBeUndefined()
     expect(needsSpellCard(p)).toBe(true)
+  })
+
+  it('leaves an existing review schedule untouched on an uncredited answer', async () => {
+    await recordTestResult(db, 'w', 'read-choice', true)
+    const before = (await db.wordProgress.get('w'))?.review
+    await recordTestResult(db, 'w', 'type', 1, false)
+    expect((await db.wordProgress.get('w'))?.review).toEqual(before)
   })
 
   it('never unlearns a word on an uncredited miss', async () => {

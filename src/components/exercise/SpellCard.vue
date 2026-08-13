@@ -153,7 +153,7 @@ const units = computed(() => spellingUnits(props.word.uzbek))
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--color-primary);
-  background: #f2f7fc;
+  background: var(--color-primary-wash);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
 }

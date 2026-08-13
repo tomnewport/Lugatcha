@@ -146,11 +146,13 @@ export interface TestResultOutcome {
  * un-learned word are forgiven; two on a learned word unlearn it so it comes
  * back round for testing.
  *
- * `credit` false records the attempt without letting it change mastery: the
- * review schedule advances and a failed spelling is still remembered, but the
- * skill is not banked. Used when a spelling info card had to be shown too close
- * to its question (see exercises/spellCards.ts) — typing back a word read
- * moments ago is copying, not recall.
+ * `credit` false records only that the spelling was attempted — a failure is
+ * still remembered, so its info card comes back — while mastery and the review
+ * schedule are left exactly as they were. Used when a spelling info card had to
+ * be shown too close to its question (see exercises/spellCards.ts): typing back
+ * a word read moments ago is copying, not recall. Grading it as a success would
+ * push the word's next review further out, making the learner wait longer for
+ * the chance to bank the skill the answer was just denied.
  */
 export async function recordTestResult(
   db: LugatchaDB,
@@ -179,7 +181,7 @@ export async function recordTestResult(
     if (credit && type === 'type') spellMastery = Math.max(spellMastery, score)
 
     if (!credit) {
-      // Nothing banked: mastery is left exactly as it was.
+      // Nothing banked: mastery and scheduling are left exactly as they were.
     } else if (score >= 1) {
       passed.add(type)
       fails = 0
@@ -201,8 +203,10 @@ export async function recordTestResult(
     }
 
     // Advance the spaced-repetition schedule so the word falls due for review
-    // at a stretch matched to how well it was just recalled.
-    const review = scheduleReview(existing?.review, gradeFromResult(result))
+    // at a stretch matched to how well it was just recalled. An uncredited
+    // answer grades nothing: the word stays as due as it was, and comes round
+    // again with its card properly spaced.
+    const review = credit ? scheduleReview(existing?.review, gradeFromResult(result)) : existing?.review
 
     await db.wordProgress.put({
       wordId,

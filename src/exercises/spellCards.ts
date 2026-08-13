@@ -39,6 +39,13 @@ export function needsSpellCard(progress: WordProgress | undefined): boolean {
  * spaced SPELL_CARD_GAP questions back from the question it prepares (cards
  * themselves aren't questions, so they don't fill the gap).
  *
+ * One greedy pass is enough because a card is not a question: inserting one
+ * between an earlier card and its spelling can only widen that gap, never close
+ * it. Keep that property — counting cards toward `between` would let a later
+ * insertion silently break an earlier pair's spacing, and a run of spellings
+ * (every one of them deferred, so they arrive back-to-back) is exactly the
+ * shape that would expose it.
+ *
  * Sessions too short to space a card — a spelling question in the opening
  * questions with nothing to push it back behind — still get the card, but the
  * question is marked `noCredit`: the learner sees the word either way, and a
