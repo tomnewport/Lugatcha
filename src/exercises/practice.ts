@@ -6,6 +6,7 @@ import {
 } from './test'
 import { isDue, overdueRatio } from './spacedRepetition'
 import { shuffle } from './validate'
+import { withSpellCards, type SpellCardItem } from './spellCards'
 import { PHRASE_MODES, type PhrasePromptMode, type PracticePhrase } from './phrases'
 
 /**
@@ -22,12 +23,27 @@ export const NEW_WORDS_PER_PRACTICE = 3
 export const NEW_PHRASES_PER_PRACTICE = 2
 
 export type PracticeItem =
-  | { kind: 'word'; word: Word; type: TestQuestionType; isNew?: boolean }
+  | {
+      kind: 'word'
+      word: Word
+      type: TestQuestionType
+      isNew?: boolean
+      /** Set when a spelling question follows its info card too closely to count. */
+      noCredit?: boolean
+    }
   | { kind: 'phrase'; phrase: PracticePhrase; mode: PhrasePromptMode; isNew?: boolean }
+  | SpellCardItem
 
 /** A renderable question: word items gain their option bank, phrase items their decoy pool. */
 export type PracticeQuestion =
-  | { kind: 'word'; word: Word; type: TestQuestionType; options: Word[]; isNew?: boolean }
+  | {
+      kind: 'word'
+      word: Word
+      type: TestQuestionType
+      options: Word[]
+      isNew?: boolean
+      noCredit?: boolean
+    }
   | {
       kind: 'phrase'
       phrase: PracticePhrase
@@ -36,6 +52,7 @@ export type PracticeQuestion =
       pool: PracticePhrase[]
       isNew?: boolean
     }
+  | SpellCardItem
 
 export interface DailyPracticeSessionData {
   /** Words the learner has met — the drilling pool. */
@@ -71,7 +88,8 @@ export function intersperse<T>(base: T[], extras: T[]): T[] {
  *  4. only then the old busywork filler, so a mature vocabulary still gets a
  *     full retention session when nothing new remains.
  * Phrase and introduction items are spread through the word backbone rather
- * than clustered at the end.
+ * than clustered at the end. Finally, spelling questions for words not yet
+ * spelled get an info card a few questions ahead of them (./spellCards.ts).
  */
 export function buildDailyPracticeSession(
   data: DailyPracticeSessionData,
@@ -164,7 +182,12 @@ export function buildDailyPracticeSession(
     }
   }
 
-  return intersperse([...wordItems, ...wordFiller], [...phraseItems, ...introItems])
+  // 5. Spelling info cards, ahead of the spelling questions that need one and
+  // spaced back from them (exercises/spellCards.ts).
+  return withSpellCards(
+    intersperse([...wordItems, ...wordFiller], [...phraseItems, ...introItems]),
+    progress,
+  )
 }
 
 /** Turns session items into renderable questions (option banks, decoy pools). */
@@ -173,12 +196,13 @@ export function buildPracticeSessionQuestions(
   allWords: Word[],
   phrasePool: PracticePhrase[],
 ): PracticeQuestion[] {
-  return items.map((item) =>
-    item.kind === 'word'
+  return items.map((item) => {
+    if (item.kind === 'spell-card') return item
+    return item.kind === 'word'
       ? {
           ...item,
           options: item.type === 'type' ? [] : buildOptionBank(item.word, allWords),
         }
-      : { ...item, pool: phrasePool },
-  )
+      : { ...item, pool: phrasePool }
+  })
 }

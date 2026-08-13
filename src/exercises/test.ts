@@ -31,6 +31,32 @@ export function typingTarget(uzbek: string): string {
     .trim()
 }
 
+/**
+ * Keys of the Uzbek keyboard that type more than one character (UzbekKeyboard),
+ * longest first so a digraph wins over its opening letter.
+ */
+const MULTI_CHAR_KEYS = ['oʻ', 'gʻ', 'sh', 'ch', 'ng']
+
+/**
+ * Splits a word into the keys that spell it — digraphs and oʻ/gʻ kept whole, so
+ * the breakdown shown on the spelling info card matches the keyboard the
+ * learner will type it on. Case and apostrophe glyphs are preserved for display.
+ */
+export function spellingUnits(uzbek: string): string[] {
+  const target = typingTarget(uzbek)
+  // Folding is character-for-character, so positions line up with `target`.
+  const folded = foldTyping(target)
+  const keys = MULTI_CHAR_KEYS.map(foldTyping)
+  const units: string[] = []
+  for (let i = 0; i < target.length; ) {
+    const key = keys.find((k) => folded.startsWith(k, i))
+    const length = key?.length ?? 1
+    units.push(target.slice(i, i + length))
+    i += length
+  }
+  return units
+}
+
 export function passedTypes(progress: WordProgress | undefined): TestQuestionType[] {
   return progress?.testPassed ?? []
 }
@@ -186,22 +212,6 @@ export function buildOptionBank(
     bank.push(w)
   }
   return shuffle(bank)
-}
-
-export interface TestQuestion {
-  word: Word
-  type: TestQuestionType
-  /** Option words for the choice question types (glossed at render); empty for 'type'. */
-  options: Word[]
-}
-
-/** Turns explicit (word, skill) pairs into questions, building option banks. */
-export function buildQuestionsFromPairs(pairs: PracticePair[], allWords: Word[]): TestQuestion[] {
-  return pairs.map(({ word, type }) => ({
-    word,
-    type,
-    options: type === 'type' ? [] : buildOptionBank(word, allWords),
-  }))
 }
 
 /** How many questions a Daily Practice session serves. */

@@ -13,6 +13,8 @@
 :root {
   --color-primary: #1b4f8a; /* lapis lazuli blue */
   --color-primary-light: #2e6db4;
+  /* Palest primary tint — selected options, pressed keys, chips on a card. */
+  --color-primary-wash: #f2f7fc;
   --color-gold: #c9a84c; /* ceramic tile gold */
   --color-teal: #1a5e52; /* deep teal accent */
   --color-terracotta: #c2522a; /* warm terracotta */

@@ -6,7 +6,15 @@ import { useContentLang } from '@/i18n/content'
 import { speakUzbek } from '@/audio/audio'
 import UzbekKeyboard from './UzbekKeyboard.vue'
 
-const props = defineProps<{ word: Word }>()
+const props = defineProps<{
+  word: Word
+  /**
+   * The spelling info card had to be shown too close to this question for the
+   * answer to count as recall (exercises/spellCards.ts), so nothing is banked.
+   * Said up front, so a 100% that goes nowhere doesn't look like a bug.
+   */
+  noCredit?: boolean
+}>()
 /** Reports the spelling score: 1 for a tip-free spelling, down to 0 (gave up). */
 const emit = defineEmits<{ answered: [score: number] }>()
 const { gloss } = useContentLang()
@@ -103,6 +111,7 @@ function finish(result: 'passed' | 'failed') {
   <div class="type-q">
     <p class="type-q__instruction">{{ $t('exercise.type.prompt') }}</p>
     <p class="type-q__english">{{ gloss(word) }}</p>
+    <p v-if="noCredit" class="type-q__nocredit">{{ $t('exercise.type.noCredit') }}</p>
 
     <div class="type-q__answer" :class="answerClass" lang="uz" aria-live="polite">
       <template v-if="status === 'typing'">
@@ -115,9 +124,13 @@ function finish(result: 'passed' | 'failed') {
     <p
       v-if="status !== 'typing'"
       class="type-q__score"
-      :class="score >= 1 ? 'type-q__score--full' : 'type-q__score--partial'"
+      :class="noCredit || score < 1 ? 'type-q__score--partial' : 'type-q__score--full'"
     >
-      {{ $t('exercise.type.score', { percent: scorePercent }) }}
+      {{
+        noCredit
+          ? $t('exercise.type.noCreditScore')
+          : $t('exercise.type.score', { percent: scorePercent })
+      }}
     </p>
 
     <UzbekKeyboard
@@ -186,6 +199,14 @@ function finish(result: 'passed' | 'failed') {
   color: var(--color-primary);
   text-align: center;
   margin: 0;
+}
+
+.type-q__nocredit {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  text-align: center;
+  margin: -0.5rem 0 0;
 }
 
 .type-q__answer {

@@ -145,12 +145,21 @@ export interface TestResultOutcome {
  * question types are banked the word is learned. Wrong answers (score 0) on an
  * un-learned word are forgiven; two on a learned word unlearn it so it comes
  * back round for testing.
+ *
+ * `credit` false records only that the spelling was attempted — a failure is
+ * still remembered, so its info card comes back — while mastery and the review
+ * schedule are left exactly as they were. Used when a spelling info card had to
+ * be shown too close to its question (see exercises/spellCards.ts): typing back
+ * a word read moments ago is copying, not recall. Grading it as a success would
+ * push the word's next review further out, making the learner wait longer for
+ * the chance to bank the skill the answer was just denied.
  */
 export async function recordTestResult(
   db: LugatchaDB,
   wordId: string,
   type: TestQuestionType,
   result: boolean | number,
+  credit = true,
 ): Promise<TestResultOutcome> {
   const score = typeof result === 'boolean' ? (result ? 1 : 0) : Math.max(0, Math.min(1, result))
   return db.transaction('rw', db.wordProgress, async () => {
@@ -163,9 +172,17 @@ export async function recordTestResult(
     let newlyLearned = false
     let unlearned = false
 
-    if (type === 'type') spellMastery = Math.max(spellMastery, score)
+    // A spelling given up on brings the info card back next time the word comes
+    // round; any other spelling attempt clears the flag. Recorded even when the
+    // attempt earns no credit — the learner still needs the reminder.
+    let lastSpellFailed = existing?.lastSpellFailed ?? false
+    if (type === 'type') lastSpellFailed = score <= 0
 
-    if (score >= 1) {
+    if (credit && type === 'type') spellMastery = Math.max(spellMastery, score)
+
+    if (!credit) {
+      // Nothing banked: mastery and scheduling are left exactly as they were.
+    } else if (score >= 1) {
       passed.add(type)
       fails = 0
       if (!wasLearned && TEST_QUESTION_TYPES.every((t) => passed.has(t))) {
@@ -186,8 +203,10 @@ export async function recordTestResult(
     }
 
     // Advance the spaced-repetition schedule so the word falls due for review
-    // at a stretch matched to how well it was just recalled.
-    const review = scheduleReview(existing?.review, gradeFromResult(result))
+    // at a stretch matched to how well it was just recalled. An uncredited
+    // answer grades nothing: the word stays as due as it was, and comes round
+    // again with its card properly spaced.
+    const review = credit ? scheduleReview(existing?.review, gradeFromResult(result)) : existing?.review
 
     await db.wordProgress.put({
       wordId,
@@ -195,6 +214,7 @@ export async function recordTestResult(
       lastResults: existing?.lastResults ?? [],
       testPassed: [...passed],
       spellMastery,
+      lastSpellFailed,
       learnedAt,
       failsSinceLearned: fails,
       review,
