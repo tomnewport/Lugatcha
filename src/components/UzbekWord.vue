@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, inject } from 'vue'
-import type { Ref } from 'vue'
+import { ref, computed, inject, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
 import { getBreakdown, ensureBreakdownIndex } from '@/exercises/deagglutination'
 import { spokenWordForm } from '@/exercises/validate'
 import { speakUzbek } from '@/audio/audio'
+import { closeWordTooltip, isWordOpen, toggleWordTooltip } from '@/components/wordTooltip'
 
 const props = defineProps<{
   word: string
@@ -11,21 +11,28 @@ const props = defineProps<{
   noHint?: boolean
 }>()
 
-// Sentence-level coordination: only one tooltip open at a time within a sentence.
-// UzbekSentence provides this ref; standalone UzbekWord gets its own isolated ref.
-const sentenceActive = inject<Ref<symbol | null>>('uz-active', ref(null))
-const id = Symbol()
-
-const localOpen = ref(false)
-const isOpen = computed(() =>
-  sentenceActive !== null
-    ? sentenceActive.value === id
-    : localOpen.value,
-)
+const id = Symbol('uz-word')
+// The sentence this word belongs to, when it is part of one (UzbekWord is also
+// used on its own in the word-intro exercise).
+const owner = inject<symbol | null>('uz-sentence', null)
+const isOpen = computed(() => isWordOpen(id))
 
 onMounted(() => {
   void ensureBreakdownIndex()
 })
+
+onBeforeUnmount(() => {
+  closeWordTooltip(id)
+  stopTracking()
+})
+
+// The next phrase, story sentence or roleplay turn reuses this component with
+// new text, so an open tooltip would otherwise survive into content it no
+// longer describes.
+watch(
+  () => [props.word, props.meaning],
+  () => closeWordTooltip(id),
+)
 
 const breakdown = computed(() => getBreakdown(props.word))
 const isMultiMorpheme = computed(() => (breakdown.value?.breakdown.length ?? 0) > 1)
@@ -39,12 +46,106 @@ const fullMeaning = computed(() => breakdown.value?.meaning ?? props.meaning)
 function toggle() {
   void speakUzbek(spokenWordForm(props.word))
   if (!hasTooltip.value) return
-  if (sentenceActive !== null) {
-    sentenceActive.value = sentenceActive.value === id ? null : id
-  } else {
-    localOpen.value = !localOpen.value
+  toggleWordTooltip(id, owner)
+}
+
+/* ── Positioning ─────────────────────────────────────────────────────────────
+   The tooltip is teleported to <body> and positioned in viewport coordinates:
+   anchored inside the sentence it was clipped by scroll containers (the
+   roleplay chat log) and by the edge of the screen. */
+
+const btnEl = ref<HTMLElement | null>(null)
+const tipEl = ref<HTMLElement | null>(null)
+const placement = ref({ left: 0, top: 0, arrow: 0, below: false, hidden: true })
+
+/** Gap between word and tooltip, and the closest the tooltip comes to an edge. */
+const GAP = 7
+const EDGE = 8
+
+function place() {
+  const btn = btnEl.value
+  const tip = tipEl.value
+  if (!btn || !tip) return
+  const anchor = btn.getBoundingClientRect()
+  const box = tip.getBoundingClientRect()
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+
+  // Keep the box on screen horizontally, then point the arrow back at the word.
+  const wanted = anchor.left + anchor.width / 2 - box.width / 2
+  const left = Math.min(Math.max(EDGE, wanted), Math.max(EDGE, vw - box.width - EDGE))
+
+  // Above the word by default; flip below when there isn't room up there.
+  const below = anchor.top - box.height - GAP < EDGE && anchor.bottom + box.height + GAP < vh
+  const top = below ? anchor.bottom + GAP : anchor.top - box.height - GAP
+
+  const centre = anchor.left + anchor.width / 2 - left
+  placement.value = {
+    left,
+    top,
+    arrow: Math.min(Math.max(10, centre), Math.max(10, box.width - 10)),
+    below,
+    hidden: isClipped(btn, anchor),
   }
 }
+
+/**
+ * True when the word itself has been scrolled out of sight — inside the chat
+ * log, or off the page. A tooltip anchored to something invisible would float
+ * loose over the rest of the screen.
+ */
+function isClipped(el: HTMLElement, rect: DOMRect): boolean {
+  if (rect.bottom < 0 || rect.top > window.innerHeight) return true
+  for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+    if (getComputedStyle(node).overflow === 'visible') continue
+    const clip = node.getBoundingClientRect()
+    if (rect.bottom < clip.top || rect.top > clip.bottom) return true
+    if (rect.right < clip.left || rect.left > clip.right) return true
+  }
+  return false
+}
+
+let tracking = false
+
+function startTracking() {
+  if (tracking) return
+  tracking = true
+  // Capture phase so scrolling of inner containers (the chat log) is seen too.
+  window.addEventListener('scroll', place, true)
+  window.addEventListener('resize', place)
+}
+
+function stopTracking() {
+  if (!tracking) return
+  tracking = false
+  window.removeEventListener('scroll', place, true)
+  window.removeEventListener('resize', place)
+}
+
+watch(isOpen, async (open) => {
+  if (!open) {
+    stopTracking()
+    placement.value = { ...placement.value, hidden: true }
+    return
+  }
+  await nextTick()
+  place()
+  startTracking()
+})
+
+// The gloss index loads asynchronously, so an open tooltip can gain a morpheme
+// grid after it was first measured.
+watch(breakdown, () => {
+  if (isOpen.value) void nextTick(place)
+})
+
+const tooltipStyle = computed(() => ({
+  left: `${placement.value.left}px`,
+  top: `${placement.value.top}px`,
+  visibility: placement.value.hidden ? ('hidden' as const) : ('visible' as const),
+}))
+
+const arrowStyle = computed(() => ({ left: `${placement.value.arrow}px` }))
 </script>
 
 <template>
@@ -58,45 +159,52 @@ function toggle() {
     }"
   >
     <button
+      ref="btnEl"
       class="uz-word__btn"
       type="button"
       :aria-expanded="hasTooltip ? isOpen : undefined"
       @click.stop="toggle"
     >{{ word }}</button>
 
-    <!-- Multi-morpheme breakdown tooltip (teal, morpheme grid) -->
-    <span
-      v-if="isOpen && isMultiMorpheme && breakdown"
-      class="uz-word__tooltip uz-word__tooltip--breakdown"
-      role="tooltip"
-    >
-      <span class="bk-row">
-        <template v-for="(part, i) in breakdown.breakdown" :key="i">
-          <span v-if="i > 0" class="bk-plus" aria-hidden="true">+</span>
-          <span class="bk-morpheme">
-            <span class="bk-morpheme__part" lang="uz">{{ part }}</span>
-            <span class="bk-morpheme__gloss">{{ breakdown.gloss[i] }}</span>
+    <Teleport to="body">
+      <span
+        v-if="isOpen && hasTooltip"
+        ref="tipEl"
+        class="uz-word__tooltip"
+        :class="[
+          isMultiMorpheme && breakdown ? 'uz-word__tooltip--breakdown' : 'uz-word__tooltip--meaning',
+          placement.below ? 'uz-word__tooltip--below' : 'uz-word__tooltip--above',
+        ]"
+        :style="tooltipStyle"
+        role="tooltip"
+      >
+        <!-- Multi-morpheme breakdown (teal, morpheme grid) -->
+        <template v-if="isMultiMorpheme && breakdown">
+          <span class="bk-row">
+            <template v-for="(part, i) in breakdown.breakdown" :key="i">
+              <span v-if="i > 0" class="bk-plus" aria-hidden="true">+</span>
+              <span class="bk-morpheme">
+                <span class="bk-morpheme__part" lang="uz">{{ part }}</span>
+                <span class="bk-morpheme__gloss">{{ breakdown.gloss[i] }}</span>
+              </span>
+            </template>
+          </span>
+          <span v-if="fullMeaning" class="bk-meaning">
+            <span lang="uz">{{ word }}</span> = {{ fullMeaning }}
           </span>
         </template>
-      </span>
-      <span v-if="fullMeaning" class="bk-meaning">
-        <span lang="uz">{{ word }}</span> = {{ fullMeaning }}
-      </span>
-    </span>
 
-    <!-- Single-morpheme vocab match: "word = meaning" pill -->
-    <span
-      v-else-if="isOpen && !isMultiMorpheme && breakdown"
-      class="uz-word__tooltip uz-word__tooltip--meaning"
-      role="tooltip"
-    ><span lang="uz">{{ word }}</span> = {{ breakdown.gloss[0] }}</span>
+        <!-- Single-morpheme vocab match: "word = meaning" pill -->
+        <template v-else-if="breakdown">
+          <span lang="uz">{{ word }}</span> = {{ breakdown.gloss[0] }}
+        </template>
 
-    <!-- Fallback: meaning prop only -->
-    <span
-      v-else-if="isOpen && !breakdown && meaning"
-      class="uz-word__tooltip uz-word__tooltip--meaning"
-      role="tooltip"
-    >{{ meaning }}</span>
+        <!-- Fallback: meaning prop only -->
+        <template v-else>{{ meaning }}</template>
+
+        <span class="uz-word__arrow" :style="arrowStyle" aria-hidden="true" />
+      </span>
+    </Teleport>
   </span>
 </template>
 
@@ -129,28 +237,33 @@ function toggle() {
   border-radius: 3px;
 }
 
-/* Base tooltip */
+/* Base tooltip. Teleported to <body> and placed in viewport coordinates by
+   place(), so no ancestor's overflow can clip it. */
 .uz-word__tooltip {
-  position: absolute;
-  bottom: calc(100% + 7px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
+  position: fixed;
+  z-index: 60;
   width: max-content;
-  max-width: min(300px, 88vw);
+  max-width: min(300px, calc(100vw - 16px));
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-md);
   white-space: normal;
-  /* small arrow pointing down */
+  text-align: left;
 }
 
-.uz-word__tooltip::after {
-  content: '';
+.uz-word__arrow {
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  margin-left: -5px;
   border: 5px solid transparent;
+}
+
+.uz-word__tooltip--above .uz-word__arrow {
+  top: 100%;
+}
+
+.uz-word__tooltip--below .uz-word__arrow {
+  bottom: 100%;
 }
 
 /* Meaning tooltip */
@@ -163,8 +276,12 @@ function toggle() {
   background: var(--color-text);
 }
 
-.uz-word__tooltip--meaning::after {
+.uz-word__tooltip--meaning.uz-word__tooltip--above .uz-word__arrow {
   border-top-color: var(--color-text);
+}
+
+.uz-word__tooltip--meaning.uz-word__tooltip--below .uz-word__arrow {
+  border-bottom-color: var(--color-text);
 }
 
 /* Breakdown tooltip */
@@ -174,8 +291,12 @@ function toggle() {
   border: 1.5px solid var(--color-teal);
 }
 
-.uz-word__tooltip--breakdown::after {
+.uz-word__tooltip--breakdown.uz-word__tooltip--above .uz-word__arrow {
   border-top-color: var(--color-teal);
+}
+
+.uz-word__tooltip--breakdown.uz-word__tooltip--below .uz-word__arrow {
+  border-bottom-color: var(--color-teal);
 }
 
 .bk-row {

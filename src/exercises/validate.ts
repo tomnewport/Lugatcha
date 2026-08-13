@@ -17,6 +17,17 @@ export function normalizeToken(token: string): string {
     .trim()
 }
 
+/**
+ * Drops exactly the punctuation `normalizeToken` drops, but keeps case and
+ * apostrophe spelling. Analysers that slice a word by suffix length need a
+ * display form whose indexes line up with the normalised form — "Kelaman."
+ * is 8 characters but normalises to 7, so slicing the raw token cuts in the
+ * wrong place.
+ */
+export function stripPunctuation(token: string): string {
+  return token.normalize('NFC').replace(PUNCTUATION, '').trim()
+}
+
 export function tokenize(sentence: string): string[] {
   return sentence.split(/\s+/).filter((t) => normalizeToken(t).length > 0)
 }

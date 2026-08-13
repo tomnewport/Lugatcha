@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, provide } from 'vue'
+import { computed, onBeforeUnmount, provide, watch } from 'vue'
 import UzbekWord from '@/components/UzbekWord.vue'
+import { closeWordTooltipsIn } from '@/components/wordTooltip'
 import { tokenize, normalizeToken } from '@/exercises/validate'
 import { i18n } from '@/i18n'
 
@@ -12,9 +13,16 @@ const props = defineProps<{
 
 const tokens = computed(() => tokenize(props.uzbek))
 
-// Only one word tooltip open at a time within this sentence.
-const activeSentenceWord = ref<symbol | null>(null)
-provide('uz-active', activeSentenceWord)
+// Exercises reuse one sentence for the next phrase, story line or roleplay
+// turn. Words are keyed by position, so a tooltip left open would otherwise
+// hang over a word that has since been replaced.
+const owner = Symbol('uz-sentence')
+provide('uz-sentence', owner)
+watch(
+  () => props.uzbek,
+  () => closeWordTooltipsIn(owner),
+)
+onBeforeUnmount(() => closeWordTooltipsIn(owner))
 
 function meaningFor(token: string): string | undefined {
   if (!props.glossary) return undefined
