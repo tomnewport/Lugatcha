@@ -225,9 +225,17 @@ async function loadRoots(): Promise<Record<string, string>> {
 }
 
 let _loading: Promise<void> | null = null
+/**
+ * Bumped by every build. A rebuild doesn't cancel the build it replaces, and
+ * the two race — the newer one warms the HTTP cache for the older one's lesson
+ * fetches, so the older can land second. Builds check they are still the
+ * current generation before publishing their result.
+ */
+let _generation = 0
 
 export function ensureBreakdownIndex(): Promise<void> {
   if (_loading) return _loading
+  const generation = ++_generation
   _loading = (async () => {
     const [metas, allWords, roots] = await Promise.all([
       loadLessonIndex(),
@@ -247,6 +255,7 @@ export function ensureBreakdownIndex(): Promise<void> {
         if (!vocab.has(normalizeToken(inf))) vocab.set(normalizeToken(inf), glossNow(w))
       }
     }
+    if (generation !== _generation) return
     vocabIndex.value = vocab
 
     // Build lesson breakdown index (hand-curated, highest priority)
@@ -267,6 +276,7 @@ export function ensureBreakdownIndex(): Promise<void> {
         }
       }
     }
+    if (generation !== _generation) return
     breakdownIndex.value = map
   })()
   return _loading

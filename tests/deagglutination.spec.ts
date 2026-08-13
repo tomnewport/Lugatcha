@@ -1,5 +1,12 @@
-import { describe, it, expect, beforeEach } from 'vitest'
-import { getBreakdown, breakdownIndex, vocabIndex } from '@/exercises/deagglutination'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import {
+  getBreakdown,
+  breakdownIndex,
+  vocabIndex,
+  ensureBreakdownIndex,
+  rebuildBreakdownIndex,
+} from '@/exercises/deagglutination'
+import { db } from '@/db'
 
 const VOCAB: [string, string][] = [
   ['u', 'he/she/it'],
@@ -14,6 +21,10 @@ const VOCAB: [string, string][] = [
 beforeEach(() => {
   vocabIndex.value = new Map(VOCAB)
   breakdownIndex.value = new Map()
+})
+
+afterEach(() => {
+  vi.unstubAllGlobals()
 })
 
 describe('getBreakdown', () => {
@@ -50,6 +61,42 @@ describe('getBreakdown', () => {
     expect(getBreakdown('—')).toBeNull()
     expect(getBreakdown('')).toBeNull()
     expect(getBreakdown('qwertyuiop')).toBeNull()
+  })
+
+  it('does not let a superseded build publish a stale index', async () => {
+    // The vocabulary lands in `words` after the first build has already read
+    // the table, so the refresh has to win even though it starts second.
+    let firstRootsFetch = true
+    vi.stubGlobal('fetch', async (url: string) => {
+      // Opening the database fires Dexie's populate hook, which seeds from the
+      // content manifest — hand it an empty one so the test drives the table.
+      const json = url.includes('roots.json')
+        ? { roots: { kel: 'come' } }
+        : url.includes('manifest.json')
+          ? { words: [], stories: [], roleplay: [] }
+          : []
+      // Stall only the first build's roots fetch, so the rebuild overtakes it.
+      if (url.includes('roots.json') && firstRootsFetch) {
+        firstRootsFetch = false
+        await new Promise((resolve) => setTimeout(resolve, 50))
+      }
+      return { ok: true, json: async () => json } as Response
+    })
+
+    await db.words.clear()
+    const stale = ensureBreakdownIndex()
+    await db.words.put({
+      id: 'x.kitob',
+      uzbek: 'kitob',
+      english: 'book',
+      theme: 'test',
+      level: 1,
+    })
+    await rebuildBreakdownIndex()
+    expect(vocabIndex.value.get('kitob')).toBe('book')
+
+    await stale
+    expect(vocabIndex.value.get('kitob')).toBe('book')
   })
 
   it('prefers a curated lesson breakdown, punctuation and all', () => {

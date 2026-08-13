@@ -3,7 +3,12 @@ import { ref, computed, inject, onMounted, onBeforeUnmount, watch, nextTick } fr
 import { getBreakdown, ensureBreakdownIndex } from '@/exercises/deagglutination'
 import { spokenWordForm } from '@/exercises/validate'
 import { speakUzbek } from '@/audio/audio'
-import { closeWordTooltip, isWordOpen, toggleWordTooltip } from '@/components/wordTooltip'
+import {
+  closeWordTooltip,
+  isWordOpen,
+  nextTooltipId,
+  toggleWordTooltip,
+} from '@/components/wordTooltip'
 
 const props = defineProps<{
   word: string
@@ -12,6 +17,9 @@ const props = defineProps<{
 }>()
 
 const id = Symbol('uz-word')
+// Teleporting the tooltip to <body> breaks its DOM adjacency to the button, so
+// the two are tied together explicitly for screen readers.
+const tipId = nextTooltipId()
 // The sentence this word belongs to, when it is part of one (UzbekWord is also
 // used on its own in the word-intro exercise).
 const owner = inject<symbol | null>('uz-sentence', null)
@@ -163,12 +171,14 @@ const arrowStyle = computed(() => ({ left: `${placement.value.arrow}px` }))
       class="uz-word__btn"
       type="button"
       :aria-expanded="hasTooltip ? isOpen : undefined"
+      :aria-describedby="isOpen && hasTooltip ? tipId : undefined"
       @click.stop="toggle"
     >{{ word }}</button>
 
     <Teleport to="body">
       <span
         v-if="isOpen && hasTooltip"
+        :id="tipId"
         ref="tipEl"
         class="uz-word__tooltip"
         :class="[

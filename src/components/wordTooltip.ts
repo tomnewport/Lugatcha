@@ -12,6 +12,13 @@ import { ref } from 'vue'
 const openWord = ref<symbol | null>(null)
 let openOwner: symbol | null = null
 
+let tooltipSeq = 0
+
+/** Unique DOM id for a word's tooltip, so its button can point at it. */
+export function nextTooltipId(): string {
+  return `uz-tip-${++tooltipSeq}`
+}
+
 /** True while `id` owns the open tooltip. */
 export function isWordOpen(id: symbol): boolean {
   return openWord.value === id
