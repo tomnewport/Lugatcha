@@ -85,10 +85,19 @@ try {
 
   // Seed after mount so the app shell renders immediately.
   // ensureSeeded is a no-op on subsequent visits once words exist.
-  ensureSeeded(db).catch((error) => {
-    console.error(error)
-    captureError('seed', error, 'while loading vocabulary')
-  })
+  ensureSeeded(db)
+    .catch((error) => {
+      console.error(error)
+      captureError('seed', error, 'while loading vocabulary')
+    })
+    .then(() =>
+      // A word tapped before seeding finished would have built its gloss index
+      // from an empty table; refresh it now that the vocabulary is in place.
+      // Kept out of the seed's catch so a refresh failure isn't reported to the
+      // learner as lost vocabulary — glosses degrade, progress is untouched.
+      import('./exercises/deagglutination').then((m) => m.refreshBreakdownIndex()),
+    )
+    .catch((error) => console.error(error))
 
   // Best-effort: ask the browser not to evict a learner's progress (see
   // db/persist.ts). Fire-and-forget — startup never depends on the answer.

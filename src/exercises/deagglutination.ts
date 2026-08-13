@@ -1,6 +1,6 @@
 import { shallowRef } from 'vue'
 import { loadLessonIndex, loadLesson } from '@/db/lessons'
-import { normalizeToken } from '@/exercises/validate'
+import { normalizeToken, stripPunctuation } from '@/exercises/validate'
 import { db } from '@/db/useDb'
 import { currentBase, glossNow, pickBase } from '@/i18n/content'
 
@@ -60,6 +60,7 @@ const SUFFIXES: { pattern: string; gloss: string; glossRu?: string }[] = [
   { pattern: 'ting', gloss: 'you -ed', glossRu: 'ты (прош. вр.)' },
   { pattern: 'dik', gloss: 'we -ed', glossRu: 'мы (прош. вр.)' },
   { pattern: 'tik', gloss: 'we -ed', glossRu: 'мы (прош. вр.)' },
+  { pattern: 'ardi', gloss: 'used to …', glossRu: 'бывало (прош. вр.)' },
   { pattern: 'di', gloss: '-ed', glossRu: 'прош. вр.' },
   { pattern: 'ti', gloss: '-ed', glossRu: 'прош. вр.' },
   // --- Non-finite / mood ---------------------------------------------------
@@ -73,6 +74,8 @@ const SUFFIXES: { pattern: string; gloss: string; glossRu?: string }[] = [
   { pattern: 'qan', gloss: '-ed (past ptcp)', glossRu: 'прич. прош. вр.' },
   { pattern: 'ish', gloss: '(verbal noun)', glossRu: '(отглаг. сущ.)' },
   { pattern: 'moq', gloss: '(infinitive)', glossRu: '(инфинитив)' },
+  { pattern: 'sak', gloss: 'if we', glossRu: 'если мы' },
+  { pattern: 'sin', gloss: 'let it/them', glossRu: 'пусть' },
   { pattern: 'sa', gloss: 'if', glossRu: 'если' },
   { pattern: 'ib', gloss: 'having …ed', glossRu: 'деепричастие' },
   // --- Possessive + case combinations (longest first) ----------------------
@@ -112,6 +115,7 @@ const SUFFIXES: { pattern: string; gloss: string; glossRu?: string }[] = [
   // --- Possessives (medium) ------------------------------------------------
   { pattern: 'ingiz', gloss: 'your (formal)', glossRu: 'ваш (вежл.)' },
   { pattern: 'imiz', gloss: 'our', glossRu: 'наш' },
+  { pattern: 'miz', gloss: 'we are', glossRu: 'мы есть' },
   { pattern: 'lari', gloss: 'their', glossRu: 'их' },
   // --- Case suffixes -------------------------------------------------------
   { pattern: 'ning', gloss: 'of', glossRu: 'род. падеж' },
@@ -138,7 +142,9 @@ const SUFFIXES: { pattern: string; gloss: string; glossRu?: string }[] = [
   { pattern: 'dek', gloss: 'like', glossRu: 'как' },
   { pattern: 'day', gloss: 'like', glossRu: 'как' },
   { pattern: 'ta', gloss: '(counter)', glossRu: '(счётн. слово)' },
+  { pattern: 'lik', gloss: '-ness/-hood', glossRu: '-ость (сущ.)' },
   { pattern: 'li', gloss: 'with', glossRu: 'с' },
+  { pattern: 'gi', gloss: 'of/at (adj.)', glossRu: '-ний (прил.)' },
   { pattern: 'mas', gloss: 'not', glossRu: 'не' },
   { pattern: 'ma', gloss: 'not', glossRu: 'не' },
   { pattern: 'chi', gloss: 'how about?', glossRu: 'а как насчёт?' },
@@ -154,20 +160,24 @@ const SUFFIX_TABLE = SUFFIXES.filter(
 )
 
 function analyzeWord(word: string, vocab: Map<string, string>, depth = 0): Breakdown | null {
-  if (depth > 8 || word.length < 2) return null
+  if (depth > 8) return null
   const ru = currentBase() === 'ru'
   const norm = normalizeToken(word)
+  if (norm.length === 0) return null
   const meaning = vocab.get(norm)
   // Exact vocab/root match short-circuits — protects words that merely look
-  // agglutinated (e.g. "boshqa" = other, not bosh + qa).
+  // agglutinated (e.g. "boshqa" = other, not bosh + qa). Checked before the
+  // length guard so one-letter roots ("u" = he/she/it) still gloss.
   if (meaning) return { breakdown: [word], gloss: [meaning] }
+  if (norm.length < 2) return null
   for (const { pattern, gloss, glossRu } of SUFFIX_TABLE) {
     if (norm.length <= pattern.length + 1) continue
     if (!norm.endsWith(pattern)) continue
     const stemNorm = norm.slice(0, norm.length - pattern.length)
     if (stemNorm.length < 2) continue
-    // Preserve original case for display by slicing the original word
-    const stem = word.slice(0, word.length - pattern.length)
+    // Preserve original case for display by slicing the original word — but
+    // only while its indexes still line up with the normalised form.
+    const stem = word.length === norm.length ? word.slice(0, stemNorm.length) : stemNorm
     const inner = analyzeWord(stem, vocab, depth + 1)
     if (inner) {
       return {
@@ -181,11 +191,14 @@ function analyzeWord(word: string, vocab: Map<string, string>, depth = 0): Break
 
 export function getBreakdown(word: string): Breakdown | null {
   const norm = normalizeToken(word)
+  if (norm.length === 0) return null
   // Lesson examples take priority (they have hand-curated breakdowns)
   const lesson = breakdownIndex.value.get(norm)
   if (lesson) return lesson
-  // Fall back to algorithmic analysis if the vocab/root index is loaded
-  if (vocabIndex.value.size > 0) return analyzeWord(word, vocabIndex.value)
+  // Fall back to algorithmic analysis if the vocab/root index is loaded.
+  // Punctuation comes off first: a word is tapped as it appears in the
+  // sentence, so it may arrive as "Kelaman." or "kofe,".
+  if (vocabIndex.value.size > 0) return analyzeWord(stripPunctuation(word), vocabIndex.value)
   return null
 }
 
@@ -212,9 +225,17 @@ async function loadRoots(): Promise<Record<string, string>> {
 }
 
 let _loading: Promise<void> | null = null
+/**
+ * Bumped by every build. A rebuild doesn't cancel the build it replaces, and
+ * the two race — the newer one warms the HTTP cache for the older one's lesson
+ * fetches, so the older can land second. Builds check they are still the
+ * current generation before publishing their result.
+ */
+let _generation = 0
 
 export function ensureBreakdownIndex(): Promise<void> {
   if (_loading) return _loading
+  const generation = ++_generation
   _loading = (async () => {
     const [metas, allWords, roots] = await Promise.all([
       loadLessonIndex(),
@@ -234,6 +255,7 @@ export function ensureBreakdownIndex(): Promise<void> {
         if (!vocab.has(normalizeToken(inf))) vocab.set(normalizeToken(inf), glossNow(w))
       }
     }
+    if (generation !== _generation) return
     vocabIndex.value = vocab
 
     // Build lesson breakdown index (hand-curated, highest priority)
@@ -254,6 +276,7 @@ export function ensureBreakdownIndex(): Promise<void> {
         }
       }
     }
+    if (generation !== _generation) return
     breakdownIndex.value = map
   })()
   return _loading
@@ -263,4 +286,16 @@ export function ensureBreakdownIndex(): Promise<void> {
 export function rebuildBreakdownIndex(): Promise<void> {
   _loading = null
   return ensureBreakdownIndex()
+}
+
+/**
+ * Refresh the indexes after vocabulary seeding, but only if something already
+ * built them. Seeding runs after mount, so on a first visit (or after a content
+ * bump) the index can be built from a still-empty `words` table — leaving every
+ * word unglossed for the rest of the session. No-op when nothing has asked for
+ * the index yet; the first request will read the seeded table anyway.
+ */
+export function refreshBreakdownIndex(): Promise<void> {
+  if (!_loading) return Promise.resolve()
+  return rebuildBreakdownIndex()
 }
