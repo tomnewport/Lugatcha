@@ -40,8 +40,13 @@ export const useProgressStore = defineStore('progress', {
     recordMatchResult(wordId: string, correct: boolean) {
       return recordMatchResult(db, wordId, correct)
     },
-    recordTestResult(wordId: string, type: TestQuestionType, result: boolean | number) {
-      return recordTestResult(db, wordId, type, result)
+    recordTestResult(
+      wordId: string,
+      type: TestQuestionType,
+      result: boolean | number,
+      credit = true,
+    ) {
+      return recordTestResult(db, wordId, type, result, credit)
     },
     recordPhraseResult(phraseKey: string, correct: boolean) {
       return recordPhraseResult(db, phraseKey, correct)

@@ -94,6 +94,12 @@ export interface WordProgress {
    * so the learner can see how close they are.
    */
   spellMastery?: number
+  /**
+   * Whether the most recent spelling attempt was given up on (tips exhausted,
+   * answer revealed). A failed attempt brings the spelling info card back even
+   * for a word that has been spelled perfectly before.
+   */
+  lastSpellFailed?: boolean
   /** When the word was first fully learned (all four types). Drives the chest. */
   learnedAt?: number
   /** Failed test questions accrued since it was learned; two of them unlearns it. */

@@ -7,7 +7,9 @@ import {
   NEW_WORDS_PER_PRACTICE,
   NEW_PHRASES_PER_PRACTICE,
   type DailyPracticeSessionData,
+  type PracticeItem,
 } from '@/exercises/practice'
+import { SPELL_CARD_GAP } from '@/exercises/spellCards'
 import type { PracticePhrase } from '@/exercises/phrases'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import type { PhraseProgress, Word, WordProgress } from '@/db/types'
@@ -66,6 +68,10 @@ function data(partial: Partial<DailyPracticeSessionData>): DailyPracticeSessionD
   }
 }
 
+/** The session's questions — spelling info cards are interstitials, not questions. */
+const questions = (items: PracticeItem[]) =>
+  items.filter((i): i is Exclude<PracticeItem, { kind: 'spell-card' }> => i.kind !== 'spell-card')
+
 describe('buildDailyPracticeSession', () => {
   it('folds due phrases into a word session, capped so words stay the backbone', () => {
     // Plenty of word work: 8 unlearned seen words (4 weak skills each).
@@ -80,12 +86,12 @@ describe('buildDailyPracticeSession', () => {
       20,
       NOW,
     )
-    expect(items).toHaveLength(20)
+    expect(questions(items)).toHaveLength(20)
     const phraseItems = items.filter((i) => i.kind === 'phrase')
     expect(phraseItems).toHaveLength(PHRASES_PER_PRACTICE)
     expect(items.filter((i) => i.kind === 'word')).toHaveLength(20 - PHRASES_PER_PRACTICE)
     // Reviews, not introductions.
-    expect(items.every((i) => !i.isNew)).toBe(true)
+    expect(questions(items).every((i) => !i.isNew)).toBe(true)
   })
 
   it('leaves not-yet-due phrases alone', () => {
@@ -99,7 +105,7 @@ describe('buildDailyPracticeSession', () => {
       20,
       NOW,
     )
-    expect(items.every((i) => i.kind === 'word')).toBe(true)
+    expect(questions(items).every((i) => i.kind === 'word')).toBe(true)
   })
 
   it('never introduces new material while reviews fill the session', () => {
@@ -112,7 +118,7 @@ describe('buildDailyPracticeSession', () => {
       20,
       NOW,
     )
-    expect(items.some((i) => i.isNew)).toBe(false)
+    expect(questions(items).some((i) => i.isNew)).toBe(false)
   })
 
   it('introduces new words and phrases when the learner is on top of reviews', () => {
@@ -173,8 +179,26 @@ describe('buildDailyPracticeSession', () => {
     const words = [word('w0'), word('w1'), word('w2')]
     const progress = new Map(words.map((w) => [w.id, learnedWordProgress(false)]))
     const items = buildDailyPracticeSession(data({ seenWords: words, progress }), 12, NOW)
-    expect(items.length).toBe(12)
-    expect(items.every((i) => i.kind === 'word' && !i.isNew)).toBe(true)
+    expect(questions(items)).toHaveLength(12)
+    expect(questions(items).every((i) => i.kind === 'word' && !i.isNew)).toBe(true)
+  })
+
+  it('cards every spelling question of a word not yet spelled, spaced back from it', () => {
+    const words = Array.from({ length: 8 }, (_, i) => word(`w${i}`))
+    const progress = new Map(words.map((w) => [w.id, seenWordProgress()]))
+
+    const items = buildDailyPracticeSession(data({ seenWords: words, progress }), 20, NOW)
+
+    const spellings = items.filter((i) => i.kind === 'word' && i.type === 'type')
+    expect(spellings.length).toBeGreaterThan(0)
+    for (const spelling of spellings) {
+      if (spelling.kind !== 'word') continue
+      const card = items.findIndex((i) => i.kind === 'spell-card' && i.word.id === spelling.word.id)
+      const asked = items.indexOf(spelling)
+      expect(card).toBeGreaterThanOrEqual(0)
+      expect(questions(items.slice(card + 1, asked))).toHaveLength(SPELL_CARD_GAP)
+      expect(spelling.noCredit).toBeUndefined()
+    }
   })
 
   it('spreads phrases through the session instead of clustering them at the end', () => {

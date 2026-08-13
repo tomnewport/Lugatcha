@@ -2,13 +2,15 @@
 import { ref, computed, onMounted } from 'vue'
 import { db, useLiveQuery } from '@/db/useDb'
 import { loadTestData, loadPoolTestData } from '@/exercises/words'
-import { buildQuestionsFromPairs, selectTestPairs } from '@/exercises/test'
-import type { PracticeQuestion } from '@/exercises/practice'
+import { selectTestPairs } from '@/exercises/test'
+import { withSpellCards } from '@/exercises/spellCards'
+import { buildPracticeSessionQuestions, type PracticeQuestion } from '@/exercises/practice'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import type { Word, TestQuestionType } from '@/db/types'
 import TestChoiceQuestion from './TestChoiceQuestion.vue'
 import TestTypeQuestion from './TestTypeQuestion.vue'
+import SpellCard from './SpellCard.vue'
 import PracticePhraseQuestion from './PracticePhraseQuestion.vue'
 import ConfettiBurst from '@/components/ConfettiBurst.vue'
 import AudioButton from '@/components/AudioButton.vue'
@@ -50,7 +52,19 @@ const current = computed(() => questions.value[index.value])
 /** Narrowed views of the current question, for template type safety. */
 const wordQ = computed(() => (current.value?.kind === 'word' ? current.value : null))
 const phraseQ = computed(() => (current.value?.kind === 'phrase' ? current.value : null))
+const spellCard = computed(() => (current.value?.kind === 'spell-card' ? current.value : null))
 const isLast = computed(() => index.value >= questions.value.length - 1)
+
+/**
+ * Spelling info cards are steps, not questions, so the counter skips them —
+ * while a card is up it reads as the question it leads into.
+ */
+const isQuestion = (q: PracticeQuestion) => q.kind !== 'spell-card'
+const questionTotal = computed(() => questions.value.filter(isQuestion).length)
+const questionNumber = computed(() => {
+  const answered = questions.value.slice(0, index.value).filter(isQuestion).length
+  return Math.min(answered + 1, questionTotal.value)
+})
 
 /** Maps a choice question type to the prompt mode the choice component shows. */
 function choiceMode(type: TestQuestionType): 'listen' | 'read' | 'read-cyrillic' {
@@ -60,7 +74,7 @@ function choiceMode(type: TestQuestionType): 'listen' | 'read' | 'read-cyrillic'
 }
 
 function phaseFor(question: PracticeQuestion | undefined): 'meet' | 'answering' {
-  return question?.isNew ? 'meet' : 'answering'
+  return question && question.kind !== 'spell-card' && question.isNew ? 'meet' : 'answering'
 }
 
 onMounted(async () => {
@@ -71,10 +85,12 @@ onMounted(async () => {
       ? await loadPoolTestData(props.pool)
       : await loadTestData(props.locationId ?? '')
     const pairs = selectTestPairs(candidates, learnedPool, prog)
-    questions.value = buildQuestionsFromPairs(pairs, allWords).map((q) => ({
-      kind: 'word' as const,
-      ...q,
-    }))
+    const items = withSpellCards(
+      pairs.map((p) => ({ kind: 'word' as const, word: p.word, type: p.type })),
+      prog,
+    )
+    // No phrases in a location or group test, hence the empty decoy pool.
+    questions.value = buildPracticeSessionQuestions(items, allWords, [])
   }
   phase.value = phaseFor(questions.value[0])
   loading.value = false
@@ -90,15 +106,15 @@ async function startNewQuestion() {
 
 /** Choice questions report a boolean; the typing question reports a 0–1 score. */
 async function onAnswered(result: boolean | number) {
-  if (phase.value !== 'answering' || !current.value) return
+  if (phase.value !== 'answering' || !current.value || current.value.kind === 'spell-card') return
   phase.value = 'feedback'
   if (current.value.kind === 'phrase') {
     // Feeds the phrase's spaced-repetition schedule; no learned state to celebrate.
     await progress.recordPhraseResult(current.value.phrase.key, result === true)
     return
   }
-  const { word, type } = current.value
-  const outcome = await progress.recordTestResult(word.id, type, result)
+  const { word, type, noCredit } = current.value
+  const outcome = await progress.recordTestResult(word.id, type, result, !noCredit)
   if (outcome.newlyLearned) {
     celebrate.value = { uzbek: word.uzbek, meaning: gloss(word) }
     confettiKey.value++
@@ -121,10 +137,13 @@ function next() {
     <p v-if="loading" class="test__loading" aria-live="polite">{{ $t('exercise.test.preparing') }}</p>
 
     <template v-else-if="current">
-      <p class="test__counter">{{ $t('exercise.test.counter', { current: index + 1, total: questions.length }) }}</p>
+      <p class="test__counter">{{ $t('exercise.test.counter', { current: questionNumber, total: questionTotal }) }}</p>
+
+      <!-- Spelling info card: study the word now, spell it a few questions on. -->
+      <SpellCard v-if="spellCard" :key="`c-${index}`" :word="spellCard.word" @continue="next" />
 
       <!-- Brand-new material: meet it before it's asked. -->
-      <div v-if="phase === 'meet'" class="test__meet">
+      <div v-else-if="phase === 'meet'" class="test__meet">
         <span class="test__meet-eyebrow">{{
           current.kind === 'word' ? $t('exercise.practiceNew.word') : $t('exercise.practiceNew.phrase')
         }}</span>
@@ -150,6 +169,7 @@ function next() {
           v-if="wordQ.type === 'type'"
           :key="`q-${index}`"
           :word="wordQ.word"
+          :no-credit="wordQ.noCredit"
           @answered="onAnswered"
         />
         <TestChoiceQuestion

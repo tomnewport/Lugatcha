@@ -491,6 +491,15 @@ export default {
       intro: "You're on top of your reviews, so here's something new — meet it, then answer.",
       continue: 'Got it — ask me',
     },
+    spellCard: {
+      eyebrow: '✍️ Spelling coming up',
+      meaning: 'Meaning',
+      otherLanguage: 'Russian',
+      cyrillic: 'Cyrillic',
+      spelling: 'Letter by letter',
+      intro: "Learn this spelling — you'll be asked to type it in a few questions' time.",
+      continue: "Got it — I'll remember",
+    },
     choice: {
       listenChoose: 'Listen, then choose the meaning',
       choose: 'Read the Latin, then choose the meaning',
@@ -510,6 +519,8 @@ export default {
       tipExplainer:
         'Spell it with no tips for 100%. Each tip highlights the next letter but lowers the score on offer — the bar shows how much mastery is still up for grabs. Run out and the button reveals the answer for a miss.',
       score: '{percent}% learned',
+      noCredit: 'Practice run — you saw this spelling too recently for it to count.',
+      noCreditScore: "Good practice — it won't count this time.",
     },
     token: {
       answerLabel: 'Your answer',

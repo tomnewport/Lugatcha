@@ -8,7 +8,7 @@ import {
   selectTestPairs,
   selectDailyPracticePairs,
   buildOptionBank,
-  buildQuestionsFromPairs,
+  spellingUnits,
   typingTarget,
   foldTyping,
   TEST_LENGTH,
@@ -248,19 +248,18 @@ describe('buildOptionBank', () => {
   })
 })
 
-describe('buildQuestionsFromPairs', () => {
-  it('builds option banks for choice questions and none for typing', () => {
-    const allWords = Array.from({ length: 60 }, (_, i) => word(`w${i}`, `m${i}`))
-    const [typed, choice] = buildQuestionsFromPairs(
-      [
-        { word: allWords[0], type: 'type' },
-        { word: allWords[1], type: 'read-choice' },
-      ],
-      allWords,
-    )
-    expect(typed.options).toEqual([])
-    expect(choice.options).toHaveLength(40)
-    expect(choice.options).toContain(allWords[1])
+describe('spellingUnits', () => {
+  it('splits a word into the keys that type it, digraphs kept whole', () => {
+    expect(spellingUnits('shahar')).toEqual(['sh', 'a', 'h', 'a', 'r'])
+    expect(spellingUnits('oʻqituvchi')).toEqual(['oʻ', 'q', 'i', 't', 'u', 'v', 'ch', 'i'])
+    expect(spellingUnits('gʻalaba')).toEqual(['gʻ', 'a', 'l', 'a', 'b', 'a'])
+  })
+
+  it('keeps the original glyphs and drops punctuation the typing target drops', () => {
+    expect(spellingUnits('Rahmat!')).toEqual(['R', 'a', 'h', 'm', 'a', 't'])
+    expect(spellingUnits("Xayrli kun")).toEqual([
+      'X', 'a', 'y', 'r', 'l', 'i', ' ', 'k', 'u', 'n',
+    ])
   })
 })
 
