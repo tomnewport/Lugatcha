@@ -65,6 +65,13 @@ let currentAudio: HTMLAudioElement | null = null
 let currentResolve: ((v: boolean) => void) | null = null
 let speakGen = 0
 
+/**
+ * Clips that were started to ring over the top of whatever else is sounding,
+ * against the callback that settles each one. See {@link speakUzbekWord}.
+ */
+const ringing = new Map<HTMLAudioElement, (played: boolean) => void>()
+
+/** Silences everything: the clip that holds the floor, and any ringing over it. */
 export function stopSpeaking(): void {
   speakGen++
   if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel()
@@ -72,6 +79,11 @@ export function stopSpeaking(): void {
     currentAudio.pause()
     currentAudio = null
   }
+  for (const [audio, done] of ringing) {
+    audio.pause()
+    done(false)
+  }
+  ringing.clear()
   if (currentResolve) {
     currentResolve(false)
     currentResolve = null
@@ -124,25 +136,50 @@ export async function primeUzbekAudio(texts: readonly string[]): Promise<void> {
   }
 }
 
+/** Starts `audio` from the top, reporting whether it played all the way out. */
+function start(audio: HTMLAudioElement, done: (played: boolean) => void): void {
+  audio.onended = () => done(true)
+  audio.onerror = () => done(false)
+  try {
+    // A reused element is wherever it last stopped; a brand new one has
+    // nothing to seek yet and starts at the top regardless.
+    audio.currentTime = 0
+  } catch {
+    // not seekable
+  }
+  audio.play().catch(() => done(false))
+}
+
+/** Plays a clip on its own, cutting off whatever held the floor before it. */
 function playFile(url: string): Promise<boolean> {
   return new Promise((resolve) => {
     const audio = openClip(url)
     currentAudio = audio
     currentResolve = resolve
-    const done = (v: boolean) => {
+    start(audio, (v) => {
       if (currentResolve === resolve) currentResolve = null
       resolve(v)
+    })
+  })
+}
+
+/**
+ * Plays a clip over the top of anything already sounding, rather than taking
+ * the floor from it. Only `stopSpeaking` silences one early.
+ */
+function ringFile(url: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const held = openClip(url)
+    // One element can only be in one place at a time, so a word that is still
+    // ringing gets a second element to overlap itself with. By then the file is
+    // in the browser's cache, so it still starts promptly.
+    const audio = held.paused || held.ended ? held : new Audio(url)
+    const done = (v: boolean) => {
+      ringing.delete(audio)
+      resolve(v)
     }
-    audio.onended = () => done(true)
-    audio.onerror = () => done(false)
-    try {
-      // A reused element is wherever it last stopped; a brand new one has
-      // nothing to seek yet and starts at the top regardless.
-      audio.currentTime = 0
-    } catch {
-      // not seekable
-    }
-    audio.play().catch(() => done(false))
+    ringing.set(audio, done)
+    start(audio, done)
   })
 }
 
@@ -275,16 +312,19 @@ export async function speakUzbek(text: string, { slow = false, langs }: SpeakOpt
  * this starts playback synchronously, inside the tap that asked for it, which
  * is also what keeps mobile browsers from treating it as unprompted audio.
  *
- * Like every other call here it cuts off whatever was playing, so a fast run of
- * presses says the word that just landed rather than queueing up behind itself.
+ * Unlike the rest of these, it does not take the floor: a word rings until it
+ * is finished, over the top of one still sounding. The words run about a second
+ * each and a quick player presses faster than that, so cutting the last one off
+ * would clip most of them to a stub — a run of words overlapping at the edges
+ * is the sound of somebody reading a number quickly, which is what it is.
+ * `stopSpeaking` still silences the lot.
  */
 export function speakUzbekWord(word: string, options: SpeakOptions = {}): Promise<void> {
   noteUzbekViewed(word)
-  stopSpeaking()
   const gen = speakGen
   const url = clipUrl(word, loadedManifest)
   if (url === undefined) return speakWordOnceLoaded(word, options, gen)
-  return playFile(url).then((played) => {
+  return ringFile(url).then((played) => {
     if (played || gen !== speakGen) return
     return speakWithSynthesis(word, options)
   })
@@ -295,7 +335,7 @@ async function speakWordOnceLoaded(word: string, options: SpeakOptions, gen: num
   const manifest = await getAudioManifest()
   if (gen !== speakGen) return
   const url = clipUrl(word, manifest)
-  if (url && (await playFile(url))) return
+  if (url && (await ringFile(url))) return
   if (gen !== speakGen) return
   await speakWithSynthesis(word, options)
 }
