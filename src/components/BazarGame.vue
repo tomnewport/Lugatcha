@@ -42,6 +42,8 @@ const newBest = ref(false)
 const paused = ref(false)
 /** Set briefly when a token is refused — the red X. */
 const refused = ref(false)
+/** Bumped per refusal so a fast second tap re-runs the X's animation. */
+const refusedKey = ref(0)
 /** Items caught mid-flight into the trolley or the bin, for the animation. */
 const bagging = ref<BeltItem[]>([])
 const dumping = ref<BeltItem[]>([])
@@ -135,11 +137,17 @@ function bag(item: BeltItem) {
 /**
  * A bonus price is read the moment its item reaches the front of the belt —
  * the round is a listening exercise, so hearing it is the whole prompt.
+ *
+ * Keyed on the item's id, not the item: every frame rebuilds the belt from
+ * fresh objects, and re-reading on each of those would cancel the clip and
+ * restart it sixty times a second, so it would never be heard at all.
  */
 watch(
-  () => (bonus.value ? state.value.items[0] : undefined),
-  (front) => {
-    if (front && state.value.status === 'playing') sayPrice(front)
+  () => (bonus.value ? state.value.items[0]?.id : undefined),
+  (id) => {
+    if (id === undefined || state.value.status !== 'playing') return
+    const front = state.value.items[0]
+    if (front) sayPrice(front)
   },
 )
 
@@ -189,6 +197,9 @@ let refusedAt: ReturnType<typeof setTimeout> | undefined
 
 function flashRefusal() {
   clearTimeout(refusedAt)
+  // A new element each time: re-setting a ref that is already true leaves the
+  // old X in place mid-animation, so a quick second wrong tap showed nothing.
+  refusedKey.value++
   refused.value = true
   buzz(35)
   refusedAt = setTimeout(() => {
@@ -350,7 +361,7 @@ onBeforeUnmount(() => {
           {{ item.item.emoji }}
         </div>
 
-        <div v-if="refused" class="bh__refused" aria-hidden="true">✗</div>
+        <div v-if="refused" :key="refusedKey" class="bh__refused" aria-hidden="true">✗</div>
 
         <div v-if="state.status === 'ready'" class="bh__overlay">
           <p class="bh__howto">{{ $t('bazar.howTo') }}</p>
