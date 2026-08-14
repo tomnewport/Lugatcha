@@ -33,17 +33,32 @@ export function isReviewed(entry: AudioManifestEntry | string | undefined): bool
 
 const manifestCache = new Map<string, Promise<AudioManifest | null>>()
 
+/**
+ * The default voice's manifest once it has arrived, for callers that cannot
+ * afford to wait on the promise.
+ *
+ * Awaiting a promise costs a turn of the event loop even when it settled long
+ * ago. That is invisible behind a speaker button and very visible in the bazar,
+ * where a word has to sound *as* the key goes down — see {@link speakUzbekWord}.
+ */
+let loadedManifest: AudioManifest | null = null
+
 export function getAudioManifest(voice?: string): Promise<AudioManifest | null> {
   const v = voice ?? AUDIO_VOICE
   if (!manifestCache.has(v)) {
-    manifestCache.set(
-      v,
-      fetch(`${base}audio/${v}/manifest.json`)
-        .then((res) => (res.ok ? (res.json() as Promise<AudioManifest>) : null))
-        .catch(() => null),
-    )
+    const pending = fetch(`${base}audio/${v}/manifest.json`)
+      .then((res) => (res.ok ? (res.json() as Promise<AudioManifest>) : null))
+      .catch(() => null)
+    if (v === AUDIO_VOICE) void pending.then((manifest) => (loadedManifest = manifest))
+    manifestCache.set(v, pending)
   }
   return manifestCache.get(v)!
+}
+
+/** The file a spoken string is recorded in, or undefined if it is not. */
+function clipUrl(text: string, manifest: AudioManifest | null): string | undefined {
+  const entry = manifest?.[audioKey(text)]
+  return entry ? `${base}audio/${AUDIO_VOICE}/${audioFile(entry)}` : undefined
 }
 
 let currentAudio: HTMLAudioElement | null = null
@@ -63,9 +78,55 @@ export function stopSpeaking(): void {
   }
 }
 
+/**
+ * Audio elements that have already been opened, least recently used first.
+ *
+ * A fresh `new Audio(url)` cannot make a sound until the file is open — off the
+ * network the first time, out of the Workbox cache after that — and that wait
+ * lands squarely between the tap and the word. Holding the element lets the
+ * next play start at once, and {@link primeUzbekAudio} opens clips through the
+ * same cache *before* anything asks for them. The cap keeps a long session from
+ * holding on to every clip it has ever played.
+ */
+const openClips = new Map<string, HTMLAudioElement>()
+const OPEN_CLIP_LIMIT = 32
+
+function openClip(url: string): HTMLAudioElement {
+  const cached = openClips.get(url)
+  if (cached) {
+    // Re-inserting moves it to the end of the map, so eviction drops the least
+    // recently used clip rather than whichever happened to be opened first.
+    openClips.delete(url)
+    openClips.set(url, cached)
+    return cached
+  }
+  const audio = new Audio(url)
+  audio.preload = 'auto'
+  audio.load()
+  openClips.set(url, audio)
+  for (const key of openClips.keys()) {
+    if (openClips.size <= OPEN_CLIP_LIMIT) break
+    openClips.delete(key)
+  }
+  return audio
+}
+
+/**
+ * Opens the clips for `texts` ahead of time, so playing one later is instant.
+ * A word with no recording, or no manifest at all, is simply nothing to do.
+ */
+export async function primeUzbekAudio(texts: readonly string[]): Promise<void> {
+  const manifest = await getAudioManifest()
+  if (!manifest) return
+  for (const text of texts) {
+    const url = clipUrl(text, manifest)
+    if (url) openClip(url)
+  }
+}
+
 function playFile(url: string): Promise<boolean> {
   return new Promise((resolve) => {
-    const audio = new Audio(url)
+    const audio = openClip(url)
     currentAudio = audio
     currentResolve = resolve
     const done = (v: boolean) => {
@@ -74,6 +135,13 @@ function playFile(url: string): Promise<boolean> {
     }
     audio.onended = () => done(true)
     audio.onerror = () => done(false)
+    try {
+      // A reused element is wherever it last stopped; a brand new one has
+      // nothing to seek yet and starts at the top regardless.
+      audio.currentTime = 0
+    } catch {
+      // not seekable
+    }
     audio.play().catch(() => done(false))
   })
 }
@@ -196,6 +264,42 @@ export async function speakUzbek(text: string, { slow = false, langs }: SpeakOpt
   await speakWithSynthesis(text, { slow, langs })
 }
 
+/**
+ * Speaks a single Uzbek word by the shortest path to sound there is.
+ *
+ * `speakUzbek` has to wait on the manifest promise before it can even look a
+ * clip up, and that wait is a turn of the event loop the caller may not have:
+ * the bazar reads each number word out as its key goes down, and a word that
+ * arrives a beat late is a word the player has already moved past. Once the
+ * manifest is in and the clip has been primed — see {@link primeUzbekAudio} —
+ * this starts playback synchronously, inside the tap that asked for it, which
+ * is also what keeps mobile browsers from treating it as unprompted audio.
+ *
+ * Like every other call here it cuts off whatever was playing, so a fast run of
+ * presses says the word that just landed rather than queueing up behind itself.
+ */
+export function speakUzbekWord(word: string, options: SpeakOptions = {}): Promise<void> {
+  noteUzbekViewed(word)
+  stopSpeaking()
+  const gen = speakGen
+  const url = clipUrl(word, loadedManifest)
+  if (url === undefined) return speakWordOnceLoaded(word, options, gen)
+  return playFile(url).then((played) => {
+    if (played || gen !== speakGen) return
+    return speakWithSynthesis(word, options)
+  })
+}
+
+/** The same word, for the first press of a session: manifest first, then sound. */
+async function speakWordOnceLoaded(word: string, options: SpeakOptions, gen: number): Promise<void> {
+  const manifest = await getAudioManifest()
+  if (gen !== speakGen) return
+  const url = clipUrl(word, manifest)
+  if (url && (await playFile(url))) return
+  if (gen !== speakGen) return
+  await speakWithSynthesis(word, options)
+}
+
 /** A pause between stitched words — enough to hear the seam as a word break. */
 const STITCH_GAP_MS = 60
 
@@ -206,17 +310,19 @@ function wait(ms: number): Promise<void> {
 /**
  * Speaks a run of Uzbek words back to back, one clip each.
  *
- * This is how the bazar reads a price like "ikki yuz o'ttiz ming" aloud:
- * there is no recording of that number, and there never could be — the game
- * reaches into the tens of millions — but there *is* a recording of every word
- * it is made of, because every Uzbek word in the app is individually tappable
- * and so individually recorded (see scripts/generate_audio.py).
+ * This is how a price like "ikki yuz o'ttiz ming" is read in one go: there is
+ * no recording of that number, and there never could be — the bazar reaches
+ * into the tens of millions — but there *is* a recording of every word it is
+ * made of, because every Uzbek word in the app is individually tappable and so
+ * individually recorded (see scripts/generate_audio.py).
  *
  * Stitching at word boundaries is a compromise and sounds like one: the
  * prosody is flat, with none of the run-on a native speaker gives a long
- * number. That is the right trade for *reading* a price you can see. The bonus
- * round, which asks the learner to recognise a number by ear alone, needs the
- * real thing and uses whole prebuilt clips instead.
+ * number, and every seam is a fixed pause rather than a spoken one. The bazar
+ * therefore says each word as its key goes down instead — one
+ * {@link speakUzbekWord} per press, paced by the player — and the bonus round,
+ * which asks the learner to recognise a number by ear alone, uses whole
+ * prebuilt clips. This is the fallback for reading a price nobody is typing.
  *
  * Any word without a clip falls through to speech synthesis on its own, so a
  * partial audio download degrades word by word rather than all at once. A new
@@ -235,9 +341,8 @@ export async function speakUzbekWords(words: readonly string[], options: SpeakOp
       await wait(STITCH_GAP_MS)
       if (gen !== speakGen) return
     }
-    const entry = manifest?.[audioKey(word)]
-    const file = entry ? audioFile(entry) : undefined
-    if (file && (await playFile(`${base}audio/${AUDIO_VOICE}/${file}`))) continue
+    const url = clipUrl(word, manifest)
+    if (url && (await playFile(url))) continue
     if (gen !== speakGen) return
     await speakWithSynthesis(word, options)
   }

@@ -28,7 +28,14 @@ import {
   type BeltItem,
 } from '@/exercises/bazar'
 import { uzbekCardinalTokens } from '@/exercises/numbers'
-import { speakUzbek, speakUzbekWords, stopSpeaking, NEIGHBOUR_VOICE_LANGS } from '@/audio/audio'
+import {
+  primeUzbekAudio,
+  speakUzbek,
+  speakUzbekWord,
+  speakUzbekWords,
+  stopSpeaking,
+  NEIGHBOUR_VOICE_LANGS,
+} from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
 
 const emit = defineEmits<{ done: [] }>()
@@ -159,6 +166,26 @@ watch(
 )
 
 /**
+ * Every clip the belt is about to need, opened before it needs it.
+ *
+ * A word is spoken the instant its key goes down, which only holds if the file
+ * is already open: the first play of a clip has to fetch and decode it, and
+ * that delay is exactly the lag between pressing a word and hearing it. Keyed
+ * on the item ids so this runs when the belt changes rather than every frame.
+ */
+watch(
+  () => state.value.items.map((item) => item.id).join(),
+  () => {
+    // Shop items are read a word at a time; a bonus price is one whole clip.
+    const texts = state.value.items.flatMap((item) =>
+      item.bonus ? [uzbekCardinalTokens(item.price).join(' ')] : item.tokens,
+    )
+    if (texts.length) void primeUzbekAudio(texts)
+  },
+  { immediate: true },
+)
+
+/**
  * Reads an item's price aloud.
  *
  * The bonus round plays a whole prebuilt recording, because recognising a
@@ -192,11 +219,14 @@ function press(token: string) {
   if (state.value.status !== 'playing' || paused.value) return
   const front = state.value.items[0]
   const result = pressToken(state.value, token)
+  // Hear the word you just said, now, before anything else happens — a price
+  // read out after the fact is read over the item that replaced it, and lands
+  // as a number from nowhere. The bonus round is keyed in digits and says its
+  // own price, so there is nothing to echo there.
+  if (result.accepted && front && !front.bonus) void speakUzbekWord(token)
   state.value = result.state
   if (result.bagged) {
     bag(result.bagged)
-    // Hear what you just said. The bonus round has already said it for you.
-    if (!result.bagged.bonus) void speakUzbekWords(result.bagged.tokens)
   } else if (result.accepted) {
     if (front) flashCorrect(front.id)
   } else {
