@@ -212,14 +212,19 @@ const BIN_POSITION = 1
 /** How many items' worth of belt there is between the ramp and the bin. */
 export const BELT_SLOTS = 3
 
-/** Items may not close up tighter than this, so tags never overlap. */
-const MIN_GAP = 0.9 / BELT_SLOTS
+/**
+ * Items may not close up tighter than this, so tags never overlap. A pricetag
+ * leads with the price at full size and carries a row of word dots under it,
+ * which makes an item about four tenths of the belt tall — the gap has to
+ * clear that or two tags collide on screen.
+ */
+export const MIN_GAP = 1.2 / BELT_SLOTS
 
 /** Bin this many and the run is over. */
 export const BIN_CAPACITY = 3
 
 /** Seconds a learner gets per spoken word, at the bottom and top of the ramp. */
-const START_MS_PER_TOKEN = 2000
+const START_MS_PER_TOKEN = 4000
 const FASTEST_MS_PER_TOKEN = 1000
 /** The band where the belt reaches full speed — the millions. */
 const FASTEST_BAND = 6
@@ -228,7 +233,7 @@ const FASTEST_BAND = 6
  * Milliseconds of belt time per spoken word of the price.
  *
  * Budgeting per *word* rather than per item is what keeps the ramp fair: a
- * one-word price at the start gets its two seconds, and a four-word price in
+ * one-word price at the start gets its four seconds, and a four-word price in
  * the millions gets four times a shorter second. The item as a whole is on the
  * belt for `BELT_SLOTS` times this, since it spends most of that queueing
  * behind the items ahead of it.

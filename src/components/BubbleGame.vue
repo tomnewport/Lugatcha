@@ -117,13 +117,16 @@ function begin() {
   void speakUzbek(state.value.target.uzbek)
 }
 
+// The controls are inert until the Start button begins the run: a move or a
+// shot that doubles as "begin" is also played as a turn, and the first shot
+// lands before the colour to hunt has even been named.
 function move(dir: Move) {
-  begin()
+  if (state.value.status === 'ready') return
   state.value = setMove(state.value, dir)
 }
 
 function shoot() {
-  begin()
+  if (state.value.status === 'ready') return
   state.value = fire(state.value)
 }
 
@@ -164,8 +167,7 @@ function toArenaX(clientX: number): number {
 }
 
 function onGrab(event: PointerEvent) {
-  if (state.value.status === 'over' || paused.value) return
-  begin()
+  if (state.value.status === 'ready' || state.value.status === 'over' || paused.value) return
   dragPointer = event.pointerId
   dragStartX = event.clientX
   dragged = false
@@ -387,7 +389,9 @@ onBeforeUnmount(() => {
 
           <div v-if="state.status === 'ready'" class="bt__overlay">
             <p class="bt__howto">{{ $t('bubbles.howTo') }}</p>
-            <p class="bt__cue">{{ $t('bubbles.tapToStart') }}</p>
+            <button class="btn btn--primary" type="button" autofocus @click="begin">
+              {{ $t('bubbles.start') }}
+            </button>
           </div>
 
           <div v-else-if="paused" class="bt__overlay">

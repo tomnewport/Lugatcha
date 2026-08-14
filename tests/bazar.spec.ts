@@ -3,6 +3,7 @@ import {
   advance,
   BANDS,
   BELT_SLOTS,
+  MIN_GAP,
   BIN_CAPACITY,
   BONUS_ITEMS,
   BONUS_MIN_CLEARED,
@@ -111,8 +112,8 @@ describe('priceForBand', () => {
 })
 
 describe('msPerToken', () => {
-  it('gives two seconds a word at the start and one in the millions', () => {
-    expect(msPerToken(0)).toBe(2000)
+  it('gives four seconds a word at the start and one in the millions', () => {
+    expect(msPerToken(0)).toBe(4000)
     expect(msPerToken(6)).toBe(1000)
   })
 
@@ -226,7 +227,10 @@ describe('a run', () => {
   it('tops the belt up behind the items already on it', () => {
     let state = startGame(createGame(seeded(1)))
     const rng = seeded(2)
-    for (let i = 0; i < 40; i++) state = advance(state, 60, rng).state
+    // Long enough for the opening item to open a full gap behind it, derived
+    // from the belt's own spacing and timing so tuning either can't rot this.
+    const gapMs = state.items[0].travelMs * MIN_GAP
+    for (let elapsed = 0; elapsed <= gapMs; elapsed += 60) state = advance(state, 60, rng).state
     expect(state.items.length).toBeGreaterThan(1)
     expect(state.items.length).toBeLessThanOrEqual(BELT_SLOTS + 1)
   })
