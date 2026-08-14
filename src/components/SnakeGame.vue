@@ -98,9 +98,9 @@ function begin() {
 }
 
 function steer(dir: Direction) {
-  if (state.value.status === 'over' || paused.value) return
+  // Steering only bites once the run has started; the Start button begins it.
+  if (state.value.status !== 'playing' || paused.value) return
   state.value = queueTurn(state.value, dir)
-  begin()
 }
 
 const KEYS: Record<string, Direction> = {
@@ -137,8 +137,7 @@ function onTouchEnd(event: TouchEvent) {
   const dy = touch.clientY - touchStart.y
   touchStart = null
   if (Math.abs(dx) < SWIPE_MIN && Math.abs(dy) < SWIPE_MIN) {
-    // A tap is enough to get going, but never changes course mid-run.
-    begin()
+    // A tap never changes course mid-run, and no longer starts one either.
     return
   }
   steer(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up')
@@ -334,7 +333,9 @@ onBeforeUnmount(() => {
 
           <div v-if="state.status === 'ready'" class="snake__overlay">
             <p class="snake__howto">{{ $t('snake.howTo') }}</p>
-            <p class="snake__cue">{{ $t('snake.tapToStart') }}</p>
+            <button class="btn btn--primary" type="button" autofocus @click="begin">
+              {{ $t('snake.start') }}
+            </button>
           </div>
 
           <div v-else-if="paused" class="snake__overlay">

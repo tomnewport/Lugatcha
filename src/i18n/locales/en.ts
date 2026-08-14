@@ -77,7 +77,7 @@ export default {
     title: 'Number snake',
     howTo:
       'Count in Uzbek! Swipe to steer the snake and eat the numbers in order — it only grows on the right one.',
-    tapToStart: 'Swipe or tap to start',
+    start: 'Start',
     next: 'Next',
     score: 'Score',
     best: 'Best',
@@ -99,7 +99,7 @@ export default {
     title: 'Bubble trouble',
     howTo:
       'Your harpoon only bursts the colour named below — everything else it passes straight through, and everything else can still knock you over. Each bubble you pop brings another colour into play.',
-    tapToStart: 'Move or fire to start',
+    start: 'Start',
     level: 'Level',
     popped: 'Popped',
     best: 'Best',
@@ -130,7 +130,7 @@ export default {
     title: 'Bazar hero',
     howTo:
       'Price up the stall! Tap the Uzbek number words in spoken order to read each pricetag aloud and send the item to your trolley. Anything that reaches the end of the belt unpriced goes in the bin — three and you are out.',
-    tapToStart: 'Tap a number word to start',
+    start: 'Start',
     score: 'Trolley',
     best: 'Best',
     bin: 'Bin',
