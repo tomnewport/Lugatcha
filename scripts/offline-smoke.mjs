@@ -84,15 +84,27 @@ try {
   await page.waitForSelector('.tile', { timeout: 15000 }).catch(() => fail('home grid did not render offline'))
   console.log('home grid renders offline')
 
-  // 4. Open a location and start the intro — requires the offline re-seed to have worked
+  // 4. Pick a language. The wiped database means this is a first run, so the
+  //    picker is up; dismissing it the way a learner does keeps the rest of the
+  //    walk honest rather than reaching past a modal.
+  await page.waitForSelector('.lp-option', { timeout: 15000 }).catch(() => fail('language picker did not render offline'))
+  await page.evaluate(() => document.querySelector('.lp-option').click())
+  await page.waitForFunction(() => document.querySelector('.lp-overlay') == null, { timeout: 15000 })
+    .catch(() => fail('language picker did not close'))
+  console.log('language picker renders and closes offline')
+
+  // 5. Open a location and start the intro — requires the offline re-seed to have
+  //    worked. With no progress the only unlocked tile is the Welcome Center,
+  //    which opens on its induction checklist rather than the location menu.
   await page.evaluate(() => [...document.querySelectorAll('.tile')].find((t) => !t.disabled).click())
-  await page.waitForSelector('.activity-card', { timeout: 15000 }).catch(() => fail('location potluck did not render offline'))
-  await page.evaluate(() => [...document.querySelectorAll('.activity-card')].find((b) => !b.disabled).click())
+  await page.waitForSelector('.welcome .continue', { timeout: 15000 })
+    .catch(() => fail('welcome centre induction did not render offline'))
+  await page.evaluate(() => document.querySelector('.welcome .continue').click())
   await page.waitForSelector('.word-card', { timeout: 15000 }).catch(() => fail('intro words did not load offline (seed failed)'))
   const word = await page.$eval('.word-card__uzbek', (e) => e.textContent.trim())
   console.log(`intro exercise loads offline (first word: ${word})`)
 
-  // 5. Settings page offline
+  // 6. Settings page offline
   await page.goto(`${URL_BASE}#/settings`, { waitUntil: 'networkidle0' }).catch(() => {})
   await page.waitForSelector('.settings-card', { timeout: 15000 }).catch(() => fail('settings did not render offline'))
   console.log('settings renders offline')
