@@ -180,8 +180,9 @@ function begin() {
 }
 
 function press(token: string) {
-  if (state.value.status === 'over' || paused.value) return
-  begin()
+  // The register is live only once the run has started: a tap that doubles as
+  // "begin" gets counted as an answer too, and it is almost always a wrong one.
+  if (state.value.status !== 'playing' || paused.value) return
   const result = pressToken(state.value, token)
   state.value = result.state
   if (result.bagged) {
@@ -365,7 +366,9 @@ onBeforeUnmount(() => {
 
         <div v-if="state.status === 'ready'" class="bh__overlay">
           <p class="bh__howto">{{ $t('bazar.howTo') }}</p>
-          <p class="bh__cue">{{ $t('bazar.tapToStart') }}</p>
+          <button class="btn btn--primary" type="button" autofocus @click="begin">
+            {{ $t('bazar.start') }}
+          </button>
         </div>
 
         <div v-else-if="paused" class="bh__overlay">
