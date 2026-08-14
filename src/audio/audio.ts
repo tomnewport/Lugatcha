@@ -78,7 +78,32 @@ function playFile(url: string): Promise<boolean> {
   })
 }
 
-function speakWithSynthesis(text: string, { slow = false } = {}): Promise<void> {
+/**
+ * Voices to try after Uzbek itself, best first — an opt-in, because a caller
+ * that would rather say nothing recognisable than say it in the wrong accent
+ * should not get one by surprise.
+ *
+ * Almost no device ships an Uzbek voice, and the default English one mangles
+ * Uzbek badly. Russian is the one nearly every device does have, and it reads
+ * Uzbek's vowels and its Russian-era loanwords more or less correctly. Turkish
+ * is a closer relative where it exists, and Arabic a distant third that at
+ * least keeps the consonants honest.
+ */
+export const NEIGHBOUR_VOICE_LANGS = ['ru', 'tr', 'ar']
+
+function pickVoice(langs: readonly string[]): SpeechSynthesisVoice | undefined {
+  const voices = speechSynthesis.getVoices()
+  for (const lang of langs) {
+    const voice = voices.find((v) => v.lang.toLowerCase().startsWith(lang))
+    if (voice) return voice
+  }
+  return undefined
+}
+
+function speakWithSynthesis(
+  text: string,
+  { slow = false, langs = [] as readonly string[] } = {},
+): Promise<void> {
   if (typeof speechSynthesis === 'undefined') return Promise.resolve()
   return new Promise((resolve) => {
     // Some engines never fire onend/onerror (e.g. no voice for the language),
@@ -89,11 +114,15 @@ function speakWithSynthesis(text: string, { slow = false } = {}): Promise<void> 
       resolve()
     }
     const utterance = new SpeechSynthesisUtterance(text)
-    const uzbekVoice = speechSynthesis
-      .getVoices()
-      .find((v) => v.lang.toLowerCase().startsWith('uz'))
-    if (uzbekVoice) utterance.voice = uzbekVoice
-    utterance.lang = 'uz-UZ'
+    const voice = pickVoice(['uz', ...langs])
+    if (voice) {
+      utterance.voice = voice
+      // Only follow a substitute voice's own locale; an Uzbek voice keeps uz-UZ.
+      if (!voice.lang.toLowerCase().startsWith('uz')) utterance.lang = voice.lang
+      else utterance.lang = 'uz-UZ'
+    } else {
+      utterance.lang = 'uz-UZ'
+    }
     utterance.rate = slow ? 0.65 : 0.85
     utterance.onend = done
     utterance.onerror = done
@@ -133,6 +162,16 @@ export function playChime(): void {
   }
 }
 
+export interface SpeakOptions {
+  /** Play the 0.75× prebuilt clip — the second tap on a speaker button. */
+  slow?: boolean
+  /**
+   * Substitute voice languages to accept when there is no prebuilt clip and no
+   * Uzbek voice, best first. See `NEIGHBOUR_VOICE_LANGS`.
+   */
+  langs?: readonly string[]
+}
+
 /**
  * Speaks Uzbek text aloud. Resolves when playback finishes (or immediately if
  * no audio backend is available), so callers can sequence on it.
@@ -141,7 +180,7 @@ export function playChime(): void {
  * the speaker). Falls back to the normal-speed clip or Web Speech if no slow
  * file is available.
  */
-export async function speakUzbek(text: string, { slow = false } = {}): Promise<void> {
+export async function speakUzbek(text: string, { slow = false, langs }: SpeakOptions = {}): Promise<void> {
   // Record the word/phrase in view so the "Raise an issue" form can attach it.
   noteUzbekViewed(text)
   stopSpeaking()
@@ -154,5 +193,52 @@ export async function speakUzbek(text: string, { slow = false } = {}): Promise<v
     : (entry ? audioFile(entry) : undefined)
   if (file && (await playFile(`${base}audio/${AUDIO_VOICE}/${file}`))) return
   if (gen !== speakGen) return
-  await speakWithSynthesis(text, { slow })
+  await speakWithSynthesis(text, { slow, langs })
+}
+
+/** A pause between stitched words — enough to hear the seam as a word break. */
+const STITCH_GAP_MS = 60
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+/**
+ * Speaks a run of Uzbek words back to back, one clip each.
+ *
+ * This is how the bazar reads a price like "ikki yuz o'ttiz ming" aloud:
+ * there is no recording of that number, and there never could be — the game
+ * reaches into the tens of millions — but there *is* a recording of every word
+ * it is made of, because every Uzbek word in the app is individually tappable
+ * and so individually recorded (see scripts/generate_audio.py).
+ *
+ * Stitching at word boundaries is a compromise and sounds like one: the
+ * prosody is flat, with none of the run-on a native speaker gives a long
+ * number. That is the right trade for *reading* a price you can see. The bonus
+ * round, which asks the learner to recognise a number by ear alone, needs the
+ * real thing and uses whole prebuilt clips instead.
+ *
+ * Any word without a clip falls through to speech synthesis on its own, so a
+ * partial audio download degrades word by word rather than all at once. A new
+ * `speakUzbek`/`stopSpeaking` call cancels the rest of the sequence.
+ */
+export async function speakUzbekWords(words: readonly string[], options: SpeakOptions = {}): Promise<void> {
+  if (!words.length) return
+  noteUzbekViewed(words.join(' '))
+  stopSpeaking()
+  const gen = speakGen
+  const manifest = await getAudioManifest()
+
+  for (const [index, word] of words.entries()) {
+    if (gen !== speakGen) return
+    if (index > 0) {
+      await wait(STITCH_GAP_MS)
+      if (gen !== speakGen) return
+    }
+    const entry = manifest?.[audioKey(word)]
+    const file = entry ? audioFile(entry) : undefined
+    if (file && (await playFile(`${base}audio/${AUDIO_VOICE}/${file}`))) continue
+    if (gen !== speakGen) return
+    await speakWithSynthesis(word, options)
+  }
 }

@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest'
-import { numberToUzbek, generateCountingQuiz } from '@/exercises/numbers'
+import {
+  numberToUzbek,
+  generateCountingQuiz,
+  uzbekCardinalTokens,
+  MAX_UZBEK_CARDINAL,
+  UZBEK_NUMBER_WORDS,
+} from '@/exercises/numbers'
 
 describe('numberToUzbek', () => {
   it('renders the units and zero', () => {
@@ -39,6 +45,85 @@ describe('numberToUzbek', () => {
     expect(() => numberToUzbek(-1)).toThrow()
     expect(() => numberToUzbek(10000)).toThrow()
     expect(() => numberToUzbek(1.5)).toThrow()
+  })
+})
+
+describe('uzbekCardinalTokens', () => {
+  /**
+   * The anchors scripts/generate_audio.py pins in NUMBER_SELF_TEST. Both sides
+   * render the readings the bazar stitches its audio from, so they have to
+   * agree word for word or the clips are looked up under the wrong hashes.
+   */
+  const ANCHORS: Record<number, string> = {
+    0: 'nol',
+    7: 'yetti',
+    10: "o'n",
+    11: "o'n bir",
+    21: 'yigirma bir',
+    99: "to'qson to'qqiz",
+    100: 'yuz',
+    1000: 'ming',
+    9999: "to'qqiz ming to'qqiz yuz to'qson to'qqiz",
+    15000: "o'n besh ming",
+    230000: "ikki yuz o'ttiz ming",
+    1500000: 'bir million besh yuz ming',
+    90000000: "to'qson million",
+  }
+
+  it('matches the readings the audio generator records', () => {
+    for (const [n, expected] of Object.entries(ANCHORS)) {
+      expect(uzbekCardinalTokens(Number(n)).join(' ')).toBe(expected)
+    }
+  })
+
+  it('agrees with numberToUzbek everywhere numberToUzbek runs', () => {
+    for (let n = 0; n <= 9999; n++) {
+      expect(uzbekCardinalTokens(n).join(' ')).toBe(numberToUzbek(n))
+    }
+  })
+
+  it('drops "bir" before ming but keeps it before million', () => {
+    expect(uzbekCardinalTokens(1000)).toEqual(['ming'])
+    expect(uzbekCardinalTokens(1_000_000)).toEqual(['bir', 'million'])
+    expect(uzbekCardinalTokens(1_000_000_000)).toEqual(['bir', 'milliard'])
+  })
+
+  it('repeats a word when the number does', () => {
+    expect(uzbekCardinalTokens(2_200_000)).toEqual(['ikki', 'million', 'ikki', 'yuz', 'ming'])
+  })
+
+  it('skips the groups that are zero', () => {
+    expect(uzbekCardinalTokens(1_000_005)).toEqual(['bir', 'million', 'besh'])
+  })
+
+  it('splits into one spoken word per element', () => {
+    for (const token of uzbekCardinalTokens(987_654_321)) {
+      expect(token).not.toContain(' ')
+      expect(UZBEK_NUMBER_WORDS).toContain(token)
+    }
+  })
+
+  it('reaches its stated ceiling and rejects everything past it', () => {
+    expect(() => uzbekCardinalTokens(MAX_UZBEK_CARDINAL)).not.toThrow()
+    expect(() => uzbekCardinalTokens(MAX_UZBEK_CARDINAL + 1)).toThrow()
+    expect(() => uzbekCardinalTokens(-1)).toThrow()
+    expect(() => uzbekCardinalTokens(1.5)).toThrow()
+  })
+})
+
+describe('UZBEK_NUMBER_WORDS', () => {
+  it('covers every word a cardinal can be built from', () => {
+    const seen = new Set<string>()
+    for (const n of [0, 999, 9999, 123_456_789, 999_999_999_999]) {
+      for (const token of uzbekCardinalTokens(n)) seen.add(token)
+    }
+    // "nol" is the one reading that is never part of a larger number.
+    seen.delete('nol')
+    for (const word of seen) expect(UZBEK_NUMBER_WORDS).toContain(word)
+  })
+
+  it('lists no duplicates', () => {
+    expect(new Set(UZBEK_NUMBER_WORDS).size).toBe(UZBEK_NUMBER_WORDS.length)
   })
 })
 

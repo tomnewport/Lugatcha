@@ -124,6 +124,35 @@ export default {
     resume: 'Resume',
   },
 
+  bazar: {
+    aria: 'Bazar hero pricing game',
+    eyebrow: 'Bonus round',
+    title: 'Bazar hero',
+    howTo:
+      'Price up the stall! Tap the Uzbek number words in spoken order to read each pricetag aloud and send the item to your trolley. Anything that reaches the end of the belt unpriced goes in the bin — three and you are out.',
+    tapToStart: 'Tap a number word to start',
+    score: 'Trolley',
+    best: 'Best',
+    bin: 'Bin',
+    binned: '{count} of 3 items binned',
+    som: 'soʻm',
+    dots: '{done} of {total} words entered',
+    register: 'Cash register',
+    keypad: 'Number keypad',
+    hearPrice: 'Hear the price again',
+    approx: 'Conversions are approximate',
+    bonusHowTo: 'Listening round — key in the {count} prices you hear',
+    over: 'Game over',
+    finalScore: 'You bagged {score} {som}.',
+    finalItems: '{count} items priced',
+    newBest: 'New best!',
+    again: 'Play again',
+    done: 'Done',
+    skip: 'Close the game',
+    paused: 'Paused',
+    resume: 'Resume',
+  },
+
   streak: {
     aria: 'Daily practice streak celebration',
     started: 'Streak started!',
@@ -191,13 +220,14 @@ export default {
     },
     game: {
       title: 'Mini-games',
-      desc: 'A mini-game after each daily practice, picked at random: count in Uzbek in Number snake, or burst the named colour in Bubble trouble. New — try one here first.',
+      desc: 'A mini-game after each daily practice, picked at random: count in Uzbek in Number snake, burst the named colour in Bubble trouble, or read the pricetags in Bazar hero. New — try one here first.',
       groupLabel: 'Mini-game after daily practice',
       on: 'On',
       off: 'Off',
       play: 'Surprise me',
       bestSnake: 'Number snake — best count: {score}',
       bestBubbles: 'Bubble trouble — most bubbles popped: {score}',
+      bestBazar: 'Bazar hero — biggest trolley: {score} soʻm',
     },
 
     backup: {
