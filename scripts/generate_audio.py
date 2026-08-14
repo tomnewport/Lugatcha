@@ -95,16 +95,33 @@ def _has_letter(text: str) -> bool:
 # ---------------------------------------------------------------------------
 # Uzbek cardinals — MUST stay identical to src/exercises/numbers.ts.
 #
-# The counting quiz (src/components/school/CountingQuiz.vue) speaks numbers it
-# generates at runtime via numberToUzbek(), so those readings live in code, not
-# in public/data — without enumerating them here the whole 0–100 range falls
-# through to the Web Speech fallback. NUMBER_SELF_TEST pins a few anchors (the
-# same ones tests/numbers.spec.ts checks) so this port can't silently drift.
+# Two games speak numbers generated at runtime, so those readings live in code
+# rather than public/data and would otherwise fall through to the Web Speech
+# fallback entirely:
+#
+#   * the counting quiz (src/components/school/CountingQuiz.vue) reads 0–100
+#     whole, and
+#   * Bazar hero (src/exercises/bazar.ts) reads soʻm prices into the tens of
+#     millions. Those cannot be recorded whole — there are far too many — so
+#     the game stitches the price together from one clip per word, which the
+#     tier-2 pass below already records. All it needs from here are the scale
+#     words no small number contains ("ming", "million", "milliard").
+#     Its *bonus* round is the exception: it asks the learner to recognise a
+#     number by ear, which stitched words cannot teach, so its hundred fixed
+#     prices are enumerated and recorded whole.
+#
+# NUMBER_SELF_TEST pins a few anchors (the same ones tests/numbers.spec.ts
+# checks) so this port can't silently drift.
 # ---------------------------------------------------------------------------
 
 _ONES = ["nol", "bir", "ikki", "uch", "to'rt", "besh", "olti", "yetti", "sakkiz", "to'qqiz"]
 # Index = the tens digit; index 1 is o'n (10), 2 is yigirma (20), …
 _TENS = ["", "o'n", "yigirma", "o'ttiz", "qirq", "ellik", "oltmish", "yetmish", "sakson", "to'qson"]
+# Scale word per group of three digits, smallest first. Only "ming" drops its
+# "bir" (ming = 1000, but *bir* million = 1 000 000).
+_SCALES = ["", "ming", "million", "milliard"]
+
+MAX_UZBEK_CARDINAL = 10 ** (len(_SCALES) * 3) - 1
 
 # generateCountingQuiz defaults to max=100 and CountingQuiz.vue uses that
 # default, so the quiz never speaks a number outside 0–100 inclusive.
@@ -118,35 +135,80 @@ NUMBER_SELF_TEST = {
     21: "yigirma bir",
     99: "to'qson to'qqiz",
     100: "yuz",
+    1000: "ming",
+    9999: "to'qqiz ming to'qqiz yuz to'qson to'qqiz",
+    15000: "o'n besh ming",
+    230000: "ikki yuz o'ttiz ming",
+    1500000: "bir million besh yuz ming",
+    90000000: "to'qson million",
 }
+
+
+def _group_tokens(n: int) -> list[str]:
+    """Render 1–999 — the body of one three-digit group — as its spoken words."""
+    tokens: list[str] = []
+    hundreds, tens, ones = n // 100, (n % 100) // 10, n % 10
+    if hundreds:
+        if hundreds > 1:
+            tokens.append(_ONES[hundreds])
+        tokens.append("yuz")
+    if tens:
+        tokens.append(_TENS[tens])
+    if ones:
+        tokens.append(_ONES[ones])
+    return tokens
+
+
+def uzbek_cardinal_tokens(n: int) -> list[str]:
+    """The spoken Uzbek cardinal, one word per element (mirrors uzbekCardinalTokens)."""
+    if not (0 <= n <= MAX_UZBEK_CARDINAL):
+        raise ValueError(f"uzbek_cardinal_tokens supports 0–{MAX_UZBEK_CARDINAL}, got {n}")
+    if n == 0:
+        return ["nol"]
+    tokens: list[str] = []
+    for scale in range(len(_SCALES) - 1, -1, -1):
+        group = (n // 10 ** (scale * 3)) % 1000
+        if not group:
+            continue
+        # A lone "bir" is dropped before ming only — "bir million" keeps its bir.
+        if not (group == 1 and scale == 1):
+            tokens.extend(_group_tokens(group))
+        if scale:
+            tokens.append(_SCALES[scale])
+    return tokens
 
 
 def number_to_uzbek(n: int) -> str:
     """Render 0–9999 as its spoken Uzbek cardinal (mirrors numberToUzbek)."""
     if not (0 <= n <= 9999):
         raise ValueError(f"number_to_uzbek supports 0–9999, got {n}")
-    if n == 0:
-        return "nol"
-    parts: list[str] = []
-    thousands, hundreds, tens, ones = n // 1000, (n % 1000) // 100, (n % 100) // 10, n % 10
-    if thousands:
-        if thousands > 1:
-            parts.append(number_to_uzbek(thousands))
-        parts.append("ming")
-    if hundreds:
-        if hundreds > 1:
-            parts.append(_ONES[hundreds])
-        parts.append("yuz")
-    if tens:
-        parts.append(_TENS[tens])
-    if ones:
-        parts.append(_ONES[ones])
-    return " ".join(parts)
+    return " ".join(uzbek_cardinal_tokens(n))
 
 
 def counting_quiz_texts() -> list[str]:
     """Every Uzbek number reading the counting quiz can speak (0–max inclusive)."""
     return [number_to_uzbek(n) for n in range(COUNTING_QUIZ_MAX + 1)]
+
+
+# The bonus round's fixed price list — MUST stay identical to BONUS_PRICES in
+# src/exercises/bazar.ts.
+BAZAR_BONUS_SIGNIFICANDS = [
+    10, 12, 15, 18, 20, 23, 25, 28, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 90,
+]
+BAZAR_BONUS_EXPONENTS = [2, 3, 4, 5, 6]
+
+
+def bazar_texts() -> list[str]:
+    """What Bazar hero speaks: the scale words it stitches with, and its bonus prices."""
+    # Stitching words: every cardinal word the game's register can offer. Most
+    # already fall out of the 0–100 quiz range; the scale words do not.
+    words = [*_ONES[1:], *_TENS[1:], "yuz", *_SCALES[1:]]
+    prices = [
+        significand * 10**exponent
+        for exponent in BAZAR_BONUS_EXPONENTS
+        for significand in BAZAR_BONUS_SIGNIFICANDS
+    ]
+    return [*words, *(" ".join(uzbek_cardinal_tokens(price)) for price in prices)]
 
 
 def self_test() -> None:
@@ -158,10 +220,12 @@ def self_test() -> None:
     ]
     for text, expected, got in failures:
         print(f"MISMATCH {text!r}: expected {expected}, got {got}", file=sys.stderr)
+    # Anchored against the general renderer, since the list reaches past the
+    # 0–9999 window number_to_uzbek deliberately keeps.
     number_failures = [
-        (n, expected, number_to_uzbek(n))
+        (n, expected, " ".join(uzbek_cardinal_tokens(n)))
         for n, expected in NUMBER_SELF_TEST.items()
-        if number_to_uzbek(n) != expected
+        if " ".join(uzbek_cardinal_tokens(n)) != expected
     ]
     for n, expected, got in number_failures:
         print(f"MISMATCH number {n}: expected {expected!r}, got {got!r}", file=sys.stderr)
@@ -235,9 +299,11 @@ def collect_texts() -> dict[str, str]:
             for section in group.get("article", []):
                 phrases.extend(ex["uzbek"] for ex in section.get("examples", []))
 
-    # Counting quiz: number readings are generated in code, not in public/data,
-    # so enumerate the range the quiz can speak (mirrors numbers.ts).
+    # Counting quiz and Bazar hero: number readings are generated in code, not
+    # in public/data, so enumerate what they can speak (mirrors numbers.ts and
+    # bazar.ts).
     phrases.extend(counting_quiz_texts())
+    phrases.extend(bazar_texts())
 
     collected: dict[str, str] = {}
 
