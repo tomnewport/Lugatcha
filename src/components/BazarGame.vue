@@ -44,6 +44,13 @@ const paused = ref(false)
 const refused = ref(false)
 /** Bumped per refusal so a fast second tap re-runs the X's animation. */
 const refusedKey = ref(0)
+/**
+ * The item that just took a correct word, and a counter that flips the shake
+ * between two identical animations. Re-adding a class the element already
+ * carries does not restart its animation, and words often land faster than the
+ * shake runs, so consecutive hits alternate to force a fresh one each time.
+ */
+const shook = ref<{ id: number; seq: number } | null>(null)
 /** Items caught mid-flight into the trolley or the bin, for the animation. */
 const bagging = ref<BeltItem[]>([])
 const dumping = ref<BeltItem[]>([])
@@ -183,15 +190,36 @@ function press(token: string) {
   // The register is live only once the run has started: a tap that doubles as
   // "begin" gets counted as an answer too, and it is almost always a wrong one.
   if (state.value.status !== 'playing' || paused.value) return
+  const front = state.value.items[0]
   const result = pressToken(state.value, token)
   state.value = result.state
   if (result.bagged) {
     bag(result.bagged)
     // Hear what you just said. The bonus round has already said it for you.
     if (!result.bagged.bonus) void speakUzbekWords(result.bagged.tokens)
-  } else if (!result.accepted) {
+  } else if (result.accepted) {
+    if (front) flashCorrect(front.id)
+  } else {
     flashRefusal()
   }
+}
+
+let shookAt: ReturnType<typeof setTimeout> | undefined
+
+/** Shakes the item that just took a word, so a right answer lands as an event. */
+function flashCorrect(id: number) {
+  clearTimeout(shookAt)
+  shook.value = { id, seq: (shook.value?.seq ?? 0) + 1 }
+  buzz(12)
+  shookAt = setTimeout(() => {
+    shook.value = null
+  }, 420)
+}
+
+/** Alternating class names, so each correct word restarts the shake. */
+function shakeClass(id: number): string | undefined {
+  if (shook.value?.id !== id) return undefined
+  return shook.value.seq % 2 ? 'bh__item--shookA' : 'bh__item--shookB'
 }
 
 let refusedAt: ReturnType<typeof setTimeout> | undefined
@@ -248,6 +276,8 @@ function playAgain() {
   newBest.value = false
   paused.value = false
   refused.value = false
+  clearTimeout(shookAt)
+  shook.value = null
   bagging.value = []
   dumping.value = []
   state.value = createGame()
@@ -268,6 +298,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (raf !== undefined) cancelAnimationFrame(raf)
   clearTimeout(refusedAt)
+  clearTimeout(shookAt)
   window.removeEventListener('keydown', onKeyDown)
   document.removeEventListener('visibilitychange', onVisibility)
   stopSpeaking()
@@ -316,31 +347,35 @@ onBeforeUnmount(() => {
           v-for="(item, index) in state.items"
           :key="item.id"
           class="bh__item"
-          :class="{ 'bh__item--front': index === 0 }"
+          :class="[{ 'bh__item--front': index === 0 }, shakeClass(item.id)]"
           :style="{ top: beltTop(item.position) }"
         >
           <span class="bh__emoji">{{ item.item.emoji }}</span>
 
+          <!--
+            The price is the thing being read, so it carries the tag: the names
+            sit small above it and the home-currency conversion small below.
+          -->
           <div class="bh__tag">
-            <span class="bh__tag-main">
+            <span class="bh__tag-names">
               <span class="bh__tag-uz" lang="uz">{{ item.item.uzbek }}</span>
-              <button
-                v-if="item.bonus"
-                class="bh__speaker"
-                :class="{ 'bh__speaker--reading': reading && index === 0 }"
-                type="button"
-                :disabled="index !== 0"
-                :aria-label="$t('bazar.hearPrice')"
-                @click="sayPrice(item)"
-              >
-                🔊
-              </button>
-              <strong v-else class="bh__tag-som">{{ som(item.price) }} {{ $t('bazar.som') }}</strong>
+              <span class="bh__tag-gloss">{{ gloss(item.item) }}</span>
             </span>
-            <span class="bh__tag-sub">
-              <span>{{ gloss(item.item) }}</span>
-              <span v-if="!item.bonus" class="bh__tag-fx">≈ {{ converted(item.price) }}</span>
-            </span>
+            <button
+              v-if="item.bonus"
+              class="bh__speaker"
+              :class="{ 'bh__speaker--reading': reading && index === 0 }"
+              type="button"
+              :disabled="index !== 0"
+              :aria-label="$t('bazar.hearPrice')"
+              @click="sayPrice(item)"
+            >
+              🔊
+            </button>
+            <template v-else>
+              <strong class="bh__tag-som">{{ som(item.price) }} {{ $t('bazar.som') }}</strong>
+              <span class="bh__tag-fx">≈ {{ converted(item.price) }}</span>
+            </template>
           </div>
 
           <span class="bh__dots" :aria-label="$t('bazar.dots', { done: item.typed, total: item.tokens.length })">
@@ -641,32 +676,40 @@ onBeforeUnmount(() => {
   border-color: var(--color-primary);
 }
 
-.bh__tag-main {
+/* Top line: what the thing is called, in both languages, kept out of the way. */
+.bh__tag-names {
   display: flex;
   align-items: baseline;
-  gap: 0.35rem;
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--color-text);
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  font-size: 0.72rem;
   line-height: 1.25;
 }
 
 .bh__tag-uz {
+  font-weight: 700;
   color: var(--color-primary);
 }
 
-.bh__tag-som {
-  font-variant-numeric: tabular-nums;
-}
-
-.bh__tag-sub {
-  display: flex;
-  gap: 0.35rem;
-  font-size: 0.7rem;
+.bh__tag-gloss {
+  font-weight: 400;
   color: var(--color-text-muted);
 }
 
+/* The price carries the tag — it is the thing being read aloud. */
+.bh__tag-som {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
 .bh__tag-fx {
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -694,20 +737,86 @@ onBeforeUnmount(() => {
 
 .bh__dots {
   display: flex;
-  gap: 0.2rem;
-  margin-top: 0.15rem;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
 }
 
 .bh__dot {
-  width: 8px;
-  height: 8px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--color-border);
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
+/*
+ * A word landing is worth seeing: the dot drops in over its grey slot, big and
+ * clear, and settles. Each dot only ever turns on once, so adding the class is
+ * enough to run this — unlike the shake, which has to alternate to restart.
+ */
 .bh__dot--on {
   background: var(--color-teal);
+  animation: bh-dot-in 0.34s cubic-bezier(0.2, 1.3, 0.5, 1) backwards;
+}
+
+@keyframes bh-dot-in {
+  0% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/*
+ * The whole item jolts on a correct word. Both keyframes are identical: the
+ * class alternates so a fast run of right answers restarts the animation
+ * rather than leaving the first one to finish alone. The translate is carried
+ * through every step because it is what centres the item on the belt.
+ */
+.bh__item--shookA {
+  animation: bh-shake-a 0.4s ease-out;
+}
+
+.bh__item--shookB {
+  animation: bh-shake-b 0.4s ease-out;
+}
+
+@keyframes bh-shake-a {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  20% {
+    transform: translate(calc(-50% - 5px), -50%) rotate(-2.5deg) scale(1.04);
+  }
+  45% {
+    transform: translate(calc(-50% + 5px), -50%) rotate(2.5deg) scale(1.04);
+  }
+  70% {
+    transform: translate(calc(-50% - 3px), -50%) rotate(-1.5deg) scale(1.02);
+  }
+}
+
+@keyframes bh-shake-b {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  20% {
+    transform: translate(calc(-50% - 5px), -50%) rotate(-2.5deg) scale(1.04);
+  }
+  45% {
+    transform: translate(calc(-50% + 5px), -50%) rotate(2.5deg) scale(1.04);
+  }
+  70% {
+    transform: translate(calc(-50% - 3px), -50%) rotate(-1.5deg) scale(1.02);
+  }
 }
 
 /* --- Leaving the belt --- */
@@ -923,7 +1032,10 @@ onBeforeUnmount(() => {
 @media (prefers-reduced-motion: reduce) {
   .bh__fly,
   .bh__refused,
-  .bh__speaker--reading {
+  .bh__speaker--reading,
+  .bh__dot--on,
+  .bh__item--shookA,
+  .bh__item--shookB {
     animation-duration: 0.01ms;
   }
 
