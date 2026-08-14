@@ -3,6 +3,7 @@ import {
   advance,
   BANDS,
   BELT_SLOTS,
+  MIN_GAP,
   BIN_CAPACITY,
   BONUS_ITEMS,
   BONUS_MIN_CLEARED,
@@ -226,10 +227,10 @@ describe('a run', () => {
   it('tops the belt up behind the items already on it', () => {
     let state = startGame(createGame(seeded(1)))
     const rng = seeded(2)
-    // Long enough for the opening item to clear a slot and make room behind it,
-    // derived from the belt's own timing so tuning the speed can't rot this.
-    const slotMs = state.items[0].travelMs / BELT_SLOTS
-    for (let elapsed = 0; elapsed < slotMs; elapsed += 60) state = advance(state, 60, rng).state
+    // Long enough for the opening item to open a full gap behind it, derived
+    // from the belt's own spacing and timing so tuning either can't rot this.
+    const gapMs = state.items[0].travelMs * MIN_GAP
+    for (let elapsed = 0; elapsed <= gapMs; elapsed += 60) state = advance(state, 60, rng).state
     expect(state.items.length).toBeGreaterThan(1)
     expect(state.items.length).toBeLessThanOrEqual(BELT_SLOTS + 1)
   })

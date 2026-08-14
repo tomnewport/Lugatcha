@@ -212,8 +212,13 @@ const BIN_POSITION = 1
 /** How many items' worth of belt there is between the ramp and the bin. */
 export const BELT_SLOTS = 3
 
-/** Items may not close up tighter than this, so tags never overlap. */
-const MIN_GAP = 0.9 / BELT_SLOTS
+/**
+ * Items may not close up tighter than this, so tags never overlap. A pricetag
+ * leads with the price at full size and carries a row of word dots under it,
+ * which makes an item about four tenths of the belt tall — the gap has to
+ * clear that or two tags collide on screen.
+ */
+export const MIN_GAP = 1.2 / BELT_SLOTS
 
 /** Bin this many and the run is over. */
 export const BIN_CAPACITY = 3
