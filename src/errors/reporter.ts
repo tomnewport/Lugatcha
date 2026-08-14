@@ -9,6 +9,7 @@
 import { reactive } from 'vue'
 import type { App } from 'vue'
 import { i18n } from '@/i18n'
+import { noteStorageError } from '@/db/storageHealth'
 
 const REPO_ISSUES_URL = 'https://github.com/tomnewport/Lugatcha/issues/new'
 const MAX_TOASTS = 3
@@ -53,6 +54,10 @@ export function toCapturedError(source: string, error: unknown, context?: string
 
 export function captureError(source: string, error: unknown, context?: string): void {
   try {
+    // A quota failure means the device is out of storage and writes aren't
+    // landing — flag it so the banner can warn that progress isn't being saved.
+    noteStorageError(error)
+
     const entry = toCapturedError(source, error, context)
 
     const existing = capturedErrors.find((e) => e.message === entry.message)

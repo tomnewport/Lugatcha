@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { RouterView, useRouter, type RouteLocationNormalized } from 'vue-router'
 import ErrorToasts from '@/components/ErrorToasts.vue'
+import StorageWarning from '@/components/StorageWarning.vue'
 import LanguagePicker from '@/components/LanguagePicker.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import RaiseIssue from '@/components/RaiseIssue.vue'
@@ -48,6 +49,7 @@ router.afterEach((to, from) => {
     </Transition>
   </RouterView>
 
+  <StorageWarning />
   <ErrorToasts />
   <LanguagePicker v-if="!settings.languageChosen" />
   <RaiseIssue />

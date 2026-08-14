@@ -5,6 +5,7 @@ import router from './router'
 import { db, ensureSeeded } from './db'
 import { requestPersistentStorage } from './db/persist'
 import { recordAppOpen } from './db/diagnostics'
+import { refreshEstimate } from './db/storageHealth'
 import { installErrorHandlers, captureError } from './errors/reporter'
 import { showFatalError } from './errors/fatalScreen'
 import { i18n, setI18nLocale } from './i18n'
@@ -85,6 +86,10 @@ try {
   // whether the store looks freshly created, or the engine/persistence changed
   // across an update — the fingerprints of a wipe (see db/diagnostics.ts).
   void recordAppOpen()
+
+  // Best-effort: check how close to the storage quota we are, so a nearly-full
+  // device can be warned before a write fails (see db/storageHealth.ts).
+  void refreshEstimate()
 } catch (error) {
   showFatalError('bootstrap', error, 'while starting the app')
 }

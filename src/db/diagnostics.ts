@@ -28,6 +28,7 @@ import { APP_COMMIT, APP_BUILD_TIME } from '@/errors/reporter'
 import { CONTENT_VERSION } from './seed'
 import { PROGRESS_TABLES } from './backup'
 import { getLastBackupAt } from './backupReminder'
+import { storageHealth } from './storageHealth'
 
 export interface InfoRow {
   label: string
@@ -261,6 +262,10 @@ export async function gatherDiagnostics(now: number = Date.now()): Promise<Diagn
   } else {
     storageRows.push({ label: 'Storage estimate', value: 'unavailable' })
   }
+  storageRows.push({
+    label: 'Write blocked (out of space)',
+    value: storageHealth.full ? 'YES — a write failed this session' : 'no',
+  })
 
   // ── Browser & install ─────────────────────────────────────────────────────
   const browserRows: InfoRow[] = [
@@ -317,6 +322,24 @@ export async function gatherDiagnostics(now: number = Date.now()): Promise<Diagn
   // ── Findings: the likely-cause notes ──────────────────────────────────────
   const findings: Finding[] = []
 
+  if (storageHealth.full) {
+    findings.push({
+      severity: 'high',
+      text:
+        'A database write failed this session because the device is out of ' +
+        'storage — new progress is NOT being saved. Free up space on the device, ' +
+        'and back up now (a backup file is saved outside the app, so it still ' +
+        'works when storage is full).',
+    })
+  }
+  if (storageHealth.low && !storageHealth.full) {
+    findings.push({
+      severity: 'medium',
+      text:
+        'Device storage is nearly full. When it runs out, progress stops saving ' +
+        'and stored data can be evicted. Free up space and keep a backup.',
+    })
+  }
   if (persisted === false) {
     findings.push({
       severity: 'high',

@@ -273,6 +273,18 @@ export default {
     unknown: 'Unknown error',
   },
 
+  storageWarning: {
+    fullTitle: 'Your device is out of storage',
+    fullBody:
+      'Your progress can’t be saved right now. Free up space on your device, then back up so nothing is lost.',
+    lowTitle: 'Storage is almost full',
+    lowBody:
+      'When the device runs out of space your progress may stop saving or be deleted. Back up now to be safe.',
+    backup: 'Back up now',
+    backingUp: 'Preparing…',
+    backedUp: 'Backed up ✓',
+  },
+
   feedback: {
     button: 'Raise an issue',
     buttonAria: 'Raise an issue or send feedback',
