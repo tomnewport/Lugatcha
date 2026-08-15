@@ -60,6 +60,13 @@ function frame(now: number) {
   last = now
   if (state.value.status !== 'playing' || paused.value) return
 
+  // Losing a life re-deals the level and drops the aim with it. A finger that
+  // never left the track still means "walk here", so say so again rather than
+  // making the player lift off and press down to get moving.
+  if (trackPointer !== null && trackAim !== null && state.value.aimX !== trackAim) {
+    state.value = setAim(state.value, trackAim)
+  }
+
   const result = step(state.value, dt)
   state.value = result.state
   for (const event of result.events) handle(event)
@@ -125,6 +132,11 @@ function move(dir: Move) {
   state.value = setMove(state.value, dir)
 }
 
+/** Steering is off while the game is waiting on the player rather than running. */
+function steerable(): boolean {
+  return state.value.status !== 'ready' && state.value.status !== 'over' && !paused.value
+}
+
 function shoot() {
   if (state.value.status === 'ready') return
   state.value = fire(state.value)
@@ -167,7 +179,7 @@ function toArenaX(clientX: number): number {
 }
 
 function onGrab(event: PointerEvent) {
-  if (state.value.status === 'ready' || state.value.status === 'over' || paused.value) return
+  if (!steerable()) return
   dragPointer = event.pointerId
   dragStartX = event.clientX
   dragged = false
@@ -191,6 +203,57 @@ function onRelease(event: PointerEvent) {
   if (!dragged) shoot()
   dragged = false
 }
+
+// --- The steering track -----------------------------------------------------
+
+/**
+ * The avatar is the most natural thing to drag and the worst thing to drag: a
+ * thumb on it covers the one part of the board you have to watch. The track
+ * below the arena is the same gesture moved out of the way — it spans the arena
+ * left to right, so where you hold it is where the avatar walks to.
+ */
+const trackEl = ref<HTMLElement | null>(null)
+let trackPointer: number | null = null
+/** Where the held finger is pointing, kept so a re-deal can pick it up again. */
+let trackAim: number | null = null
+
+/** Pointer clientX to an arena x, across the width of the track. */
+function toTrackX(clientX: number): number {
+  const rect = trackEl.value?.getBoundingClientRect()
+  if (!rect || !rect.width) return state.value.playerX
+  const fraction = (clientX - rect.left) / rect.width
+  return Math.min(1, Math.max(0, fraction)) * ARENA_WIDTH
+}
+
+function aimAt(clientX: number) {
+  trackAim = toTrackX(clientX)
+  state.value = setAim(state.value, trackAim)
+}
+
+function onTrackGrab(event: PointerEvent) {
+  if (!steerable()) return
+  trackPointer = event.pointerId
+  // Keep steering even once the finger wanders off the track.
+  ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+  event.preventDefault()
+  aimAt(event.clientX)
+}
+
+function onTrackDrag(event: PointerEvent) {
+  if (trackPointer !== event.pointerId) return
+  aimAt(event.clientX)
+}
+
+function onTrackRelease(event: PointerEvent) {
+  if (trackPointer !== event.pointerId) return
+  trackPointer = null
+  trackAim = null
+  // Letting go leaves the avatar standing where it got to.
+  state.value = clearAim(state.value)
+}
+
+/** The knob's position along the track, 0 at the left wall and 1 at the right. */
+const knobAt = computed(() => state.value.playerX / ARENA_WIDTH)
 
 function onKeyDown(event: KeyboardEvent) {
   const key = event.key.toLowerCase()
@@ -449,31 +512,36 @@ onBeforeUnmount(() => {
         ></span>
       </div>
 
+      <!-- Fire in both corners so either thumb can shoot while the other
+           steers; the track between them is the drag, kept clear of the board. -->
       <div class="bt__controls">
-        <button
-          class="bt__pad"
-          type="button"
-          :aria-label="$t('bubbles.left')"
-          @pointerdown.prevent="move(-1)"
-          @pointerup="move(0)"
-          @pointerleave="move(0)"
-          @pointercancel="move(0)"
-        >
-          ◀
-        </button>
         <button class="bt__fire" type="button" :aria-label="$t('bubbles.fire')" @pointerdown.prevent="shoot">
           {{ $t('bubbles.fire') }}
         </button>
-        <button
-          class="bt__pad"
-          type="button"
-          :aria-label="$t('bubbles.right')"
-          @pointerdown.prevent="move(1)"
-          @pointerup="move(0)"
-          @pointerleave="move(0)"
-          @pointercancel="move(0)"
+
+        <div
+          ref="trackEl"
+          class="bt__track"
+          role="slider"
+          tabindex="-1"
+          :aria-label="$t('bubbles.steer')"
+          :aria-valuemin="0"
+          :aria-valuemax="100"
+          :aria-valuenow="Math.round(state.playerX)"
+          @pointerdown="onTrackGrab"
+          @pointermove="onTrackDrag"
+          @pointerup="onTrackRelease"
+          @pointercancel="onTrackRelease"
         >
-          ▶
+          <span class="bt__track-hint" aria-hidden="true">◀</span>
+          <span class="bt__knob" :style="{ left: `calc(1.5rem + ${knobAt} * (100% - 3rem))` }" aria-hidden="true">
+            <span class="bt__knob-grip"></span>
+          </span>
+          <span class="bt__track-hint" aria-hidden="true">▶</span>
+        </div>
+
+        <button class="bt__fire" type="button" :aria-label="$t('bubbles.fire')" @pointerdown.prevent="shoot">
+          {{ $t('bubbles.fire') }}
         </button>
       </div>
     </div>
@@ -825,34 +893,83 @@ onBeforeUnmount(() => {
 
 .bt__controls {
   display: grid;
-  grid-template-columns: 1fr 1.4fr 1fr;
+  grid-template-columns: auto 1fr auto;
   gap: 0.4rem;
+  align-items: stretch;
 }
 
-.bt__pad,
 .bt__fire {
-  padding: 0.75rem 0.5rem;
-  font-size: 1rem;
+  /* Big enough for a thumb in the corner, no bigger: the rest of the row is
+     the drag, and every pixel there is finer steering. */
+  width: 64px;
+  min-height: 66px;
+  padding: 0.5rem 0.25rem;
+  font-size: 0.8rem;
   font-weight: 800;
-  border: 1.5px solid var(--color-border);
+  border: 1.5px solid var(--color-primary);
   border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  user-select: none;
-}
-
-.bt__fire {
   background: var(--color-primary);
-  border-color: var(--color-primary);
   color: #fff;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  font-size: 0.85rem;
+  user-select: none;
+  touch-action: none;
 }
 
-.bt__pad:active,
 .bt__fire:active {
   transform: translateY(1px);
+}
+
+/* The drag, moved off the avatar: hold it anywhere and the player walks to
+   the matching point of the arena, so the finger never covers the board. */
+.bt__track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.4rem;
+  min-height: 66px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.bt__track:active {
+  cursor: grabbing;
+}
+
+.bt__track-hint {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.bt__knob {
+  position: absolute;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  box-shadow: 0 1px 3px rgba(37, 28, 18, 0.3);
+}
+
+/* Three ridges: the same "grab me" the avatar's own handle would have. */
+.bt__knob-grip {
+  width: 14px;
+  height: 16px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.85) 0 2px,
+    transparent 2px 6px
+  );
 }
 
 @media (prefers-reduced-motion: reduce) {
