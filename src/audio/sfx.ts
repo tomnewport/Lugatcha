@@ -6,29 +6,8 @@
  * needs no licence, and — the reason that matters here — cannot be the one
  * thing missing when the app is opened offline. The vocabulary audio is the
  * only thing worth spending a download on.
- *
- * The context is made once and kept. Browsers cap how many a page may open, and
- * a game that dings on every second item would run through that cap in a
- * minute; it also starts suspended until the first gesture, which is the tap
- * that plays the first sound anyway.
  */
-
-let context: AudioContext | null = null
-
-function audioContext(): AudioContext | null {
-  try {
-    const Ctx =
-      window.AudioContext ??
-      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (!Ctx) return null
-    context ??= new Ctx()
-    if (context.state === 'suspended') void context.resume()
-    return context
-  } catch {
-    // audio unavailable
-    return null
-  }
-}
+import { audioContext } from './context'
 
 /** One second of white noise, made once and replayed — the basis of every crash. */
 let noise: AudioBuffer | null = null

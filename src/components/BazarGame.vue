@@ -37,6 +37,7 @@ import {
   NEIGHBOUR_VOICE_LANGS,
 } from '@/audio/audio'
 import { playKerching, playSmash } from '@/audio/sfx'
+import { resumeAudio } from '@/audio/context'
 import { useContentLang } from '@/i18n/content'
 
 const emit = defineEmits<{ done: [] }>()
@@ -212,6 +213,9 @@ function sayPrice(item: BeltItem) {
 
 function begin() {
   if (state.value.status !== 'ready') return
+  // The one tap before the first word: wake the audio here rather than make the
+  // first press pay for it.
+  resumeAudio()
   state.value = startGame(state.value)
   last = 0
 }
