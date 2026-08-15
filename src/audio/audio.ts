@@ -6,6 +6,7 @@
  * the Web Speech API, requesting an Uzbek voice where the device has one.
  */
 import { audioKey } from './key'
+import { audioContext } from './context'
 import { noteUzbekViewed } from '@/feedback/activityContext'
 
 const base = import.meta.env.BASE_URL
@@ -66,10 +67,17 @@ let currentResolve: ((v: boolean) => void) | null = null
 let speakGen = 0
 
 /**
- * Clips that were started to ring over the top of whatever else is sounding,
- * against the callback that settles each one. See {@link speakUzbekWord}.
+ * Something currently sounding over the top of the rest, and the two ways it
+ * can be brought to an end. See {@link speakUzbekWord}.
  */
-const ringing = new Map<HTMLAudioElement, (played: boolean) => void>()
+interface Sounding {
+  /** Let it finish under the word that has just started, then fade it out. */
+  tail(): void
+  /** Cut it now. */
+  silence(): void
+}
+
+const ringing = new Set<Sounding>()
 
 /**
  * How long a word may go on ringing once the next word has started, and how
@@ -86,32 +94,6 @@ const ringing = new Map<HTMLAudioElement, (played: boolean) => void>()
 const OVERLAP_TAIL_MS = 300
 const TAIL_FADE_MS = 120
 
-/** Clips fading out under a newer word, against the callback that ends each. */
-const tailing = new Map<HTMLAudioElement, () => void>()
-
-function tailOut(audio: HTMLAudioElement, settle: (played: boolean) => void): void {
-  if (tailing.has(audio)) return
-  const until = Date.now() + OVERLAP_TAIL_MS
-  const timer = setInterval(fade, 20)
-  tailing.set(audio, () => stop(false))
-
-  function fade() {
-    const left = until - Date.now()
-    // A word that finishes inside its own tail has simply been heard in full.
-    if (audio.ended || left <= 0) stop(true)
-    else if (left < TAIL_FADE_MS) audio.volume = Math.max(0, left / TAIL_FADE_MS)
-  }
-
-  function stop(played: boolean) {
-    clearInterval(timer)
-    tailing.delete(audio)
-    audio.pause()
-    // Handed back at full volume: the element is pooled and plays again later.
-    audio.volume = 1
-    settle(played)
-  }
-}
-
 /** Silences everything: the clip that holds the floor, and any ringing over it. */
 export function stopSpeaking(): void {
   speakGen++
@@ -120,11 +102,7 @@ export function stopSpeaking(): void {
     currentAudio.pause()
     currentAudio = null
   }
-  for (const cancel of [...tailing.values()]) cancel()
-  for (const [audio, done] of ringing) {
-    audio.pause()
-    done(false)
-  }
+  for (const sounding of [...ringing]) sounding.silence()
   ringing.clear()
   if (currentResolve) {
     currentResolve(false)
@@ -166,15 +144,102 @@ function openClip(url: string): HTMLAudioElement {
 }
 
 /**
- * Opens the clips for `texts` ahead of time, so playing one later is instant.
+ * A decoded clip, and where the word inside it actually is.
+ *
+ * Every recording is topped and tailed with silence — the readings run about a
+ * sixth of a second of nothing before the speaker starts, and a quarter of a
+ * second of nothing after they stop. Played from the top, that silence is
+ * indistinguishable from the app being slow: you press a key, and the word
+ * arrives a beat later. Played from `from`, it arrives when you pressed.
+ */
+interface Clip {
+  buffer: AudioBuffer
+  /** Seconds into the file where the speech starts. */
+  from: number
+  /** Seconds into the file where it stops, before the silence at the end. */
+  to: number
+}
+
+const clips = new Map<string, Clip>()
+const decoding = new Map<string, Promise<Clip | null>>()
+/** Enough for every number word twice over; a word is ~150KB decoded. */
+const CLIP_LIMIT = 24
+
+/**
+ * Where the speech is inside a recording.
+ *
+ * "Silence" is measured against the clip's own peak rather than an absolute
+ * level, because the readings are not normalised to each other, and a fixed
+ * threshold would trim a quiet word to nothing while leaving a loud one's hiss
+ * in place. The window is nudged outwards either side so that the attack of a
+ * plosive — the whole of the "t" in "to'rt" — is not mistaken for silence and
+ * cut off.
+ */
+const SILENCE_FRACTION = 0.02
+const ONSET_MARGIN_S = 0.02
+
+function speechBounds(buffer: AudioBuffer): { from: number; to: number } {
+  const data = buffer.getChannelData(0)
+  let peak = 0
+  for (let i = 0; i < data.length; i++) peak = Math.max(peak, Math.abs(data[i]))
+  const floor = peak * SILENCE_FRACTION
+  let head = 0
+  while (head < data.length && Math.abs(data[head]) < floor) head++
+  let tail = data.length - 1
+  while (tail > head && Math.abs(data[tail]) < floor) tail--
+  // A clip that is silent throughout is played as it is, rather than as nothing.
+  if (head >= tail) return { from: 0, to: buffer.duration }
+  return {
+    from: Math.max(0, head / buffer.sampleRate - ONSET_MARGIN_S),
+    to: Math.min(buffer.duration, tail / buffer.sampleRate + ONSET_MARGIN_S),
+  }
+}
+
+/** Fetches and decodes a clip, keeping it and where its word starts. */
+function decodeClip(url: string): Promise<Clip | null> {
+  const held = clips.get(url)
+  if (held) return Promise.resolve(held)
+  const already = decoding.get(url)
+  if (already) return already
+  const ctx = audioContext()
+  if (!ctx) return Promise.resolve(null)
+
+  const pending = fetch(url)
+    .then((res) => (res.ok ? res.arrayBuffer() : Promise.reject(new Error('missing'))))
+    .then((bytes) => ctx.decodeAudioData(bytes))
+    .then((buffer) => {
+      const clip: Clip = { buffer, ...speechBounds(buffer) }
+      clips.set(url, clip)
+      for (const key of clips.keys()) {
+        if (clips.size <= CLIP_LIMIT) break
+        if (key !== url) clips.delete(key)
+      }
+      return clip
+    })
+    .catch(() => null)
+    .finally(() => decoding.delete(url))
+  decoding.set(url, pending)
+  return pending
+}
+
+/**
+ * Readies the clips for `texts` ahead of time, so playing one later is instant.
  * A word with no recording, or no manifest at all, is simply nothing to do.
+ *
+ * Decoding up front is what buys the trimmed start: the silence at the head of
+ * a recording can only be skipped once the samples are in hand, and doing that
+ * work in the moment of the tap would cost more than the silence did. Where
+ * there is no Web Audio to decode with, the file is opened as an element
+ * instead and plays from the top, silence and all.
  */
 export async function primeUzbekAudio(texts: readonly string[]): Promise<void> {
   const manifest = await getAudioManifest()
   if (!manifest) return
   for (const text of texts) {
     const url = clipUrl(text, manifest)
-    if (url) openClip(url)
+    if (!url) continue
+    if (audioContext()) void decodeClip(url)
+    else openClip(url)
   }
 }
 
@@ -211,21 +276,86 @@ function playFile(url: string): Promise<boolean> {
  * Plays a clip over the top of anything already sounding, rather than taking
  * the floor from it. Words already ringing are given their tail and faded out,
  * so the overlap stays two deep however fast the presses come.
+ *
+ * A decoded clip is played from the word rather than from the top of the file,
+ * which is the difference between hearing it when you pressed and hearing it a
+ * beat later; anything not decoded falls back to playing the file whole.
  */
 function ringFile(url: string): Promise<boolean> {
+  for (const sounding of ringing) sounding.tail()
+  const clip = clips.get(url)
+  return clip ? ringClip(clip) : ringElement(url)
+}
+
+/** Rings a decoded clip, trimmed to the word and gated through its own gain. */
+function ringClip(clip: Clip): Promise<boolean> {
+  const ctx = audioContext()
+  if (!ctx) return Promise.resolve(false)
   return new Promise((resolve) => {
-    for (const [audio, done] of ringing) tailOut(audio, done)
+    const gain = ctx.createGain()
+    gain.connect(ctx.destination)
+    const source = ctx.createBufferSource()
+    source.buffer = clip.buffer
+    source.connect(gain)
+
+    const handle: Sounding = {
+      tail() {
+        const now = ctx.currentTime
+        const from = now + (OVERLAP_TAIL_MS - TAIL_FADE_MS) / 1000
+        const until = now + OVERLAP_TAIL_MS / 1000
+        // Hold, then ramp down: a source stopped mid-vowel ends on a click.
+        gain.gain.setValueAtTime(gain.gain.value, from)
+        gain.gain.linearRampToValueAtTime(0, until)
+        source.stop(until)
+      },
+      silence() {
+        source.stop()
+      },
+    }
+    source.onended = () => {
+      ringing.delete(handle)
+      resolve(true)
+    }
+    ringing.add(handle)
+    // Now, from the word, for as long as the word lasts — the silence either
+    // side of it is never played at all.
+    source.start(0, clip.from, clip.to - clip.from)
+  })
+}
+
+/** Rings a whole file through an audio element, for want of a decoded clip. */
+function ringElement(url: string): Promise<boolean> {
+  return new Promise((resolve) => {
     const held = openClip(url)
     // One element can only be in one place at a time, so a word that is still
     // ringing gets a second element to overlap itself with. By then the file is
     // in the browser's cache, so it still starts promptly.
     const audio = held.paused || held.ended ? held : new Audio(url)
-    const done = (v: boolean) => {
-      ringing.delete(audio)
-      resolve(v)
+    let fading: ReturnType<typeof setInterval> | undefined
+
+    const settle = (played: boolean) => {
+      clearInterval(fading)
+      ringing.delete(handle)
+      audio.pause()
+      // Handed back at full volume: the element is pooled and plays again later.
+      audio.volume = 1
+      resolve(played)
     }
-    ringing.set(audio, done)
-    start(audio, done)
+    const handle: Sounding = {
+      tail() {
+        if (fading) return
+        const until = Date.now() + OVERLAP_TAIL_MS
+        fading = setInterval(() => {
+          const left = until - Date.now()
+          // A word that ends inside its tail has simply been heard in full.
+          if (audio.ended || left <= 0) settle(true)
+          else if (left < TAIL_FADE_MS) audio.volume = Math.max(0, left / TAIL_FADE_MS)
+        }, 20)
+      },
+      silence: () => settle(false),
+    }
+    ringing.add(handle)
+    start(audio, settle)
   })
 }
 
