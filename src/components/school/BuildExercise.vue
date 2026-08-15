@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { LessonExercise } from '@/db/types'
-import { speakUzbek, playChime } from '@/audio/audio'
+import { speakUzbek } from '@/audio/audio'
+import { playChime } from '@/audio/sfx'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from '@/components/exercise/TokenAssembly.vue'
 import { useContentLang } from '@/i18n/content'

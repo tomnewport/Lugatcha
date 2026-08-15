@@ -71,6 +71,47 @@ let speakGen = 0
  */
 const ringing = new Map<HTMLAudioElement, (played: boolean) => void>()
 
+/**
+ * How long a word may go on ringing once the next word has started, and how
+ * much of that is spent fading out.
+ *
+ * Overlap is what makes a quick run of presses sound like somebody reading a
+ * number fast rather than a row of clipped stubs — but a player who knows the
+ * price can outrun the clips three and four deep, and that is a pile-up, not a
+ * reading. So each word gets the start of the next one and a little after it:
+ * long enough to be heard whole, short enough that only two are ever really
+ * sounding. It fades out rather than stopping, because a clip cut mid-vowel
+ * ends on a click.
+ */
+const OVERLAP_TAIL_MS = 300
+const TAIL_FADE_MS = 120
+
+/** Clips fading out under a newer word, against the callback that ends each. */
+const tailing = new Map<HTMLAudioElement, () => void>()
+
+function tailOut(audio: HTMLAudioElement, settle: (played: boolean) => void): void {
+  if (tailing.has(audio)) return
+  const until = Date.now() + OVERLAP_TAIL_MS
+  const timer = setInterval(fade, 20)
+  tailing.set(audio, () => stop(false))
+
+  function fade() {
+    const left = until - Date.now()
+    // A word that finishes inside its own tail has simply been heard in full.
+    if (audio.ended || left <= 0) stop(true)
+    else if (left < TAIL_FADE_MS) audio.volume = Math.max(0, left / TAIL_FADE_MS)
+  }
+
+  function stop(played: boolean) {
+    clearInterval(timer)
+    tailing.delete(audio)
+    audio.pause()
+    // Handed back at full volume: the element is pooled and plays again later.
+    audio.volume = 1
+    settle(played)
+  }
+}
+
 /** Silences everything: the clip that holds the floor, and any ringing over it. */
 export function stopSpeaking(): void {
   speakGen++
@@ -79,6 +120,7 @@ export function stopSpeaking(): void {
     currentAudio.pause()
     currentAudio = null
   }
+  for (const cancel of [...tailing.values()]) cancel()
   for (const [audio, done] of ringing) {
     audio.pause()
     done(false)
@@ -140,6 +182,8 @@ export async function primeUzbekAudio(texts: readonly string[]): Promise<void> {
 function start(audio: HTMLAudioElement, done: (played: boolean) => void): void {
   audio.onended = () => done(true)
   audio.onerror = () => done(false)
+  // Pooled elements come back from a tail-out; never inherit its fade.
+  audio.volume = 1
   try {
     // A reused element is wherever it last stopped; a brand new one has
     // nothing to seek yet and starts at the top regardless.
@@ -165,10 +209,12 @@ function playFile(url: string): Promise<boolean> {
 
 /**
  * Plays a clip over the top of anything already sounding, rather than taking
- * the floor from it. Only `stopSpeaking` silences one early.
+ * the floor from it. Words already ringing are given their tail and faded out,
+ * so the overlap stays two deep however fast the presses come.
  */
 function ringFile(url: string): Promise<boolean> {
   return new Promise((resolve) => {
+    for (const [audio, done] of ringing) tailOut(audio, done)
     const held = openClip(url)
     // One element can only be in one place at a time, so a word that is still
     // ringing gets a second element to overlap itself with. By then the file is
@@ -235,38 +281,6 @@ function speakWithSynthesis(
   })
 }
 
-/** Plays a short ascending three-note chime to signal a correct answer. */
-export function playChime(): void {
-  try {
-    const Ctx =
-      window.AudioContext ??
-      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (!Ctx) return
-    const ctx = new Ctx()
-    const notes = [
-      { freq: 1046.5, start: 0, dur: 0.45 },
-      { freq: 1318.5, start: 0.1, dur: 0.55 },
-      { freq: 1568.0, start: 0.2, dur: 0.65 },
-    ]
-    for (const { freq, start, dur } of notes) {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.type = 'sine'
-      osc.frequency.value = freq
-      gain.gain.setValueAtTime(0, ctx.currentTime + start)
-      gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + start + 0.02)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur)
-      osc.start(ctx.currentTime + start)
-      osc.stop(ctx.currentTime + start + dur)
-    }
-    setTimeout(() => ctx.close(), 1500)
-  } catch {
-    // audio unavailable
-  }
-}
-
 export interface SpeakOptions {
   /** Play the 0.75× prebuilt clip — the second tap on a speaker button. */
   slow?: boolean
@@ -312,12 +326,13 @@ export async function speakUzbek(text: string, { slow = false, langs }: SpeakOpt
  * this starts playback synchronously, inside the tap that asked for it, which
  * is also what keeps mobile browsers from treating it as unprompted audio.
  *
- * Unlike the rest of these, it does not take the floor: a word rings until it
- * is finished, over the top of one still sounding. The words run about a second
- * each and a quick player presses faster than that, so cutting the last one off
- * would clip most of them to a stub — a run of words overlapping at the edges
- * is the sound of somebody reading a number quickly, which is what it is.
- * `stopSpeaking` still silences the lot.
+ * Unlike the rest of these, it does not take the floor: a word rings on over
+ * the top of one still sounding. The words run about a second each and a quick
+ * player presses faster than that, so cutting the last one off would clip most
+ * of them to a stub — a run of words overlapping at the edges is the sound of
+ * somebody reading a number quickly, which is what it is. The overlap is capped
+ * at `OVERLAP_TAIL_MS` so it stays a reading rather than becoming a pile-up,
+ * and `stopSpeaking` still silences the lot.
  */
 export function speakUzbekWord(word: string, options: SpeakOptions = {}): Promise<void> {
   noteUzbekViewed(word)

@@ -36,6 +36,7 @@ import {
   stopSpeaking,
   NEIGHBOUR_VOICE_LANGS,
 } from '@/audio/audio'
+import { playKerching, playSmash } from '@/audio/sfx'
 import { useContentLang } from '@/i18n/content'
 
 const emit = defineEmits<{ done: [] }>()
@@ -131,6 +132,7 @@ function buzz(pattern: number | number[]) {
 /** Shows an item dropping into the bin, then forgets it. */
 function dump(item: BeltItem) {
   dumping.value = [...dumping.value, item]
+  playSmash()
   buzz([30, 40, 30])
   setTimeout(() => {
     dumping.value = dumping.value.filter((i) => i.id !== item.id)
@@ -140,6 +142,7 @@ function dump(item: BeltItem) {
 /** Shows an item landing in the trolley, then forgets it. */
 function bag(item: BeltItem) {
   bagging.value = [...bagging.value, item]
+  playKerching()
   buzz(15)
   setTimeout(() => {
     bagging.value = bagging.value.filter((i) => i.id !== item.id)

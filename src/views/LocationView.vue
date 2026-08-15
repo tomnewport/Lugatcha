@@ -13,7 +13,7 @@ import {
 import { useActivityContext } from '@/feedback/activityContext'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
-import { playChime } from '@/audio/audio'
+import { playChime } from '@/audio/sfx'
 import { WELCOME_CENTER_ID } from '@/db/progress'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import LocationMenu from '@/components/LocationMenu.vue'

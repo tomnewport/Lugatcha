@@ -10,7 +10,8 @@ import {
 import { foldTyping } from '@/exercises/test'
 import { normalizeToken } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
-import { speakUzbek, playChime } from '@/audio/audio'
+import { speakUzbek } from '@/audio/audio'
+import { playChime } from '@/audio/sfx'
 import { i18n } from '@/i18n'
 import AudioButton from '@/components/AudioButton.vue'
 

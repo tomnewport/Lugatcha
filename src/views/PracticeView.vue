@@ -7,7 +7,7 @@ import {
   buildPracticeSessionQuestions,
   type PracticeQuestion,
 } from '@/exercises/practice'
-import { playChime } from '@/audio/audio'
+import { playChime } from '@/audio/sfx'
 import { recordStreakDay, type StreakUpdate } from '@/streak'
 import { useActivityContext } from '@/feedback/activityContext'
 import { useSettingsStore } from '@/stores/settings'

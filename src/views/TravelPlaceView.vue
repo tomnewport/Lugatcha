@@ -13,7 +13,7 @@ import {
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import { useActivityContext } from '@/feedback/activityContext'
-import { playChime } from '@/audio/audio'
+import { playChime } from '@/audio/sfx'
 import ExerciseLayout from '@/components/exercise/ExerciseLayout.vue'
 import WordIntroExercise from '@/components/exercise/WordIntroExercise.vue'
 import FlashcardsExercise from '@/components/exercise/FlashcardsExercise.vue'
