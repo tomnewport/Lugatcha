@@ -28,7 +28,15 @@ import {
   type BeltItem,
 } from '@/exercises/bazar'
 import { uzbekCardinalTokens } from '@/exercises/numbers'
-import { speakUzbek, speakUzbekWords, stopSpeaking, NEIGHBOUR_VOICE_LANGS } from '@/audio/audio'
+import {
+  primeUzbekAudio,
+  speakUzbek,
+  speakUzbekWord,
+  speakUzbekWords,
+  stopSpeaking,
+  NEIGHBOUR_VOICE_LANGS,
+} from '@/audio/audio'
+import { playKerching, playSmash } from '@/audio/sfx'
 import { useContentLang } from '@/i18n/content'
 
 const emit = defineEmits<{ done: [] }>()
@@ -124,6 +132,7 @@ function buzz(pattern: number | number[]) {
 /** Shows an item dropping into the bin, then forgets it. */
 function dump(item: BeltItem) {
   dumping.value = [...dumping.value, item]
+  playSmash()
   buzz([30, 40, 30])
   setTimeout(() => {
     dumping.value = dumping.value.filter((i) => i.id !== item.id)
@@ -133,6 +142,7 @@ function dump(item: BeltItem) {
 /** Shows an item landing in the trolley, then forgets it. */
 function bag(item: BeltItem) {
   bagging.value = [...bagging.value, item]
+  playKerching()
   buzz(15)
   setTimeout(() => {
     bagging.value = bagging.value.filter((i) => i.id !== item.id)
@@ -156,6 +166,26 @@ watch(
     const front = state.value.items[0]
     if (front) sayPrice(front)
   },
+)
+
+/**
+ * Every clip the belt is about to need, opened before it needs it.
+ *
+ * A word is spoken the instant its key goes down, which only holds if the file
+ * is already open: the first play of a clip has to fetch and decode it, and
+ * that delay is exactly the lag between pressing a word and hearing it. Keyed
+ * on the item ids so this runs when the belt changes rather than every frame.
+ */
+watch(
+  () => state.value.items.map((item) => item.id).join(),
+  () => {
+    // Shop items are read a word at a time; a bonus price is one whole clip.
+    const texts = state.value.items.flatMap((item) =>
+      item.bonus ? [uzbekCardinalTokens(item.price).join(' ')] : item.tokens,
+    )
+    if (texts.length) void primeUzbekAudio(texts)
+  },
+  { immediate: true },
 )
 
 /**
@@ -192,11 +222,14 @@ function press(token: string) {
   if (state.value.status !== 'playing' || paused.value) return
   const front = state.value.items[0]
   const result = pressToken(state.value, token)
+  // Hear the word you just said, now, before anything else happens — a price
+  // read out after the fact is read over the item that replaced it, and lands
+  // as a number from nowhere. The bonus round is keyed in digits and says its
+  // own price, so there is nothing to echo there.
+  if (result.accepted && front && !front.bonus) void speakUzbekWord(token)
   state.value = result.state
   if (result.bagged) {
     bag(result.bagged)
-    // Hear what you just said. The bonus round has already said it for you.
-    if (!result.bagged.bonus) void speakUzbekWords(result.bagged.tokens)
   } else if (result.accepted) {
     if (front) flashCorrect(front.id)
   } else {

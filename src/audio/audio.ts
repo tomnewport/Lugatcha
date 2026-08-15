@@ -33,23 +33,86 @@ export function isReviewed(entry: AudioManifestEntry | string | undefined): bool
 
 const manifestCache = new Map<string, Promise<AudioManifest | null>>()
 
+/**
+ * The default voice's manifest once it has arrived, for callers that cannot
+ * afford to wait on the promise.
+ *
+ * Awaiting a promise costs a turn of the event loop even when it settled long
+ * ago. That is invisible behind a speaker button and very visible in the bazar,
+ * where a word has to sound *as* the key goes down — see {@link speakUzbekWord}.
+ */
+let loadedManifest: AudioManifest | null = null
+
 export function getAudioManifest(voice?: string): Promise<AudioManifest | null> {
   const v = voice ?? AUDIO_VOICE
   if (!manifestCache.has(v)) {
-    manifestCache.set(
-      v,
-      fetch(`${base}audio/${v}/manifest.json`)
-        .then((res) => (res.ok ? (res.json() as Promise<AudioManifest>) : null))
-        .catch(() => null),
-    )
+    const pending = fetch(`${base}audio/${v}/manifest.json`)
+      .then((res) => (res.ok ? (res.json() as Promise<AudioManifest>) : null))
+      .catch(() => null)
+    if (v === AUDIO_VOICE) void pending.then((manifest) => (loadedManifest = manifest))
+    manifestCache.set(v, pending)
   }
   return manifestCache.get(v)!
+}
+
+/** The file a spoken string is recorded in, or undefined if it is not. */
+function clipUrl(text: string, manifest: AudioManifest | null): string | undefined {
+  const entry = manifest?.[audioKey(text)]
+  return entry ? `${base}audio/${AUDIO_VOICE}/${audioFile(entry)}` : undefined
 }
 
 let currentAudio: HTMLAudioElement | null = null
 let currentResolve: ((v: boolean) => void) | null = null
 let speakGen = 0
 
+/**
+ * Clips that were started to ring over the top of whatever else is sounding,
+ * against the callback that settles each one. See {@link speakUzbekWord}.
+ */
+const ringing = new Map<HTMLAudioElement, (played: boolean) => void>()
+
+/**
+ * How long a word may go on ringing once the next word has started, and how
+ * much of that is spent fading out.
+ *
+ * Overlap is what makes a quick run of presses sound like somebody reading a
+ * number fast rather than a row of clipped stubs — but a player who knows the
+ * price can outrun the clips three and four deep, and that is a pile-up, not a
+ * reading. So each word gets the start of the next one and a little after it:
+ * long enough to be heard whole, short enough that only two are ever really
+ * sounding. It fades out rather than stopping, because a clip cut mid-vowel
+ * ends on a click.
+ */
+const OVERLAP_TAIL_MS = 300
+const TAIL_FADE_MS = 120
+
+/** Clips fading out under a newer word, against the callback that ends each. */
+const tailing = new Map<HTMLAudioElement, () => void>()
+
+function tailOut(audio: HTMLAudioElement, settle: (played: boolean) => void): void {
+  if (tailing.has(audio)) return
+  const until = Date.now() + OVERLAP_TAIL_MS
+  const timer = setInterval(fade, 20)
+  tailing.set(audio, () => stop(false))
+
+  function fade() {
+    const left = until - Date.now()
+    // A word that finishes inside its own tail has simply been heard in full.
+    if (audio.ended || left <= 0) stop(true)
+    else if (left < TAIL_FADE_MS) audio.volume = Math.max(0, left / TAIL_FADE_MS)
+  }
+
+  function stop(played: boolean) {
+    clearInterval(timer)
+    tailing.delete(audio)
+    audio.pause()
+    // Handed back at full volume: the element is pooled and plays again later.
+    audio.volume = 1
+    settle(played)
+  }
+}
+
+/** Silences everything: the clip that holds the floor, and any ringing over it. */
 export function stopSpeaking(): void {
   speakGen++
   if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel()
@@ -57,24 +120,112 @@ export function stopSpeaking(): void {
     currentAudio.pause()
     currentAudio = null
   }
+  for (const cancel of [...tailing.values()]) cancel()
+  for (const [audio, done] of ringing) {
+    audio.pause()
+    done(false)
+  }
+  ringing.clear()
   if (currentResolve) {
     currentResolve(false)
     currentResolve = null
   }
 }
 
+/**
+ * Audio elements that have already been opened, least recently used first.
+ *
+ * A fresh `new Audio(url)` cannot make a sound until the file is open — off the
+ * network the first time, out of the Workbox cache after that — and that wait
+ * lands squarely between the tap and the word. Holding the element lets the
+ * next play start at once, and {@link primeUzbekAudio} opens clips through the
+ * same cache *before* anything asks for them. The cap keeps a long session from
+ * holding on to every clip it has ever played.
+ */
+const openClips = new Map<string, HTMLAudioElement>()
+const OPEN_CLIP_LIMIT = 32
+
+function openClip(url: string): HTMLAudioElement {
+  const cached = openClips.get(url)
+  if (cached) {
+    // Re-inserting moves it to the end of the map, so eviction drops the least
+    // recently used clip rather than whichever happened to be opened first.
+    openClips.delete(url)
+    openClips.set(url, cached)
+    return cached
+  }
+  const audio = new Audio(url)
+  audio.preload = 'auto'
+  audio.load()
+  openClips.set(url, audio)
+  for (const key of openClips.keys()) {
+    if (openClips.size <= OPEN_CLIP_LIMIT) break
+    openClips.delete(key)
+  }
+  return audio
+}
+
+/**
+ * Opens the clips for `texts` ahead of time, so playing one later is instant.
+ * A word with no recording, or no manifest at all, is simply nothing to do.
+ */
+export async function primeUzbekAudio(texts: readonly string[]): Promise<void> {
+  const manifest = await getAudioManifest()
+  if (!manifest) return
+  for (const text of texts) {
+    const url = clipUrl(text, manifest)
+    if (url) openClip(url)
+  }
+}
+
+/** Starts `audio` from the top, reporting whether it played all the way out. */
+function start(audio: HTMLAudioElement, done: (played: boolean) => void): void {
+  audio.onended = () => done(true)
+  audio.onerror = () => done(false)
+  // Pooled elements come back from a tail-out; never inherit its fade.
+  audio.volume = 1
+  try {
+    // A reused element is wherever it last stopped; a brand new one has
+    // nothing to seek yet and starts at the top regardless.
+    audio.currentTime = 0
+  } catch {
+    // not seekable
+  }
+  audio.play().catch(() => done(false))
+}
+
+/** Plays a clip on its own, cutting off whatever held the floor before it. */
 function playFile(url: string): Promise<boolean> {
   return new Promise((resolve) => {
-    const audio = new Audio(url)
+    const audio = openClip(url)
     currentAudio = audio
     currentResolve = resolve
-    const done = (v: boolean) => {
+    start(audio, (v) => {
       if (currentResolve === resolve) currentResolve = null
       resolve(v)
+    })
+  })
+}
+
+/**
+ * Plays a clip over the top of anything already sounding, rather than taking
+ * the floor from it. Words already ringing are given their tail and faded out,
+ * so the overlap stays two deep however fast the presses come.
+ */
+function ringFile(url: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    for (const [audio, done] of ringing) tailOut(audio, done)
+    const held = openClip(url)
+    // One element can only be in one place at a time, so a word that is still
+    // ringing gets a second element to overlap itself with. By then the file is
+    // in the browser's cache, so it still starts promptly.
+    const audio = held.paused || held.ended ? held : new Audio(url)
+    const done = (v: boolean) => {
+      ringing.delete(audio)
+      resolve(v)
     }
-    audio.onended = () => done(true)
-    audio.onerror = () => done(false)
-    audio.play().catch(() => done(false))
+    ringing.set(audio, done)
+    start(audio, done)
   })
 }
 
@@ -130,38 +281,6 @@ function speakWithSynthesis(
   })
 }
 
-/** Plays a short ascending three-note chime to signal a correct answer. */
-export function playChime(): void {
-  try {
-    const Ctx =
-      window.AudioContext ??
-      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (!Ctx) return
-    const ctx = new Ctx()
-    const notes = [
-      { freq: 1046.5, start: 0, dur: 0.45 },
-      { freq: 1318.5, start: 0.1, dur: 0.55 },
-      { freq: 1568.0, start: 0.2, dur: 0.65 },
-    ]
-    for (const { freq, start, dur } of notes) {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.type = 'sine'
-      osc.frequency.value = freq
-      gain.gain.setValueAtTime(0, ctx.currentTime + start)
-      gain.gain.linearRampToValueAtTime(0.22, ctx.currentTime + start + 0.02)
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + start + dur)
-      osc.start(ctx.currentTime + start)
-      osc.stop(ctx.currentTime + start + dur)
-    }
-    setTimeout(() => ctx.close(), 1500)
-  } catch {
-    // audio unavailable
-  }
-}
-
 export interface SpeakOptions {
   /** Play the 0.75× prebuilt clip — the second tap on a speaker button. */
   slow?: boolean
@@ -196,6 +315,46 @@ export async function speakUzbek(text: string, { slow = false, langs }: SpeakOpt
   await speakWithSynthesis(text, { slow, langs })
 }
 
+/**
+ * Speaks a single Uzbek word by the shortest path to sound there is.
+ *
+ * `speakUzbek` has to wait on the manifest promise before it can even look a
+ * clip up, and that wait is a turn of the event loop the caller may not have:
+ * the bazar reads each number word out as its key goes down, and a word that
+ * arrives a beat late is a word the player has already moved past. Once the
+ * manifest is in and the clip has been primed — see {@link primeUzbekAudio} —
+ * this starts playback synchronously, inside the tap that asked for it, which
+ * is also what keeps mobile browsers from treating it as unprompted audio.
+ *
+ * Unlike the rest of these, it does not take the floor: a word rings on over
+ * the top of one still sounding. The words run about a second each and a quick
+ * player presses faster than that, so cutting the last one off would clip most
+ * of them to a stub — a run of words overlapping at the edges is the sound of
+ * somebody reading a number quickly, which is what it is. The overlap is capped
+ * at `OVERLAP_TAIL_MS` so it stays a reading rather than becoming a pile-up,
+ * and `stopSpeaking` still silences the lot.
+ */
+export function speakUzbekWord(word: string, options: SpeakOptions = {}): Promise<void> {
+  noteUzbekViewed(word)
+  const gen = speakGen
+  const url = clipUrl(word, loadedManifest)
+  if (url === undefined) return speakWordOnceLoaded(word, options, gen)
+  return ringFile(url).then((played) => {
+    if (played || gen !== speakGen) return
+    return speakWithSynthesis(word, options)
+  })
+}
+
+/** The same word, for the first press of a session: manifest first, then sound. */
+async function speakWordOnceLoaded(word: string, options: SpeakOptions, gen: number): Promise<void> {
+  const manifest = await getAudioManifest()
+  if (gen !== speakGen) return
+  const url = clipUrl(word, manifest)
+  if (url && (await ringFile(url))) return
+  if (gen !== speakGen) return
+  await speakWithSynthesis(word, options)
+}
+
 /** A pause between stitched words — enough to hear the seam as a word break. */
 const STITCH_GAP_MS = 60
 
@@ -206,17 +365,19 @@ function wait(ms: number): Promise<void> {
 /**
  * Speaks a run of Uzbek words back to back, one clip each.
  *
- * This is how the bazar reads a price like "ikki yuz o'ttiz ming" aloud:
- * there is no recording of that number, and there never could be — the game
- * reaches into the tens of millions — but there *is* a recording of every word
- * it is made of, because every Uzbek word in the app is individually tappable
- * and so individually recorded (see scripts/generate_audio.py).
+ * This is how a price like "ikki yuz o'ttiz ming" is read in one go: there is
+ * no recording of that number, and there never could be — the bazar reaches
+ * into the tens of millions — but there *is* a recording of every word it is
+ * made of, because every Uzbek word in the app is individually tappable and so
+ * individually recorded (see scripts/generate_audio.py).
  *
  * Stitching at word boundaries is a compromise and sounds like one: the
  * prosody is flat, with none of the run-on a native speaker gives a long
- * number. That is the right trade for *reading* a price you can see. The bonus
- * round, which asks the learner to recognise a number by ear alone, needs the
- * real thing and uses whole prebuilt clips instead.
+ * number, and every seam is a fixed pause rather than a spoken one. The bazar
+ * therefore says each word as its key goes down instead — one
+ * {@link speakUzbekWord} per press, paced by the player — and the bonus round,
+ * which asks the learner to recognise a number by ear alone, uses whole
+ * prebuilt clips. This is the fallback for reading a price nobody is typing.
  *
  * Any word without a clip falls through to speech synthesis on its own, so a
  * partial audio download degrades word by word rather than all at once. A new
@@ -235,9 +396,8 @@ export async function speakUzbekWords(words: readonly string[], options: SpeakOp
       await wait(STITCH_GAP_MS)
       if (gen !== speakGen) return
     }
-    const entry = manifest?.[audioKey(word)]
-    const file = entry ? audioFile(entry) : undefined
-    if (file && (await playFile(`${base}audio/${AUDIO_VOICE}/${file}`))) continue
+    const url = clipUrl(word, manifest)
+    if (url && (await playFile(url))) continue
     if (gen !== speakGen) return
     await speakWithSynthesis(word, options)
   }

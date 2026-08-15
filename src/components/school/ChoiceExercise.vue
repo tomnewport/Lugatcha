@@ -3,7 +3,7 @@ import { ref, computed } from 'vue'
 import type { LessonExercise } from '@/db/types'
 import { shuffle } from '@/exercises/validate'
 import AudioButton from '@/components/AudioButton.vue'
-import { playChime } from '@/audio/audio'
+import { playChime } from '@/audio/sfx'
 import { useContentLang } from '@/i18n/content'
 
 const props = defineProps<{ exercise: LessonExercise }>()
