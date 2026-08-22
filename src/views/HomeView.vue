@@ -22,7 +22,7 @@ import {
   markBackedUp,
   snoozeReminder,
 } from '@/db/backupReminder'
-import { currentStreak, streakChips } from '@/streak'
+import { currentStreak, streakChips, skipState, SKIP_CAP, type SkipState } from '@/streak'
 import { selectAutoExercise, EXERCISE_EMOJI, type LocationStats } from '@/exercises/potluck'
 import { MAP_MARKERS, markerStyle, markerCentre } from '@/map/cityMap'
 import homeCityMap from '@/assets/home-city-map.webp'
@@ -165,6 +165,9 @@ const welcomeComplete = computed(() => {
 const lastTried = ref<string | null>(null)
 const practicedToday = ref(false)
 const streak = ref(0)
+// Banked rest days: shown only once some have been spent, as a nudge that the
+// cushion under the streak is thinner than it has been.
+const skips = ref<SkipState>({ available: 0, peak: 0, nextInDays: null })
 // Once the day's practice is done, the practice button becomes "Continue
 // learning", which opens the next-location chooser overlay.
 const continueOpen = ref(false)
@@ -175,6 +178,8 @@ const streakSymbols = computed(() =>
     .join(''),
 )
 
+const skipWarning = computed(() => streak.value > 0 && skips.value.available < skips.value.peak)
+
 onMounted(() => {
   try {
     lastTried.value = localStorage.getItem(LAST_TRIED_KEY)
@@ -184,6 +189,7 @@ onMounted(() => {
     // private mode
   }
   streak.value = currentStreak()
+  skips.value = skipState()
 })
 
 const progressMap = computed(() => {
@@ -369,6 +375,27 @@ onMounted(async () => {
       <p v-if="welcomeComplete && streak > 0" class="streak-line" :title="$t('home.streakDays', { count: streak })">
         <span class="streak-line__chips" aria-hidden="true">{{ streakSymbols }}</span>
         <span class="streak-line__label">{{ $t('home.streakDays', { count: streak }) }}</span>
+      </p>
+      <p
+        v-if="welcomeComplete && skipWarning"
+        class="rest-line"
+        :title="$t('home.restDaysHint', { cap: SKIP_CAP })"
+      >
+        <span class="rest-line__tokens" aria-hidden="true">
+          <span
+            v-for="i in skips.peak"
+            :key="i"
+            class="rest-token"
+            :class="{ 'rest-token--spent': i > skips.available }"
+            >🛟</span
+          >
+        </span>
+        <span class="rest-line__label">
+          {{ $t('home.restDaysLeft', { count: skips.available, max: skips.peak })
+          }}<template v-if="skips.nextInDays !== null">
+            &middot; {{ $t('home.restDaysNext', { days: skips.nextInDays }) }}</template
+          >
+        </span>
       </p>
     </header>
 
@@ -765,6 +792,38 @@ onMounted(async () => {
   font-size: 0.95rem;
   line-height: 1;
   letter-spacing: -0.04em;
+}
+
+/*
+ * Rest-day bank — only rendered once the streak has spent some of its cushion.
+ * The line sits over the city art, so it carries its own pale chip to stay
+ * legible where the plain streak line below the logo does not have to.
+ */
+.rest-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.25rem 0 0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.85);
+  box-shadow: var(--shadow-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-terracotta);
+}
+
+.rest-line__tokens {
+  display: inline-flex;
+  gap: 0.1rem;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+/* A spent rest day stays in place, greyed, so the gap is what you notice. */
+.rest-token--spent {
+  filter: grayscale(1);
+  opacity: 0.35;
 }
 
 /* Image-backed city map with location markers */

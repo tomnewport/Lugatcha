@@ -36,6 +36,10 @@ export default {
     continueAria: 'Continue learning — pick your next place',
     continueLessonAria: 'Continue learning — your next activity',
     streakDays: '{count}-day streak',
+    restDaysLeft: '{count} of {max} rest days left',
+    restDaysNext: 'next in {days} d',
+    restDaysHint:
+      'A missed day is covered by a rest day. You earn one a week of practice, up to {cap} banked.',
     backupNowAria: 'Back up your progress',
     backupDone: 'Backup ready ✓',
     backupReminder:

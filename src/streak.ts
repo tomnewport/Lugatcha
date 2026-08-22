@@ -9,10 +9,22 @@
 
 const COUNT_KEY = 'lugatcha.streakCount'
 const DATE_KEY = 'lugatcha.streakLastDate'
-const SKIP_KEY = 'lugatcha.streakSkipDate'
+const SKIPS_KEY = 'lugatcha.streakSkips'
+const SKIPS_AT_KEY = 'lugatcha.streakSkipsAt'
+const SKIPS_PEAK_KEY = 'lugatcha.streakSkipsPeak'
 
-/** No two skipped days may be forgiven within this many days of each other. */
-const SKIP_COOLDOWN_DAYS = 7
+/**
+ * Rest days (the old "weekly skip", now a bank). One is earned every
+ * `SKIP_ACCRUAL_DAYS`, they stack up to `SKIP_CAP`, and each missed day spends
+ * one — so a long, steady streak buys itself a real cushion, while a new one
+ * still starts with a single day of grace.
+ */
+export const SKIP_CAP = 3
+const SKIP_ACCRUAL_DAYS = 7
+const SKIP_START = 1
+
+/** Pre-bank key: the date the one-a-week skip was last spent. Migrated below. */
+const LEGACY_SKIP_KEY = 'lugatcha.streakSkipDate'
 
 export type ChipTier = 0 | 1 | 2
 export type ChipColor = 'blue' | 'orange'
@@ -119,52 +131,134 @@ function daysBetween(a: string, b: string): number {
 interface StoredStreak {
   count: number
   lastDate: string | null
-  /** Date the weekly skipped-day allowance was last spent, if ever. */
-  skipDate: string | null
+  /** Rest days banked right now. */
+  skips: number
+  /** Date the accrual clock last ticked; null until the first practice. */
+  skipsAt: string | null
+  /** The most this streak has had banked at once — what the warning compares to. */
+  peak: number
+}
+
+/** `date` shifted by `n` whole days, as YYYY-MM-DD. */
+function addDays(date: string, n: number): string {
+  const d = new Date(`${date}T00:00:00`)
+  d.setDate(d.getDate() + n)
+  return localDate(d)
 }
 
 function load(): StoredStreak {
   try {
     const count = parseInt(localStorage.getItem(COUNT_KEY) ?? '0', 10) || 0
+    const lastDate = localStorage.getItem(DATE_KEY)
+    const raw = localStorage.getItem(SKIPS_KEY)
+    if (raw === null) return migrate(count, lastDate)
+    const skips = clampSkips(parseInt(raw, 10))
+    const peak = clampSkips(parseInt(localStorage.getItem(SKIPS_PEAK_KEY) ?? '', 10))
     return {
       count,
-      lastDate: localStorage.getItem(DATE_KEY),
-      skipDate: localStorage.getItem(SKIP_KEY),
+      lastDate,
+      skips,
+      skipsAt: localStorage.getItem(SKIPS_AT_KEY),
+      peak: Math.max(peak, skips),
     }
   } catch {
-    return { count: 0, lastDate: null, skipDate: null }
+    return { count: 0, lastDate: null, skips: SKIP_START, skipsAt: null, peak: SKIP_START }
   }
 }
 
-function save(count: number, date: string, skipDate: string | null): void {
+function clampSkips(n: number): number {
+  if (!Number.isFinite(n) || n < 0) return 0
+  return Math.min(SKIP_CAP, Math.floor(n))
+}
+
+/**
+ * Reads a streak saved before rest days were banked. The old scheme stored only
+ * the date a skip was last spent, so: spent recently → the bank is empty and
+ * refills a week after that day; otherwise the learner had their skip in hand.
+ * Either way the peak is one, so a spent skip shows the warning straight away.
+ */
+function migrate(count: number, lastDate: string | null): StoredStreak {
+  const spentOn = localStorage.getItem(LEGACY_SKIP_KEY)
+  return spentOn
+    ? { count, lastDate, skips: 0, skipsAt: spentOn, peak: SKIP_START }
+    : { count, lastDate, skips: SKIP_START, skipsAt: null, peak: SKIP_START }
+}
+
+function save(state: StoredStreak): void {
   try {
-    localStorage.setItem(COUNT_KEY, String(count))
-    localStorage.setItem(DATE_KEY, date)
-    if (skipDate) localStorage.setItem(SKIP_KEY, skipDate)
-    else localStorage.removeItem(SKIP_KEY)
+    localStorage.setItem(COUNT_KEY, String(state.count))
+    if (state.lastDate) localStorage.setItem(DATE_KEY, state.lastDate)
+    localStorage.setItem(SKIPS_KEY, String(state.skips))
+    localStorage.setItem(SKIPS_PEAK_KEY, String(state.peak))
+    if (state.skipsAt) localStorage.setItem(SKIPS_AT_KEY, state.skipsAt)
+    else localStorage.removeItem(SKIPS_AT_KEY)
+    localStorage.removeItem(LEGACY_SKIP_KEY)
   } catch {
     // private mode — streak simply won't persist
   }
 }
 
-/** Whether a skipped day could still be forgiven, given the last one spent. */
-function skipAvailable(skipDate: string | null, today: string): boolean {
-  return !skipDate || daysBetween(skipDate, today) >= SKIP_COOLDOWN_DAYS
+/**
+ * The state brought up to date for `today`: one rest day per full
+ * `SKIP_ACCRUAL_DAYS` since the clock last ticked, never past the cap. A full
+ * bank idles its clock, so the next week only starts counting once there is
+ * room again. Pure, so the display can call it without writing anything.
+ */
+function accrue(state: StoredStreak, today: string): StoredStreak {
+  const anchor = state.skipsAt ?? today
+  const elapsed = daysBetween(anchor, today)
+  let { skips, skipsAt } = { skips: state.skips, skipsAt: anchor }
+  if (elapsed >= SKIP_ACCRUAL_DAYS && skips < SKIP_CAP) {
+    const earned = Math.floor(elapsed / SKIP_ACCRUAL_DAYS)
+    skips = clampSkips(skips + earned)
+    skipsAt = addDays(anchor, earned * SKIP_ACCRUAL_DAYS)
+  }
+  // A full bank — or a clock that has moved backwards — starts fresh from today.
+  if (skips >= SKIP_CAP || elapsed < 0) skipsAt = today
+  return { ...state, skips, skipsAt, peak: Math.max(state.peak, skips) }
+}
+
+/** Rest days a lapse of `gap` days would cost (one per day with no practice). */
+function costOf(gap: number): number {
+  return gap - 1
+}
+
+export interface SkipState {
+  /** Rest days available right now. */
+  available: number
+  /** The most banked at once during this streak — the warning's benchmark. */
+  peak: number
+  /** Days until the next rest day is earned; null when the bank is full. */
+  nextInDays: number | null
+}
+
+/**
+ * The rest-day bank as the learner should see it today. `available < peak`
+ * means they have spent some of their cushion and it hasn't grown back yet —
+ * that is the warning the home screen shows.
+ */
+export function skipState(now: Date = new Date()): SkipState {
+  const today = localDate(now)
+  const { skips, skipsAt, peak } = accrue(load(), today)
+  return {
+    available: skips,
+    peak,
+    nextInDays: skips >= SKIP_CAP ? null : SKIP_ACCRUAL_DAYS - daysBetween(skipsAt ?? today, today),
+  }
 }
 
 /**
  * The streak the learner can still see today: the stored count if the last
- * practice was today or yesterday, or if exactly one day was missed and the
- * weekly skip allowance can cover it. Otherwise 0 (the streak has lapsed).
+ * practice was today or yesterday, or if the banked rest days cover every day
+ * missed since. Otherwise 0 (the streak has lapsed).
  */
 export function currentStreak(now: Date = new Date()): number {
-  const { count, lastDate, skipDate } = load()
-  if (!lastDate) return 0
   const today = localDate(now)
+  const { count, lastDate, skips } = accrue(load(), today)
+  if (!lastDate) return 0
   const gap = daysBetween(lastDate, today)
   if (gap <= 1) return count
-  if (gap === 2 && skipAvailable(skipDate, today)) return count
-  return 0
+  return costOf(gap) <= skips ? count : 0
 }
 
 export interface StreakUpdate {
@@ -174,26 +268,35 @@ export interface StreakUpdate {
   to: number
   /** True only when this practice actually grew the streak (cue the celebration). */
   extended: boolean
-  /** True when today's practice was forgiven a missed day via the weekly skip. */
-  usedSkip: boolean
+  /** Rest days spent to bridge the days missed since the last practice. */
+  skipsSpent: number
 }
 
 /**
  * Records that the learner practised today and returns the transition. Already
  * practised today → no change (`extended: false`). Practised yesterday →
- * streak grows by one. Missed exactly one day → still grows, spending the
- * once-a-week skip allowance (if it hasn't already been spent this week).
- * Otherwise the streak resets and starts again at one.
+ * streak grows by one. Missed days → still grows, spending one banked rest day
+ * per missed day, if the bank covers them all. Otherwise the streak resets and
+ * starts again at one, with a fresh single rest day to its name.
  */
 export function recordStreakDay(now: Date = new Date()): StreakUpdate {
   const today = localDate(now)
-  const { count, lastDate, skipDate } = load()
-  if (lastDate === today) return { from: count, to: count, extended: false, usedSkip: false }
+  const stored = load()
+  if (stored.lastDate === today) {
+    return { from: stored.count, to: stored.count, extended: false, skipsSpent: 0 }
+  }
 
-  const gap = lastDate ? daysBetween(lastDate, today) : Infinity
-  const usedSkip = gap === 2 && skipAvailable(skipDate, today)
-  const base = gap === 1 || usedSkip ? count : 0
-  const to = base + 1
-  save(to, today, usedSkip ? today : base === 0 ? null : skipDate)
-  return { from: base, to, extended: true, usedSkip }
+  const state = accrue(stored, today)
+  const gap = state.lastDate ? daysBetween(state.lastDate, today) : Infinity
+  const cost = costOf(gap)
+  const skipsSpent = gap > 1 && cost <= state.skips ? cost : 0
+  const kept = gap <= 1 || skipsSpent > 0
+  const from = kept ? state.count : 0
+
+  save(
+    kept
+      ? { ...state, count: from + 1, lastDate: today, skips: state.skips - skipsSpent }
+      : { count: 1, lastDate: today, skips: SKIP_START, skipsAt: today, peak: SKIP_START },
+  )
+  return { from, to: from + 1, extended: true, skipsSpent }
 }
