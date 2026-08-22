@@ -37,6 +37,10 @@ const ru: MessageSchema = {
     continueAria: 'Продолжить обучение — выберите следующее место',
     continueLessonAria: 'Продолжить обучение — следующее задание',
     streakDays: 'Серия: {count} дн.',
+    restDaysLeft: 'Выходных: {count} из {max}',
+    restDaysNext: 'следующий через {days} дн.',
+    restDaysHint:
+      'Пропущенный день покрывается выходным. Один начисляется за неделю занятий, максимум {cap}.',
     backupNowAria: 'Сохранить резервную копию прогресса',
     backupDone: 'Резервная копия готова ✓',
     backupReminder:
