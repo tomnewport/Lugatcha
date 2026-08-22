@@ -1,0 +1,812 @@
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useSettingsStore, type BaseLanguage } from '@/stores/settings'
+import { useProgressStore } from '@/stores/progress'
+import { getAudioManifest, type AudioManifest } from '@/audio/audio'
+import { useAudioDownload } from '@/audio/offline'
+import { clearAllLocalData } from '@/db/clearAll'
+import { db } from '@/db'
+import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/db/backup'
+import { readHighScore as readSnakeBest } from '@/exercises/snake'
+import { readHighScore as readBubblesBest } from '@/exercises/bubbles'
+import { readHighScore as readBazarBest, formatSom } from '@/exercises/bazar'
+import BonusGame from '@/components/BonusGame.vue'
+import type { MiniGameId } from '@/exercises/miniGames'
+import { saveBackup, pickBackupText } from '@/db/backupIO'
+import { markBackedUp } from '@/db/backupReminder'
+import {
+  gatherDiagnostics,
+  formatDiagnosticsReport,
+  type DiagnosticsReport,
+  type FindingSeverity,
+} from '@/db/diagnostics'
+
+const { t } = useI18n()
+const settings = useSettingsStore()
+const progress = useProgressStore()
+
+/**
+ * Raised once "Reset progress" has wiped the learner's history. The panel can
+ * sit on top of a live activity (daily practice) whose questions were built
+ * from the progress that has just gone away, so the host is told to rebuild
+ * rather than drill words the learner no longer has.
+ */
+const emit = defineEmits<{ (e: 'progress-reset'): void }>()
+
+const confirmingReset = ref(false)
+const resetDone = ref(false)
+
+const confirmingClear = ref(false)
+const clearing = ref(false)
+
+const audioManifest = ref<AudioManifest | null>(null)
+const audioChecked = ref(false)
+
+const {
+  total: audioTotal,
+  done: audioDone,
+  status: audioStatus,
+  error: audioErrorMsg,
+  prepare: prepareAudio,
+  start: startAudio,
+  pause: pauseAudio,
+  resume: resumeAudio,
+} = useAudioDownload()
+const audioPercent = computed(() =>
+  audioTotal.value ? Math.round((audioDone.value / audioTotal.value) * 100) : 0,
+)
+
+onMounted(async () => {
+  audioManifest.value = await getAudioManifest()
+  audioChecked.value = true
+  await prepareAudio()
+  await loadDiagnostics()
+})
+
+// ── Diagnostics ─────────────────────────────────────────────────────────────
+const diagnostics = ref<DiagnosticsReport | null>(null)
+const diagLoading = ref(false)
+const diagCopied = ref(false)
+const diagCopyFailed = ref(false)
+const showDiagDetails = ref(false)
+
+const canShareDiagnostics = computed(
+  () => typeof navigator !== 'undefined' && typeof navigator.share === 'function',
+)
+
+const severityLabels: Record<FindingSeverity, string> = {
+  high: 'settings.diagnostics.severityHigh',
+  medium: 'settings.diagnostics.severityMedium',
+  info: 'settings.diagnostics.severityInfo',
+}
+
+async function loadDiagnostics() {
+  diagLoading.value = true
+  diagCopied.value = false
+  diagCopyFailed.value = false
+  try {
+    diagnostics.value = await gatherDiagnostics()
+  } finally {
+    diagLoading.value = false
+  }
+}
+
+function diagnosticsText(): string {
+  return diagnostics.value ? formatDiagnosticsReport(diagnostics.value) : ''
+}
+
+async function copyDiagnostics() {
+  diagCopied.value = false
+  diagCopyFailed.value = false
+  const text = diagnosticsText()
+  try {
+    await navigator.clipboard.writeText(text)
+    diagCopied.value = true
+    setTimeout(() => (diagCopied.value = false), 3000)
+  } catch {
+    // Clipboard blocked (insecure context, permissions) — reveal the raw text
+    // so the learner can select and copy it by hand.
+    diagCopyFailed.value = true
+    showDiagDetails.value = true
+  }
+}
+
+async function shareDiagnostics() {
+  try {
+    await navigator.share({ title: 'Lugʻatcha diagnostics', text: diagnosticsText() })
+  } catch {
+    // Share sheet cancelled or unavailable — no-op; Copy remains the fallback.
+  }
+}
+
+function setBaseLanguage(lang: BaseLanguage) {
+  settings.setBaseLanguage(lang)
+}
+
+// ── Mini-games ──────────────────────────────────────────────────────────────
+// Soft-launched: off until opted in here, and playable here without waiting
+// for the next daily practice to finish. "Surprise me" rolls the same dice the
+// bonus round does; the named buttons go straight to one game, so trying a
+// particular one is not a matter of rerolling until it comes up.
+// `null` means nothing is open; 'random' defers the choice to BonusGame.
+const playingGame = ref<MiniGameId | 'random' | null>(null)
+const snakeBest = ref(readSnakeBest())
+const bubblesBest = ref(readBubblesBest())
+const bazarBest = ref(readBazarBest())
+
+function closeGame() {
+  playingGame.value = null
+  snakeBest.value = readSnakeBest()
+  bubblesBest.value = readBubblesBest()
+  bazarBest.value = readBazarBest()
+}
+
+async function resetProgress() {
+  await progress.resetAllProgress()
+  confirmingReset.value = false
+  emit('progress-reset')
+  resetDone.value = true
+  setTimeout(() => (resetDone.value = false), 3000)
+}
+
+async function clearAllData() {
+  clearing.value = true
+  await clearAllLocalData()
+  // Reload from the app root so it re-seeds from scratch, like a fresh install.
+  window.location.assign(import.meta.env.BASE_URL)
+}
+
+const backingUp = ref(false)
+const backupDone = ref(false)
+const restoring = ref(false)
+const restoreError = ref('')
+const confirmingRestore = ref(false)
+
+async function backupNow() {
+  backingUp.value = true
+  backupDone.value = false
+  try {
+    const shared = await saveBackup(await collectBackup(db))
+    if (shared) {
+      markBackedUp()
+      backupDone.value = true
+      setTimeout(() => (backupDone.value = false), 4000)
+    }
+  } finally {
+    backingUp.value = false
+  }
+}
+
+async function restoreFromFile() {
+  restoreError.value = ''
+  const text = await pickBackupText()
+  if (text === null) return // picker cancelled
+  let backup
+  try {
+    backup = parseBackup(text)
+  } catch (err) {
+    restoreError.value =
+      err instanceof InvalidBackupError ? err.message : t('settings.backup.restoreFailed')
+    return
+  }
+  restoring.value = true
+  try {
+    await applyBackup(db, backup)
+    // Reload so live queries, settings, and the streak re-read the restored state.
+    window.location.assign(import.meta.env.BASE_URL)
+  } catch {
+    restoreError.value = t('settings.backup.restoreFailed')
+    restoring.value = false
+  }
+}
+</script>
+
+<template>
+  <div class="settings-panel">
+    <slot name="nav" />
+
+    <h1 class="settings__title">{{ $t('settings.title') }}</h1>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.learningLanguage.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.learningLanguage.desc') }}</p>
+      <div
+        class="opt-toggle"
+        role="radiogroup"
+        :aria-label="$t('settings.learningLanguage.groupLabel')"
+      >
+        <button
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': settings.baseLanguage === 'en' }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.baseLanguage === 'en'"
+          @click="setBaseLanguage('en')"
+        >
+          {{ $t('settings.learningLanguage.english') }}
+        </button>
+        <button
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': settings.baseLanguage === 'ru' }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.baseLanguage === 'ru'"
+          @click="setBaseLanguage('ru')"
+        >
+          {{ $t('settings.learningLanguage.russian') }}
+        </button>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.audio.title') }}</h2>
+      <template v-if="!audioChecked">
+        <p class="settings-card__desc">{{ $t('settings.audio.checking') }}</p>
+      </template>
+      <template v-else-if="audioManifest">
+        <p class="settings-card__desc">
+          {{ $t('settings.audio.summary', { count: audioTotal }) }}
+        </p>
+
+        <div
+          v-if="audioStatus !== 'idle'"
+          class="dl-bar"
+          role="progressbar"
+          :aria-valuenow="audioPercent"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div class="dl-bar__fill" :style="{ width: `${audioPercent}%` }" />
+        </div>
+        <p v-if="audioStatus !== 'idle'" class="settings-card__desc">
+          {{
+            $t('settings.audio.progress', {
+              done: audioDone,
+              total: audioTotal,
+              percent: audioPercent,
+            })
+          }}
+        </p>
+
+        <div class="dl-actions">
+          <button
+            v-if="audioStatus === 'idle' || audioStatus === 'done'"
+            class="btn btn--primary"
+            type="button"
+            :disabled="audioStatus === 'done'"
+            @click="startAudio()"
+          >
+            {{
+              audioStatus === 'done'
+                ? $t('settings.audio.allDownloaded')
+                : $t('settings.audio.downloadAll')
+            }}
+          </button>
+          <button
+            v-else-if="audioStatus === 'running'"
+            class="btn btn--ghost"
+            type="button"
+            @click="pauseAudio()"
+          >
+            {{ $t('settings.audio.pause') }}
+          </button>
+          <button v-else class="btn btn--primary" type="button" @click="resumeAudio()">
+            {{ audioStatus === 'error' ? $t('settings.audio.retry') : $t('settings.audio.resume') }}
+          </button>
+        </div>
+
+        <p v-if="audioStatus === 'error'" class="settings-card__note settings-card__note--error">
+          {{ $t('settings.audio.error', { message: audioErrorMsg }) }}
+        </p>
+        <p v-else-if="audioStatus === 'done'" class="settings-card__note">
+          {{ $t('settings.audio.done', { count: audioTotal }) }}
+        </p>
+      </template>
+      <template v-else>
+        <p class="settings-card__desc">
+          {{ $t('settings.audio.none') }}
+        </p>
+      </template>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.game.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.game.desc') }}</p>
+      <div class="opt-toggle" role="radiogroup" :aria-label="$t('settings.game.groupLabel')">
+        <button
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': settings.miniGames }"
+          type="button"
+          role="radio"
+          :aria-checked="settings.miniGames"
+          @click="settings.setMiniGames(true)"
+        >
+          {{ $t('settings.game.on') }}
+        </button>
+        <button
+          class="opt-toggle__btn"
+          :class="{ 'opt-toggle__btn--active': !settings.miniGames }"
+          type="button"
+          role="radio"
+          :aria-checked="!settings.miniGames"
+          @click="settings.setMiniGames(false)"
+        >
+          {{ $t('settings.game.off') }}
+        </button>
+      </div>
+      <div class="dl-actions dl-actions--wrap">
+        <button class="btn btn--primary" type="button" @click="playingGame = 'random'">
+          {{ $t('settings.game.play') }}
+        </button>
+        <button class="btn btn--ghost" type="button" @click="playingGame = 'snake'">
+          {{ $t('snake.title') }}
+        </button>
+        <button class="btn btn--ghost" type="button" @click="playingGame = 'bubbles'">
+          {{ $t('bubbles.title') }}
+        </button>
+        <button class="btn btn--ghost" type="button" @click="playingGame = 'bazar'">
+          {{ $t('bazar.title') }}
+        </button>
+      </div>
+      <p v-if="snakeBest > 0" class="settings-card__note">
+        {{ $t('settings.game.bestSnake', { score: snakeBest }) }}
+      </p>
+      <p v-if="bubblesBest > 0" class="settings-card__note">
+        {{ $t('settings.game.bestBubbles', { score: bubblesBest }) }}
+      </p>
+      <p v-if="bazarBest > 0" class="settings-card__note">
+        {{ $t('settings.game.bestBazar', { score: formatSom(bazarBest, $i18n.locale) }) }}
+      </p>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.backup.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.backup.desc') }}</p>
+      <div class="dl-actions">
+        <button class="btn btn--primary" type="button" :disabled="backingUp" @click="backupNow">
+          {{ backingUp ? $t('settings.backup.backingUp') : $t('settings.backup.backup') }}
+        </button>
+        <button
+          v-if="!confirmingRestore"
+          class="btn btn--ghost"
+          type="button"
+          :disabled="restoring"
+          @click="confirmingRestore = true"
+        >
+          {{ $t('settings.backup.restore') }}
+        </button>
+      </div>
+      <div v-if="confirmingRestore" class="reset-confirm">
+        <p class="reset-confirm__msg">{{ $t('settings.backup.restoreConfirm') }}</p>
+        <div class="reset-confirm__actions">
+          <button
+            class="btn btn--danger"
+            type="button"
+            :disabled="restoring"
+            @click="restoreFromFile"
+          >
+            {{ restoring ? $t('settings.backup.restoring') : $t('settings.backup.restoreYes') }}
+          </button>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            :disabled="restoring"
+            @click="confirmingRestore = false"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
+      </div>
+      <p v-if="backupDone" class="settings-card__note" aria-live="polite">
+        {{ $t('settings.backup.done') }}
+      </p>
+      <p
+        v-if="restoreError"
+        class="settings-card__note settings-card__note--error"
+        aria-live="polite"
+      >
+        {{ restoreError }}
+      </p>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.progress.title') }}</h2>
+      <p class="settings-card__desc">
+        {{ $t('settings.progress.desc') }}
+      </p>
+      <button
+        v-if="!confirmingReset"
+        class="btn btn--ghost"
+        type="button"
+        @click="confirmingReset = true"
+      >
+        {{ $t('settings.progress.reset') }}
+      </button>
+      <div v-else class="reset-confirm">
+        <p class="reset-confirm__msg">{{ $t('settings.progress.confirm') }}</p>
+        <div class="reset-confirm__actions">
+          <button class="btn btn--danger" type="button" @click="resetProgress">
+            {{ $t('settings.progress.confirmYes') }}
+          </button>
+          <button class="btn btn--ghost" type="button" @click="confirmingReset = false">
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
+      </div>
+      <p v-if="resetDone" class="settings-card__note" aria-live="polite">
+        {{ $t('settings.progress.done') }}
+      </p>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.data.title') }}</h2>
+      <p class="settings-card__desc">
+        {{ $t('settings.data.desc') }}
+      </p>
+      <button
+        v-if="!confirmingClear"
+        class="btn btn--danger"
+        type="button"
+        @click="confirmingClear = true"
+      >
+        {{ $t('settings.data.clear') }}
+      </button>
+      <div v-else class="reset-confirm">
+        <p class="reset-confirm__msg">{{ $t('settings.data.confirm') }}</p>
+        <div class="reset-confirm__actions">
+          <button class="btn btn--danger" type="button" :disabled="clearing" @click="clearAllData">
+            {{ clearing ? $t('settings.data.clearing') : $t('settings.data.confirmYes') }}
+          </button>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            :disabled="clearing"
+            @click="confirmingClear = false"
+          >
+            {{ $t('common.cancel') }}
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-card">
+      <h2 class="settings-card__title">{{ $t('settings.diagnostics.title') }}</h2>
+      <p class="settings-card__desc">{{ $t('settings.diagnostics.desc') }}</p>
+
+      <p v-if="diagLoading" class="settings-card__desc">
+        {{ $t('settings.diagnostics.loading') }}
+      </p>
+
+      <template v-else-if="diagnostics">
+        <!-- Likely-cause findings, highest severity first. -->
+        <div class="diag-findings" aria-live="polite">
+          <h3 class="diag-findings__title">{{ $t('settings.diagnostics.findingsTitle') }}</h3>
+          <p v-if="!diagnostics.findings.length" class="settings-card__note">
+            {{ $t('settings.diagnostics.noFindings') }}
+          </p>
+          <ul v-else class="diag-findings__list">
+            <li
+              v-for="(f, i) in diagnostics.findings"
+              :key="i"
+              class="diag-finding"
+              :class="`diag-finding--${f.severity}`"
+            >
+              <span class="diag-finding__tag">{{ $t(severityLabels[f.severity]) }}</span>
+              <span class="diag-finding__text">{{ f.text }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dl-actions dl-actions--wrap">
+          <button class="btn btn--primary" type="button" @click="copyDiagnostics">
+            {{ diagCopied ? $t('settings.diagnostics.copied') : $t('settings.diagnostics.copy') }}
+          </button>
+          <button
+            v-if="canShareDiagnostics"
+            class="btn btn--ghost"
+            type="button"
+            @click="shareDiagnostics"
+          >
+            {{ $t('settings.diagnostics.share') }}
+          </button>
+          <button
+            class="btn btn--ghost"
+            type="button"
+            :disabled="diagLoading"
+            @click="loadDiagnostics"
+          >
+            {{ $t('settings.diagnostics.refresh') }}
+          </button>
+        </div>
+
+        <p
+          v-if="diagCopyFailed"
+          class="settings-card__note settings-card__note--error"
+          aria-live="polite"
+        >
+          {{ $t('settings.diagnostics.copyFailed') }}
+        </p>
+
+        <!-- Full details: the raw report, grouped and copy-selectable. -->
+        <button
+          type="button"
+          class="diag-details__toggle"
+          :aria-expanded="showDiagDetails"
+          @click="showDiagDetails = !showDiagDetails"
+        >
+          <span
+            class="diag-details__chevron"
+            :class="{ 'diag-details__chevron--open': showDiagDetails }"
+            aria-hidden="true"
+            >▸</span
+          >
+          {{ $t('settings.diagnostics.detailsToggle') }}
+        </button>
+
+        <div v-if="showDiagDetails" class="diag-report">
+          <div v-for="group in diagnostics.groups" :key="group.title" class="diag-group">
+            <h4 class="diag-group__title">{{ group.title }}</h4>
+            <dl class="diag-group__list">
+              <div v-for="row in group.rows" :key="row.label" class="diag-row">
+                <dt>{{ row.label }}</dt>
+                <dd>{{ row.value }}</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </template>
+    </section>
+
+    <BonusGame
+      v-if="playingGame"
+      :game="playingGame === 'random' ? undefined : playingGame"
+      @done="closeGame"
+    />
+  </div>
+</template>
+
+<style scoped>
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.settings__title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.settings-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 1.1rem;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.settings-card__desc {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.settings-card__note {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-teal);
+  margin: 0;
+}
+
+.settings-card__note--error {
+  color: var(--color-terracotta);
+}
+
+.dl-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.dl-bar__fill {
+  height: 100%;
+  background: var(--color-primary);
+  transition: width 0.2s ease;
+}
+
+.dl-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dl-actions--wrap {
+  flex-wrap: wrap;
+}
+
+/* ── Diagnostics ──────────────────────────────────────────────────────────── */
+.diag-findings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diag-findings__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.diag-findings__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.diag-finding {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.6rem 0.7rem;
+  border: 1.5px solid var(--color-border);
+  border-left-width: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.diag-finding--high {
+  border-left-color: var(--color-terracotta);
+}
+
+.diag-finding--medium {
+  border-left-color: var(--color-primary);
+}
+
+.diag-finding--info {
+  border-left-color: var(--color-border);
+}
+
+.diag-finding__tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.diag-finding--high .diag-finding__tag {
+  color: var(--color-terracotta);
+}
+
+.diag-finding__text {
+  font-size: 0.82rem;
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+.diag-details__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  align-self: flex-start;
+}
+
+.diag-details__chevron {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.diag-details__chevron--open {
+  transform: rotate(90deg);
+}
+
+.diag-report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.diag-group__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.35rem;
+}
+
+.diag-group__list {
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.diag-row {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.76rem;
+}
+
+.diag-row dt {
+  flex-shrink: 0;
+  min-width: 9rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.diag-row dd {
+  margin: 0;
+  color: var(--color-text);
+  word-break: break-word;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.opt-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.opt-toggle__btn {
+  padding: 0.6rem 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.opt-toggle__btn--active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.reset-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reset-confirm__msg {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-terracotta);
+  margin: 0;
+}
+
+.reset-confirm__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+</style>
