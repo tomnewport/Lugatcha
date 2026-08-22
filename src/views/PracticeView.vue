@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { loadDailyPracticeData } from '@/exercises/words'
 import {
@@ -38,17 +38,56 @@ const celebration = ref<StreakUpdate | null>(null)
 // is, is picked at random. Closing it takes the learner home.
 const game = ref(false)
 
+// Kept out of the practice chunk: most sessions never open it.
+const SettingsPanel = defineAsyncComponent(() => import('@/components/SettingsPanel.vue'))
+
+// Settings, opened over the session rather than navigated to. Daily practice
+// can be mandatory — the router holds the learner here until it is done — so a
+// link out to /settings would either be blocked or throw away a half-finished
+// session. Overlaying keeps the questions and their answers alive underneath.
+const settingsOpen = ref(false)
+const settingsSheet = ref<HTMLElement | null>(null)
+const settingsButton = ref<HTMLButtonElement | null>(null)
+
+// Move focus into the sheet and back out again, so a keyboard or screen-reader
+// learner is not left tabbing through the questions hidden behind it.
+watch(settingsOpen, async (open) => {
+  await nextTick()
+  if (open) settingsSheet.value?.focus()
+  else settingsButton.value?.focus()
+})
+
 // Scope any "Raise an issue" report to the daily practice session.
 useActivityContext(() => ({
   label: `Daily practice · ${i18n.global.t('practice.title')}`,
   details: [{ label: 'Questions', value: String(questions.value?.length ?? 0) }],
 }))
 
-onMounted(async () => {
+async function loadQuestions() {
+  questions.value = null
   const data = await loadDailyPracticeData()
   const items = buildDailyPracticeSession(data)
   questions.value = buildPracticeSessionQuestions(items, data.allWords, data.phrases)
+}
+
+onMounted(() => {
+  void loadQuestions()
+  window.addEventListener('keydown', onKeydown)
 })
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKeydown)
+})
+
+function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape' && settingsOpen.value) settingsOpen.value = false
+}
+
+// Resetting progress from the panel wipes the very history this session's
+// questions were drawn from, so build a fresh one from what is left.
+function onProgressReset() {
+  void loadQuestions()
+}
 
 function recordPracticeAt() {
   try {
@@ -120,6 +159,21 @@ function onEmptyBack() {
         <span class="practice-header__eyebrow">{{ $t('practice.eyebrow') }}</span>
         <h1 class="practice-header__title">{{ $t('practice.title') }}</h1>
       </div>
+      <button
+        ref="settingsButton"
+        class="settings-btn"
+        :aria-label="$t('practice.settings')"
+        :aria-expanded="settingsOpen"
+        type="button"
+        @click="settingsOpen = true"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.09a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+          />
+        </svg>
+      </button>
       <span class="practice-header__icon" aria-hidden="true">🎯</span>
     </header>
 
@@ -143,6 +197,29 @@ function onEmptyBack() {
     />
 
     <BonusGame v-if="game" @done="onGameDone" />
+
+    <div
+      v-if="settingsOpen"
+      ref="settingsSheet"
+      class="settings-sheet"
+      role="dialog"
+      aria-modal="true"
+      tabindex="-1"
+      :aria-label="$t('settings.title')"
+    >
+      <div class="settings-sheet__inner">
+        <SettingsPanel @progress-reset="onProgressReset">
+          <template #nav>
+            <button class="settings-sheet__back" type="button" @click="settingsOpen = false">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M10 3L5 8l5 5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              {{ $t('practice.backToPractice') }}
+            </button>
+          </template>
+        </SettingsPanel>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -216,6 +293,68 @@ function onEmptyBack() {
 .practice-header__icon {
   font-size: 1.5rem;
   flex-shrink: 0;
+}
+
+.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.settings-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.settings-btn:hover {
+  color: var(--color-primary);
+}
+
+/* Settings over the top of the session, so the questions survive the detour. */
+.settings-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-bg);
+  padding: 1rem 1.25rem calc(4rem + env(safe-area-inset-bottom));
+}
+
+.settings-sheet:focus {
+  outline: none;
+}
+
+.settings-sheet__inner {
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.settings-sheet__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem 0.4rem 0.5rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-sm);
+  align-self: flex-start;
+}
+
+.settings-sheet__back svg {
+  width: 16px;
+  height: 16px;
 }
 
 .practice-body {

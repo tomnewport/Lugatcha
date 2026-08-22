@@ -52,6 +52,8 @@ export default {
   practice: {
     eyebrow: 'Daily practice',
     title: 'Words from across the city',
+    settings: 'Settings',
+    backToPractice: 'Back to practice',
     empty:
       'Meet some words first — explore the city, then come back to practise what you have learned.',
   },
