@@ -7,7 +7,7 @@
  * thing missing when the app is opened offline. The vocabulary audio is the
  * only thing worth spending a download on.
  */
-import { audioContext } from './context'
+import { audioContext, onAudioContextReset } from './context'
 
 /** One second of white noise, made once and replayed — the basis of every crash. */
 let noise: AudioBuffer | null = null
@@ -20,6 +20,13 @@ function noiseBuffer(ctx: AudioContext): AudioBuffer {
   }
   return noise
 }
+
+// The noise is a second of samples at the old context's rate. A replacement
+// context — the app following the phone onto headphones, see context.ts — may
+// well run at another, so make it again rather than have every crash resampled.
+onAudioContextReset(() => {
+  noise = null
+})
 
 /**
  * A gain envelope: silent, up to `peak` almost at once, then decaying away
