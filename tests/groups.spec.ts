@@ -45,6 +45,52 @@ describe('vocab group data integrity', () => {
     expect(withQuiz).toEqual(['numbers'])
   })
 
+  it('teaches every verb in the polite forms a visitor needs', () => {
+    // A verb is drilled one form at a time, but each entry carries the whole
+    // paradigm so the card can show it (src/components/VerbFormStrip.vue). The
+    // second person is always the polite siz form — the register a visitor uses.
+    const verbWords = groups.flatMap((g) => g.words).filter((w) => w.verb)
+    expect(verbWords.length, 'no verb vocabulary found').toBeGreaterThan(0)
+
+    for (const w of verbWords) {
+      const verb = w.verb!
+      expect(verb.infinitive, `${w.id} infinitive`).toMatch(/moq$/)
+      expect(verb.gloss.length, `${w.id} gloss`).toBeGreaterThan(0)
+      expect(verb.i, `${w.id} men form`).toMatch(/man$/)
+      expect(verb.you, `${w.id} siz form`).toMatch(/siz$/)
+      if (verb.request) expect(verb.request, `${w.id} request form`).toMatch(/ng$/)
+      // The word drilled must be the form it says it is teaching.
+      const taught = verb.form === 'i' ? verb.i : verb.form === 'you' ? verb.you : verb.request
+      expect(taught, `${w.id} teaches ${verb.form}, which it does not carry`).toBe(w.uzbek)
+    }
+  })
+
+  it('teaches both the men and the siz form of the verbs it introduces first', () => {
+    // "At least the I and the you form" — every essential (level 1) verb needs
+    // its counterpart taught too, so the learner can say it and hear it back.
+    const verbWords = groups.flatMap((g) => g.words).filter((w) => w.verb)
+    const forms = new Map<string, Set<string>>()
+    for (const w of verbWords) {
+      const set = forms.get(w.verb!.infinitive) ?? new Set<string>()
+      set.add(w.verb!.form)
+      forms.set(w.verb!.infinitive, set)
+    }
+    const lonely = [...forms.entries()].filter(([, set]) => set.size < 2).map(([inf]) => inf)
+    expect(lonely, `verbs taught in one form only: ${lonely.join(', ')}`).toHaveLength(0)
+  })
+
+  it('flags the words that turn up in every phrase as high-frequency', () => {
+    // The little words and the everyday verbs are what phrases are built from,
+    // so they lead a New Words session rather than waiting behind topic nouns.
+    for (const group of groups.filter((g) => g.id === 'essentials' || g.id === 'verbs')) {
+      for (const w of group.words) {
+        expect(w.highFrequency, `${w.id} should be high-frequency`).toBe(true)
+      }
+    }
+    const flagged = groups.flatMap((g) => g.words).filter((w) => w.highFrequency)
+    expect(flagged.length).toBeGreaterThanOrEqual(40)
+  })
+
   it('group word ids are globally unique', () => {
     const groupIds = groups.flatMap((g) => g.words.map((w) => w.id))
     expect(new Set(groupIds).size, 'duplicate ids within groups').toBe(groupIds.length)

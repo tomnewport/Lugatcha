@@ -6,7 +6,8 @@
     "english": "city",
     "russian": "город",
     "theme": "bukhara",
-    "level": 1
+    "level": 1,
+    "sameAs": "samarkand.shahar"
   },
   {
     "id": "bukhara.baland",
@@ -33,7 +34,8 @@
     "english": "tea",
     "russian": "чай",
     "theme": "bukhara",
-    "level": 1
+    "level": 1,
+    "sameAs": "restaurant.tea"
   },
   {
     "id": "bukhara.masjid",
@@ -42,7 +44,8 @@
     "english": "mosque",
     "russian": "мечеть",
     "theme": "bukhara",
-    "level": 1
+    "level": 1,
+    "sameAs": "public-square.mosque"
   },
   {
     "id": "bukhara.bozor",
@@ -51,7 +54,8 @@
     "english": "bazaar",
     "russian": "базар",
     "theme": "bukhara",
-    "level": 1
+    "level": 1,
+    "sameAs": "public-square.bazaar"
   },
   {
     "id": "bukhara.kohna",
@@ -69,7 +73,8 @@
     "english": "caravan",
     "russian": "караван",
     "theme": "bukhara",
-    "level": 2
+    "level": 2,
+    "sameAs": "samarkand.karvon"
   },
   {
     "id": "bukhara.amir",
@@ -87,7 +92,8 @@
     "english": "history",
     "russian": "история",
     "theme": "bukhara",
-    "level": 2
+    "level": 2,
+    "sameAs": "museum.history"
   },
   {
     "id": "bukhara.qadimiy",
@@ -96,6 +102,7 @@
     "english": "ancient",
     "russian": "древний",
     "theme": "bukhara",
-    "level": 2
+    "level": 2,
+    "sameAs": "samarkand.qadimiy"
   }
 ]

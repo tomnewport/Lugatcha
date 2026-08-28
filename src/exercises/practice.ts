@@ -7,6 +7,7 @@ import {
 import { isDue, overdueRatio } from './spacedRepetition'
 import { shuffle } from './validate'
 import { withSpellCards, type SpellCardItem } from './spellCards'
+import { leadWithHighFrequency } from './words'
 import { PHRASE_MODES, type PhrasePromptMode, type PracticePhrase } from './phrases'
 
 /**
@@ -126,11 +127,15 @@ export function buildDailyPracticeSession(
   let spare = count - wordItems.length - phraseItems.length
   if (spare > 0) {
     const startedThemes = new Set(seenWords.map((w) => w.theme))
-    // Essential words first; areas already started before unexplored ones.
-    const newWords = shuffle(unseenWords)
-      .sort((a, b) => (a.level ?? 2) - (b.level ?? 2))
-      .sort((a, b) => Number(startedThemes.has(b.theme)) - Number(startedThemes.has(a.theme)))
-      .slice(0, NEW_WORDS_PER_PRACTICE)
+    // Essential words first; areas already started before unexplored ones — then
+    // a high-frequency word takes the lead, since the glue and everyday verbs
+    // pay off across every area rather than in one.
+    const newWords = leadWithHighFrequency(
+      shuffle(unseenWords)
+        .sort((a, b) => (a.level ?? 2) - (b.level ?? 2))
+        .sort((a, b) => Number(startedThemes.has(b.theme)) - Number(startedThemes.has(a.theme))),
+      1,
+    ).slice(0, NEW_WORDS_PER_PRACTICE)
     // A phrase without its scenario is just noise — only started areas.
     const newPhrases = shuffle(
       phrases.filter((p) => !phraseProg(p)?.seenAt && startedThemes.has(p.theme)),

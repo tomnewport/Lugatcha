@@ -6,7 +6,8 @@
     "english": "green",
     "russian": "зелёный",
     "theme": "fergana",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.colour-green"
   },
   {
     "id": "fergana.bog",
@@ -42,7 +43,8 @@
     "english": "tree",
     "russian": "дерево",
     "theme": "fergana",
-    "level": 1
+    "level": 1,
+    "sameAs": "mountain-park.tree"
   },
   {
     "id": "fergana.gul",
@@ -60,7 +62,8 @@
     "english": "pomegranate",
     "russian": "гранат",
     "theme": "fergana",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.food-pomegranate"
   },
   {
     "id": "fergana.uzum",
@@ -78,7 +81,8 @@
     "english": "sun",
     "russian": "солнце",
     "theme": "fergana",
-    "level": 1
+    "level": 1,
+    "sameAs": "mountain-park.sun"
   },
   {
     "id": "fergana.dehqon",

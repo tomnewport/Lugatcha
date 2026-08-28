@@ -46,5 +46,29 @@
     "icon": "🍲",
     "blurb": "Plov, soups and the colours of the bazaar",
     "blurbRu": "Плов, супы и краски базара"
+  },
+  {
+    "id": "essentials",
+    "order": 5,
+    "title": {
+      "en": "Little words",
+      "uz": "Kichik so'zlar",
+      "ru": "Маленькие слова"
+    },
+    "icon": "🔗",
+    "blurb": "The handful that turns up in every phrase — men, bu, va, juda",
+    "blurbRu": "Горстка слов, которые встречаются в каждой фразе — men, bu, va, juda"
+  },
+  {
+    "id": "verbs",
+    "order": 6,
+    "title": {
+      "en": "Everyday verbs",
+      "uz": "Kundalik fe'llar",
+      "ru": "Повседневные глаголы"
+    },
+    "icon": "🙋",
+    "blurb": "I'll take, please give, I'm waiting — in the polite form",
+    "blurbRu": "Я возьму, дайте, я подожду — в вежливой форме"
   }
 ]

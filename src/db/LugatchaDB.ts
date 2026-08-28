@@ -57,6 +57,11 @@ export class LugatchaDB extends Dexie {
     this.version(7).stores({
       roleplayProgress: 'variantId',
     })
+    // v8: index the sameAs link so a word's family (the copies of it that other
+    // topics list) can be looked up when progress is written
+    this.version(8).stores({
+      words: 'id, theme, sameAs',
+    })
     // Fires only on first-ever open of this DB in the browser
     this.on('populate', () => seedDatabase(this))
   }

@@ -1,6 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { db } from '@/db'
-import { pickIntroWords } from '@/exercises/words'
+import {
+  pickIntroWords,
+  leadWithHighFrequency,
+  HIGH_FREQUENCY_PER_INTRO,
+} from '@/exercises/words'
 import { normalizeToken } from '@/exercises/validate'
 import type { Word } from '@/db/types'
 
@@ -82,5 +86,69 @@ describe('pickIntroWords', () => {
     expect(picked.every((x) => x.theme === 'welcome-center')).toBe(true)
     const forms = surfaces(picked)
     expect(new Set(forms).size).toBe(forms.length)
+  })
+})
+
+describe('leadWithHighFrequency', () => {
+  const plain = (id: string): Word => w(id, id, 'airport')
+  const common = (id: string): Word => ({ ...w(id, id, 'core'), highFrequency: true })
+
+  it('puts the high-frequency words first without reordering the rest', () => {
+    const ordered = leadWithHighFrequency(
+      [plain('a'), common('men'), plain('b'), common('va'), plain('c')],
+      2,
+    )
+    expect(ordered.map((x) => x.id)).toEqual(['men', 'va', 'a', 'b', 'c'])
+  })
+
+  it('leads with only as many as the session keeps room for', () => {
+    const ordered = leadWithHighFrequency(
+      [plain('a'), common('men'), common('va'), common('bu'), common('juda')],
+      2,
+    )
+    // Two lead; the others stay in place rather than crowding out the topic.
+    expect(ordered.map((x) => x.id)).toEqual(['men', 'va', 'a', 'bu', 'juda'])
+  })
+
+  it('changes nothing when there is no high-frequency vocabulary left to meet', () => {
+    const words = [plain('a'), plain('b')]
+    expect(leadWithHighFrequency(words).map((x) => x.id)).toEqual(['a', 'b'])
+  })
+})
+
+describe('pickIntroWords and the high-frequency lead', () => {
+  beforeEach(async () => {
+    await db.words.clear()
+    await db.wordProgress.clear()
+  })
+
+  it('opens a session with the words every phrase is built from', async () => {
+    // The complaint behind this: "give me", "I want", va and the rest turn up in
+    // taught phrases but were never taught as words. They now lead the session.
+    const themeWords = Array.from({ length: 8 }, (_, i) => w(`airport.n${i}`, `n${i}`, 'airport'))
+    const glue: Word[] = [
+      { ...w('essentials.men', 'men', 'core', 'I'), highFrequency: true },
+      { ...w('verbs.bering', 'bering', 'core', 'please give me'), highFrequency: true },
+      { ...w('core.money', 'pul', 'core', 'money') },
+    ]
+    await seed([...themeWords, ...glue])
+
+    const picked = await pickIntroWords('airport', 5)
+    expect(picked.slice(0, HIGH_FREQUENCY_PER_INTRO).map((x) => x.id).sort()).toEqual([
+      'essentials.men',
+      'verbs.bering',
+    ])
+    // ...and the topic still teaches its own words in the same session.
+    expect(picked.filter((x) => x.theme === 'airport').length).toBeGreaterThan(0)
+  })
+
+  it('serves a shared word once, from whichever topic met it first', async () => {
+    await seed([
+      w('restaurant.tea', 'choy', 'restaurant', 'tea'),
+      { ...w('cafe.tea', 'choy', 'cafe', 'tea'), sameAs: 'restaurant.tea' },
+      w('cafe.sugar', 'shakar', 'cafe', 'sugar'),
+    ])
+    const picked = await pickIntroWords('cafe', 5)
+    expect(surfaces(picked).filter((f) => f === 'choy')).toHaveLength(1)
   })
 })

@@ -4,6 +4,7 @@ import { shuffle, normalizeToken } from './validate'
 import { isWordLearned } from './test'
 import { loadPracticePhrases, type PracticePhrase } from './phrases'
 import { WELCOME_CENTER_ID } from '@/db/progress'
+import { dedupeFamilies } from './wordFamilies'
 
 async function seenWordIds(): Promise<Set<string>> {
   const progress = await db.wordProgress.toArray()
@@ -13,6 +14,28 @@ async function seenWordIds(): Promise<Set<string>> {
 /** Essential words first; random within the same level (stable sort after shuffle). */
 function byLevel(words: Word[]): Word[] {
   return shuffle(words).sort((a, b) => (a.level ?? 2) - (b.level ?? 2))
+}
+
+/**
+ * How many slots of a New Words session are kept for high-frequency vocabulary.
+ * Enough that the glue words and everyday verbs arrive steadily from the first
+ * session; few enough that a topic still teaches its own vocabulary.
+ */
+export const HIGH_FREQUENCY_PER_INTRO = 2
+
+/**
+ * Puts a couple of high-frequency words at the front of a session — the glue
+ * (men, bu, va, juda) and the everyday verbs (bering, olaman, kutaman) that run
+ * through the phrases every topic teaches. Learning one pays off in every
+ * conversation, so it shouldn't queue behind a single topic's nice-to-have
+ * nouns; capping the lead keeps the topic teaching its own words too. Order is
+ * otherwise preserved.
+ */
+export function leadWithHighFrequency(words: Word[], slots = HIGH_FREQUENCY_PER_INTRO): Word[] {
+  const lead = words.filter((w) => w.highFrequency).slice(0, slots)
+  if (lead.length === 0) return [...words]
+  const leading = new Set(lead.map((w) => w.id))
+  return [...lead, ...words.filter((w) => !leading.has(w.id))]
 }
 
 /**
@@ -52,7 +75,10 @@ export async function pickIntroWords(theme: string, count = 5): Promise<Word[]> 
   }
   const unseenCore = byLevel(coreWords.filter((w) => !seen.has(w.id)))
   const seenAny = shuffle([...themeWords, ...coreWords].filter((w) => seen.has(w.id)))
-  return dedupeBySurface([...unseenTheme, ...unseenCore, ...seenAny]).slice(0, count)
+  // A couple of high-frequency words lead the session; the topic's own words
+  // fill the rest, so both move forward together.
+  const fresh = leadWithHighFrequency([...unseenTheme, ...unseenCore])
+  return dedupeBySurface([...fresh, ...seenAny]).slice(0, count)
 }
 
 /**
@@ -69,7 +95,7 @@ export async function pickFlashcardWords(theme: string, count = 5): Promise<Word
   const seenCore = shuffle(coreWords.filter((w) => seen.has(w.id)))
   // Fallback for the (unreachable in normal flow) case of too few seen words
   const unseenTheme = shuffle(themeWords.filter((w) => !seen.has(w.id)))
-  return [...seenTheme, ...seenCore, ...unseenTheme].slice(0, count)
+  return dedupeFamilies([...seenTheme, ...seenCore, ...unseenTheme]).slice(0, count)
 }
 
 export interface DailyPracticeData {
@@ -104,9 +130,12 @@ export async function loadDailyPracticeData(): Promise<DailyPracticeData> {
     allPhraseProgress.map((p) => [p.phraseKey, p]),
   )
   const seenIds = new Set(allProgress.filter((p) => p.seenAt).map((p) => p.wordId))
+  // One card per word family: a word listed by four topics is still one word to
+  // drill, not four (exercises/wordFamilies.ts).
+  const words = dedupeFamilies(allWords)
   return {
-    seenWords: allWords.filter((w) => seenIds.has(w.id)),
-    unseenWords: allWords.filter((w) => !seenIds.has(w.id)),
+    seenWords: words.filter((w) => seenIds.has(w.id)),
+    unseenWords: words.filter((w) => !seenIds.has(w.id)),
     allWords,
     phrases,
     progress,
@@ -139,11 +168,13 @@ export async function loadTestData(theme: string): Promise<TestData> {
   const seen = new Set(allProgress.filter((p) => p.seenAt).map((p) => p.wordId))
   const byId = new Map(allWords.map((w) => [w.id, w]))
 
-  const candidates = [...themeWords, ...coreWords].filter((w) => seen.has(w.id))
-  const learnedPool = allProgress
-    .filter((p) => isWordLearned(p))
-    .map((p) => byId.get(p.wordId))
-    .filter((w): w is Word => Boolean(w))
+  const candidates = dedupeFamilies([...themeWords, ...coreWords].filter((w) => seen.has(w.id)))
+  const learnedPool = dedupeFamilies(
+    allProgress
+      .filter((p) => isWordLearned(p))
+      .map((p) => byId.get(p.wordId))
+      .filter((w): w is Word => Boolean(w)),
+  )
 
   return { candidates, learnedPool, allWords, progress }
 }
@@ -162,6 +193,7 @@ export async function loadPoolTestData(pool: Word[]): Promise<TestData> {
   const progress = new Map<string, WordProgress | undefined>(
     allProgress.map((p) => [p.wordId, p]),
   )
-  const learnedPool = pool.filter((w) => isWordLearned(progress.get(w.id)))
-  return { candidates: pool, learnedPool, allWords, progress }
+  const words = dedupeFamilies(pool)
+  const learnedPool = words.filter((w) => isWordLearned(progress.get(w.id)))
+  return { candidates: words, learnedPool, allWords, progress }
 }

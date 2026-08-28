@@ -15,7 +15,8 @@
     "english": "bus stop",
     "russian": "автобусная остановка",
     "theme": "bus-stop",
-    "level": 1
+    "level": 1,
+    "sameAs": "metro-station.station-stop"
   },
   {
     "id": "bus-stop.where-to",
@@ -89,7 +90,8 @@
     "english": "far",
     "russian": "далеко",
     "theme": "bus-stop",
-    "level": 2
+    "level": 2,
+    "sameAs": "public-square.far"
   },
   {
     "id": "bus-stop.soon",

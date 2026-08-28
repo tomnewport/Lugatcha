@@ -15,7 +15,8 @@
     "english": "money",
     "russian": "деньги",
     "theme": "bank",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.money"
   },
   {
     "id": "bank.exchange",
@@ -42,7 +43,8 @@
     "english": "som (Uzbek currency)",
     "russian": "сум (узбекская валюта)",
     "theme": "bank",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.som"
   },
   {
     "id": "bank.how-much",
@@ -51,7 +53,8 @@
     "english": "how much",
     "russian": "сколько",
     "theme": "bank",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.how-much"
   },
   {
     "id": "bank.card-bank",
@@ -60,7 +63,8 @@
     "english": "bank card",
     "russian": "банковская карта",
     "theme": "bank",
-    "level": 2
+    "level": 2,
+    "sameAs": "metro-station.card"
   },
   {
     "id": "bank.cash",
@@ -96,7 +100,8 @@
     "english": "passport",
     "russian": "паспорт",
     "theme": "bank",
-    "level": 1
+    "level": 1,
+    "sameAs": "airport.passport"
   },
   {
     "id": "bank.sign",

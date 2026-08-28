@@ -5,6 +5,8 @@ import { db, useLiveQuery } from '@/db/useDb'
 import { isWordLearned, passedTypes } from '@/exercises/test'
 import { overdueRatio, reviewStatus, relativeDue, type ReviewStage } from '@/exercises/spacedRepetition'
 import { TEST_QUESTION_TYPES } from '@/db/types'
+import type { Word } from '@/db/types'
+import { dedupeFamilies } from '@/exercises/wordFamilies'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
@@ -65,7 +67,9 @@ const chest = useLiveQuery<{
   // A word belongs in the chest once met (seen, or with any skill passed).
   const relevant = allProgress.filter((p) => p.seenAt != null || passedTypes(p).length > 0)
   const words = await db.words.bulkGet(relevant.map((p) => p.wordId))
-  const byId = new Map(words.filter(Boolean).map((w) => [w!.id, w!]))
+  // A word several topics list is one word in the chest, not one per topic
+  // (exercises/wordFamilies.ts) — its copies all carry the same progress.
+  const byId = new Map(dedupeFamilies(words.filter((w): w is Word => Boolean(w))).map((w) => [w.id, w]))
 
   const learned: LearnedWord[] = []
   const learning: LearningWord[] = []

@@ -15,7 +15,8 @@
     "english": "square",
     "russian": "площадь",
     "theme": "samarkand",
-    "level": 1
+    "level": 1,
+    "sameAs": "public-square.square"
   },
   {
     "id": "samarkand.gozal",
@@ -24,7 +25,8 @@
     "english": "beautiful",
     "russian": "красивый",
     "theme": "samarkand",
-    "level": 1
+    "level": 1,
+    "sameAs": "mountain-park.beautiful"
   },
   {
     "id": "samarkand.kok",
@@ -33,7 +35,8 @@
     "english": "blue",
     "russian": "синий",
     "theme": "samarkand",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.colour-blue"
   },
   {
     "id": "samarkand.sayyoh",
@@ -51,7 +54,8 @@
     "english": "photo",
     "russian": "фотография",
     "theme": "samarkand",
-    "level": 1
+    "level": 1,
+    "sameAs": "museum.picture"
   },
   {
     "id": "samarkand.qadimiy",

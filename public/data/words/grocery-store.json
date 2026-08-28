@@ -15,7 +15,8 @@
     "english": "bread",
     "russian": "хлеб",
     "theme": "grocery-store",
-    "level": 1
+    "level": 1,
+    "sameAs": "restaurant.bread"
   },
   {
     "id": "grocery-store.milk",
@@ -87,7 +88,8 @@
     "english": "water",
     "russian": "вода",
     "theme": "grocery-store",
-    "level": 2
+    "level": 2,
+    "sameAs": "restaurant.water"
   },
   {
     "id": "grocery-store.bag",

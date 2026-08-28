@@ -1,8 +1,9 @@
 import type { LugatchaDB } from './LugatchaDB'
-import type { ExerciseType, TestQuestionType } from './types'
+import type { ExerciseType, TestQuestionType, WordProgress } from './types'
 import { TEST_QUESTION_TYPES } from './types'
 import { scheduleReview, gradeFromResult, DAY_MS, DEFAULT_EASE } from '@/exercises/spacedRepetition'
 import type { ReviewSchedule } from '@/exercises/spacedRepetition'
+import { canonicalId, mergeFamilyProgress } from '@/exercises/wordFamilies'
 
 const MAX_RESULTS = 4
 /** Failed questions on a learned word before it's unlearned (issue #61). */
@@ -62,13 +63,21 @@ export async function isWelcomeCenterComplete(db: LugatchaDB): Promise<boolean> 
   return false
 }
 
-/** True when any seen word lies outside the Welcome Center's vocabulary. */
+/**
+ * True when any seen word lies outside the Welcome Center's vocabulary — and
+ * outside the families its words belong to. The welcome basics are the same
+ * words as the core ones (salom, rahmat, ha, yo'q), so meeting them writes
+ * progress against their core copies too; counting those as "beyond the
+ * Welcome Center" would graduate a learner on their very first session.
+ */
 async function hasProgressBeyondWelcome(db: LugatchaDB): Promise<boolean> {
   const allProgress = await db.wordProgress.toArray()
   const seenIds = allProgress.filter((p) => p.seenAt).map((p) => p.wordId)
   if (seenIds.length === 0) return false
-  const seenWords = await db.words.bulkGet(seenIds)
-  return seenWords.some((w) => w && w.theme !== WELCOME_CENTER_ID)
+  const welcomeWords = await db.words.where('theme').equals(WELCOME_CENTER_ID).toArray()
+  const welcomeFamilies = await Promise.all(welcomeWords.map((w) => familyOf(db, w.id)))
+  const onboarding = new Set(welcomeFamilies.flat())
+  return seenIds.some((id) => !onboarding.has(id))
 }
 
 /** Permanently records Welcome Center graduation. Idempotent. */
@@ -85,15 +94,49 @@ async function latchGraduation(db: LugatchaDB): Promise<void> {
   })
 }
 
+/**
+ * Every id that shares this word's teaching: the canonical word plus each copy
+ * another topic lists (Word.sameAs — see exercises/wordFamilies.ts). Progress is
+ * written to all of them, so a common word met at the cafe is already met at the
+ * tea house, and the tea house's tile credits it without teaching it again.
+ * Falls back to the word alone when the vocabulary isn't loaded yet.
+ */
+export async function familyOf(db: LugatchaDB, wordId: string): Promise<string[]> {
+  const word = await db.words.get(wordId)
+  if (!word) return [wordId]
+  const canonical = canonicalId(word)
+  const aliases = await db.words.where('sameAs').equals(canonical).primaryKeys()
+  const ids = new Set<string>([wordId, canonical, ...(aliases as string[])])
+  return [...ids]
+}
+
+/** The one progress row a family shares, reconciling rows written before it was linked. */
+async function familyProgressRow(
+  db: LugatchaDB,
+  family: string[],
+): Promise<WordProgress | undefined> {
+  const rows = await db.wordProgress.bulkGet(family)
+  return mergeFamilyProgress(rows)
+}
+
+/** Writes one progress row to every member of a family, so they stay in step. */
+async function putAcrossFamily(
+  db: LugatchaDB,
+  family: string[],
+  row: Omit<WordProgress, 'wordId'>,
+): Promise<void> {
+  await db.wordProgress.bulkPut(family.map((wordId) => ({ ...row, wordId })))
+}
+
 /** Records first exposure to each word. No-op for words already seen. */
 export async function markWordsSeen(db: LugatchaDB, wordIds: string[]): Promise<void> {
   const now = Date.now()
+  const families = await Promise.all(wordIds.map((id) => familyOf(db, id)))
   await db.transaction('rw', db.wordProgress, async () => {
-    for (const wordId of wordIds) {
-      const existing = await db.wordProgress.get(wordId)
+    for (const family of families) {
+      const existing = await familyProgressRow(db, family)
       if (existing?.seenAt) continue
-      await db.wordProgress.put({
-        wordId,
+      await putAcrossFamily(db, family, {
         seenAt: now,
         lastResults: existing?.lastResults ?? [],
       })
@@ -109,7 +152,7 @@ export async function markWordsSeen(db: LugatchaDB, wordIds: string[]): Promise<
  * only offered on not-yet-learned words, so mastery can't be wiped this way.
  */
 export async function forgetWord(db: LugatchaDB, wordId: string): Promise<void> {
-  await db.wordProgress.delete(wordId)
+  await db.wordProgress.bulkDelete(await familyOf(db, wordId))
 }
 
 /** Prepends a flashcard match result, keeping only the most recent four. */
@@ -118,10 +161,11 @@ export async function recordMatchResult(
   wordId: string,
   correct: boolean,
 ): Promise<void> {
+  const family = await familyOf(db, wordId)
   await db.transaction('rw', db.wordProgress, async () => {
-    const existing = await db.wordProgress.get(wordId)
-    await db.wordProgress.put({
-      wordId,
+    const existing = await familyProgressRow(db, family)
+    await putAcrossFamily(db, family, {
+      ...existing,
       seenAt: existing?.seenAt,
       lastResults: [correct, ...(existing?.lastResults ?? [])].slice(0, MAX_RESULTS),
     })
@@ -162,8 +206,9 @@ export async function recordTestResult(
   credit = true,
 ): Promise<TestResultOutcome> {
   const score = typeof result === 'boolean' ? (result ? 1 : 0) : Math.max(0, Math.min(1, result))
+  const family = await familyOf(db, wordId)
   return db.transaction('rw', db.wordProgress, async () => {
-    const existing = await db.wordProgress.get(wordId)
+    const existing = await familyProgressRow(db, family)
     const passed = new Set<TestQuestionType>(existing?.testPassed ?? [])
     const wasLearned = TEST_QUESTION_TYPES.every((t) => passed.has(t))
     let fails = existing?.failsSinceLearned ?? 0
@@ -208,8 +253,7 @@ export async function recordTestResult(
     // again with its card properly spaced.
     const review = credit ? scheduleReview(existing?.review, gradeFromResult(result)) : existing?.review
 
-    await db.wordProgress.put({
-      wordId,
+    await putAcrossFamily(db, family, {
       seenAt: existing?.seenAt ?? Date.now(),
       lastResults: existing?.lastResults ?? [],
       testPassed: [...passed],
@@ -378,14 +422,14 @@ export async function markWordsKnown(
   wordIds: string[],
   now: number = Date.now(),
 ): Promise<void> {
+  const families = await Promise.all(wordIds.map((id) => familyOf(db, id)))
   await db.transaction('rw', db.wordProgress, async () => {
     let index = 0
-    for (const wordId of wordIds) {
-      const existing = await db.wordProgress.get(wordId)
+    for (const family of families) {
+      const existing = await familyProgressRow(db, family)
       const alreadyLearned = TEST_QUESTION_TYPES.every((t) => existing?.testPassed?.includes(t))
       if (alreadyLearned) continue
-      await db.wordProgress.put({
-        wordId,
+      await putAcrossFamily(db, family, {
         seenAt: existing?.seenAt ?? now,
         lastResults:
           existing?.lastResults && existing.lastResults.length >= 4
