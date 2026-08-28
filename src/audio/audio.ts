@@ -6,7 +6,7 @@
  * the Web Speech API, requesting an Uzbek voice where the device has one.
  */
 import { audioKey } from './key'
-import { audioContext } from './context'
+import { audioContext, onAudioContextReset, onAudioRouteChange } from './context'
 import { noteUzbekViewed } from '@/feedback/activityContext'
 
 const base = import.meta.env.BASE_URL
@@ -111,6 +111,15 @@ export function stopSpeaking(): void {
 }
 
 /**
+ * A context that has been closed and replaced — the app following the phone
+ * onto headphones, see audio/context.ts — leaves every clip sounding through
+ * it playing into nothing, and unable to say so, because a node in a closed
+ * context never reports that it ended. Cut the lot and start again on the new
+ * one; the decoded buffers themselves carry over untouched.
+ */
+onAudioContextReset(stopSpeaking)
+
+/**
  * Audio elements that have already been opened, least recently used first.
  *
  * A fresh `new Audio(url)` cannot make a sound until the file is open — off the
@@ -122,6 +131,17 @@ export function stopSpeaking(): void {
  */
 const openClips = new Map<string, HTMLAudioElement>()
 const OPEN_CLIP_LIMIT = 32
+
+/**
+ * A pooled element was opened for the device the phone was playing through
+ * then, and an element that has already loaded can stay with it. So when the
+ * phone moves its sound — headphones going on, see audio/context.ts — the pool
+ * is dropped and the next word opens an element on the device now in use. The
+ * files are in the Workbox cache by that point, so re-opening one is cheap.
+ */
+onAudioRouteChange(() => {
+  openClips.clear()
+})
 
 function openClip(url: string): HTMLAudioElement {
   const cached = openClips.get(url)
@@ -309,7 +329,12 @@ function ringClip(clip: Clip): Promise<boolean> {
         source.stop(until)
       },
       silence() {
-        source.stop()
+        try {
+          source.stop()
+        } catch {
+          // The context it played in has gone; it is already as stopped as
+          // it can be. See the onAudioContextReset above.
+        }
       },
     }
     source.onended = () => {
