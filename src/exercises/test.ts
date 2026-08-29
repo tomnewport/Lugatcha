@@ -2,6 +2,11 @@ import type { Word, WordProgress, TestQuestionType } from '@/db/types'
 import { TEST_QUESTION_TYPES } from '@/db/types'
 import { shuffle } from './validate'
 import { isDue, overdueRatio } from './spacedRepetition'
+import {
+  leadWithHighFrequency,
+  HIGH_FREQUENCY_PER_TEST,
+  HIGH_FREQUENCY_PRACTICE_SLOTS,
+} from './highFrequency'
 
 export const TEST_LENGTH = 20
 export const OPTION_BANK_SIZE = 40
@@ -137,10 +142,17 @@ export function selectTestPairs(
   const weakSkills = (w: Word) =>
     TEST_QUESTION_TYPES.filter((t) => !passedTypes(progress.get(w.id)).includes(t))
 
-  const newPool = [
-    ...shuffle(candidates.filter(partial)),
-    ...shuffle(candidates.filter((w) => !learned(w) && !partial(w))),
-  ]
+  // Started words lead, then fresh ones — with a high-frequency word pulled to
+  // the front of the batch. A test is where a word actually becomes learned, so
+  // the little words and everyday verbs have to reach one wherever the learner
+  // is working, not only in the School (exercises/highFrequency.ts).
+  const newPool = leadWithHighFrequency(
+    [
+      ...shuffle(candidates.filter(partial)),
+      ...shuffle(candidates.filter((w) => !learned(w) && !partial(w))),
+    ],
+    HIGH_FREQUENCY_PER_TEST,
+  )
   const retestPool = shuffle(learnedPool.filter(learned))
 
   const pairs: PracticePair[] = []
@@ -261,6 +273,7 @@ export function selectDailyPracticePairs(
    */
   fillWithRetests = true,
   activeWordLimit = DAILY_ACTIVE_WORDS,
+  highFrequencySlots = HIGH_FREQUENCY_PRACTICE_SLOTS,
 ): PracticePair[] {
   const passedOf = (w: Word) => passedTypes(progress.get(w.id))
   const learned = (w: Word) => isWordLearned(progress.get(w.id))
@@ -288,9 +301,15 @@ export function selectDailyPracticePairs(
   // into several areas) can mark far more words seen than can be learned at
   // once. Keep only the closest-to-learned / most-overdue ones active so the
   // learner finishes a manageable set before the rest enter rotation.
-  const batch = themeBatches
-    .sort((a, b) => passedOf(b).length - passedOf(a).length || dueness(b) - dueness(a))
-    .slice(0, activeWordLimit)
+  const ranked = themeBatches.sort(
+    (a, b) => passedOf(b).length - passedOf(a).length || dueness(b) - dueness(a),
+  )
+  // A few of those slots are kept for high-frequency words. They are all one
+  // "area" (core), so without a reservation the whole set — every little word
+  // and everyday verb the learner has met — competes for a single area's share
+  // while each city location gets its own. They are the vocabulary that pays
+  // off everywhere, so they keep moving toward learned whatever else is due.
+  const batch = leadWithHighFrequency(ranked, highFrequencySlots).slice(0, activeWordLimit)
 
   const pairs: PracticePair[] = []
   const used = new Set<string>()

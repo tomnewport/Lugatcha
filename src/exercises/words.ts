@@ -5,6 +5,7 @@ import { isWordLearned } from './test'
 import { loadPracticePhrases, type PracticePhrase } from './phrases'
 import { WELCOME_CENTER_ID } from '@/db/progress'
 import { dedupeFamilies } from './wordFamilies'
+import { leadWithHighFrequency, HIGH_FREQUENCY_PER_INTRO } from './highFrequency'
 
 async function seenWordIds(): Promise<Set<string>> {
   const progress = await db.wordProgress.toArray()
@@ -14,28 +15,6 @@ async function seenWordIds(): Promise<Set<string>> {
 /** Essential words first; random within the same level (stable sort after shuffle). */
 function byLevel(words: Word[]): Word[] {
   return shuffle(words).sort((a, b) => (a.level ?? 2) - (b.level ?? 2))
-}
-
-/**
- * How many slots of a New Words session are kept for high-frequency vocabulary.
- * Enough that the glue words and everyday verbs arrive steadily from the first
- * session; few enough that a topic still teaches its own vocabulary.
- */
-export const HIGH_FREQUENCY_PER_INTRO = 2
-
-/**
- * Puts a couple of high-frequency words at the front of a session — the glue
- * (men, bu, va, juda) and the everyday verbs (bering, olaman, kutaman) that run
- * through the phrases every topic teaches. Learning one pays off in every
- * conversation, so it shouldn't queue behind a single topic's nice-to-have
- * nouns; capping the lead keeps the topic teaching its own words too. Order is
- * otherwise preserved.
- */
-export function leadWithHighFrequency(words: Word[], slots = HIGH_FREQUENCY_PER_INTRO): Word[] {
-  const lead = words.filter((w) => w.highFrequency).slice(0, slots)
-  if (lead.length === 0) return [...words]
-  const leading = new Set(lead.map((w) => w.id))
-  return [...lead, ...words.filter((w) => !leading.has(w.id))]
 }
 
 /**
@@ -77,7 +56,7 @@ export async function pickIntroWords(theme: string, count = 5): Promise<Word[]> 
   const seenAny = shuffle([...themeWords, ...coreWords].filter((w) => seen.has(w.id)))
   // A couple of high-frequency words lead the session; the topic's own words
   // fill the rest, so both move forward together.
-  const fresh = leadWithHighFrequency([...unseenTheme, ...unseenCore])
+  const fresh = leadWithHighFrequency([...unseenTheme, ...unseenCore], HIGH_FREQUENCY_PER_INTRO)
   return dedupeBySurface([...fresh, ...seenAny]).slice(0, count)
 }
 

@@ -1,10 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { db } from '@/db'
-import {
-  pickIntroWords,
-  leadWithHighFrequency,
-  HIGH_FREQUENCY_PER_INTRO,
-} from '@/exercises/words'
+import { pickIntroWords } from '@/exercises/words'
+import { HIGH_FREQUENCY_PER_INTRO } from '@/exercises/highFrequency'
 import { normalizeToken } from '@/exercises/validate'
 import type { Word } from '@/db/types'
 
@@ -86,33 +83,6 @@ describe('pickIntroWords', () => {
     expect(picked.every((x) => x.theme === 'welcome-center')).toBe(true)
     const forms = surfaces(picked)
     expect(new Set(forms).size).toBe(forms.length)
-  })
-})
-
-describe('leadWithHighFrequency', () => {
-  const plain = (id: string): Word => w(id, id, 'airport')
-  const common = (id: string): Word => ({ ...w(id, id, 'core'), highFrequency: true })
-
-  it('puts the high-frequency words first without reordering the rest', () => {
-    const ordered = leadWithHighFrequency(
-      [plain('a'), common('men'), plain('b'), common('va'), plain('c')],
-      2,
-    )
-    expect(ordered.map((x) => x.id)).toEqual(['men', 'va', 'a', 'b', 'c'])
-  })
-
-  it('leads with only as many as the session keeps room for', () => {
-    const ordered = leadWithHighFrequency(
-      [plain('a'), common('men'), common('va'), common('bu'), common('juda')],
-      2,
-    )
-    // Two lead; the others stay in place rather than crowding out the topic.
-    expect(ordered.map((x) => x.id)).toEqual(['men', 'va', 'a', 'bu', 'juda'])
-  })
-
-  it('changes nothing when there is no high-frequency vocabulary left to meet', () => {
-    const words = [plain('a'), plain('b')]
-    expect(leadWithHighFrequency(words).map((x) => x.id)).toEqual(['a', 'b'])
   })
 })
 
