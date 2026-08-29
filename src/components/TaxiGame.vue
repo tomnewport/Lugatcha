@@ -24,6 +24,7 @@ import {
   dropOff,
   landmark,
   levelFor,
+  purse,
   readHighScore,
   recordHighScore,
   routeUzbek,
@@ -32,6 +33,7 @@ import {
   CITY_HEIGHT,
   CITY_WIDTH,
   EAST,
+  LIVES,
   NORTH,
   PATIENCE,
   SOUTH,
@@ -124,12 +126,66 @@ const fare = computed<Fare | null>(() => state.value.fare)
 const outcome = computed(() => state.value.outcome)
 const playable = computed(() => state.value.status === 'playing' && !outcome.value && !paused.value)
 const level = computed(() => levelFor(state.value.delivered) + 1)
-/** The passenger's patience, spent lamps first. */
-const lamps = computed(() => Array.from({ length: PATIENCE }, (_, i) => i < state.value.patience))
+/** The three lives, spent lamps first. */
+const lamps = computed(() => Array.from({ length: LIVES }, (_, i) => i >= state.value.lives))
+/** The passenger's patience with your wrong corners, spent pips first. */
+const pips = computed(() => Array.from({ length: PATIENCE }, (_, i) => i < state.value.patience))
 
 /** Every sum on screen is soʻm, grouped the way the bazar prints its prices. */
 function som(amount: number): string {
   return formatSom(amount, locale.value)
+}
+
+/**
+ * Money as it flies past the window: thousands, in a word.
+ *
+ * A sprite lasts under a second, which is not long enough to read "1 000", so
+ * these say "1k" — and every sum in this game is a whole number of thousands.
+ */
+function shortSom(amount: number): string {
+  const thousands = amount / 1_000
+  const rounded = Number.isInteger(thousands) ? `${thousands}` : thousands.toFixed(1)
+  return t('taxi.thousands', { amount: rounded })
+}
+
+/**
+ * The little sums that rise off the taxi as money moves.
+ *
+ * The meter tile changes too quietly to notice mid-drag, so every block of fuel
+ * and every word bought throws its price up off the roof of the cab, where the
+ * driver is already looking. They are keyed and kept in a list because several
+ * can be in the air at once — a fast drag spends a block a frame.
+ */
+interface Coin {
+  id: number
+  text: string
+  earned: boolean
+  x: number
+  y: number
+}
+
+const coins = ref<Coin[]>([])
+let coinId = 0
+/** Long enough to read, short enough not to trail behind a fast drag. */
+const COIN_MS = 900
+
+function throwCoin(amount: number, earned: boolean) {
+  const id = ++coinId
+  coins.value = [
+    ...coins.value,
+    {
+      id,
+      text: `${earned ? '+' : '\u2212'}${shortSom(amount)}`,
+      earned,
+      // Nudged left and right in turn, so two sums in quick succession do not
+      // land on top of each other.
+      x: px(state.value.taxi.x) + (id % 2 ? 16 : -16),
+      y: px(state.value.taxi.y),
+    },
+  ]
+  setTimeout(() => {
+    coins.value = coins.value.filter((coin) => coin.id !== id)
+  }, COIN_MS)
 }
 
 /** Whether this word's meaning has been paid for on this fare. */
@@ -154,9 +210,8 @@ function tapWord(word: Word) {
     void speakUzbekWord(word.text.toLowerCase())
     return
   }
-  state.value = buyWord(state.value, word.text)
+  spendAnd(buyWord(state.value, word.text))
   void speakUzbekWord(word.text.toLowerCase())
-  if (state.value.status === 'over') finish()
 }
 
 function placeName(id: string): string {
@@ -298,7 +353,7 @@ function steerTowards(target: { x: number; y: number }) {
     for (const dir of wanted) {
       const next = drive(before, dir)
       if (next !== before) {
-        state.value = next
+        spendAnd(next)
         steered = true
         break
       }
@@ -344,8 +399,7 @@ function onKey(event: KeyboardEvent) {
   if (event.key in arrows) {
     if (!playable.value) return
     event.preventDefault()
-    state.value = drive(state.value, arrows[event.key])
-    if (state.value.status === 'over') finish()
+    spendAnd(drive(state.value, arrows[event.key]))
     return
   }
   if (event.key === 'Enter' || event.key === ' ') {
@@ -361,11 +415,16 @@ function onKey(event: KeyboardEvent) {
 const THANKS_MS = 1900
 /** How long "not here" stays over the instruction after a refused corner. */
 const REFUSAL_MS = 1400
+/** How long the depot's re-float stays up after the meter runs dry. */
+const BUST_MS = 2200
 
 /** Set while the passenger is saying this is not the place; keyed so a second
  *  refusal re-runs the flash rather than sitting on the first one. */
 const refused = ref(false)
 const refusedKey = ref(0)
+/** Set when the depot has just had to float the driver again. */
+const bust = ref(false)
+const bustKey = ref(0)
 
 let advance: ReturnType<typeof setTimeout> | undefined
 
@@ -382,6 +441,7 @@ function letThemOut() {
   if (drop.result === 'arrived') {
     playChime()
     buzz(20)
+    if (drop.paid > 0) throwCoin(drop.paid, true)
     // The payslip stays up for a moment and then the next passenger gets in;
     // a passenger who gave up leaves the route they wanted on screen until the
     // driver has looked at it.
@@ -393,6 +453,32 @@ function letThemOut() {
     if (drop.result === 'refused') flashRefusal()
   }
   if (state.value.status === 'over') finish()
+}
+
+/**
+ * Applies a move or a purchase: throws the price up off the cab, and says so
+ * if that was the last of the fare.
+ */
+function spendAnd(next: TaxiState) {
+  const before = state.value
+  if (next === before) return
+  const spent = next.spent - before.spent
+  state.value = next
+  if (spent > 0) throwCoin(spent, false)
+  if (next.lives >= before.lives) return
+
+  playHorn()
+  buzz([60, 80, 60])
+  if (next.status === 'over') {
+    finish()
+    return
+  }
+  bust.value = true
+  bustKey.value++
+  const shown = bustKey.value
+  setTimeout(() => {
+    if (bustKey.value === shown) bust.value = false
+  }, BUST_MS)
 }
 
 /** Shows "not here" over the instruction for a moment. */
@@ -417,7 +503,7 @@ function clearAdvance() {
 }
 
 function finish() {
-  newBest.value = recordHighScore(state.value.peak)
+  newBest.value = recordHighScore(state.value.takings)
   best.value = readHighScore()
 }
 
@@ -455,7 +541,7 @@ function done() {
   stopSpeaking()
   // A shift has no natural end, so a driver who has had enough and closes the
   // game still keeps what they delivered.
-  recordHighScore(state.value.peak)
+  recordHighScore(state.value.takings)
   emit('done')
 }
 
@@ -511,21 +597,18 @@ onBeforeUnmount(() => {
 
       <div class="taxi__hud">
         <span class="taxi__stat taxi__stat--cash">
-          <span class="taxi__stat-label">{{ $t('taxi.cash') }}</span>
-          <strong class="taxi__stat-value">{{ som(state.balance) }}</strong>
+          <span class="taxi__stat-label">{{ $t('taxi.takings') }}</span>
+          <strong class="taxi__stat-value">{{ som(state.takings) }}</strong>
         </span>
         <span class="taxi__stat">
           <span class="taxi__stat-label">{{ $t('taxi.fare') }}</span>
-          <strong class="taxi__stat-value">{{ som(fare?.pay ?? 0) }}</strong>
+          <strong class="taxi__stat-value">{{ som(purse(state)) }}</strong>
         </span>
         <span class="taxi__stat">
           <span class="taxi__stat-label">{{ $t('taxi.best') }}</span>
           <strong class="taxi__stat-value">{{ som(best) }}</strong>
         </span>
-        <span
-          class="taxi__lamps"
-          :aria-label="$t('taxi.patience', { count: PATIENCE - state.patience })"
-        >
+        <span class="taxi__lamps" :aria-label="$t('taxi.livesLeft', { count: state.lives })">
           <span
             v-for="(spent, i) in lamps"
             :key="i"
@@ -541,18 +624,34 @@ onBeforeUnmount(() => {
         class="taxi__fare"
         :class="{
           'taxi__fare--right': outcome?.result === 'arrived',
-          'taxi__fare--wrong': outcome?.result === 'gaveUp' || refused,
+          'taxi__fare--wrong': outcome?.result === 'gaveUp' || refused || bust,
         }"
       >
-        <span class="taxi__rider" aria-hidden="true">
-          {{ outcome?.result === 'arrived' ? '🙋' : '🧕' }}
+        <span class="taxi__who">
+          <span class="taxi__rider" aria-hidden="true">
+            {{ outcome?.result === 'arrived' ? '🙋' : '🧕' }}
+          </span>
+          <!-- How many more wrong corners this passenger will sit through. -->
+          <span
+            v-if="!outcome"
+            class="taxi__pips"
+            :aria-label="$t('taxi.patience', { count: PATIENCE - state.patience })"
+          >
+            <span
+              v-for="(spent, i) in pips"
+              :key="i"
+              class="taxi__pip"
+              :class="{ 'taxi__pip--spent': spent }"
+              aria-hidden="true"
+            />
+          </span>
         </span>
 
         <!-- The words they used, kept next to what they meant: reading the
              clause again with its meaning under it is the lesson. -->
         <div v-if="outcome" class="taxi__verdict">
           <p class="taxi__verdict-title">
-            <span>{{ outcome.result === 'arrived' ? $t('taxi.thanks') : $t('taxi.gaveUp') }}</span>
+            <span>{{ $t(`taxi.${outcome.result}`) }}</span>
             <strong v-if="outcome.paid" class="taxi__paid">
               {{ $t('taxi.paid', { amount: som(outcome.paid) }) }}
             </strong>
@@ -565,7 +664,8 @@ onBeforeUnmount(() => {
              bought it, says it again for nothing. -->
         <div v-else class="taxi__bubble" :class="{ 'taxi__bubble--speaking': speaking }">
           <span class="taxi__clauses">
-            <span v-if="refused" class="taxi__refusal">{{ $t('taxi.notThere') }}</span>
+            <span v-if="bust" class="taxi__refusal">{{ $t('taxi.bust') }}</span>
+            <span v-else-if="refused" class="taxi__refusal">{{ $t('taxi.notThere') }}</span>
             <span v-for="(clause, i) in fare?.words ?? []" :key="i" class="taxi__clause">
               <button
                 v-for="(word, j) in clause"
@@ -681,6 +781,18 @@ onBeforeUnmount(() => {
             <rect x="-7" y="-3" width="14" height="7" rx="2" class="taxi__sign" />
           </g>
 
+          <!-- Money on its way out of the window, or into it. -->
+          <text
+            v-for="coin in coins"
+            :key="coin.id"
+            class="taxi__coin"
+            :class="{ 'taxi__coin--earned': coin.earned }"
+            :x="coin.x"
+            :y="coin.y - 30"
+          >
+            {{ coin.text }}
+          </text>
+
           <!-- The corner they wanted, and the one they were left on. Drawn
                last, so a cross over the cab is a cross over the cab. -->
           <g v-if="outcome" class="taxi__marks">
@@ -716,7 +828,7 @@ onBeforeUnmount(() => {
           <p class="taxi__over-title">{{ $t('taxi.over') }}</p>
           <p v-if="newBest" class="taxi__new-best">{{ $t('taxi.newBest') }}</p>
           <p class="taxi__over-score">
-            {{ $t('taxi.finalScore', { takings: som(state.peak), count: state.delivered }) }}
+            {{ $t('taxi.finalScore', { takings: som(state.takings), count: state.delivered }) }}
           </p>
           <div class="taxi__actions">
             <button class="btn btn--primary" type="button" @click="playAgain">
@@ -912,9 +1024,33 @@ onBeforeUnmount(() => {
   border-color: var(--color-terracotta);
 }
 
+.taxi__who {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
 .taxi__rider {
   font-size: 1.6rem;
   line-height: 1.2;
+}
+
+.taxi__pips {
+  display: flex;
+  gap: 0.15rem;
+}
+
+.taxi__pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+}
+
+.taxi__pip--spent {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
 .taxi__bubble {
@@ -1131,6 +1267,53 @@ onBeforeUnmount(() => {
   stroke: var(--color-terracotta);
   stroke-width: 7;
   stroke-linecap: round;
+}
+
+/* A price rising off the roof of the cab and fading out with it. */
+.taxi__coin {
+  font-size: 23px;
+  font-weight: 800;
+  text-anchor: middle;
+  fill: var(--color-terracotta);
+  stroke: #e9e0c8;
+  stroke-width: 4;
+  paint-order: stroke;
+  pointer-events: none;
+  animation: taxi-coin 0.9s ease-out forwards;
+}
+
+.taxi__coin--earned {
+  fill: var(--color-teal);
+}
+
+@keyframes taxi-coin {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-42px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .taxi__coin {
+    animation-duration: 0.9s;
+    animation-name: taxi-coin-still;
+  }
+
+  @keyframes taxi-coin-still {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
 }
 
 .taxi__beam {
