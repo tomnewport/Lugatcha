@@ -18,6 +18,8 @@ import {
   LANDMARKS,
   LEVELS,
   levelFor,
+  MAX_BLOCKS,
+  MAX_ORDINAL,
   NORTH,
   fareValue,
   FUEL_PER_BLOCK,
@@ -28,6 +30,7 @@ import {
   purse,
   resolve,
   routeUzbek,
+  sayings,
   SOUTH,
   startGame,
   stepUzbek,
@@ -42,8 +45,16 @@ import {
   type Step,
   type TaxiState,
 } from '@/exercises/taxi'
+import { readFileSync } from 'node:fs'
 import en from '@/i18n/locales/en'
 import ru from '@/i18n/locales/ru'
+
+// Shared with scripts/generate_audio.py --self-test: the clause list is written
+// out in both languages, and both are pinned here so a wording added to one and
+// not the other cannot slip through as a silently unrecorded line.
+const recordedClauses: string[] = JSON.parse(
+  readFileSync(new URL('./taxi-clauses.json', import.meta.url), 'utf8'),
+).clauses
 
 /** A cheap deterministic pseudo-random source, so a shift can be replayed. */
 function seeded(seed = 1): () => number {
@@ -71,6 +82,11 @@ function headingBetween(a: Point, b: Point): Dir {
   if (b.x > a.x) return EAST
   if (b.y > a.y) return SOUTH
   return WEST
+}
+
+/** Every way of saying a step, as indexes into its phrasings. */
+function everySaying(step: Step): number[] {
+  return Array.from({ length: sayings(step.kind) }, (_, say) => say)
 }
 
 /** Every instruction the game can ever put together, one step at a time. */
@@ -273,37 +289,74 @@ describe('what the passenger says', () => {
     expect(routeUzbek(steps)).toBe('Toʻgʻriga ikki kvartal yuring. Chapga buriling.')
   })
 
-  it('builds the clause out of the very words the driver can buy', () => {
+  it('builds every wording out of the very words the driver can buy', () => {
     // The sentence and the price list are the same thing, so a word can never
-    // appear in one and not the other.
+    // appear in one and not the other, in any of the wordings.
     for (const step of everyStep()) {
-      expect(
-        `${stepWords(step)
+      for (const say of everySaying(step)) {
+        const joined = stepWords(step, say)
           .map((word) => word.text)
-          .join(' ')}.`,
-      ).toBe(stepUzbek(step))
+          .join(' ')
+        expect(`${joined}.`).toBe(stepUzbek(step, say))
+      }
     }
   })
 
-  it('has a meaning to sell for every word of every clause', () => {
+  it('has a meaning to sell for every word of every wording', () => {
     const words = en.taxi.word as Record<string, string>
     const russian = ru.taxi.word as Record<string, string>
     for (const step of everyStep()) {
-      for (const word of stepWords(step)) {
-        expect(words[word.key]).toBeTruthy()
-        expect(russian[word.key]).toBeTruthy()
-        // A word that names a landmark has to be able to say which one.
-        expect(words[word.key].includes('{place}')).toBe(word.place !== undefined)
+      for (const say of everySaying(step)) {
+        for (const word of stepWords(step, say)) {
+          expect(words[word.key]).toBeTruthy()
+          expect(russian[word.key]).toBeTruthy()
+          // A word that names a landmark has to be able to say which one.
+          expect(words[word.key].includes('{place}')).toBe(word.place !== undefined)
+        }
       }
     }
+  })
+
+  it('says every step more than one way, and never the same way twice', () => {
+    for (const step of everyStep()) {
+      const said = everySaying(step).map((say) => stepUzbek(step, say))
+      expect(said.length).toBeGreaterThanOrEqual(3)
+      expect(new Set(said).size).toBe(said.length)
+      // Each is a whole sentence: opens on a capital, closes on a stop.
+      for (const clause of said) {
+        expect(clause.endsWith('.')).toBe(true)
+        expect(clause[0]).toBe(clause[0].toUpperCase())
+      }
+    }
+  })
+
+  it('wraps an out-of-range wording rather than coming back empty', () => {
+    const step: Step = { kind: 'turnNow', side: 'left' }
+    expect(stepUzbek(step, sayings('turnNow'))).toBe(stepUzbek(step, 0))
+    expect(stepUzbek(step, -1)).toBe(stepUzbek(step, sayings('turnNow') - 1))
+  })
+
+  it('speaks only the clauses the recordings were made from', () => {
+    // If this fails, a wording changed: copy the received list into
+    // tests/taxi-clauses.json, mirror the change in scripts/generate_audio.py,
+    // and re-run the generator so the new lines get recorded.
+    expect([...allSpokenClauses()].sort()).toEqual(recordedClauses)
   })
 
   it('lists every clause it can speak, with no repeats', () => {
     const clauses = allSpokenClauses()
     expect(new Set(clauses).size).toBe(clauses.length)
     // Two sides for every ordinal and every landmark, one bare turn each way,
-    // one line per distance, and one "carry on to" per landmark.
-    expect(clauses).toHaveLength(2 * (4 + 1 + LANDMARKS.length) + 5 + LANDMARKS.length)
+    // one line per distance and one "carry on to" per landmark — each of them
+    // in every wording there is.
+    expect(clauses).toHaveLength(
+      2 *
+        (MAX_ORDINAL * sayings('turn') +
+          sayings('turnNow') +
+          LANDMARKS.length * sayings('landmarkTurn')) +
+        MAX_BLOCKS * sayings('straight') +
+        LANDMARKS.length * sayings('toLandmark'),
+    )
   })
 })
 
@@ -321,6 +374,45 @@ describe('the ramp', () => {
 
   it('tops out on the last level rather than running off the end', () => {
     expect(levelFor(500)).toBe(LEVELS.length - 1)
+  })
+
+  it('opens on one wording and widens as the directions get longer', () => {
+    expect(LEVELS[0].voices).toBe(1)
+    for (let i = 1; i < LEVELS.length; i++) {
+      expect(LEVELS[i].voices).toBeGreaterThanOrEqual(LEVELS[i - 1].voices)
+    }
+    expect(LEVELS[LEVELS.length - 1].voices).toBeGreaterThanOrEqual(3)
+  })
+
+  it('says a first fare the plainest way there is', () => {
+    const rng = seeded(12)
+    const city = buildCity(seeded(6))
+    for (let i = 0; i < 20; i++) {
+      const pose = { x: i % city.width, y: (i * 3) % city.height, dir: (i % 4) as Dir }
+      const fare = pickFare(city, pose, LEVELS[0], rng)
+      if (!fare) continue
+      expect(fare.said).toEqual(fare.steps.map(() => 0))
+    }
+  })
+
+  it('reaches every wording of every step once the level allows them', () => {
+    const rng = seeded(4)
+    const city = buildCity(seeded(2))
+    const last = LEVELS[LEVELS.length - 1]
+    const heard = new Map<string, Set<number>>()
+    for (let i = 0; i < 400; i++) {
+      const pose = { x: i % city.width, y: (i * 7) % city.height, dir: (i % 4) as Dir }
+      const fare = pickFare(city, pose, last, rng)
+      if (!fare) continue
+      fare.steps.forEach((step, index) => {
+        const seen = heard.get(step.kind) ?? new Set<number>()
+        seen.add(fare.said[index])
+        heard.set(step.kind, seen)
+      })
+    }
+    for (const [kind, seen] of heard) {
+      expect(seen.size).toBe(Math.min(last.voices, sayings(kind as Step['kind'])))
+    }
   })
 
   it('introduces the landmarks only once the driver knows the streets', () => {
@@ -375,6 +467,7 @@ describe('picking a fare', () => {
         const fare = pickFare(city, pose, level, rng)
         if (!fare) continue
         for (const clause of fare.clauses) expect(recorded).toContain(clause)
+        expect(fare.clauses).toEqual(fare.steps.map((step, i) => stepUzbek(step, fare.said[i])))
       }
     }
   })

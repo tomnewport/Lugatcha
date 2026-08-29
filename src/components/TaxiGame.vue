@@ -254,7 +254,10 @@ const answerGloss = computed(() =>
   outcome.value ? outcome.value.steps.map(stepGloss).join(' ') : '',
 )
 
-const answerUzbek = computed(() => (outcome.value ? routeUzbek(outcome.value.steps) : ''))
+/** What the passenger actually said, in the wording they said it in. */
+const answerUzbek = computed(() =>
+  outcome.value ? routeUzbek(outcome.value.steps, outcome.value.said) : '',
+)
 
 // --- Saying it --------------------------------------------------------------
 
