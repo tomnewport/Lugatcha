@@ -153,8 +153,11 @@ function shortSom(amount: number): string {
  *
  * The meter tile changes too quietly to notice mid-drag, so every block of fuel
  * and every word bought throws its price up off the roof of the cab, where the
- * driver is already looking. They are keyed and kept in a list because several
- * can be in the air at once — a fast drag spends a block a frame.
+ * driver is already looking. Spending is not a mistake — it is the job, and a
+ * word bought is a word learned — so a price leaves in the same warm brown the
+ * cab is drawn in and only the fare coming back is coloured. They are keyed and
+ * kept in a list because several can be in the air at once: a fast drag spends
+ * a block a frame.
  */
 interface Coin {
   id: number
@@ -175,12 +178,12 @@ function throwCoin(amount: number, earned: boolean) {
     ...coins.value,
     {
       id,
-      text: `${earned ? '+' : '\u2212'}${shortSom(amount)}`,
+      text: `💰 ${earned ? '+' : '\u2212'}${shortSom(amount)}`,
       earned,
-      // Nudged left and right in turn, so two sums in quick succession do not
-      // land on top of each other.
-      x: px(state.value.taxi.x) + (id % 2 ? 16 : -16),
-      y: px(state.value.taxi.y),
+      x: px(state.value.taxi.x),
+      // Every other one starts a little lower, so two sums in quick succession
+      // rise as a pair rather than on top of each other.
+      y: px(state.value.taxi.y) + (id % 2 ? 0 : 20),
     },
   ]
   setTimeout(() => {
@@ -1271,10 +1274,11 @@ onBeforeUnmount(() => {
 
 /* A price rising off the roof of the cab and fading out with it. */
 .taxi__coin {
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 800;
   text-anchor: middle;
-  fill: var(--color-terracotta);
+  /* The cab's own outline: money going out is ordinary, not an alarm. */
+  fill: #6b4a12;
   stroke: #e9e0c8;
   stroke-width: 4;
   paint-order: stroke;
@@ -1283,6 +1287,7 @@ onBeforeUnmount(() => {
 }
 
 .taxi__coin--earned {
+  font-size: 26px;
   fill: var(--color-teal);
 }
 
