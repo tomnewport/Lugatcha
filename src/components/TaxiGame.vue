@@ -17,6 +17,7 @@
  */
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import {
+  buyWord,
   continueRun,
   createGame,
   drive,
@@ -27,21 +28,32 @@ import {
   recordHighScore,
   routeUzbek,
   startGame,
+  wordKey,
   CITY_HEIGHT,
   CITY_WIDTH,
   EAST,
   NORTH,
+  PATIENCE,
   SOUTH,
-  STRIKES,
+  FUEL_PER_BLOCK,
   WEST,
+  WORD_PRICE,
   type Dir,
   type Fare,
   type Landmark,
   type Point,
   type Step,
   type TaxiState,
+  type Word,
 } from '@/exercises/taxi'
-import { primeUzbekAudio, speakUzbek, stopSpeaking, NEIGHBOUR_VOICE_LANGS } from '@/audio/audio'
+import { formatSom } from '@/exercises/bazar'
+import {
+  primeUzbekAudio,
+  speakUzbek,
+  speakUzbekWord,
+  stopSpeaking,
+  NEIGHBOUR_VOICE_LANGS,
+} from '@/audio/audio'
 import { playChime, playHorn } from '@/audio/sfx'
 import { resumeAudio } from '@/audio/context'
 import { useContentLang } from '@/i18n/content'
@@ -49,7 +61,7 @@ import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits<{ done: [] }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { gloss } = useContentLang()
 
 const state = ref<TaxiState>(createGame())
@@ -112,8 +124,40 @@ const fare = computed<Fare | null>(() => state.value.fare)
 const outcome = computed(() => state.value.outcome)
 const playable = computed(() => state.value.status === 'playing' && !outcome.value && !paused.value)
 const level = computed(() => levelFor(state.value.delivered) + 1)
-/** One lamp per strike, spent ones first. */
-const lamps = computed(() => Array.from({ length: STRIKES }, (_, i) => i < state.value.wrong))
+/** The passenger's patience, spent lamps first. */
+const lamps = computed(() => Array.from({ length: PATIENCE }, (_, i) => i < state.value.patience))
+
+/** Every sum on screen is soʻm, grouped the way the bazar prints its prices. */
+function som(amount: number): string {
+  return formatSom(amount, locale.value)
+}
+
+/** Whether this word's meaning has been paid for on this fare. */
+function bought(word: Word): boolean {
+  return state.value.bought.includes(wordKey(word.text))
+}
+
+/** The meaning the driver bought, in their own language. */
+function wordGloss(word: Word): string {
+  return t(`taxi.word.${word.key}`, word.place ? { place: placeName(word.place) } : {})
+}
+
+/**
+ * Buys a word, or — once it is bought — simply says it again.
+ *
+ * Re-reading the half of an instruction you have paid for has to be free, or
+ * the driver is taxed for going back over the thing they are trying to learn.
+ */
+function tapWord(word: Word) {
+  if (!playable.value) return
+  if (bought(word)) {
+    void speakUzbekWord(word.text.toLowerCase())
+    return
+  }
+  state.value = buyWord(state.value, word.text)
+  void speakUzbekWord(word.text.toLowerCase())
+  if (state.value.status === 'over') finish()
+}
 
 function placeName(id: string): string {
   const found = landmark(id)
@@ -301,6 +345,7 @@ function onKey(event: KeyboardEvent) {
     if (!playable.value) return
     event.preventDefault()
     state.value = drive(state.value, arrows[event.key])
+    if (state.value.status === 'over') finish()
     return
   }
   if (event.key === 'Enter' || event.key === ' ') {
@@ -312,8 +357,15 @@ function onKey(event: KeyboardEvent) {
 
 // --- Dropping off -----------------------------------------------------------
 
-/** How long the "rahmat!" is left up before the next passenger gets in. */
-const THANKS_MS = 1700
+/** How long the payslip is left up before the next passenger gets in. */
+const THANKS_MS = 1900
+/** How long "not here" stays over the instruction after a refused corner. */
+const REFUSAL_MS = 1400
+
+/** Set while the passenger is saying this is not the place; keyed so a second
+ *  refusal re-runs the flash rather than sitting on the first one. */
+const refused = ref(false)
+const refusedKey = ref(0)
 
 let advance: ReturnType<typeof setTimeout> | undefined
 
@@ -323,21 +375,34 @@ function letThemOut() {
   speaking.value = false
   stopSpeaking()
 
-  const dropped = dropOff(state.value)
-  state.value = dropped
-  const result = dropped.outcome
-  if (!result) return
+  const drop = dropOff(state.value)
+  state.value = drop.state
+  if (drop.result === 'ignored') return
 
-  buzz(result.correct ? 20 : [40, 60, 90])
-  if (result.correct) {
+  if (drop.result === 'arrived') {
     playChime()
-    // A wrong drop stays on screen until the driver has looked at the route
-    // they were meant to take; a right one gets out of the way.
+    buzz(20)
+    // The payslip stays up for a moment and then the next passenger gets in;
+    // a passenger who gave up leaves the route they wanted on screen until the
+    // driver has looked at it.
     advance = setTimeout(nextPassenger, THANKS_MS)
   } else {
     playHorn()
+    buzz([40, 60, 90])
+    // Refused: they stay in the cab, so all that changes is the nudge.
+    if (drop.result === 'refused') flashRefusal()
   }
-  if (dropped.status === 'over') finish()
+  if (state.value.status === 'over') finish()
+}
+
+/** Shows "not here" over the instruction for a moment. */
+function flashRefusal() {
+  refused.value = true
+  refusedKey.value++
+  const shown = refusedKey.value
+  setTimeout(() => {
+    if (refusedKey.value === shown) refused.value = false
+  }, REFUSAL_MS)
 }
 
 function nextPassenger() {
@@ -352,7 +417,7 @@ function clearAdvance() {
 }
 
 function finish() {
-  newBest.value = recordHighScore(state.value.delivered)
+  newBest.value = recordHighScore(state.value.peak)
   best.value = readHighScore()
 }
 
@@ -390,7 +455,7 @@ function done() {
   stopSpeaking()
   // A shift has no natural end, so a driver who has had enough and closes the
   // game still keeps what they delivered.
-  recordHighScore(state.value.delivered)
+  recordHighScore(state.value.peak)
   emit('done')
 }
 
@@ -426,7 +491,9 @@ onBeforeUnmount(() => {
     <div class="taxi__card">
       <header class="taxi__header">
         <div class="taxi__titles">
-          <span class="taxi__eyebrow">{{ $t('taxi.eyebrow') }}</span>
+          <span class="taxi__eyebrow">
+            {{ $t('taxi.eyebrow') }} · {{ $t('taxi.level', { level }) }}
+          </span>
           <h2 class="taxi__title">{{ $t('taxi.title') }}</h2>
         </div>
         <button class="taxi__close" type="button" :aria-label="$t('taxi.skip')" @click="done">
@@ -443,21 +510,21 @@ onBeforeUnmount(() => {
       </header>
 
       <div class="taxi__hud">
-        <span class="taxi__stat">
-          <span class="taxi__stat-label">{{ $t('taxi.fares') }}</span>
-          <strong class="taxi__stat-value">{{ state.delivered }}</strong>
+        <span class="taxi__stat taxi__stat--cash">
+          <span class="taxi__stat-label">{{ $t('taxi.cash') }}</span>
+          <strong class="taxi__stat-value">{{ som(state.balance) }}</strong>
         </span>
         <span class="taxi__stat">
-          <span class="taxi__stat-label">{{ $t('taxi.level') }}</span>
-          <strong class="taxi__stat-value">{{ level }}</strong>
+          <span class="taxi__stat-label">{{ $t('taxi.fare') }}</span>
+          <strong class="taxi__stat-value">{{ som(fare?.pay ?? 0) }}</strong>
         </span>
         <span class="taxi__stat">
           <span class="taxi__stat-label">{{ $t('taxi.best') }}</span>
-          <strong class="taxi__stat-value">{{ best }}</strong>
+          <strong class="taxi__stat-value">{{ som(best) }}</strong>
         </span>
         <span
           class="taxi__lamps"
-          :aria-label="$t('taxi.strikes', { count: state.wrong, total: STRIKES })"
+          :aria-label="$t('taxi.patience', { count: PATIENCE - state.patience })"
         >
           <span
             v-for="(spent, i) in lamps"
@@ -473,52 +540,75 @@ onBeforeUnmount(() => {
       <div
         class="taxi__fare"
         :class="{
-          'taxi__fare--right': outcome?.correct,
-          'taxi__fare--wrong': outcome && !outcome.correct,
+          'taxi__fare--right': outcome?.result === 'arrived',
+          'taxi__fare--wrong': outcome?.result === 'gaveUp' || refused,
         }"
       >
-        <span class="taxi__rider" aria-hidden="true">{{ outcome?.correct ? '🙋' : '🧕' }}</span>
+        <span class="taxi__rider" aria-hidden="true">
+          {{ outcome?.result === 'arrived' ? '🙋' : '🧕' }}
+        </span>
 
-        <!-- The words they used, kept next to what they meant: hearing the
+        <!-- The words they used, kept next to what they meant: reading the
              clause again with its meaning under it is the lesson. -->
         <div v-if="outcome" class="taxi__verdict">
           <p class="taxi__verdict-title">
-            {{ outcome.correct ? $t('taxi.thanks') : $t('taxi.notThere') }}
+            <span>{{ outcome.result === 'arrived' ? $t('taxi.thanks') : $t('taxi.gaveUp') }}</span>
+            <strong v-if="outcome.paid" class="taxi__paid">
+              {{ $t('taxi.paid', { amount: som(outcome.paid) }) }}
+            </strong>
           </p>
           <p class="taxi__verdict-said">{{ answerUzbek }}</p>
           <p class="taxi__verdict-body">{{ answerGloss }}</p>
         </div>
 
-        <button
-          v-else
-          class="taxi__bubble"
-          :class="{ 'taxi__bubble--speaking': speaking }"
-          type="button"
-          :aria-label="$t('taxi.hearAgain')"
-          @click="repeat"
-        >
+        <!-- Every word is a button: tapping one buys its meaning, and having
+             bought it, says it again for nothing. -->
+        <div v-else class="taxi__bubble" :class="{ 'taxi__bubble--speaking': speaking }">
           <span class="taxi__clauses">
-            <span v-for="(clause, i) in fare?.clauses ?? []" :key="i" class="taxi__clause">
-              {{ clause }}
+            <span v-if="refused" class="taxi__refusal">{{ $t('taxi.notThere') }}</span>
+            <span v-for="(clause, i) in fare?.words ?? []" :key="i" class="taxi__clause">
+              <button
+                v-for="(word, j) in clause"
+                :key="j"
+                class="taxi__word"
+                :class="{ 'taxi__word--bought': bought(word) }"
+                type="button"
+                :aria-label="
+                  bought(word)
+                    ? $t('taxi.sayWord', { word: word.text })
+                    : $t('taxi.buyWord', { word: word.text, price: som(WORD_PRICE) })
+                "
+                @click="tapWord(word)"
+              >
+                <span class="taxi__word-uz">{{ word.text }}</span>
+                <span v-if="bought(word)" class="taxi__word-gloss">{{ wordGloss(word) }}</span>
+              </button>
             </span>
           </span>
-          <svg class="taxi__speaker" viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M4 9v6h4l5 4V5L8 9H4z"
-              fill="currentColor"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
+          <button
+            class="taxi__speaker"
+            type="button"
+            :aria-label="$t('taxi.hearAgain')"
+            @click="repeat"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M4 9v6h4l5 4V5L8 9H4z"
+                fill="currentColor"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="taxi__stage">
@@ -567,7 +657,7 @@ onBeforeUnmount(() => {
           <polyline
             v-if="outcome"
             class="taxi__answer"
-            :class="{ 'taxi__answer--right': outcome.correct }"
+            :class="{ 'taxi__answer--right': outcome.result === 'arrived' }"
             :points="pointsOf(outcome.route.path)"
           />
 
@@ -601,7 +691,7 @@ onBeforeUnmount(() => {
               r="29"
             />
             <path
-              v-if="!outcome.correct"
+              v-if="outcome.result !== 'arrived'"
               class="taxi__missed"
               :d="`M${px(outcome.dropped.x) - 15} ${px(outcome.dropped.y) - 15}l30 30M${px(outcome.dropped.x) + 15} ${px(outcome.dropped.y) - 15}l-30 30`"
             />
@@ -625,7 +715,9 @@ onBeforeUnmount(() => {
         <div v-else-if="state.status === 'over'" class="taxi__overlay">
           <p class="taxi__over-title">{{ $t('taxi.over') }}</p>
           <p v-if="newBest" class="taxi__new-best">{{ $t('taxi.newBest') }}</p>
-          <p class="taxi__over-score">{{ $t('taxi.finalScore', { count: state.delivered }) }}</p>
+          <p class="taxi__over-score">
+            {{ $t('taxi.finalScore', { takings: som(state.peak), count: state.delivered }) }}
+          </p>
           <div class="taxi__actions">
             <button class="btn btn--primary" type="button" @click="playAgain">
               {{ $t('taxi.again') }}
@@ -655,7 +747,9 @@ onBeforeUnmount(() => {
         >
           {{ $t('taxi.dropOff') }}
         </button>
-        <p class="taxi__hint">{{ $t('taxi.steer') }}</p>
+        <p class="taxi__hint">
+          {{ $t('taxi.steer', { fuel: som(FUEL_PER_BLOCK), word: som(WORD_PRICE) }) }}
+        </p>
       </footer>
     </div>
   </div>
@@ -761,10 +855,15 @@ onBeforeUnmount(() => {
 }
 
 .taxi__stat-value {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
   font-weight: 800;
   color: var(--color-primary);
   line-height: 1;
+}
+
+.taxi__stat--cash .taxi__stat-value {
+  color: var(--color-teal);
 }
 
 /* The three lights on the meter: one goes out per passenger left astray. */
@@ -823,8 +922,8 @@ onBeforeUnmount(() => {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.5rem;
+  gap: 0.4rem;
+  padding: 0.35rem 0.4rem;
   text-align: left;
   background: var(--color-surface);
   border: 1.5px solid var(--color-border);
@@ -846,17 +945,66 @@ onBeforeUnmount(() => {
 }
 
 .taxi__clause {
-  font-size: 0.95rem;
-  font-weight: 700;
-  line-height: 1.25;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.15rem 0.3rem;
+}
+
+/* Each word is a price tag as much as a word: untouched it is just the Uzbek,
+   and once bought it carries its meaning underneath for the rest of the fare. */
+.taxi__word {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding: 0.05rem 0.15rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  text-align: left;
   color: var(--color-primary);
 }
 
+.taxi__word-uz {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+  border-bottom: 1.5px dotted var(--color-gold);
+}
+
+.taxi__word--bought .taxi__word-uz {
+  border-bottom-color: transparent;
+}
+
+.taxi__word-gloss {
+  font-size: 0.65rem;
+  line-height: 1.15;
+  color: var(--color-text-muted);
+}
+
+.taxi__refusal {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--color-terracotta);
+}
+
 .taxi__speaker {
-  width: 20px;
-  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
   color: var(--color-primary-light);
+}
+
+.taxi__speaker svg {
+  width: 18px;
+  height: 18px;
 }
 
 .taxi__verdict {
@@ -865,10 +1013,21 @@ onBeforeUnmount(() => {
 }
 
 .taxi__verdict-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
   margin: 0 0 0.15rem;
   font-size: 0.95rem;
   font-weight: 800;
   color: var(--color-text);
+}
+
+.taxi__paid {
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: var(--color-teal);
+  font-variant-numeric: tabular-nums;
 }
 
 .taxi__verdict-said {

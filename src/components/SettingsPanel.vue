@@ -365,7 +365,7 @@ async function restoreFromFile() {
         {{ $t('settings.game.bestBazar', { score: formatSom(bazarBest, $i18n.locale) }) }}
       </p>
       <p v-if="taxiBest > 0" class="settings-card__note">
-        {{ $t('settings.game.bestTaxi', { score: taxiBest }) }}
+        {{ $t('settings.game.bestTaxi', { score: formatSom(taxiBest, $i18n.locale) }) }}
       </p>
     </section>
 
