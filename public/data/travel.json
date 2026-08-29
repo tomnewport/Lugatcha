@@ -69,7 +69,8 @@
         "english": "silk",
         "russian": "шёлк",
         "theme": "samarkand",
-        "level": 1
+        "level": 1,
+        "sameAs": "museum.silk"
       }
     ]
   },
@@ -107,7 +108,8 @@
         "english": "madrasah",
         "russian": "медресе",
         "theme": "bukhara",
-        "level": 2
+        "level": 2,
+        "sameAs": "samarkand.madrasa"
       },
       {
         "id": "bukhara.karvonsaroy",
@@ -255,7 +257,8 @@
         "english": "metro",
         "russian": "метро",
         "theme": "tashkent",
-        "level": 1
+        "level": 1,
+        "sameAs": "metro-station.metro"
       },
       {
         "id": "tashkent.bozor",
@@ -264,7 +267,8 @@
         "english": "bazaar",
         "russian": "базар",
         "theme": "tashkent",
-        "level": 1
+        "level": 1,
+        "sameAs": "public-square.bazaar"
       },
       {
         "id": "tashkent.maydon",
@@ -273,7 +277,8 @@
         "english": "square",
         "russian": "площадь",
         "theme": "tashkent",
-        "level": 2
+        "level": 2,
+        "sameAs": "public-square.square"
       },
       {
         "id": "tashkent.zilzila",
@@ -347,7 +352,8 @@
         "english": "fruit",
         "russian": "фрукт",
         "theme": "fergana",
-        "level": 1
+        "level": 1,
+        "sameAs": "grocery-store.fruit"
       },
       {
         "id": "fergana.orik",
@@ -403,7 +409,8 @@
         "english": "water",
         "russian": "вода",
         "theme": "aral",
-        "level": 1
+        "level": 1,
+        "sameAs": "restaurant.water"
       },
       {
         "id": "aral.baliq",
@@ -430,7 +437,8 @@
         "english": "sand",
         "russian": "песок",
         "theme": "aral",
-        "level": 1
+        "level": 1,
+        "sameAs": "khiva.qum"
       },
       {
         "id": "aral.tuz",

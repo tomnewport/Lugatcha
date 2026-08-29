@@ -24,7 +24,8 @@
     "english": "ticket",
     "russian": "билет",
     "theme": "train-station",
-    "level": 1
+    "level": 1,
+    "sameAs": "airport.ticket"
   },
   {
     "id": "train-station.platform",
@@ -42,7 +43,8 @@
     "english": "when",
     "russian": "когда",
     "theme": "train-station",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.when"
   },
   {
     "id": "train-station.late",

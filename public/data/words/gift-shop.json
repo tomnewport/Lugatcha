@@ -15,7 +15,8 @@
     "english": "how much",
     "russian": "сколько",
     "theme": "gift-shop",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.how-much"
   },
   {
     "id": "gift-shop.expensive",
@@ -53,7 +54,8 @@
     "theme": "gift-shop",
     "level": 1,
     "usageNotes": "Chegirma bormi? — Is there a discount? Polite bargaining is normal.",
-    "usageNotesRu": "Chegirma bormi? — Есть ли скидка? Вежливый торг — это нормально."
+    "usageNotesRu": "Chegirma bormi? — Есть ли скидка? Вежливый торг — это нормально.",
+    "sameAs": "museum.discount"
   },
   {
     "id": "gift-shop.ceramics",
@@ -62,7 +64,8 @@
     "english": "ceramics",
     "russian": "керамика",
     "theme": "gift-shop",
-    "level": 2
+    "level": 2,
+    "sameAs": "museum.ceramics"
   },
   {
     "id": "gift-shop.scarf",
@@ -80,7 +83,8 @@
     "english": "silk",
     "russian": "шёлк",
     "theme": "gift-shop",
-    "level": 2
+    "level": 2,
+    "sameAs": "museum.silk"
   },
   {
     "id": "gift-shop.colour",

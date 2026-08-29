@@ -15,7 +15,8 @@
     "english": "tea",
     "russian": "чай",
     "theme": "choyxona",
-    "level": 1
+    "level": 1,
+    "sameAs": "restaurant.tea"
   },
   {
     "id": "choyxona.friend",
@@ -33,7 +34,8 @@
     "english": "name",
     "russian": "имя",
     "theme": "choyxona",
-    "level": 1
+    "level": 1,
+    "sameAs": "library.name"
   },
   {
     "id": "choyxona.sit",

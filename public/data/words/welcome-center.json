@@ -8,7 +8,8 @@
     "theme": "welcome-center",
     "level": 1,
     "usageNotes": "The everyday hello — friendly and safe with almost anyone.",
-    "usageNotesRu": "Повседневное приветствие — уместно почти с любым человеком."
+    "usageNotesRu": "Повседневное приветствие — уместно почти с любым человеком.",
+    "sameAs": "core.hello"
   },
   {
     "id": "welcome-center.assalomu-alaykum",
@@ -39,7 +40,8 @@
     "english": "Goodbye",
     "russian": "До свидания",
     "theme": "welcome-center",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.goodbye"
   },
   {
     "id": "welcome-center.please",
@@ -48,7 +50,8 @@
     "english": "Please",
     "russian": "Пожалуйста",
     "theme": "welcome-center",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.please"
   },
   {
     "id": "welcome-center.thank-you",
@@ -57,7 +60,8 @@
     "english": "Thank you",
     "russian": "Спасибо",
     "theme": "welcome-center",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.thank-you"
   },
   {
     "id": "welcome-center.youre-welcome",
@@ -79,7 +83,8 @@
     "theme": "welcome-center",
     "level": 1,
     "usageNotes": "Polite form to get attention or to apologise.",
-    "usageNotesRu": "Вежливая форма, чтобы привлечь внимание или извиниться."
+    "usageNotesRu": "Вежливая форма, чтобы привлечь внимание или извиниться.",
+    "sameAs": "core.excuse-me"
   },
   {
     "id": "welcome-center.yes",
@@ -88,7 +93,8 @@
     "english": "Yes",
     "russian": "Да",
     "theme": "welcome-center",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.yes"
   },
   {
     "id": "welcome-center.no",
@@ -97,7 +103,8 @@
     "english": "No",
     "russian": "Нет",
     "theme": "welcome-center",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.no"
   },
   {
     "id": "welcome-center.help",
@@ -119,7 +126,8 @@
     "theme": "welcome-center",
     "level": 1,
     "usageNotes": "Also the easy answer to 'how are you?' — Yaxshi.",
-    "usageNotesRu": "Также простой ответ на «как дела?» — Yaxshi."
+    "usageNotesRu": "Также простой ответ на «как дела?» — Yaxshi.",
+    "sameAs": "core.good"
   },
   {
     "id": "welcome-center.i-dont-understand",
@@ -130,6 +138,7 @@
     "theme": "welcome-center",
     "level": 1,
     "usageNotes": "Say this when you need someone to slow down or repeat.",
-    "usageNotesRu": "Скажите это, когда нужно, чтобы собеседник повторил или говорил медленнее."
+    "usageNotesRu": "Скажите это, когда нужно, чтобы собеседник повторил или говорил медленнее.",
+    "sameAs": "core.i-dont-understand"
   }
 ]

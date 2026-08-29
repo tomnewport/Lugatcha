@@ -6,6 +6,7 @@ import { useContentLang } from '@/i18n/content'
 import LessonSectionCard from './LessonSectionCard.vue'
 import AudioButton from '@/components/AudioButton.vue'
 import CyrillicSub from '@/components/CyrillicSub.vue'
+import VerbFormStrip from '@/components/VerbFormStrip.vue'
 
 const props = defineProps<{ group: VocabGroup }>()
 const emit = defineEmits<{ done: [] }>()
@@ -38,11 +39,12 @@ onMounted(() => {
             :style="{ background: word.swatch }"
             aria-hidden="true"
           />
-          <span class="word__text">
+          <div class="word__text">
             <span class="word__uzbek" lang="uz">{{ word.uzbek }}</span>
             <CyrillicSub :latin="word.uzbek" :cyrillic="word.cyrillic" />
             <span class="word__english">{{ gloss(word) }}</span>
-          </span>
+            <VerbFormStrip v-if="word.verb" class="word__verb" :verb="word.verb" compact />
+          </div>
           <AudioButton :text="word.uzbek" />
         </li>
       </ul>
@@ -110,6 +112,10 @@ onMounted(() => {
 .word__english {
   font-size: 0.85rem;
   color: var(--color-text-muted);
+}
+
+.word__verb {
+  margin-top: 0.35rem;
 }
 
 .review__cta {

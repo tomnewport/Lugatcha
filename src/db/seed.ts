@@ -70,7 +70,9 @@ async function fetchTravelWords(): Promise<Word[]> {
 // v7: added the Welcome Center onboarding vocabulary.
 // v8: added basic Welcome Center stories and roleplay.
 // v9: added Cyrillic spellings to every word (sight-Cyrillic test question).
-export const CONTENT_VERSION = 9
+// v10: linked the words several topics share (sameAs), and added the
+// high-frequency vocabulary — the "little words" and "everyday verbs" sets.
+export const CONTENT_VERSION = 10
 const CONTENT_VERSION_KEY = 'lugatcha.contentVersion'
 
 function storedContentVersion(): string | null {

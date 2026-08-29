@@ -17,7 +17,8 @@
     "theme": "police-station",
     "level": 1,
     "usageNotes": "Yordam bering! — Help me!",
-    "usageNotesRu": "Yordam bering! — Помогите!"
+    "usageNotesRu": "Yordam bering! — Помогите!",
+    "sameAs": "welcome-center.help"
   },
   {
     "id": "police-station.document",
@@ -102,7 +103,8 @@
     "theme": "police-station",
     "level": 2,
     "usageNotes": "Tourists staying privately may need to register their stay.",
-    "usageNotesRu": "Туристам, останавливающимся в частном жилье, может потребоваться регистрация пребывания."
+    "usageNotesRu": "Туристам, останавливающимся в частном жилье, может потребоваться регистрация пребывания.",
+    "sameAs": "hotel.check-in"
   },
   {
     "id": "police-station.form",

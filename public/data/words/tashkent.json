@@ -6,7 +6,8 @@
     "english": "big",
     "russian": "большой",
     "theme": "tashkent",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.big"
   },
   {
     "id": "tashkent.shahar",
@@ -15,7 +16,8 @@
     "english": "city",
     "russian": "город",
     "theme": "tashkent",
-    "level": 1
+    "level": 1,
+    "sameAs": "samarkand.shahar"
   },
   {
     "id": "tashkent.odam",
@@ -33,7 +35,8 @@
     "english": "fruit",
     "russian": "фрукты",
     "theme": "tashkent",
-    "level": 1
+    "level": 1,
+    "sameAs": "grocery-store.fruit"
   },
   {
     "id": "tashkent.kocha",
@@ -42,7 +45,8 @@
     "english": "street",
     "russian": "улица",
     "theme": "tashkent",
-    "level": 1
+    "level": 1,
+    "sameAs": "police-station.street"
   },
   {
     "id": "tashkent.avtobus",
@@ -51,7 +55,8 @@
     "english": "bus",
     "russian": "автобус",
     "theme": "tashkent",
-    "level": 1
+    "level": 1,
+    "sameAs": "bus-stop.bus"
   },
   {
     "id": "tashkent.dokon",
@@ -60,7 +65,8 @@
     "english": "shop",
     "russian": "магазин",
     "theme": "tashkent",
-    "level": 1
+    "level": 1,
+    "sameAs": "grocery-store.shop"
   },
   {
     "id": "tashkent.toza",

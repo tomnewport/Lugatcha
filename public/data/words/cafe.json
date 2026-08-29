@@ -15,7 +15,8 @@
     "english": "tea",
     "russian": "чай",
     "theme": "cafe",
-    "level": 1
+    "level": 1,
+    "sameAs": "restaurant.tea"
   },
   {
     "id": "cafe.sugar",
@@ -51,7 +52,8 @@
     "english": "small",
     "russian": "маленький",
     "theme": "cafe",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.small"
   },
   {
     "id": "cafe.big",
@@ -60,7 +62,8 @@
     "english": "big",
     "russian": "большой",
     "theme": "cafe",
-    "level": 1
+    "level": 1,
+    "sameAs": "core.big"
   },
   {
     "id": "cafe.milk",
@@ -69,7 +72,8 @@
     "english": "milk",
     "russian": "молоко",
     "theme": "cafe",
-    "level": 2
+    "level": 2,
+    "sameAs": "grocery-store.milk"
   },
   {
     "id": "cafe.juice",

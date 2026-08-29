@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { tokenize, normalizeToken } from '@/exercises/validate'
-import type { Word, Story, Roleplay, TravelPlace } from '@/db/types'
+import { canonicalId } from '@/exercises/wordFamilies'
+import type { Word, Story, Roleplay, TravelPlace, VocabGroup, VocabGroupMeta } from '@/db/types'
 
 const DATA = join(__dirname, '..', 'public', 'data')
 const read = <T>(p: string): T => JSON.parse(readFileSync(join(DATA, p), 'utf8'))
@@ -15,6 +16,14 @@ interface Manifest {
 const manifest = read<Manifest>('manifest.json')
 
 const allWords: Word[] = manifest.words.flatMap((n) => read<Word[]>(`words/${n}.json`))
+/** Everything the app seeds into the words table: themes, travel places, groups. */
+const everyWord: Word[] = [
+  ...allWords,
+  ...read<TravelPlace[]>('travel.json').flatMap((p) => p.words ?? []),
+  ...read<VocabGroupMeta[]>('groups/index.json').flatMap(
+    (m) => read<VocabGroup>(`groups/${m.id}.json`).words ?? [],
+  ),
+]
 const allStories: Story[] = manifest.stories.flatMap((n) => read<Story[]>(`stories/${n}.json`))
 const allRoleplays: Roleplay[] = manifest.roleplay.flatMap((n) => read<Roleplay[]>(`roleplay/${n}.json`))
 
@@ -44,6 +53,41 @@ describe('vocabulary', () => {
     for (const theme of manifest.words) {
       const count = allWords.filter((w) => w.theme === theme).length
       expect(count, `theme ${theme} word count`).toBeGreaterThanOrEqual(10)
+    }
+  })
+})
+
+describe('word families', () => {
+  // The same word belongs to several topics — choy to the cafe, the tea house
+  // and the restaurant. Each topic may list it, but only one copy teaches it;
+  // the rest point at that one with `sameAs` so the word is met, drilled and
+  // learned once (src/exercises/wordFamilies.ts).
+  const byId = new Map(everyWord.map((w) => [w.id, w]))
+  const bySurface = new Map<string, Word[]>()
+  for (const w of everyWord) {
+    const form = normalizeToken(w.uzbek)
+    bySurface.set(form, [...(bySurface.get(form) ?? []), w])
+  }
+
+  it('links every word that more than one topic lists', () => {
+    const unlinked: string[] = []
+    for (const [form, words] of bySurface) {
+      if (words.length < 2) continue
+      const canonicals = new Set(words.map(canonicalId))
+      if (canonicals.size > 1) unlinked.push(`${form}: ${[...canonicals].join(' / ')}`)
+    }
+    expect(unlinked, `unlinked duplicates — add "sameAs":\n${unlinked.join('\n')}`).toHaveLength(0)
+  })
+
+  it('points every sameAs at a real word that is not itself a copy', () => {
+    for (const w of everyWord) {
+      if (!w.sameAs) continue
+      const target = byId.get(w.sameAs)
+      expect(target, `${w.id}: sameAs "${w.sameAs}" does not exist`).toBeDefined()
+      expect(target?.sameAs, `${w.id}: sameAs points at another copy (chain)`).toBeUndefined()
+      expect(normalizeToken(target!.uzbek), `${w.id}: sameAs points at a different word`).toBe(
+        normalizeToken(w.uzbek),
+      )
     }
   })
 })

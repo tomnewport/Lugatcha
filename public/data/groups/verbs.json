@@ -1,0 +1,859 @@
+{
+  "id": "verbs",
+  "order": 6,
+  "title": {
+    "en": "Everyday verbs",
+    "uz": "Kundalik fe'llar",
+    "ru": "Повседневные глаголы"
+  },
+  "icon": "🙋",
+  "blurb": "I'll take, please give, I'm waiting — in the polite form",
+  "blurbRu": "Я возьму, дайте, я подожду — в вежливой форме",
+  "article": [
+    {
+      "heading": "The ending says who",
+      "headingRu": "Окончание говорит, кто",
+      "body": [
+        "Uzbek verbs are listed in dictionaries ending in **-moq**: *olmoq* (to take), *bermoq* (to give), *kutmoq* (to wait). You never actually say that form. Chop off the -moq and you have the root — *ol-*, *ber-*, *kut-* — and everything is built on that.",
+        "For the everyday present-future — \"I take\", \"I'll take\", \"I'm taking\" are all the same form — add **-a-** and then the ending for who:",
+        "**men → -aman** (I), **siz → -asiz** (you). So *ol-* gives **olaman** (I'll take) and **olasiz** (you take). A root ending in a vowel uses **-y-** instead: *xohla-* → **xohlayman** (I want).",
+        "Because the ending already says who, the pronoun is usually dropped. *Kutaman* on its own is a complete sentence: \"I'll wait.\" And the verb comes **last**: *Men choy olaman* — I'll have tea."
+      ],
+      "bodyRu": [
+        "В словарях узбекские глаголы стоят с окончанием **-moq**: *olmoq* (брать), *bermoq* (давать), *kutmoq* (ждать). Эту форму вслух не говорят. Уберите -moq — останется корень: *ol-*, *ber-*, *kut-* — на нём всё и строится.",
+        "Для обычного настояще-будущего времени — «я беру», «я возьму», «я сейчас беру» — это одна и та же форма: добавьте **-a-**, а затем окончание лица:",
+        "**men → -aman** (я), **siz → -asiz** (вы). От *ol-* получаем **olaman** (я возьму) и **olasiz** (вы берёте). Корень на гласную берёт **-y-**: *xohla-* → **xohlayman** (я хочу).",
+        "Раз окончание уже указывает на лицо, местоимение обычно опускают. *Kutaman* само по себе — законченное предложение: «Я подожду». И глагол стоит **в конце**: *Men choy olaman* — я буду чай."
+      ],
+      "examples": [
+        {
+          "uzbek": "Bitta olaman",
+          "english": "I'll take one",
+          "russian": "Я возьму одну",
+          "breakdown": [
+            "bitta",
+            "ol",
+            "a",
+            "man"
+          ],
+          "gloss": [
+            "one",
+            "take",
+            "present",
+            "I"
+          ],
+          "glossRu": [
+            "одну",
+            "брать",
+            "наст.",
+            "я"
+          ]
+        },
+        {
+          "uzbek": "Nima xohlaysiz?",
+          "english": "What would you like?",
+          "russian": "Что вы хотите?",
+          "breakdown": [
+            "nima",
+            "xohla",
+            "y",
+            "siz"
+          ],
+          "gloss": [
+            "what",
+            "want",
+            "present",
+            "you"
+          ],
+          "glossRu": [
+            "что",
+            "хотеть",
+            "наст.",
+            "вы"
+          ]
+        }
+      ]
+    },
+    {
+      "heading": "Asking for things: -ing",
+      "headingRu": "Просьба: -ing",
+      "body": [
+        "To ask someone to do something politely, add **-ing** to the root: *ber-* → **bering** (please give), *kut-* → **kuting** (please wait), *kel-* → **keling** (come in). This is the form you will use most as a visitor, and it is polite on its own — you do not need to add anything to soften it, though *iltimos* (please) never hurts.",
+        "There is a shorter form — bare *ber!*, *kut!* — that goes with *sen*. Leave it alone. Between the two, **-ing** is the one that is never wrong: with a shopkeeper, a waiter, a taxi driver, someone your own age, anyone.",
+        "Put it together with **menga** (to me) and you can ask for anything: *Menga choy bering* — please give me tea."
+      ],
+      "bodyRu": [
+        "Чтобы вежливо о чём-то попросить, добавьте к корню **-ing**: *ber-* → **bering** (дайте), *kut-* → **kuting** (подождите), *kel-* → **keling** (заходите). Это форма, которой гость пользуется чаще всего; она вежлива сама по себе — смягчать её не нужно, хотя *iltimos* (пожалуйста) никогда не помешает.",
+        "Есть и короткая форма — просто *ber!*, *kut!* — она идёт с *sen*. Не трогайте её. Из двух форм **-ing** — та, с которой не ошибёшься: с продавцом, официантом, таксистом, ровесником, с кем угодно.",
+        "Соедините её с **menga** (мне) — и можно попросить что угодно: *Menga choy bering* — дайте мне, пожалуйста, чай."
+      ],
+      "examples": [
+        {
+          "uzbek": "Menga bitta bering",
+          "english": "Please give me one",
+          "russian": "Дайте мне одну, пожалуйста"
+        },
+        {
+          "uzbek": "Bir daqiqa kuting",
+          "english": "Wait a minute, please",
+          "russian": "Подождите минуту, пожалуйста"
+        }
+      ]
+    },
+    {
+      "heading": "Turning it into a question, or a no",
+      "headingRu": "Вопрос и отрицание",
+      "body": [
+        "A question needs no new word order — add **-mi** to the end of the verb: *olasiz* → **olasizmi?** (will you take it?), *bilasiz* → **bilasizmi?** (do you know?).",
+        "A \"no\" is built into the verb with **-ma-**, slipped in right after the root: *bilaman* (I know) → **bilmayman** (I don't know); *tushundim* (I understood) → **tushunmadim** (I didn't catch that). Those last two are worth memorising as they stand — you will need them.",
+        "For \"he/she/it\", the ending is simply **-di**: *keladi* (it comes / it's coming), *turadi* (it costs), *bo'ladi* (that works). *Qancha turadi?* — how much does it cost?"
+      ],
+      "bodyRu": [
+        "Для вопроса не нужен новый порядок слов — добавьте **-mi** в конец глагола: *olasiz* → **olasizmi?** (возьмёте?), *bilasiz* → **bilasizmi?** (вы знаете?).",
+        "Отрицание встроено в глагол через **-ma-**, сразу после корня: *bilaman* (я знаю) → **bilmayman** (я не знаю); *tushundim* (я понял) → **tushunmadim** (я не понял). Последние две стоит запомнить целиком — они пригодятся.",
+        "Для «он/она/оно» окончание просто **-di**: *keladi* (приходит), *turadi* (стоит), *bo'ladi* (годится). *Qancha turadi?* — сколько это стоит?"
+      ],
+      "examples": [
+        {
+          "uzbek": "Bilmayman",
+          "english": "I don't know",
+          "russian": "Я не знаю",
+          "breakdown": [
+            "bil",
+            "ma",
+            "y",
+            "man"
+          ],
+          "gloss": [
+            "know",
+            "not",
+            "present",
+            "I"
+          ],
+          "glossRu": [
+            "знать",
+            "не",
+            "наст.",
+            "я"
+          ]
+        },
+        {
+          "uzbek": "Qancha turadi?",
+          "english": "How much does it cost?",
+          "russian": "Сколько это стоит?"
+        }
+      ]
+    }
+  ],
+  "words": [
+    {
+      "id": "verbs.olaman",
+      "uzbek": "olaman",
+      "cyrillic": "оламан",
+      "english": "I'll take it / I'll have it",
+      "russian": "я возьму",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "inflections": [
+        "olamanmi",
+        "oldim"
+      ],
+      "usageNotes": "Also \"I'll buy it\". Bitta olaman — I'll take one.",
+      "usageNotesRu": "Также «я куплю». Bitta olaman — я возьму одну.",
+      "verb": {
+        "infinitive": "olmoq",
+        "gloss": "to take / to buy",
+        "glossRu": "брать / покупать",
+        "i": "olaman",
+        "you": "olasiz",
+        "request": "oling",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.olasiz",
+      "uzbek": "olasiz",
+      "cyrillic": "оласиз",
+      "english": "you take / you'll have",
+      "russian": "вы берёте / вы возьмёте",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "inflections": [
+        "olasizmi"
+      ],
+      "usageNotes": "Add -mi to ask: Olasizmi? — will you take it?",
+      "usageNotesRu": "Добавьте -mi для вопроса: Olasizmi? — возьмёте?",
+      "verb": {
+        "infinitive": "olmoq",
+        "gloss": "to take / to buy",
+        "glossRu": "брать / покупать",
+        "i": "olaman",
+        "you": "olasiz",
+        "request": "oling",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.oling",
+      "uzbek": "oling",
+      "cyrillic": "олинг",
+      "english": "please take it / help yourself",
+      "russian": "возьмите / угощайтесь",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "What a host says as they offer you food. The polite answer is rahmat.",
+      "usageNotesRu": "Так говорит хозяин, предлагая угощение. Вежливый ответ — rahmat.",
+      "verb": {
+        "infinitive": "olmoq",
+        "gloss": "to take / to buy",
+        "glossRu": "брать / покупать",
+        "i": "olaman",
+        "you": "olasiz",
+        "request": "oling",
+        "form": "request"
+      }
+    },
+    {
+      "id": "verbs.bering",
+      "uzbek": "bering",
+      "cyrillic": "беринг",
+      "english": "please give me",
+      "russian": "дайте",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "The workhorse of every shop and cafe: Menga choy bering — give me tea, please.",
+      "usageNotesRu": "Главное слово в любом магазине и кафе: Menga choy bering — дайте мне, пожалуйста, чай.",
+      "verb": {
+        "infinitive": "bermoq",
+        "gloss": "to give",
+        "glossRu": "давать",
+        "i": "beraman",
+        "you": "berasiz",
+        "request": "bering",
+        "form": "request"
+      }
+    },
+    {
+      "id": "verbs.beraman",
+      "uzbek": "beraman",
+      "cyrillic": "бераман",
+      "english": "I'll give",
+      "russian": "я дам",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "verb": {
+        "infinitive": "bermoq",
+        "gloss": "to give",
+        "glossRu": "давать",
+        "i": "beraman",
+        "you": "berasiz",
+        "request": "bering",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.xohlayman",
+      "uzbek": "xohlayman",
+      "cyrillic": "хоҳлайман",
+      "english": "I want / I'd like",
+      "russian": "я хочу",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Say the thing first: Choy xohlayman — I'd like tea. In a shop, kerak (need) or olaman is more usual.",
+      "usageNotesRu": "Сначала называйте предмет: Choy xohlayman — я хочу чай. В магазине привычнее kerak (нужно) или olaman.",
+      "verb": {
+        "infinitive": "xohlamoq",
+        "gloss": "to want",
+        "glossRu": "хотеть",
+        "i": "xohlayman",
+        "you": "xohlaysiz",
+        "request": "xohlang",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.xohlaysiz",
+      "uzbek": "xohlaysiz",
+      "cyrillic": "хоҳлайсиз",
+      "english": "you want / you'd like",
+      "russian": "вы хотите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "inflections": [
+        "xohlaysizmi"
+      ],
+      "usageNotes": "Nima xohlaysiz? — what would you like? You will hear this at every counter.",
+      "usageNotesRu": "Nima xohlaysiz? — что вы хотите? Это спрашивают у любой стойки.",
+      "verb": {
+        "infinitive": "xohlamoq",
+        "gloss": "to want",
+        "glossRu": "хотеть",
+        "i": "xohlayman",
+        "you": "xohlaysiz",
+        "request": "xohlang",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.tanlayman",
+      "uzbek": "tanlayman",
+      "cyrillic": "танлайман",
+      "english": "I choose / I'll pick this one",
+      "russian": "я выбираю",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Bunisini tanlayman — I'll take this one. Pointing works too.",
+      "usageNotesRu": "Bunisini tanlayman — я выберу вот эту. Показать пальцем тоже годится.",
+      "verb": {
+        "infinitive": "tanlamoq",
+        "gloss": "to choose",
+        "glossRu": "выбирать",
+        "i": "tanlayman",
+        "you": "tanlaysiz",
+        "request": "tanlang",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.tanlang",
+      "uzbek": "tanlang",
+      "cyrillic": "танланг",
+      "english": "please choose",
+      "russian": "выберите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 3,
+      "highFrequency": true,
+      "verb": {
+        "infinitive": "tanlamoq",
+        "gloss": "to choose",
+        "glossRu": "выбирать",
+        "i": "tanlayman",
+        "you": "tanlaysiz",
+        "request": "tanlang",
+        "form": "request"
+      }
+    },
+    {
+      "id": "verbs.kelaman",
+      "uzbek": "kelaman",
+      "cyrillic": "келаман",
+      "english": "I'm coming / I'll come",
+      "russian": "я приду",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "inflections": [
+        "keldim"
+      ],
+      "verb": {
+        "infinitive": "kelmoq",
+        "gloss": "to come",
+        "glossRu": "приходить",
+        "i": "kelaman",
+        "you": "kelasiz",
+        "request": "keling",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.keling",
+      "uzbek": "keling",
+      "cyrillic": "келинг",
+      "english": "come in / please come",
+      "russian": "заходите / приходите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "A warm invitation in itself — often doubled with marhamat: Keling, marhamat!",
+      "usageNotesRu": "Само по себе тёплое приглашение — часто вместе с marhamat: Keling, marhamat!",
+      "verb": {
+        "infinitive": "kelmoq",
+        "gloss": "to come",
+        "glossRu": "приходить",
+        "i": "kelaman",
+        "you": "kelasiz",
+        "request": "keling",
+        "form": "request"
+      }
+    },
+    {
+      "id": "verbs.boraman",
+      "uzbek": "boraman",
+      "cyrillic": "бораман",
+      "english": "I'm going / I'll go",
+      "russian": "я иду / я поеду",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "inflections": [
+        "bordim"
+      ],
+      "usageNotes": "Say where first, with -ga: Samarqandga boraman — I'm going to Samarkand.",
+      "usageNotesRu": "Сначала куда, с окончанием -ga: Samarqandga boraman — я еду в Самарканд.",
+      "verb": {
+        "infinitive": "bormoq",
+        "gloss": "to go",
+        "glossRu": "идти / ехать",
+        "i": "boraman",
+        "you": "borasiz",
+        "request": "boring",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.borasiz",
+      "uzbek": "borasiz",
+      "cyrillic": "борасиз",
+      "english": "you're going / you'll go",
+      "russian": "вы идёте / вы поедете",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "inflections": [
+        "borasizmi"
+      ],
+      "usageNotes": "Qayerga borasiz? — where are you going? The first thing a taxi driver asks.",
+      "usageNotesRu": "Qayerga borasiz? — куда вы едете? Первый вопрос таксиста.",
+      "verb": {
+        "infinitive": "bormoq",
+        "gloss": "to go",
+        "glossRu": "идти / ехать",
+        "i": "boraman",
+        "you": "borasiz",
+        "request": "boring",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.kutaman",
+      "uzbek": "kutaman",
+      "cyrillic": "кутаман",
+      "english": "I'll wait",
+      "russian": "я подожду",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "verb": {
+        "infinitive": "kutmoq",
+        "gloss": "to wait",
+        "glossRu": "ждать",
+        "i": "kutaman",
+        "you": "kutasiz",
+        "request": "kuting",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.kuting",
+      "uzbek": "kuting",
+      "cyrillic": "кутинг",
+      "english": "please wait",
+      "russian": "подождите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Bir daqiqa kuting — wait a minute, please.",
+      "usageNotesRu": "Bir daqiqa kuting — подождите минутку, пожалуйста.",
+      "verb": {
+        "infinitive": "kutmoq",
+        "gloss": "to wait",
+        "glossRu": "ждать",
+        "i": "kutaman",
+        "you": "kutasiz",
+        "request": "kuting",
+        "form": "request"
+      }
+    },
+    {
+      "id": "verbs.tushunaman",
+      "uzbek": "tushunaman",
+      "cyrillic": "тушунаман",
+      "english": "I understand",
+      "russian": "я понимаю",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "inflections": [
+        "tushundim",
+        "tushunmadim"
+      ],
+      "usageNotes": "The negative is worth learning whole: tushunmadim — I didn't catch that.",
+      "usageNotesRu": "Отрицание стоит выучить целиком: tushunmadim — я не понял.",
+      "verb": {
+        "infinitive": "tushunmoq",
+        "gloss": "to understand",
+        "glossRu": "понимать",
+        "i": "tushunaman",
+        "you": "tushunasiz",
+        "request": "tushuning",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.tushunasiz",
+      "uzbek": "tushunasiz",
+      "cyrillic": "тушунасиз",
+      "english": "you understand",
+      "russian": "вы понимаете",
+      "theme": "core",
+      "group": "verbs",
+      "level": 3,
+      "highFrequency": true,
+      "inflections": [
+        "tushunasizmi"
+      ],
+      "usageNotes": "Tushunasizmi? — do you understand?",
+      "usageNotesRu": "Tushunasizmi? — вы понимаете?",
+      "verb": {
+        "infinitive": "tushunmoq",
+        "gloss": "to understand",
+        "glossRu": "понимать",
+        "i": "tushunaman",
+        "you": "tushunasiz",
+        "request": "tushuning",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.bilaman",
+      "uzbek": "bilaman",
+      "cyrillic": "биламан",
+      "english": "I know",
+      "russian": "я знаю",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "inflections": [
+        "bilmayman"
+      ],
+      "usageNotes": "And its opposite, which you will need more often: bilmayman — I don't know.",
+      "usageNotesRu": "И его противоположность, которая нужна чаще: bilmayman — я не знаю.",
+      "verb": {
+        "infinitive": "bilmoq",
+        "gloss": "to know",
+        "glossRu": "знать",
+        "i": "bilaman",
+        "you": "bilasiz",
+        "request": "biling",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.bilasiz",
+      "uzbek": "bilasiz",
+      "cyrillic": "биласиз",
+      "english": "you know",
+      "russian": "вы знаете",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "inflections": [
+        "bilasizmi"
+      ],
+      "usageNotes": "Bilasizmi? — do you know?",
+      "usageNotesRu": "Bilasizmi? — вы знаете?",
+      "verb": {
+        "infinitive": "bilmoq",
+        "gloss": "to know",
+        "glossRu": "знать",
+        "i": "bilaman",
+        "you": "bilasiz",
+        "request": "biling",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.koraman",
+      "uzbek": "ko'raman",
+      "cyrillic": "кўраман",
+      "english": "I see / I'll see",
+      "russian": "я вижу / я посмотрю",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "inflections": [
+        "ko'rdim"
+      ],
+      "verb": {
+        "infinitive": "ko'rmoq",
+        "gloss": "to see",
+        "glossRu": "видеть",
+        "i": "ko'raman",
+        "you": "ko'rasiz",
+        "request": "ko'ring",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.korasiz",
+      "uzbek": "ko'rasiz",
+      "cyrillic": "кўрасиз",
+      "english": "you see / you'll see",
+      "russian": "вы видите / вы увидите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 3,
+      "highFrequency": true,
+      "verb": {
+        "infinitive": "ko'rmoq",
+        "gloss": "to see",
+        "glossRu": "видеть",
+        "i": "ko'raman",
+        "you": "ko'rasiz",
+        "request": "ko'ring",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.korsating",
+      "uzbek": "ko'rsating",
+      "cyrillic": "кўрсатинг",
+      "english": "please show me",
+      "russian": "покажите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Bunisini ko'rsating — show me that one. Gets you a long way in a bazaar.",
+      "usageNotesRu": "Bunisini ko'rsating — покажите вот это. На базаре выручает не раз.",
+      "verb": {
+        "infinitive": "ko'rsatmoq",
+        "gloss": "to show",
+        "glossRu": "показывать",
+        "i": "ko'rsataman",
+        "you": "ko'rsatasiz",
+        "request": "ko'rsating",
+        "form": "request"
+      }
+    },
+    {
+      "id": "verbs.korsataman",
+      "uzbek": "ko'rsataman",
+      "cyrillic": "кўрсатаман",
+      "english": "I'll show you",
+      "russian": "я покажу",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "verb": {
+        "infinitive": "ko'rsatmoq",
+        "gloss": "to show",
+        "glossRu": "показывать",
+        "i": "ko'rsataman",
+        "you": "ko'rsatasiz",
+        "request": "ko'rsating",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.tolayman",
+      "uzbek": "to'layman",
+      "cyrillic": "тўлайман",
+      "english": "I'll pay",
+      "russian": "я заплачу",
+      "theme": "core",
+      "group": "verbs",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Naqd to'layman — I'll pay cash.",
+      "usageNotesRu": "Naqd to'layman — я заплачу наличными.",
+      "verb": {
+        "infinitive": "to'lamoq",
+        "gloss": "to pay",
+        "glossRu": "платить",
+        "i": "to'layman",
+        "you": "to'laysiz",
+        "request": "to'lang",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.tolaysiz",
+      "uzbek": "to'laysiz",
+      "cyrillic": "тўлайсиз",
+      "english": "you pay",
+      "russian": "вы платите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 3,
+      "highFrequency": true,
+      "verb": {
+        "infinitive": "to'lamoq",
+        "gloss": "to pay",
+        "glossRu": "платить",
+        "i": "to'layman",
+        "you": "to'laysiz",
+        "request": "to'lang",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.ichaman",
+      "uzbek": "ichaman",
+      "cyrillic": "ичаман",
+      "english": "I drink / I'll have (a drink)",
+      "russian": "я пью / я буду пить",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Choy ichaman — I'll have tea. Uzbek drinks tea, it does not \"take\" it.",
+      "usageNotesRu": "Choy ichaman — я буду чай. По-узбекски чай «пьют», а не «берут».",
+      "verb": {
+        "infinitive": "ichmoq",
+        "gloss": "to drink",
+        "glossRu": "пить",
+        "i": "ichaman",
+        "you": "ichasiz",
+        "request": "iching",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.ichasiz",
+      "uzbek": "ichasiz",
+      "cyrillic": "ичасиз",
+      "english": "you drink",
+      "russian": "вы пьёте",
+      "theme": "core",
+      "group": "verbs",
+      "level": 3,
+      "highFrequency": true,
+      "inflections": [
+        "ichasizmi"
+      ],
+      "usageNotes": "Choy ichasizmi? — will you have tea? Expect to be asked, often.",
+      "usageNotesRu": "Choy ichasizmi? — будете чай? Вас будут спрашивать часто.",
+      "verb": {
+        "infinitive": "ichmoq",
+        "gloss": "to drink",
+        "glossRu": "пить",
+        "i": "ichaman",
+        "you": "ichasiz",
+        "request": "iching",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.yeyman",
+      "uzbek": "yeyman",
+      "cyrillic": "ейман",
+      "english": "I eat / I'll have (food)",
+      "russian": "я ем / я буду есть",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "inflections": [
+        "yemayman",
+        "yedim"
+      ],
+      "usageNotes": "Go'sht yemayman — I don't eat meat. Useful to have ready.",
+      "usageNotesRu": "Go'sht yemayman — я не ем мясо. Полезно держать наготове.",
+      "verb": {
+        "infinitive": "yemoq",
+        "gloss": "to eat",
+        "glossRu": "есть / кушать",
+        "i": "yeyman",
+        "you": "yeysiz",
+        "request": "yeng",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.yeysiz",
+      "uzbek": "yeysiz",
+      "cyrillic": "ейсиз",
+      "english": "you eat",
+      "russian": "вы едите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 3,
+      "highFrequency": true,
+      "inflections": [
+        "yeysizmi"
+      ],
+      "verb": {
+        "infinitive": "yemoq",
+        "gloss": "to eat",
+        "glossRu": "есть / кушать",
+        "i": "yeyman",
+        "you": "yeysiz",
+        "request": "yeng",
+        "form": "you"
+      }
+    },
+    {
+      "id": "verbs.gapiraman",
+      "uzbek": "gapiraman",
+      "cyrillic": "гапираман",
+      "english": "I speak",
+      "russian": "я говорю",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Ozgina o'zbekcha gapiraman — I speak a little Uzbek.",
+      "usageNotesRu": "Ozgina o'zbekcha gapiraman — я немного говорю по-узбекски.",
+      "verb": {
+        "infinitive": "gapirmoq",
+        "gloss": "to speak",
+        "glossRu": "говорить",
+        "i": "gapiraman",
+        "you": "gapirasiz",
+        "request": "gapiring",
+        "form": "i"
+      }
+    },
+    {
+      "id": "verbs.gapiring",
+      "uzbek": "gapiring",
+      "cyrillic": "гапиринг",
+      "english": "please speak",
+      "russian": "говорите",
+      "theme": "core",
+      "group": "verbs",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Sekinroq gapiring — please speak more slowly. Worth learning before you need it.",
+      "usageNotesRu": "Sekinroq gapiring — говорите, пожалуйста, помедленнее. Стоит выучить заранее.",
+      "verb": {
+        "infinitive": "gapirmoq",
+        "gloss": "to speak",
+        "glossRu": "говорить",
+        "i": "gapiraman",
+        "you": "gapirasiz",
+        "request": "gapiring",
+        "form": "request"
+      }
+    }
+  ]
+}

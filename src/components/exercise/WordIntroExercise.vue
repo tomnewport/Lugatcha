@@ -11,6 +11,7 @@ import AudioButton from '@/components/AudioButton.vue'
 import UzbekWord from '@/components/UzbekWord.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import CyrillicSub from '@/components/CyrillicSub.vue'
+import VerbFormStrip from '@/components/VerbFormStrip.vue'
 
 type Step = 'listen' | 'quiz' | 'match' | 'phrases'
 
@@ -319,6 +320,7 @@ async function finish() {
             <CyrillicSub :latin="word.uzbek" :cyrillic="word.cyrillic" />
             <span class="word-card__english">{{ gloss(word) }}</span>
             <span v-if="word.usageNotes" class="word-card__notes">{{ pick(word.usageNotes, word.usageNotesRu) }}</span>
+            <VerbFormStrip v-if="word.verb" class="word-card__verb" :verb="word.verb" />
           </div>
           <svg
             v-if="heard.has(word.id)"
@@ -582,6 +584,10 @@ async function finish() {
 .word-card__english {
   font-size: 0.9rem;
   color: var(--color-text);
+}
+
+.word-card__verb {
+  margin-top: 0.4rem;
 }
 
 .word-card__notes {

@@ -7,6 +7,7 @@ import {
 import { isDue, overdueRatio } from './spacedRepetition'
 import { shuffle } from './validate'
 import { withSpellCards, type SpellCardItem } from './spellCards'
+import { isHighFrequency, leadWithHighFrequency } from './highFrequency'
 import { PHRASE_MODES, type PhrasePromptMode, type PracticePhrase } from './phrases'
 
 /**
@@ -81,10 +82,12 @@ export function intersperse<T>(base: T[], extras: T[]): T[] {
  * Builds one Daily Practice session, in priority order:
  *  1. word weak skills and due word reviews (selectDailyPracticePairs, no filler),
  *  2. due phrase reviews — most overdue first, capped so words keep the lead,
- *  3. with spare room ("learning is going well"): introduce a few new words
- *     (started areas and essential words first) and new phrases (started areas
- *     only, where the scenario gives them context), flagged `isNew` so the UI
- *     presents them before asking,
+ *  3. introductions: one slot is reserved for meeting a high-frequency word —
+ *     the vocabulary that belongs to no area and pays off in all of them — and
+ *     any further spare room ("learning is going well") introduces more new
+ *     words (started areas and essential words first) and new phrases (started
+ *     areas only, where the scenario gives them context), all flagged `isNew`
+ *     so the UI presents them before asking,
  *  4. only then the old busywork filler, so a mature vocabulary still gets a
  *     full retention session when nothing new remains.
  * Phrase and introduction items are spread through the word backbone rather
@@ -110,12 +113,19 @@ export function buildDailyPracticeSession(
     mode: PHRASE_MODES[i % PHRASE_MODES.length],
   }))
 
+  // A place is kept for meeting one high-frequency word — the little words and
+  // everyday verbs every phrase is built from (exercises/highFrequency.ts).
+  // They belong to no topic, so a learner who practises rather than exploring
+  // would otherwise only meet them if a session happened to run short of
+  // reviews. Reserving the slot up front means they arrive either way.
+  const meetsHighFrequency = unseenWords.some(isHighFrequency) ? 1 : 0
+
   // 1. The word backbone: weak skills + due reviews only — no filler, so any
   // spare room is visible and can go to new material instead.
   const wordItems: PracticeItem[] = selectDailyPracticePairs(
     seenWords,
     progress,
-    count - phraseItems.length,
+    count - phraseItems.length - meetsHighFrequency,
     undefined,
     now,
     false,
@@ -126,11 +136,16 @@ export function buildDailyPracticeSession(
   let spare = count - wordItems.length - phraseItems.length
   if (spare > 0) {
     const startedThemes = new Set(seenWords.map((w) => w.theme))
-    // Essential words first; areas already started before unexplored ones.
-    const newWords = shuffle(unseenWords)
-      .sort((a, b) => (a.level ?? 2) - (b.level ?? 2))
-      .sort((a, b) => Number(startedThemes.has(b.theme)) - Number(startedThemes.has(a.theme)))
-      .slice(0, NEW_WORDS_PER_PRACTICE)
+    // Essential words first; areas already started before unexplored ones — then
+    // a high-frequency word takes the lead, since the glue and everyday verbs
+    // pay off across every area rather than in one.
+    const newWords = leadWithHighFrequency(
+      shuffle(unseenWords)
+        .sort((a, b) => (a.level ?? 2) - (b.level ?? 2))
+        .sort((a, b) => Number(startedThemes.has(b.theme)) - Number(startedThemes.has(a.theme))),
+      // The reserved slot goes to a high-frequency word, so it leads the queue.
+      1,
+    ).slice(0, NEW_WORDS_PER_PRACTICE)
     // A phrase without its scenario is just noise — only started areas.
     const newPhrases = shuffle(
       phrases.filter((p) => !phraseProg(p)?.seenAt && startedThemes.has(p.theme)),

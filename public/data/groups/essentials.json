@@ -1,0 +1,497 @@
+{
+  "id": "essentials",
+  "order": 5,
+  "title": {
+    "en": "Little words",
+    "uz": "Kichik so'zlar",
+    "ru": "Маленькие слова"
+  },
+  "icon": "🔗",
+  "blurb": "The handful that turns up in every phrase — men, bu, va, juda",
+  "blurbRu": "Горстка слов, которые встречаются в каждой фразе — men, bu, va, juda",
+  "article": [
+    {
+      "heading": "Small words, most of the work",
+      "headingRu": "Маленькие слова делают большую часть работы",
+      "body": [
+        "Every phrase in this app is built out of the same few dozen words. *Men* (I) turns up more than any noun you will ever learn; *bu* (this), *va* (and) and *juda* (very) are not far behind. They are not exciting, and no single topic owns them — which is exactly why they are worth learning first. Twenty of these unlock hundreds of sentences.",
+        "None of them change for gender, and none of them need an article: Uzbek has neither. What they do instead is sit in a fixed place in the sentence, so once you know the word you know how to use it."
+      ],
+      "bodyRu": [
+        "Каждая фраза в этом приложении построена из одних и тех же нескольких десятков слов. *Men* (я) встречается чаще любого существительного, которое вы выучите; *bu* (этот), *va* (и) и *juda* (очень) — сразу за ним. Они не выглядят интересно, и ни одна тема ими не «владеет» — именно поэтому их стоит выучить первыми. Двадцать таких слов открывают сотни предложений.",
+        "Ни одно из них не меняется по роду, и ни одному не нужен артикль: в узбекском нет ни того, ни другого. Зато у каждого — своё постоянное место в предложении, так что, зная слово, вы знаете и как им пользоваться."
+      ],
+      "examples": [
+        {
+          "uzbek": "Men va siz",
+          "english": "me and you",
+          "russian": "я и вы"
+        },
+        {
+          "uzbek": "Bu juda yaxshi",
+          "english": "This is very good",
+          "russian": "Это очень хорошо"
+        }
+      ]
+    },
+    {
+      "heading": "Men, siz — and why it is always siz",
+      "headingRu": "Men, siz — и почему всегда siz",
+      "body": [
+        "**Men** is \"I\", **siz** is \"you\", **u** is \"he\", \"she\" *and* \"it\" — Uzbek has no gender to keep track of.",
+        "There are two words for \"you\": **siz** (polite) and **sen** (familiar). *Sen* is for family, close friends and children. As a visitor you use **siz** for everyone — a shopkeeper, a waiter, a stranger your own age. It is never wrong, and it is what this app teaches throughout.",
+        "To say \"to me\" or \"for me\", add the **-ga** ending: *men* → **menga**, *siz* → **sizga**. That is how you ask for things: *Menga choy bering* — give me tea."
+      ],
+      "bodyRu": [
+        "**Men** — «я», **siz** — «вы», **u** — «он», «она» *и* «оно»: в узбекском нет рода, за которым нужно следить.",
+        "Для «ты/вы» есть два слова: **siz** (вежливое) и **sen** (familiar, на «ты»). *Sen* — для семьи, близких друзей и детей. Как гостю вам подойдёт **siz** для всех — для продавца, официанта, ровесника-незнакомца. Так никогда не ошибётесь, и именно этому учит приложение.",
+        "Чтобы сказать «мне» или «вам», добавьте окончание **-ga**: *men* → **menga**, *siz* → **sizga**. Так и просят: *Menga choy bering* — дайте мне чай."
+      ],
+      "examples": [
+        {
+          "uzbek": "Menga suv bering",
+          "english": "Give me water, please",
+          "russian": "Дайте мне воды, пожалуйста",
+          "breakdown": [
+            "men",
+            "ga",
+            "suv",
+            "bering"
+          ],
+          "gloss": [
+            "me",
+            "to",
+            "water",
+            "give (polite)"
+          ],
+          "glossRu": [
+            "мне",
+            "к",
+            "вода",
+            "дайте (вежл.)"
+          ]
+        },
+        {
+          "uzbek": "U yerda",
+          "english": "It's over there",
+          "russian": "Это там"
+        }
+      ]
+    },
+    {
+      "heading": "Asking with -mi",
+      "headingRu": "Вопрос с -mi",
+      "body": [
+        "Uzbek does not reorder a sentence to ask a question. It sticks **-mi** onto the end of the word being asked about, and the sentence is otherwise unchanged.",
+        "**Bor** means \"there is\" — so **bormi?** means \"is there? / do you have any?\". It is one of the most useful words a visitor has: point at anything and add *bormi*. The same trick works on verbs (*olasizmi?* — will you take it?) and on adjectives (*ochiqmi?* — is it open?)."
+      ],
+      "bodyRu": [
+        "Узбекский не меняет порядок слов ради вопроса. Он добавляет **-mi** к тому слову, о котором спрашивают, а остальное предложение остаётся прежним.",
+        "**Bor** значит «есть, имеется» — значит, **bormi?** означает «есть? / у вас есть?». Это одно из самых полезных слов для гостя: покажите на что угодно и добавьте *bormi*. Тот же приём работает с глаголами (*olasizmi?* — возьмёте?) и с прилагательными (*ochiqmi?* — открыто?)."
+      ],
+      "examples": [
+        {
+          "uzbek": "Choy bormi?",
+          "english": "Is there any tea?",
+          "russian": "Чай есть?",
+          "breakdown": [
+            "choy",
+            "bor",
+            "mi"
+          ],
+          "gloss": [
+            "tea",
+            "there is",
+            "?"
+          ],
+          "glossRu": [
+            "чай",
+            "есть",
+            "?"
+          ]
+        },
+        {
+          "uzbek": "Bu nima?",
+          "english": "What is this?",
+          "russian": "Что это?"
+        }
+      ]
+    }
+  ],
+  "words": [
+    {
+      "id": "essentials.men",
+      "uzbek": "men",
+      "cyrillic": "мен",
+      "english": "I",
+      "russian": "я",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "The commonest word in the language. Often left out when the verb ending already says who: Kelaman = (I) will come.",
+      "usageNotesRu": "Самое частое слово в языке. Часто опускается, когда окончание глагола и так указывает на лицо: Kelaman = (я) приду."
+    },
+    {
+      "id": "essentials.siz",
+      "uzbek": "siz",
+      "cyrillic": "сиз",
+      "english": "you (polite)",
+      "russian": "вы (вежливо)",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Use siz with everyone you meet as a visitor. The familiar sen is for family and close friends, and can sound rude from a stranger.",
+      "usageNotesRu": "Гостю следует говорить siz всем. Фамильярное sen — для семьи и близких друзей; от незнакомца оно звучит грубо."
+    },
+    {
+      "id": "essentials.u",
+      "uzbek": "u",
+      "cyrillic": "у",
+      "english": "he / she / it",
+      "russian": "он / она / оно",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "One word covers all three — Uzbek has no gender. It also means \"that\" when pointing further away than bu.",
+      "usageNotesRu": "Одно слово на все три — в узбекском нет рода. Оно же значит «тот», когда указывают на что-то подальше, чем bu."
+    },
+    {
+      "id": "essentials.biz",
+      "uzbek": "biz",
+      "cyrillic": "биз",
+      "english": "we",
+      "russian": "мы",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.menga",
+      "uzbek": "menga",
+      "cyrillic": "менга",
+      "english": "to me / for me",
+      "russian": "мне / для меня",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "men + -ga. The start of almost every request: Menga ... bering — give me ...",
+      "usageNotesRu": "men + -ga. С этого начинается почти любая просьба: Menga ... bering — дайте мне ..."
+    },
+    {
+      "id": "essentials.sizga",
+      "uzbek": "sizga",
+      "cyrillic": "сизга",
+      "english": "to you / for you",
+      "russian": "вам / для вас",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.mening",
+      "uzbek": "mening",
+      "cyrillic": "менинг",
+      "english": "my",
+      "russian": "мой",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "The thing owned takes an ending too: mening pasportim — my passport.",
+      "usageNotesRu": "У предмета тоже появляется окончание: mening pasportim — мой паспорт."
+    },
+    {
+      "id": "essentials.bu",
+      "uzbek": "bu",
+      "cyrillic": "бу",
+      "english": "this",
+      "russian": "это / этот",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Bu nima? — what is this? Point and ask; it works everywhere.",
+      "usageNotesRu": "Bu nima? — что это? Покажите и спросите — работает везде."
+    },
+    {
+      "id": "essentials.mana",
+      "uzbek": "mana",
+      "cyrillic": "мана",
+      "english": "here it is / here you are",
+      "russian": "вот / вот, пожалуйста",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "What you say as you hand something over — your passport, the money, a ticket.",
+      "usageNotesRu": "Так говорят, передавая что-то — паспорт, деньги, билет."
+    },
+    {
+      "id": "essentials.va",
+      "uzbek": "va",
+      "cyrillic": "ва",
+      "english": "and",
+      "russian": "и",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Joins words and sentences. In speech you will also hear -u tacked onto the first word instead.",
+      "usageNotesRu": "Соединяет слова и предложения. В разговорной речи вместо него часто слышится -u, приклеенное к первому слову."
+    },
+    {
+      "id": "essentials.ham",
+      "uzbek": "ham",
+      "cyrillic": "ҳам",
+      "english": "also / too",
+      "russian": "тоже / также",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Follows the word it applies to: Men ham — me too.",
+      "usageNotesRu": "Ставится после слова, к которому относится: Men ham — я тоже."
+    },
+    {
+      "id": "essentials.bilan",
+      "uzbek": "bilan",
+      "cyrillic": "билан",
+      "english": "with",
+      "russian": "с",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Comes after the noun, not before: sut bilan — with milk.",
+      "usageNotesRu": "Ставится после существительного, а не перед ним: sut bilan — с молоком."
+    },
+    {
+      "id": "essentials.lekin",
+      "uzbek": "lekin",
+      "cyrillic": "лекин",
+      "english": "but",
+      "russian": "но",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.yoki",
+      "uzbek": "yoki",
+      "cyrillic": "ёки",
+      "english": "or",
+      "russian": "или",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.juda",
+      "uzbek": "juda",
+      "cyrillic": "жуда",
+      "english": "very",
+      "russian": "очень",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "usageNotes": "Goes before the word it strengthens: juda yaxshi — very good.",
+      "usageNotesRu": "Ставится перед словом, которое усиливает: juda yaxshi — очень хорошо."
+    },
+    {
+      "id": "essentials.yana",
+      "uzbek": "yana",
+      "cyrillic": "яна",
+      "english": "again / more",
+      "russian": "ещё / снова",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Yana bitta — one more, please.",
+      "usageNotesRu": "Yana bitta — ещё одну, пожалуйста."
+    },
+    {
+      "id": "essentials.faqat",
+      "uzbek": "faqat",
+      "cyrillic": "фақат",
+      "english": "only / just",
+      "russian": "только",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.boshqa",
+      "uzbek": "boshqa",
+      "cyrillic": "бошқа",
+      "english": "another / different",
+      "russian": "другой",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Boshqa bormi? — do you have another one?",
+      "usageNotesRu": "Boshqa bormi? — а другой есть?"
+    },
+    {
+      "id": "essentials.bormi",
+      "uzbek": "bormi?",
+      "cyrillic": "борми?",
+      "english": "is there? / do you have any?",
+      "russian": "есть?",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true,
+      "inflections": [
+        "bormi"
+      ],
+      "usageNotes": "bor (there is) + the question ending -mi. Name the thing and add bormi: Choy bormi?",
+      "usageNotesRu": "bor (есть) + вопросительное окончание -mi. Назовите предмет и добавьте bormi: Choy bormi?"
+    },
+    {
+      "id": "essentials.nima",
+      "uzbek": "nima",
+      "cyrillic": "нима",
+      "english": "what",
+      "russian": "что",
+      "theme": "core",
+      "group": "essentials",
+      "level": 1,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.kim",
+      "uzbek": "kim",
+      "cyrillic": "ким",
+      "english": "who",
+      "russian": "кто",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.qaysi",
+      "uzbek": "qaysi",
+      "cyrillic": "қайси",
+      "english": "which",
+      "russian": "какой / который",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Qaysi bekat? — which stop?",
+      "usageNotesRu": "Qaysi bekat? — какая остановка?"
+    },
+    {
+      "id": "essentials.qanday",
+      "uzbek": "qanday",
+      "cyrillic": "қандай",
+      "english": "how / what kind of",
+      "russian": "как / какой",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.nega",
+      "uzbek": "nega",
+      "cyrillic": "нега",
+      "english": "why",
+      "russian": "почему",
+      "theme": "core",
+      "group": "essentials",
+      "level": 3,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.emas",
+      "uzbek": "emas",
+      "cyrillic": "эмас",
+      "english": "is not",
+      "russian": "не (является)",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Follows what it negates: Bu yaxshi emas — this is not good.",
+      "usageNotesRu": "Ставится после того, что отрицает: Bu yaxshi emas — это нехорошо."
+    },
+    {
+      "id": "essentials.albatta",
+      "uzbek": "albatta",
+      "cyrillic": "албатта",
+      "english": "of course / certainly",
+      "russian": "конечно",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.tez",
+      "uzbek": "tez",
+      "cyrillic": "тез",
+      "english": "fast / quickly",
+      "russian": "быстро / быстрый",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true
+    },
+    {
+      "id": "essentials.sekin",
+      "uzbek": "sekin",
+      "cyrillic": "секин",
+      "english": "slow / slowly",
+      "russian": "медленно / медленный",
+      "theme": "core",
+      "group": "essentials",
+      "level": 2,
+      "highFrequency": true,
+      "usageNotes": "Sekinroq, iltimos — slower, please. The single most useful thing to say to someone speaking too fast.",
+      "usageNotesRu": "Sekinroq, iltimos — помедленнее, пожалуйста. Самая полезная фраза, когда с вами говорят слишком быстро.",
+      "inflections": [
+        "sekinroq"
+      ]
+    },
+    {
+      "id": "essentials.ozgina",
+      "uzbek": "ozgina",
+      "cyrillic": "озгина",
+      "english": "a little / a bit",
+      "russian": "немного",
+      "theme": "core",
+      "group": "essentials",
+      "level": 3,
+      "highFrequency": true,
+      "usageNotes": "Ozgina o'zbekcha bilaman — I know a little Uzbek. It usually earns a smile.",
+      "usageNotesRu": "Ozgina o'zbekcha bilaman — я немного знаю узбекский. Обычно в ответ улыбаются."
+    },
+    {
+      "id": "essentials.har",
+      "uzbek": "har",
+      "cyrillic": "ҳар",
+      "english": "every / each",
+      "russian": "каждый",
+      "theme": "core",
+      "group": "essentials",
+      "level": 3,
+      "highFrequency": true,
+      "usageNotes": "Har kuni — every day.",
+      "usageNotesRu": "Har kuni — каждый день."
+    }
+  ]
+}

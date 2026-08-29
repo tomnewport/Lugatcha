@@ -22,6 +22,56 @@ export interface Word {
   group?: string
   /** Hex swatch for colour words, shown in the group's review gallery. */
   swatch?: string
+  /**
+   * The canonical word this entry is another copy of. Common words (choy, suv,
+   * shahar) legitimately belong to several themes, but they are one word to
+   * learn: an entry with `sameAs` keeps the word in its theme's list while
+   * pointing at the copy that carries the teaching. Progress is shared across
+   * the whole family (src/exercises/wordFamilies.ts), so meeting a word in one
+   * topic means it is already met in every other — and only the canonical copy
+   * is ever served as a card, so it can't be taught or drilled four times over.
+   */
+  sameAs?: string
+  /**
+   * Words that turn up constantly in the phrases the app teaches — the glue
+   * (men, bu, va, juda) and the everyday verbs (olaman, bering, kutaman).
+   * They're served ahead of themed vocabulary, since knowing them unlocks
+   * every topic rather than one.
+   */
+  highFrequency?: boolean
+  /**
+   * Set on a verb word: which form this entry drills, and the rest of the
+   * paradigm to show alongside it. Verbs are taught in the *siz* (polite)
+   * register throughout — the safe register for a visitor.
+   */
+  verb?: VerbForms
+}
+
+/** Which form of a verb a word entry drills. */
+export type VerbFormKey = 'i' | 'you' | 'request'
+
+/**
+ * The practical paradigm a verb is taught in: the *men* form ("I take"), the
+ * polite *siz* form ("you take"), and — where it's the phrase a visitor
+ * actually says — the polite imperative ("please take"). Every entry carries
+ * the whole set so a card can show the verb in context, and `form` says which
+ * of them this particular word drills.
+ */
+export interface VerbForms {
+  /** Dictionary form, e.g. "olmoq". */
+  infinitive: string
+  /** English gloss of the infinitive, e.g. "to take". */
+  gloss: string
+  /** Russian gloss; falls back to `gloss` when absent. */
+  glossRu?: string
+  /** Present-future first person, e.g. "olaman". */
+  i: string
+  /** Present-future second person polite, e.g. "olasiz". */
+  you: string
+  /** Polite imperative, e.g. "oling". */
+  request?: string
+  /** Which of the three this entry teaches. */
+  form: VerbFormKey
 }
 
 export interface StorySentence {

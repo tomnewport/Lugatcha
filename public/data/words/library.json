@@ -89,7 +89,8 @@
     "english": "help",
     "russian": "помощь",
     "theme": "library",
-    "level": 2
+    "level": 2,
+    "sameAs": "welcome-center.help"
   },
   {
     "id": "library.name",
