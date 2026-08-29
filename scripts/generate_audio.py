@@ -52,6 +52,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "public" / "data"
 AUDIO_ROOT = REPO_ROOT / "public" / "audio"
 FIXTURES = REPO_ROOT / "tests" / "audio-key-fixtures.json"
+TAXI_CLAUSES = REPO_ROOT / "tests" / "taxi-clauses.json"
 
 # ---------------------------------------------------------------------------
 # Text keying — MUST stay identical to src/audio/key.ts.
@@ -216,17 +217,22 @@ def bazar_texts() -> list[str]:
 # src/exercises/taxi.ts.
 #
 # The passenger's directions are generated at runtime, but they are assembled
-# out of a fixed, small set of whole clauses ("Birinchi koʻchadan chapga
-# buriling.") precisely so that every one of them can be recorded as a real
-# sentence rather than stitched together word by word. tests/taxi.spec.ts
-# checks that nothing the game generates falls outside this set; if a landmark
-# or an ordinal is added there, it has to be added here too and the generator
-# re-run.
+# out of a fixed set of whole clauses ("Birinchi koʻchadan chapga buriling.")
+# precisely so that every one of them can be recorded as a real sentence rather
+# than stitched together word by word. Each kind of step has three or four
+# wordings, because directions in the street are not formulaic; the set is
+# still finite, and self_test() pins this list against the TypeScript one via
+# tests/taxi-clauses.json. Add a wording or a landmark there and it has to be
+# added here too, the fixture regenerated, and the generator re-run.
 # ---------------------------------------------------------------------------
 
 TAXI_ORDINALS = ["birinchi", "ikkinchi", "uchinchi", "toʻrtinchi"]
 TAXI_CARDINALS = ["bir", "ikki", "uch", "toʻrt", "besh"]
-TAXI_SIDES = ["chapga", "oʻngga"]
+# The counted forms: -ta on the number, irregular only at bir → bitta.
+TAXI_COUNTERS = ["bitta", "ikkita", "uchta", "toʻrtta", "beshta"]
+TAXI_SIDE_TO = {"left": "chapga", "right": "oʻngga"}
+TAXI_SIDE_BARE = {"left": "chap", "right": "oʻng"}
+TAXI_SIDE_ON = {"left": "chapdagi", "right": "oʻngdagi"}
 # Landmark names as the passenger says them, capitalised — every clause that
 # names one starts with it (LANDMARKS in src/exercises/taxi.ts).
 TAXI_LANDMARKS = [
@@ -249,19 +255,38 @@ TAXI_LANDMARKS = [
 ]
 
 
+def _taxi_clause(words: list[str]) -> str:
+    """One clause: capitalise the opening word, and close the sentence."""
+    head, *rest = words
+    return " ".join([head[:1].upper() + head[1:], *rest]) + "."
+
+
 def taxi_texts() -> list[str]:
-    """Every clause a passenger in Taxi driver can say."""
+    """Every clause a passenger in Taxi driver can say, in every wording."""
     clauses: list[str] = []
-    for side in TAXI_SIDES:
+    for side in ("left", "right"):
+        to = TAXI_SIDE_TO[side]
         for ordinal in TAXI_ORDINALS:
-            clauses.append(f"{ordinal.capitalize()} koʻchadan {side} buriling.")
-        clauses.append(f"{side.capitalize()} buriling.")
+            clauses.append(_taxi_clause([ordinal, "koʻchadan", to, "buriling"]))
+            clauses.append(_taxi_clause([TAXI_SIDE_ON[side], ordinal, "koʻchaga", "buriling"]))
+            clauses.append(_taxi_clause([ordinal, "chorrahadan", to, "qayriling"]))
+            clauses.append(_taxi_clause([ordinal, "burilishdan", to, "buriling"]))
+        clauses.append(_taxi_clause([to, "buriling"]))
+        clauses.append(_taxi_clause([TAXI_SIDE_BARE[side], "tomonga", "buriling"]))
+        clauses.append(_taxi_clause([to, "qayriling"]))
+        clauses.append(_taxi_clause(["keyin", to, "buriling"]))
         for place in TAXI_LANDMARKS:
-            clauses.append(f"{place}da {side} buriling.")
-    for cardinal in TAXI_CARDINALS:
-        clauses.append(f"Toʻgʻriga {cardinal} kvartal yuring.")
+            clauses.append(_taxi_clause([f"{place}da", to, "buriling"]))
+            clauses.append(_taxi_clause([place, "yonidan", to, "buriling"]))
+            clauses.append(_taxi_clause([f"{place}ga", "yetganda", to, "buriling"]))
+    for cardinal, counter in zip(TAXI_CARDINALS, TAXI_COUNTERS):
+        clauses.append(_taxi_clause(["toʻgʻriga", cardinal, "kvartal", "yuring"]))
+        clauses.append(_taxi_clause([counter, "kvartal", "toʻgʻri", "boring"]))
+        clauses.append(_taxi_clause([cardinal, "kvartal", "toʻgʻriga", "haydang"]))
     for place in TAXI_LANDMARKS:
-        clauses.append(f"{place}gacha yuring.")
+        clauses.append(_taxi_clause([f"{place}gacha", "yuring"]))
+        clauses.append(_taxi_clause([f"{place}ga", "boring"]))
+        clauses.append(_taxi_clause([f"{place}gacha", "toʻgʻri", "haydang"]))
     return clauses
 
 
@@ -283,11 +308,26 @@ def self_test() -> None:
     ]
     for n, expected, got in number_failures:
         print(f"MISMATCH number {n}: expected {expected!r}, got {got!r}", file=sys.stderr)
-    if failures or number_failures:
+    # The taxi's clauses are written out twice — here and in taxi.ts — so both
+    # are pinned to one list. Regenerate it from the TypeScript side (see the
+    # note at the top of tests/taxi-clauses.json) if a wording changes.
+    taxi_expected = json.loads(TAXI_CLAUSES.read_text(encoding="utf-8"))["clauses"]
+    taxi_got = sorted(taxi_texts())
+    taxi_ok = taxi_got == sorted(taxi_expected)
+    if not taxi_ok:
+        missing = sorted(set(taxi_expected) - set(taxi_got))
+        extra = sorted(set(taxi_got) - set(taxi_expected))
+        for text in missing:
+            print(f"MISSING taxi clause {text!r}", file=sys.stderr)
+        for text in extra:
+            print(f"UNEXPECTED taxi clause {text!r}", file=sys.stderr)
+
+    if failures or number_failures or not taxi_ok:
         sys.exit(1)
     print(
         f"self-test OK — {len(fixtures)} fixtures match src/audio/key.ts, "
-        f"{len(NUMBER_SELF_TEST)} number readings match src/exercises/numbers.ts"
+        f"{len(NUMBER_SELF_TEST)} number readings match src/exercises/numbers.ts, "
+        f"{len(taxi_got)} taxi clauses match src/exercises/taxi.ts"
     )
 
 

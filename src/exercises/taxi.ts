@@ -100,8 +100,9 @@ export interface Landmark {
  * They are the buildings a passenger actually navigates by — somewhere to
  * arrive, somewhere to eat, and the transport that brought you — and their
  * Uzbek names are the vocabulary the last levels test. Adding one here adds
- * three spoken clauses, so scripts/generate_audio.py has to be re-run for it
- * (see {@link allSpokenClauses}).
+ * nine spoken clauses — three wordings each way at a turn, and three for
+ * driving up to it — so scripts/generate_audio.py has to be re-run for it (see
+ * {@link allSpokenClauses}).
  */
 export const LANDMARKS: readonly Landmark[] = [
   { id: 'hospital', emoji: '🏥', uzbek: 'Kasalxona', english: 'hospital', russian: 'больница' },
@@ -320,12 +321,22 @@ export type StepKind = Step['kind']
 export const ORDINALS: readonly string[] = ['', 'birinchi', 'ikkinchi', 'uchinchi', 'toʻrtinchi']
 /** Cardinals 1–5, indexed from one — how many blocks to drive. */
 export const CARDINALS: readonly string[] = ['', 'bir', 'ikki', 'uch', 'toʻrt', 'besh']
+/**
+ * The same 1–5 with `-ta`, the counter Uzbek puts on a number in front of a
+ * thing being counted. Irregular only at one: *bir* becomes *bitta*.
+ */
+export const COUNTERS: readonly string[] = ['', 'bitta', 'ikkita', 'uchta', 'toʻrtta', 'beshta']
 
 /** The furthest an instruction ever counts. */
 export const MAX_ORDINAL = 4
 export const MAX_BLOCKS = 5
 
-const SIDE_WORDS: Record<Side, string> = { left: 'chapga', right: 'oʻngga' }
+/** *chapga* / *oʻngga* — the dative, "to the left". */
+const SIDE_TO: Record<Side, string> = { left: 'chapga', right: 'oʻngga' }
+/** *chap* / *oʻng* — the bare adjective, for "the left side". */
+const SIDE_BARE: Record<Side, string> = { left: 'chap', right: 'oʻng' }
+/** *chapdagi* / *oʻngdagi* — "the one on the left". */
+const SIDE_ON: Record<Side, string> = { left: 'chapdagi', right: 'oʻngdagi' }
 
 function capitalise(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1)
@@ -347,65 +358,204 @@ export interface Word {
   place?: string
 }
 
+function word(text: string, key: string, place?: string): Word {
+  return place === undefined ? { text, key } : { text, key, place }
+}
+
 /** Cardinal meanings 1–5, indexed from one, to match `CARDINALS`. */
 const CARDINAL_KEYS = ['', 'one', 'two', 'three', 'four', 'five']
+/** And the counted forms, which mean the same but say it with `-ta`. */
+const COUNTER_KEYS = ['', 'taOne', 'taTwo', 'taThree', 'taFour', 'taFive']
 
-/**
- * A step broken into its words.
- *
- * This is the source of truth for the clause: {@link stepUzbek} joins these
- * up, so the sentence the passenger says and the words the driver can pay to
- * translate can never drift apart.
- */
-export function stepWords(step: Step): Word[] {
-  switch (step.kind) {
-    case 'turn':
-      return [
-        { text: capitalise(ORDINALS[step.ordinal]), key: `ordinal${step.ordinal}` },
-        { text: 'koʻchadan', key: 'street' },
-        { text: SIDE_WORDS[step.side], key: step.side },
-        { text: 'buriling', key: 'turn' },
-      ]
-    case 'straight':
-      return [
-        { text: 'Toʻgʻriga', key: 'straightOn' },
-        { text: CARDINALS[step.blocks], key: CARDINAL_KEYS[step.blocks] },
-        { text: 'kvartal', key: 'block' },
-        { text: 'yuring', key: 'go' },
-      ]
-    case 'turnNow':
-      return [
-        { text: capitalise(SIDE_WORDS[step.side]), key: step.side },
-        { text: 'buriling', key: 'turn' },
-      ]
-    case 'landmarkTurn':
-      return [
-        { text: `${landmark(step.place)?.uzbek ?? ''}da`, key: 'atPlace', place: step.place },
-        { text: SIDE_WORDS[step.side], key: step.side },
-        { text: 'buriling', key: 'turn' },
-      ]
-    default:
-      return [
-        { text: `${landmark(step.place)?.uzbek ?? ''}gacha`, key: 'toPlace', place: step.place },
-        { text: 'yuring', key: 'go' },
-      ]
-  }
+/** The Uzbek name of a landmark, or an empty string if the id is not one. */
+function placeUzbek(id: string): string {
+  return landmark(id)?.uzbek ?? ''
 }
 
 /**
- * A step as the passenger says it.
+ * The ways of saying each kind of step, plainest first.
  *
- * Every clause is a plain polite imperative — *buriling*, *yuring* — because
- * that is what a passenger uses on a driver, and every one is short enough to
- * be recorded whole. That is the point of splitting an instruction into
- * clauses rather than generating one long sentence: the set of things this game
- * can say is small and fixed, so it can all be spoken in a real voice rather
- * than stitched together word by word. Keep it that way — see
- * {@link allSpokenClauses}.
+ * Directions are not formulaic in the street, and a game that says everything
+ * one way teaches a learner to pattern-match on the shape of the sentence
+ * rather than to understand it. So every step has three or four ways of coming
+ * out, differing in the noun the counting hangs off (*koʻcha*, *chorraha*,
+ * *burilish*), in the verb (*buriling*, *qayriling*; *yuring*, *boring*,
+ * *haydang*), and in word order — the sort of variation one passenger to the
+ * next actually produces.
+ *
+ * The first of each list is the plainest, and a run opens on those alone: a
+ * level's `voices` says how many of them are in play, so the wording widens as
+ * the directions themselves get longer (see {@link LEVELS}).
+ *
+ * They are functions of the step rather than strings because the words are
+ * what the driver buys, one at a time — see {@link Word}.
  */
-export function stepUzbek(step: Step): string {
-  return `${stepWords(step)
-    .map((word) => word.text)
+type Saying<K extends StepKind> = (step: Extract<Step, { kind: K }>) => Word[]
+
+const TURN_SAYINGS: Saying<'turn'>[] = [
+  // "Turn left at the first street."
+  (step) => [
+    word(ORDINALS[step.ordinal], `ordinal${step.ordinal}`),
+    word('koʻchadan', 'street'),
+    word(SIDE_TO[step.side], step.side),
+    word('buriling', 'turn'),
+  ],
+  // The side first, the way a passenger points before they explain.
+  (step) => [
+    word(SIDE_ON[step.side], `${step.side}On`),
+    word(ORDINALS[step.ordinal], `ordinal${step.ordinal}`),
+    word('koʻchaga', 'streetTo'),
+    word('buriling', 'turn'),
+  ],
+  // Counting junctions rather than streets.
+  (step) => [
+    word(ORDINALS[step.ordinal], `ordinal${step.ordinal}`),
+    word('chorrahadan', 'crossroads'),
+    word(SIDE_TO[step.side], step.side),
+    word('qayriling', 'turnAlt'),
+  ],
+  // Counting the turnings themselves.
+  (step) => [
+    word(ORDINALS[step.ordinal], `ordinal${step.ordinal}`),
+    word('burilishdan', 'turning'),
+    word(SIDE_TO[step.side], step.side),
+    word('buriling', 'turn'),
+  ],
+]
+
+const TURN_NOW_SAYINGS: Saying<'turnNow'>[] = [
+  (step) => [word(SIDE_TO[step.side], step.side), word('buriling', 'turn')],
+  (step) => [
+    word(SIDE_BARE[step.side], `${step.side}Plain`),
+    word('tomonga', 'towards'),
+    word('buriling', 'turn'),
+  ],
+  (step) => [word(SIDE_TO[step.side], step.side), word('qayriling', 'turnAlt')],
+  // "and then left" — the join a passenger makes between two clauses.
+  (step) => [word('keyin', 'then'), word(SIDE_TO[step.side], step.side), word('buriling', 'turn')],
+]
+
+const STRAIGHT_SAYINGS: Saying<'straight'>[] = [
+  (step) => [
+    word('toʻgʻriga', 'straightOn'),
+    word(CARDINALS[step.blocks], CARDINAL_KEYS[step.blocks]),
+    word('kvartal', 'block'),
+    word('yuring', 'go'),
+  ],
+  // The counted form, and the distance out in front where the ear meets it first.
+  (step) => [
+    word(COUNTERS[step.blocks], COUNTER_KEYS[step.blocks]),
+    word('kvartal', 'block'),
+    word('toʻgʻri', 'straightPlain'),
+    word('boring', 'goBor'),
+  ],
+  // Said to a driver rather than to a pedestrian: *haydang*, drive.
+  (step) => [
+    word(CARDINALS[step.blocks], CARDINAL_KEYS[step.blocks]),
+    word('kvartal', 'block'),
+    word('toʻgʻriga', 'straightOn'),
+    word('haydang', 'drive'),
+  ],
+]
+
+const LANDMARK_TURN_SAYINGS: Saying<'landmarkTurn'>[] = [
+  (step) => [
+    word(`${placeUzbek(step.place)}da`, 'atPlace', step.place),
+    word(SIDE_TO[step.side], step.side),
+    word('buriling', 'turn'),
+  ],
+  (step) => [
+    word(placeUzbek(step.place), 'placeBare', step.place),
+    word('yonidan', 'beside'),
+    word(SIDE_TO[step.side], step.side),
+    word('buriling', 'turn'),
+  ],
+  // "When you get to the hospital, turn left."
+  (step) => [
+    word(`${placeUzbek(step.place)}ga`, 'toPlace', step.place),
+    word('yetganda', 'whenReached'),
+    word(SIDE_TO[step.side], step.side),
+    word('buriling', 'turn'),
+  ],
+]
+
+const TO_LANDMARK_SAYINGS: Saying<'toLandmark'>[] = [
+  (step) => [
+    word(`${placeUzbek(step.place)}gacha`, 'asFarAsPlace', step.place),
+    word('yuring', 'go'),
+  ],
+  (step) => [word(`${placeUzbek(step.place)}ga`, 'toPlace', step.place), word('boring', 'goBor')],
+  (step) => [
+    word(`${placeUzbek(step.place)}gacha`, 'asFarAsPlace', step.place),
+    word('toʻgʻri', 'straightPlain'),
+    word('haydang', 'drive'),
+  ],
+]
+
+/** How many ways there are of saying a step of this kind. */
+export function sayings(kind: StepKind): number {
+  switch (kind) {
+    case 'turn':
+      return TURN_SAYINGS.length
+    case 'turnNow':
+      return TURN_NOW_SAYINGS.length
+    case 'straight':
+      return STRAIGHT_SAYINGS.length
+    case 'landmarkTurn':
+      return LANDMARK_TURN_SAYINGS.length
+    default:
+      return TO_LANDMARK_SAYINGS.length
+  }
+}
+
+/** Wraps `say` into range, so callers can pass any index and get a clause. */
+function chosen<T>(list: readonly T[], say: number): T {
+  return list[((say % list.length) + list.length) % list.length]
+}
+
+/**
+ * A step broken into its words, said the `say`th way.
+ *
+ * This is the source of truth for the clause: {@link stepUzbek} joins these
+ * up, so the sentence the passenger says and the words the driver can pay to
+ * translate can never drift apart. Only the first word is capitalised here —
+ * the phrasings are written in the lower case they take mid-sentence, and
+ * which of them comes first depends on the phrasing.
+ */
+export function stepWords(step: Step, say = 0): Word[] {
+  const words = (() => {
+    switch (step.kind) {
+      case 'turn':
+        return chosen(TURN_SAYINGS, say)(step)
+      case 'straight':
+        return chosen(STRAIGHT_SAYINGS, say)(step)
+      case 'turnNow':
+        return chosen(TURN_NOW_SAYINGS, say)(step)
+      case 'landmarkTurn':
+        return chosen(LANDMARK_TURN_SAYINGS, say)(step)
+      default:
+        return chosen(TO_LANDMARK_SAYINGS, say)(step)
+    }
+  })()
+  return words.map((entry, index) =>
+    index === 0 ? { ...entry, text: capitalise(entry.text) } : entry,
+  )
+}
+
+/**
+ * A step as the passenger says it, the `say`th way.
+ *
+ * Every clause is a plain polite imperative — *buriling*, *yuring*, *haydang*
+ * — because that is what a passenger uses on a driver, and every one is short
+ * enough to be recorded whole. That is the point of splitting an instruction
+ * into clauses rather than generating one long sentence: however many ways
+ * there are of saying a step, the set of things this game can say stays small
+ * and fixed, so it can all be spoken in a real voice rather than stitched
+ * together word by word. Keep it that way — see {@link allSpokenClauses}.
+ */
+export function stepUzbek(step: Step, say = 0): string {
+  return `${stepWords(step, say)
+    .map((entry) => entry.text)
     .join(' ')}.`
 }
 
@@ -414,9 +564,15 @@ export function wordKey(text: string): string {
   return text.toLowerCase()
 }
 
-/** The whole instruction, one sentence per step. */
-export function routeUzbek(steps: readonly Step[]): string {
-  return steps.map(stepUzbek).join(' ')
+/**
+ * The whole instruction, one sentence per step.
+ *
+ * With no `said` it comes out in the plainest wording, which is what the
+ * generator compares against when it is avoiding repeating itself: two tellings
+ * of the same route are the same fare however differently they are worded.
+ */
+export function routeUzbek(steps: readonly Step[], said: readonly number[] = []): string {
+  return steps.map((step, index) => stepUzbek(step, said[index] ?? 0)).join(' ')
 }
 
 /**
@@ -429,21 +585,18 @@ export function routeUzbek(steps: readonly Step[]): string {
  */
 export function allSpokenClauses(): string[] {
   const clauses: string[] = []
+  const every = (step: Step) => {
+    for (let say = 0; say < sayings(step.kind); say++) clauses.push(stepUzbek(step, say))
+  }
   for (const side of SIDES) {
     for (let ordinal = 1; ordinal <= MAX_ORDINAL; ordinal++) {
-      clauses.push(stepUzbek({ kind: 'turn', side, ordinal }))
+      every({ kind: 'turn', side, ordinal })
     }
-    clauses.push(stepUzbek({ kind: 'turnNow', side }))
-    for (const place of LANDMARKS) {
-      clauses.push(stepUzbek({ kind: 'landmarkTurn', place: place.id, side }))
-    }
+    every({ kind: 'turnNow', side })
+    for (const place of LANDMARKS) every({ kind: 'landmarkTurn', place: place.id, side })
   }
-  for (let blocks = 1; blocks <= MAX_BLOCKS; blocks++) {
-    clauses.push(stepUzbek({ kind: 'straight', blocks }))
-  }
-  for (const place of LANDMARKS) {
-    clauses.push(stepUzbek({ kind: 'toLandmark', place: place.id }))
-  }
+  for (let blocks = 1; blocks <= MAX_BLOCKS; blocks++) every({ kind: 'straight', blocks })
+  for (const place of LANDMARKS) every({ kind: 'toLandmark', place: place.id })
   return clauses
 }
 
@@ -545,6 +698,13 @@ export interface Level {
   ordinal: number
   /** How many blocks "go straight on" may ask for. */
   blocks: number
+  /**
+   * How many of each step's wordings are in play, plainest first.
+   *
+   * A driver on their first fare has enough to do working out which way is
+   * left; the wording widens once the directions themselves are familiar.
+   */
+  voices: number
   /** Fares to deliver before the next level; the last one never ends. */
   fares: number
 }
@@ -557,18 +717,20 @@ export interface Level {
  * runs for as long as the driver does.
  */
 export const LEVELS: readonly Level[] = [
-  { shapes: [['turn']], ordinal: 2, blocks: 3, fares: 3 },
-  { shapes: [['turn'], ['straight']], ordinal: 3, blocks: 3, fares: 3 },
+  { shapes: [['turn']], ordinal: 2, blocks: 3, voices: 1, fares: 3 },
+  { shapes: [['turn'], ['straight']], ordinal: 3, blocks: 3, voices: 2, fares: 3 },
   {
     shapes: [['turn'], ['straight'], ['straight', 'turnNow']],
     ordinal: 3,
     blocks: 4,
+    voices: 2,
     fares: 4,
   },
   {
     shapes: [['turn'], ['straight', 'turnNow'], ['turn', 'straight'], ['turn', 'turn']],
     ordinal: 4,
     blocks: 4,
+    voices: 3,
     fares: 4,
   },
   {
@@ -580,6 +742,7 @@ export const LEVELS: readonly Level[] = [
     ],
     ordinal: 4,
     blocks: 5,
+    voices: 3,
     fares: 5,
   },
   {
@@ -593,6 +756,7 @@ export const LEVELS: readonly Level[] = [
     ],
     ordinal: 4,
     blocks: 5,
+    voices: 4,
     fares: Infinity,
   },
 ]
@@ -677,6 +841,8 @@ export function fareValue(words: number, blocks: number): number {
 /** A fare: what was said, what it pays, and where doing as you are told puts you. */
 export interface Fare {
   steps: Step[]
+  /** Which wording each step came out in; see {@link sayings}. */
+  said: number[]
   /** Each step as it is spoken — also the unit the audio is recorded in. */
   clauses: string[]
   /** The same clauses word by word, for the driver to buy meanings from. */
@@ -692,13 +858,26 @@ export interface Fare {
   from: Pose
 }
 
-function makeFare(steps: Step[], route: Route, from: Pose): Fare {
-  const words = steps.map(stepWords)
+/**
+ * Puts an instruction into words: one of the level's wordings per step, drawn
+ * independently, so a two-clause fare can come out in two different voices the
+ * way a real one does.
+ */
+function makeFare(
+  steps: Step[],
+  route: Route,
+  from: Pose,
+  voices: number,
+  rng: () => number,
+): Fare {
+  const said = steps.map((step) => Math.floor(rng() * Math.min(voices, sayings(step.kind))))
+  const words = steps.map((step, index) => stepWords(step, said[index]))
   const wordCount = words.reduce((total, clause) => total + clause.length, 0)
   const blocks = route.path.length - 1
   return {
     steps,
-    clauses: steps.map(stepUzbek),
+    said,
+    clauses: steps.map((step, index) => stepUzbek(step, said[index])),
     words,
     wordCount,
     blocks,
@@ -724,25 +903,30 @@ export function pickFare(
   rng: () => number = Math.random,
   avoid?: string,
 ): Fare | null {
-  const byShape: Fare[][] = []
+  const byShape: { steps: Step[]; route: Route }[][] = []
   for (const shape of level.shapes) {
-    const fares: Fare[] = []
+    const drivable: { steps: Step[]; route: Route }[] = []
     for (const steps of shapeInstructions(city, shape, level)) {
       const route = resolve(city, pose, steps)
       if (!route) continue
       const blocks = route.path.length - 1
       if (blocks < MIN_BLOCKS || blocks > MAX_ROUTE_BLOCKS) continue
       if (samePoint(route.dest, pose)) continue
-      fares.push(makeFare(steps, route, pose))
+      drivable.push({ steps, route })
     }
-    // Saying the same thing twice running reads as a bug, so drop the repeat
-    // wherever there is anything else to say.
-    const fresh = fares.filter((fare) => routeUzbek(fare.steps) !== avoid)
-    const usable = fresh.length ? fresh : fares
+    // Sending the driver the same way twice running reads as a bug, so drop
+    // the repeat wherever there is anything else to say. Two tellings of one
+    // route count as the same fare, which is why this compares the plainest
+    // wording of each rather than the wording it will end up in.
+    const fresh = drivable.filter((option) => routeUzbek(option.steps) !== avoid)
+    const usable = fresh.length ? fresh : drivable
     if (usable.length) byShape.push(usable)
   }
   if (!byShape.length) return null
-  return pickOne(pickOne(byShape, rng), rng)
+  // The wording is only chosen once the route is, so a level with four voices
+  // does not cost four times the search.
+  const picked = pickOne(pickOne(byShape, rng), rng)
+  return makeFare(picked.steps, picked.route, pose, level.voices, rng)
 }
 
 // --- State ------------------------------------------------------------------
@@ -769,6 +953,8 @@ export interface Outcome {
   /** The route the instruction described — drawn on the map however it ended. */
   route: Route
   steps: Step[]
+  /** The wording it was actually given in, so the review echoes what was said. */
+  said: number[]
   /** Soʻm banked; zero unless they arrived. */
   paid: number
 }
@@ -909,6 +1095,7 @@ function writeOff(state: TaxiState, result: FareEnd): TaxiState {
           dropped: { x: state.taxi.x, y: state.taxi.y },
           route: state.fare.route,
           steps: state.fare.steps,
+          said: state.fare.said,
           paid: 0,
         }
       : state.outcome,
@@ -990,7 +1177,7 @@ export function dropOff(state: TaxiState): Drop {
   }
 
   const dropped = { x: state.taxi.x, y: state.taxi.y }
-  const { route, steps } = state.fare
+  const { route, steps, said } = state.fare
 
   if (samePoint(dropped, route.dest)) {
     const paid = purse(state)
@@ -999,7 +1186,7 @@ export function dropOff(state: TaxiState): Drop {
         ...state,
         takings: state.takings + paid,
         delivered: state.delivered + 1,
-        outcome: { result: 'arrived', dropped, route, steps, paid },
+        outcome: { result: 'arrived', dropped, route, steps, said, paid },
       },
       result: 'arrived',
       paid,
