@@ -5,6 +5,7 @@ import {
   CITY_HEIGHT,
   CITY_LANDMARKS,
   CITY_WIDTH,
+  buyWord,
   continueRun,
   createGame,
   currentLevel,
@@ -18,16 +19,22 @@ import {
   LEVELS,
   levelFor,
   NORTH,
+  fareValue,
+  FUEL_PER_BLOCK,
+  LIVES,
+  PATIENCE,
   pickFare,
   placeAt,
+  purse,
   resolve,
   routeUzbek,
   SOUTH,
   startGame,
-  STRIKES,
   stepUzbek,
+  stepWords,
   turnDir,
   WEST,
+  WORD_PRICE,
   type City,
   type Dir,
   type Place,
@@ -35,6 +42,8 @@ import {
   type Step,
   type TaxiState,
 } from '@/exercises/taxi'
+import en from '@/i18n/locales/en'
+import ru from '@/i18n/locales/ru'
 
 /** A cheap deterministic pseudo-random source, so a shift can be replayed. */
 function seeded(seed = 1): () => number {
@@ -62,6 +71,19 @@ function headingBetween(a: Point, b: Point): Dir {
   if (b.x > a.x) return EAST
   if (b.y > a.y) return SOUTH
   return WEST
+}
+
+/** Every instruction the game can ever put together, one step at a time. */
+function everyStep(): Step[] {
+  const steps: Step[] = []
+  for (const side of ['left', 'right'] as const) {
+    for (let ordinal = 1; ordinal <= 4; ordinal++) steps.push({ kind: 'turn', side, ordinal })
+    steps.push({ kind: 'turnNow', side })
+    for (const place of LANDMARKS) steps.push({ kind: 'landmarkTurn', place: place.id, side })
+  }
+  for (let blocks = 1; blocks <= 5; blocks++) steps.push({ kind: 'straight', blocks })
+  for (const place of LANDMARKS) steps.push({ kind: 'toLandmark', place: place.id })
+  return steps
 }
 
 /** Drives the taxi along the fare's own route, block by block. */
@@ -251,6 +273,31 @@ describe('what the passenger says', () => {
     expect(routeUzbek(steps)).toBe('Toʻgʻriga ikki kvartal yuring. Chapga buriling.')
   })
 
+  it('builds the clause out of the very words the driver can buy', () => {
+    // The sentence and the price list are the same thing, so a word can never
+    // appear in one and not the other.
+    for (const step of everyStep()) {
+      expect(
+        `${stepWords(step)
+          .map((word) => word.text)
+          .join(' ')}.`,
+      ).toBe(stepUzbek(step))
+    }
+  })
+
+  it('has a meaning to sell for every word of every clause', () => {
+    const words = en.taxi.word as Record<string, string>
+    const russian = ru.taxi.word as Record<string, string>
+    for (const step of everyStep()) {
+      for (const word of stepWords(step)) {
+        expect(words[word.key]).toBeTruthy()
+        expect(russian[word.key]).toBeTruthy()
+        // A word that names a landmark has to be able to say which one.
+        expect(words[word.key].includes('{place}')).toBe(word.place !== undefined)
+      }
+    }
+  })
+
   it('lists every clause it can speak, with no repeats', () => {
     const clauses = allSpokenClauses()
     expect(new Set(clauses).size).toBe(clauses.length)
@@ -369,72 +416,208 @@ describe('driving', () => {
 })
 
 describe('dropping off', () => {
-  it('pays out when the taxi is on the corner the instruction described', () => {
-    const state = driveRoute(startGame(createGame(seeded(21))))
-    const dropped = dropOff(state)
-    expect(dropped.outcome?.correct).toBe(true)
-    expect(dropped.delivered).toBe(1)
-    expect(dropped.wrong).toBe(0)
-    expect(dropped.status).toBe('playing')
+  it('banks whatever is left on the meter when the taxi is on the right corner', () => {
+    const driven = driveRoute(startGame(createGame(seeded(21))))
+    const left = purse(driven)
+    const drop = dropOff(driven)
+    expect(drop.result).toBe('arrived')
+    expect(drop.paid).toBe(left)
+    expect(drop.state.takings).toBe(left)
+    expect(drop.state.delivered).toBe(1)
+    expect(drop.state.status).toBe('playing')
+    expect(drop.state.outcome?.result).toBe('arrived')
   })
 
-  it('counts a strike, and shows the route that was meant, when it is not', () => {
+  it('is worth the words said and the distance covered, a little over the fuel', () => {
     const state = startGame(createGame(seeded(21)))
-    const dropped = dropOff(state) // let them out where they got in
-    expect(dropped.outcome?.correct).toBe(false)
-    expect(dropped.outcome?.route.dest).toEqual(state.fare!.route.dest)
-    expect(dropped.delivered).toBe(0)
-    expect(dropped.wrong).toBe(1)
+    const fare = state.fare!
+    expect(fare.pay).toBe(fareValue(fare.wordCount, fare.blocks))
+    // The margin over the fuel is what makes a well-driven fare worth taking.
+    expect(fare.pay).toBeGreaterThan(fare.blocks * FUEL_PER_BLOCK)
   })
 
-  it('ends the shift on the third one in the wrong street', () => {
+  it('keeps the passenger in the cab on a wrong corner, and says so', () => {
+    const state = startGame(createGame(seeded(21)))
+    const drop = dropOff(state) // let them out where they got in
+    expect(drop.result).toBe('refused')
+    expect(drop.paid).toBe(0)
+    expect(drop.state.outcome).toBeNull()
+    expect(drop.state.fare).toBe(state.fare)
+    expect(drop.state.patience).toBe(1)
+    expect(drop.state.spent).toBe(state.spent)
+    expect(drop.state.lives).toBe(state.lives)
+  })
+
+  it('writes the fare off for a life once the passenger runs out of patience', () => {
     let state = startGame(createGame(seeded(13)))
-    for (let i = 0; i < STRIKES; i++) {
-      state = dropOff(state)
-      expect(state.outcome?.correct).toBe(false)
-      if (i < STRIKES - 1) state = continueRun(state, seeded(4 + i))
-    }
-    expect(state.status).toBe('over')
-    expect(state.wrong).toBe(STRIKES)
+    for (let i = 1; i < PATIENCE; i++) state = dropOff(state).state
+    const drop = dropOff(state)
+    expect(drop.result).toBe('gaveUp')
+    expect(drop.state.outcome?.result).toBe('gaveUp')
+    expect(drop.state.outcome?.route.dest).toEqual(state.fare!.route.dest)
+    expect(drop.state.delivered).toBe(0)
+    expect(drop.state.takings).toBe(0)
+    expect(drop.state.lives).toBe(LIVES - 1)
+    expect(drop.state.status).toBe('playing')
   })
 
-  it('ignores a second tap on the same passenger', () => {
-    const state = dropOff(startGame(createGame(seeded(9))))
-    expect(dropOff(state)).toBe(state)
+  it('ignores a second tap once the fare is over', () => {
+    const state = startGame(createGame(seeded(9)))
+    const arrived = dropOff(driveRoute(state)).state
+    const again = dropOff(arrived)
+    expect(again.result).toBe('ignored')
+    expect(again.state).toBe(arrived)
   })
 
-  it('leaves the taxi where it should have gone, so the next fare starts there', () => {
-    const state = dropOff(startGame(createGame(seeded(17))))
+  it('leaves the taxi where it stopped, and starts the next fare from there', () => {
+    let state = startGame(createGame(seeded(17)))
+    for (let i = 0; i < PATIENCE; i++) state = dropOff(state).state
     const next = continueRun(state, seeded(3))
-    expect(next.taxi).toMatchObject(state.outcome!.route.dest)
-    expect(next.trail).toEqual([state.outcome!.route.dest])
+    expect(next.taxi).toMatchObject({ x: state.taxi.x, y: state.taxi.y })
+    expect(next.trail).toEqual([{ x: state.taxi.x, y: state.taxi.y }])
     expect(next.outcome).toBeNull()
+    expect(next.patience).toBe(0)
+    expect(next.spent).toBe(0)
     expect(next.fareId).toBe(state.fareId + 1)
   })
 
   it('picks up the next passenger where the last one got out', () => {
-    const state = dropOff(driveRoute(startGame(createGame(seeded(21)))))
+    const state = dropOff(driveRoute(startGame(createGame(seeded(21))))).state
     const next = continueRun(state, seeded(3))
     expect(next.taxi).toMatchObject(state.fare!.route.dest)
   })
 })
 
+describe('the meter', () => {
+  it('opens empty and only ever goes up', () => {
+    const state = createGame(seeded(21))
+    expect(state.takings).toBe(0)
+    expect(state.lives).toBe(LIVES)
+    expect(purse(state)).toBe(state.fare!.pay)
+
+    const paid = dropOff(driveRoute(startGame(state))).state
+    expect(paid.takings).toBeGreaterThan(0)
+  })
+
+  it('takes the fuel out of the fare, not out of the takings', () => {
+    const state = startGame(createGame(seeded(2)))
+    const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
+      hasRoad(state.city, state.taxi, dir),
+    )!
+    const there = drive(state, open)
+    expect(there.spent).toBe(FUEL_PER_BLOCK)
+    expect(purse(there)).toBe(purse(state) - FUEL_PER_BLOCK)
+    expect(there.takings).toBe(state.takings)
+    // Thinking better of it costs the same again — the fuel is already burnt.
+    const back = drive(there, ((open + 2) % 4) as Dir)
+    expect(back.spent).toBe(2 * FUEL_PER_BLOCK)
+  })
+
+  it('sells a word once, and gives it back for nothing after that', () => {
+    const state = startGame(createGame(seeded(21)))
+    const word = state.fare!.words[0][0]
+    const bought = buyWord(state, word.text)
+    expect(bought.spent).toBe(WORD_PRICE)
+    expect(bought.bought).toContain(word.text.toLowerCase())
+    // The same word, however it is capitalised, is already paid for.
+    expect(buyWord(bought, word.text.toUpperCase())).toBe(bought)
+  })
+
+  it('forgets what was bought when the next passenger gets in', () => {
+    let state = startGame(createGame(seeded(21)))
+    state = buyWord(state, state.fare!.words[0][0].text)
+    expect(state.bought).toHaveLength(1)
+    state = continueRun(dropOff(driveRoute(state)).state, seeded(3))
+    expect(state.bought).toEqual([])
+  })
+
+  it('always leaves something over for a driver who buys every word and drives straight', () => {
+    // The whole promise of the rate: translation is never the thing that
+    // bankrupts you, it is just the thing that leaves you working for pennies.
+    let state = startGame(createGame(seeded(55)))
+    const rng = seeded(8)
+    for (let fare = 0; fare < 15; fare++) {
+      for (const clause of state.fare!.words) {
+        for (const word of clause) state = buyWord(state, word.text)
+      }
+      const drop = dropOff(driveRoute(state))
+      expect(drop.result).toBe('arrived')
+      expect(drop.paid).toBeGreaterThan(0)
+      state = continueRun(drop.state, rng)
+    }
+    expect(state.lives).toBe(LIVES)
+  })
+
+  it('writes the fare off when the driving eats all of it, and costs a life', () => {
+    let state = startGame(createGame(seeded(31)))
+    const fare = state.fare!
+    // Drive back and forth over one block until the purse is gone.
+    const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
+      hasRoad(state.city, state.taxi, dir),
+    )!
+    for (let i = 0; i < fare.pay / FUEL_PER_BLOCK && !state.outcome; i++) {
+      state = drive(state, i % 2 ? (((open + 2) % 4) as Dir) : open)
+    }
+    expect(state.outcome?.result).toBe('broke')
+    expect(state.lives).toBe(LIVES - 1)
+    expect(state.takings).toBe(0)
+    expect(state.status).toBe('playing')
+    // The route is still on the table, because that is the thing to look at.
+    expect(state.outcome?.route.dest).toEqual(fare.route.dest)
+  })
+
+  it('ends the shift on the third fare written off, and only then', () => {
+    let state = startGame(createGame(seeded(13)))
+    for (let life = 1; life <= LIVES; life++) {
+      for (let i = 0; i < PATIENCE; i++) state = dropOff(state).state
+      expect(state.lives).toBe(LIVES - life)
+      if (life < LIVES) {
+        expect(state.status).toBe('playing')
+        state = continueRun(state, seeded(life))
+      }
+    }
+    expect(state.status).toBe('over')
+  })
+})
+
 describe('a whole shift', () => {
-  it('drives a perfect run up the levels without ever running out of fares', () => {
+  it('drives a perfect run up the levels, and banks it', () => {
     let state = startGame(createGame(seeded(77)))
     const rng = seeded(101)
-    const targetLevel = LEVELS.length - 1
 
     for (let fare = 0; fare < 40; fare++) {
       expect(state.fare).not.toBeNull()
       expect(state.status).toBe('playing')
-      state = dropOff(driveRoute(state))
-      expect(state.outcome?.correct).toBe(true)
-      state = continueRun(state, rng)
+      const drop = dropOff(driveRoute(state))
+      expect(drop.result).toBe('arrived')
+      state = continueRun(drop.state, rng)
     }
 
     expect(state.delivered).toBe(40)
-    expect(state.wrong).toBe(0)
-    expect(currentLevel(state)).toBe(LEVELS[targetLevel])
+    expect(state.lives).toBe(LIVES)
+    expect(currentLevel(state)).toBe(LEVELS[LEVELS.length - 1])
+    // A fare is worth more than the fuel it takes, so reading the directions
+    // is what pays: about five thousand soʻm a fare.
+    expect(state.takings).toBeGreaterThan(40 * 4 * FUEL_PER_BLOCK)
+  })
+
+  it('works for pennies when every word has to be translated', () => {
+    let read = startGame(createGame(seeded(77)))
+    let translated = startGame(createGame(seeded(77)))
+    const readRng = seeded(101)
+    const translatedRng = seeded(101)
+
+    for (let fare = 0; fare < 12; fare++) {
+      read = continueRun(dropOff(driveRoute(read)).state, readRng)
+      for (const clause of translated.fare!.words) {
+        for (const word of clause) translated = buyWord(translated, word.text)
+      }
+      translated = continueRun(dropOff(driveRoute(translated)).state, translatedRng)
+    }
+
+    // Both shifts delivered every passenger; only one of them made a living.
+    expect(translated.delivered).toBe(read.delivered)
+    expect(translated.takings).toBeGreaterThan(0)
+    expect(translated.takings * 4).toBeLessThan(read.takings)
   })
 })

@@ -4,9 +4,14 @@
  *
  * A fare is one instruction and one drop-off. The passenger speaks: *birinchi
  * koʻchadan chapga buriling* — first on the left. You drag the taxi along the
- * streets to where you think that is, and tap it to let them out. Get it wrong
- * three times and the shift is over. Nothing is timed: this is a comprehension
- * puzzle, and the only pressure is the three lights on the meter.
+ * streets to where you think that is, and tap it to let them out; get there and
+ * they pay. Nothing is timed. The pressure is the meter: every block burns
+ * fuel, every word of the instruction you tap to have translated costs money,
+ * and a fare pays for its words and its distance at a rate only a little above
+ * what the driving costs. Understand the directions and the shift turns a
+ * profit; buy the whole instruction in translation and it barely pays at all.
+ * Nothing takes money off the driver: the meter belongs to the fare in hand, so
+ * the worst a fare can do is eat itself, and that costs one of three lives.
  *
  * The ramp is the *directions*, not the city. A run opens on the shortest
  * thing anyone ever says to a driver — an ordinal and a side — then adds
@@ -327,6 +332,67 @@ function capitalise(text: string): string {
 }
 
 /**
+ * One word of a clause, and what it would cost the driver to understand it.
+ *
+ * `key` names the meaning under `taxi.word.*` rather than carrying it: the
+ * translation the driver buys is in their own language, which this module does
+ * not know about. Every word of every clause has one, because any of them can
+ * be the word that is holding the instruction up.
+ */
+export interface Word {
+  text: string
+  /** i18n key under `taxi.word.*`. */
+  key: string
+  /** The landmark this word names, for the keys that take one. */
+  place?: string
+}
+
+/** Cardinal meanings 1–5, indexed from one, to match `CARDINALS`. */
+const CARDINAL_KEYS = ['', 'one', 'two', 'three', 'four', 'five']
+
+/**
+ * A step broken into its words.
+ *
+ * This is the source of truth for the clause: {@link stepUzbek} joins these
+ * up, so the sentence the passenger says and the words the driver can pay to
+ * translate can never drift apart.
+ */
+export function stepWords(step: Step): Word[] {
+  switch (step.kind) {
+    case 'turn':
+      return [
+        { text: capitalise(ORDINALS[step.ordinal]), key: `ordinal${step.ordinal}` },
+        { text: 'koʻchadan', key: 'street' },
+        { text: SIDE_WORDS[step.side], key: step.side },
+        { text: 'buriling', key: 'turn' },
+      ]
+    case 'straight':
+      return [
+        { text: 'Toʻgʻriga', key: 'straightOn' },
+        { text: CARDINALS[step.blocks], key: CARDINAL_KEYS[step.blocks] },
+        { text: 'kvartal', key: 'block' },
+        { text: 'yuring', key: 'go' },
+      ]
+    case 'turnNow':
+      return [
+        { text: capitalise(SIDE_WORDS[step.side]), key: step.side },
+        { text: 'buriling', key: 'turn' },
+      ]
+    case 'landmarkTurn':
+      return [
+        { text: `${landmark(step.place)?.uzbek ?? ''}da`, key: 'atPlace', place: step.place },
+        { text: SIDE_WORDS[step.side], key: step.side },
+        { text: 'buriling', key: 'turn' },
+      ]
+    default:
+      return [
+        { text: `${landmark(step.place)?.uzbek ?? ''}gacha`, key: 'toPlace', place: step.place },
+        { text: 'yuring', key: 'go' },
+      ]
+  }
+}
+
+/**
  * A step as the passenger says it.
  *
  * Every clause is a plain polite imperative — *buriling*, *yuring* — because
@@ -338,18 +404,14 @@ function capitalise(text: string): string {
  * {@link allSpokenClauses}.
  */
 export function stepUzbek(step: Step): string {
-  switch (step.kind) {
-    case 'turn':
-      return `${capitalise(ORDINALS[step.ordinal])} koʻchadan ${SIDE_WORDS[step.side]} buriling.`
-    case 'straight':
-      return `Toʻgʻriga ${CARDINALS[step.blocks]} kvartal yuring.`
-    case 'turnNow':
-      return `${capitalise(SIDE_WORDS[step.side])} buriling.`
-    case 'landmarkTurn':
-      return `${landmark(step.place)?.uzbek ?? ''}da ${SIDE_WORDS[step.side]} buriling.`
-    default:
-      return `${landmark(step.place)?.uzbek ?? ''}gacha yuring.`
-  }
+  return `${stepWords(step)
+    .map((word) => word.text)
+    .join(' ')}.`
+}
+
+/** The word a driver pays for, as it is keyed — case and position aside. */
+export function wordKey(text: string): string {
+  return text.toLowerCase()
 }
 
 /** The whole instruction, one sentence per step. */
@@ -586,18 +648,64 @@ function shapeInstructions(city: City, shape: readonly StepKind[], level: Level)
 const MIN_BLOCKS = 2
 const MAX_ROUTE_BLOCKS = 12
 
-/** A fare: what was said, and where doing as you were told puts you. */
+// --- The meter --------------------------------------------------------------
+
+/**
+ * The money, all of it in soʻm, and all of it in thousands.
+ *
+ * A fare pays for the words it took to say and the distance it covers, and the
+ * driver pays for the fuel to get there and for every word they could not
+ * manage without. The rate is set a little above the fuel so that a fare driven
+ * straight to the door turns a profit and a fare found by wandering does not —
+ * that margin, `DISTANCE_RATE` minus one block of fuel, is the whole game.
+ *
+ * The numbers are small on purpose: a fare comes out around 6 000–15 000 soʻm,
+ * which is roughly what a short hop across Tashkent actually costs, and a word
+ * costs about what a minute of driving does. Understand the instruction and the
+ * shift pays; buy the whole thing in translation and you have worked for
+ * nothing.
+ */
+export const FUEL_PER_BLOCK = 1_000
+export const WORD_PRICE = 1_000
+export const DISTANCE_RATE = 1.25
+
+/** What a fare is worth: a word each, plus the distance at `DISTANCE_RATE`. */
+export function fareValue(words: number, blocks: number): number {
+  return (words + Math.round(DISTANCE_RATE * blocks)) * FUEL_PER_BLOCK
+}
+
+/** A fare: what was said, what it pays, and where doing as you are told puts you. */
 export interface Fare {
   steps: Step[]
   /** Each step as it is spoken — also the unit the audio is recorded in. */
   clauses: string[]
+  /** The same clauses word by word, for the driver to buy meanings from. */
+  words: Word[][]
+  /** How many words there are in all — half of what the fare pays for. */
+  wordCount: number
+  /** Blocks between the pick-up and the door: the other half. */
+  blocks: number
+  /** What it pays on arrival, in soʻm. */
+  pay: number
   route: Route
   /** The pose the instruction was given from; left and right depend on it. */
   from: Pose
 }
 
 function makeFare(steps: Step[], route: Route, from: Pose): Fare {
-  return { steps, clauses: steps.map(stepUzbek), route, from }
+  const words = steps.map(stepWords)
+  const wordCount = words.reduce((total, clause) => total + clause.length, 0)
+  const blocks = route.path.length - 1
+  return {
+    steps,
+    clauses: steps.map(stepUzbek),
+    words,
+    wordCount,
+    blocks,
+    pay: fareValue(wordCount, blocks),
+    route,
+    from,
+  }
 }
 
 /**
@@ -639,18 +747,44 @@ export function pickFare(
 
 // --- State ------------------------------------------------------------------
 
-/** What a drop-off turned out to be, kept on state so the map can show it. */
+/**
+ * What a drop-off came to.
+ *
+ * A wrong corner is not a life lost on its own: directions can be read more
+ * than one way, and the driver has already paid for the mistake out of the
+ * fare. The passenger stays in the cab and says this is not it — until they
+ * have said it {@link PATIENCE} times, at which point they get out where they
+ * are and the fare is written off.
+ */
+export type DropResult = 'arrived' | 'refused' | 'gaveUp' | 'ignored'
+
+/** How a fare ended: paid, walked out on, or driven into the ground. */
+export type FareEnd = 'arrived' | 'gaveUp' | 'broke'
+
+/** A fare that has ended, kept on state so the map can show what was meant. */
 export interface Outcome {
-  correct: boolean
-  /** Where the passenger was let out. */
+  result: FareEnd
+  /** Where the passenger was let out; the taxi's corner when the money ran out. */
   dropped: Point
-  /** The route the instruction described — drawn on the map either way. */
+  /** The route the instruction described — drawn on the map however it ended. */
   route: Route
   steps: Step[]
+  /** Soʻm banked; zero unless they arrived. */
+  paid: number
 }
 
-/** Wrong drop-offs allowed before the shift ends. */
-export const STRIKES = 3
+/** Wrong corners one passenger will sit through before giving up on you. */
+export const PATIENCE = 3
+
+/**
+ * Fares a driver may write off before the shift is over.
+ *
+ * Nothing takes money off a driver: what is on the meter belongs to the fare
+ * being driven, and the worst a fare can do is eat itself. A fare that ends
+ * without a passenger at their door — driven into the ground, or abandoned by
+ * the passenger — costs one of these instead.
+ */
+export const LIVES = 3
 
 export interface TaxiState {
   status: 'ready' | 'playing' | 'over'
@@ -660,12 +794,20 @@ export interface TaxiState {
   fare: Fare | null
   /** Where the taxi has driven since this fare started, for the trail. */
   trail: Point[]
-  /** Set between a drop-off and the next fare. */
+  /** Set between a drop-off that ended the fare and the next passenger. */
   outcome: Outcome | null
-  /** Passengers delivered — the score. */
+  /** Soʻm banked from fares already delivered — the score, and it only rises. */
+  takings: number
+  /** Fares left to write off before the shift ends; see {@link LIVES}. */
+  lives: number
+  /** Soʻm of the current fare already spent on fuel and translations. */
+  spent: number
+  /** Fares delivered; the ramp is keyed off it. */
   delivered: number
-  /** Passengers left in the wrong street. `STRIKES` of them ends the shift. */
-  wrong: number
+  /** Wrong corners tried on the current fare, against `PATIENCE`. */
+  patience: number
+  /** Words of this fare already paid for, keyed by {@link wordKey}. */
+  bought: string[]
   /** Bumped per fare, so the component can tell a new instruction from a redraw. */
   fareId: number
 }
@@ -712,6 +854,9 @@ export function nextFare(state: TaxiState, rng: () => number = Math.random): Tax
     fare,
     trail: [{ x: pose.x, y: pose.y }],
     outcome: null,
+    patience: 0,
+    spent: 0,
+    bought: [],
   }
 }
 
@@ -725,8 +870,12 @@ export function createGame(rng: () => number = Math.random): TaxiState {
     fare: null,
     trail: [],
     outcome: null,
+    takings: 0,
+    lives: LIVES,
+    spent: 0,
     delivered: 0,
-    wrong: 0,
+    patience: 0,
+    bought: [],
     fareId: 0,
   }
   return { ...nextFare(empty, rng), fareId: 1 }
@@ -737,12 +886,57 @@ export function startGame(state: TaxiState): TaxiState {
   return state.status === 'ready' ? { ...state, status: 'playing' } : state
 }
 
+/** Soʻm still on the meter for the fare being driven. */
+export function purse(state: TaxiState): number {
+  return state.fare ? Math.max(0, state.fare.pay - state.spent) : 0
+}
+
 /**
- * Drives one block in `dir`, if there is a street there.
+ * Writes the current fare off: the driver keeps nothing and a life goes.
+ *
+ * The taxi and the route stay on screen, because a fare lost is the one the
+ * driver most needs to see the answer to.
+ */
+function writeOff(state: TaxiState, result: FareEnd): TaxiState {
+  const lives = state.lives - 1
+  return {
+    ...state,
+    lives: Math.max(0, lives),
+    status: lives <= 0 ? 'over' : state.status,
+    outcome: state.fare
+      ? {
+          result,
+          dropped: { x: state.taxi.x, y: state.taxi.y },
+          route: state.fare.route,
+          steps: state.fare.steps,
+          paid: 0,
+        }
+      : state.outcome,
+  }
+}
+
+/**
+ * Takes money off the meter, and writes the fare off if that empties it.
+ *
+ * Spending is always against the fare in hand, never against the shift's
+ * takings, so a driver cannot end a fare poorer than they began it — the worst
+ * that can happen is that the whole purse goes on fuel and translations, and
+ * then it is a life rather than money that is lost.
+ */
+function spend(state: TaxiState, som: number): TaxiState {
+  const spent = state.spent + som
+  const next = { ...state, spent }
+  return state.fare && spent >= state.fare.pay ? writeOff(next, 'broke') : next
+}
+
+/**
+ * Drives one block in `dir`, if there is a street there, and burns the fuel.
  *
  * Doubling back rubs the trail out behind you rather than drawing over it, so
  * what is on the map is always the route the taxi would take now — a driver
- * who thinks better of a turning has not "been" down it.
+ * who thinks better of a turning has not "been" down it. The fuel is spent
+ * either way: reconsidering costs the same as being right first time, which is
+ * exactly why it pays to listen to the whole instruction before pulling out.
  */
 export function drive(state: TaxiState, dir: Dir): TaxiState {
   if (state.status !== 'playing' || state.outcome) return state
@@ -752,51 +946,92 @@ export function drive(state: TaxiState, dir: Dir): TaxiState {
   const previous = state.trail[state.trail.length - 2]
   const trail =
     previous && samePoint(previous, next) ? state.trail.slice(0, -1) : [...state.trail, next]
-  return { ...state, taxi: { ...next, dir }, trail }
+  return spend({ ...state, taxi: { ...next, dir }, trail }, FUEL_PER_BLOCK)
+}
+
+/**
+ * Buys the meaning of one word of the instruction.
+ *
+ * It is bought for the whole fare rather than for the one place it appears:
+ * paying twice for *buriling* in the same breath would teach nothing the first
+ * payment did not. A word already bought is free to tap again, which is what
+ * makes the bought half of an instruction re-readable while you drive.
+ */
+export function buyWord(state: TaxiState, text: string): TaxiState {
+  const key = wordKey(text)
+  if (state.status !== 'playing' || state.outcome) return state
+  if (state.bought.includes(key)) return state
+  return spend({ ...state, bought: [...state.bought, key] }, WORD_PRICE)
+}
+
+/** What one drop-off did: the new state, and how the passenger took it. */
+export interface Drop {
+  state: TaxiState
+  result: DropResult
+  /** Soʻm earned; zero unless they arrived. */
+  paid: number
 }
 
 /**
  * Lets the passenger out where the taxi is standing.
  *
- * The drop-off is judged on the corner alone: a driver who found the right
- * street the long way round still found it. What comes back carries the route
- * the instruction meant, which the map draws either way — being shown the
- * answer is how the rules of "first on the left" are actually learned.
+ * The corner alone is judged: a driver who found the right street the long way
+ * round still found it, and has already paid for the detour in fuel. A wrong
+ * corner is refused rather than punished — the passenger stays put and says so
+ * — until they have said it {@link PATIENCE} times and give up on you, which
+ * writes the fare off for a life. Arriving banks whatever is left on the meter.
+ * Every ending carries the route the instruction meant, which the map then
+ * draws: being shown the answer is how the rules of "first on the left" are
+ * actually learned.
  */
-export function dropOff(state: TaxiState): TaxiState {
-  if (state.status !== 'playing' || !state.fare || state.outcome) return state
+export function dropOff(state: TaxiState): Drop {
+  if (state.status !== 'playing' || !state.fare || state.outcome) {
+    return { state, result: 'ignored', paid: 0 }
+  }
 
   const dropped = { x: state.taxi.x, y: state.taxi.y }
-  const correct = samePoint(dropped, state.fare.route.dest)
-  const wrong = state.wrong + (correct ? 0 : 1)
-  return {
-    ...state,
-    status: wrong >= STRIKES ? 'over' : state.status,
-    delivered: state.delivered + (correct ? 1 : 0),
-    wrong,
-    outcome: { correct, dropped, route: state.fare.route, steps: state.fare.steps },
+  const { route, steps } = state.fare
+
+  if (samePoint(dropped, route.dest)) {
+    const paid = purse(state)
+    return {
+      state: {
+        ...state,
+        takings: state.takings + paid,
+        delivered: state.delivered + 1,
+        outcome: { result: 'arrived', dropped, route, steps, paid },
+      },
+      result: 'arrived',
+      paid,
+    }
   }
+
+  const patience = state.patience + 1
+  if (patience < PATIENCE) {
+    return { state: { ...state, patience }, result: 'refused', paid: 0 }
+  }
+  return { state: writeOff({ ...state, patience }, 'gaveUp'), result: 'gaveUp', paid: 0 }
 }
 
 /**
  * Clears the last drop-off and flags down the next passenger.
  *
- * After a wrong one the taxi is put where it should have gone — the passenger
- * did get there in the end — so the next instruction is given from a corner
- * the driver has just been shown.
+ * The taxi stays where it stopped either way. A passenger who gave up got out
+ * on the wrong corner, and that corner is now on screen next to the route they
+ * wanted — which is a better place to start reading the next instruction from
+ * than anywhere the game could move the driver to.
  */
 export function continueRun(state: TaxiState, rng: () => number = Math.random): TaxiState {
   if (!state.outcome) return state
   if (state.status === 'over') return { ...state, outcome: null, fare: null }
 
-  const { correct, route } = state.outcome
-  const taxi: Pose = correct ? state.taxi : { ...route.dest, dir: route.dir }
-  const next = nextFare({ ...state, taxi, outcome: null }, rng)
+  const next = nextFare({ ...state, outcome: null }, rng)
   return { ...next, fareId: state.fareId + 1 }
 }
 
 // --- High score -------------------------------------------------------------
 
+/** The best takings, in soʻm — the most a shift ever banked. */
 const HIGH_SCORE_KEY = 'lugatcha.taxiHighScore'
 
 export function readHighScore(): number {
