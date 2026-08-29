@@ -158,6 +158,43 @@ export default {
     resume: 'Resume',
   },
 
+  taxi: {
+    aria: 'Taxi driver directions game',
+    eyebrow: 'Bonus round',
+    title: 'Taxi driver',
+    howTo:
+      'Your passenger gives directions in Uzbek. Drag the taxi along the streets to where they mean, then tap it to let them out — turn where you were told, and pull up in the street they named. Three passengers left in the wrong place and the shift is over.',
+    start: 'Start the shift',
+    fares: 'Fares',
+    level: 'Level',
+    best: 'Best',
+    strikes: '{count} of {total} passengers dropped in the wrong place',
+    mapAria: 'City map — drag the taxi along the streets to drive it',
+    hearAgain: 'Hear the directions again',
+    dropOff: 'Drop off here',
+    nextFare: 'Next passenger',
+    steer: 'Drag the taxi to drive it, tap it to drop off. Arrow keys work too.',
+    thanks: 'Rahmat! Right street.',
+    notThere: 'Not where they wanted.',
+    over: 'End of shift',
+    finalScore: 'You got {count} passengers where they were going.',
+    newBest: 'New best!',
+    again: 'Drive again',
+    done: 'Done',
+    skip: 'Close the game',
+    paused: 'Paused',
+    resume: 'Resume',
+    ordinal: { 1: 'first', 2: 'second', 3: 'third', 4: 'fourth' },
+    side: { left: 'left', right: 'right' },
+    gloss: {
+      turn: 'Take the {ordinal} street on the {side}.',
+      straight: 'Carry straight on for one block. | Carry straight on for {blocks} blocks.',
+      turnNow: 'Turn {side}.',
+      landmarkTurn: 'Turn {side} at the {place}.',
+      toLandmark: 'Carry on as far as the {place}.',
+    },
+  },
+
   streak: {
     aria: 'Daily practice streak celebration',
     started: 'Streak started!',
@@ -225,7 +262,7 @@ export default {
     },
     game: {
       title: 'Mini-games',
-      desc: 'A mini-game after each daily practice, picked at random: count in Uzbek in Number snake, burst the named colour in Bubble trouble, or read the pricetags in Bazar hero. New — try one here first.',
+      desc: 'A mini-game after each daily practice, picked at random: count in Uzbek in Number snake, burst the named colour in Bubble trouble, read the pricetags in Bazar hero, or follow the directions in Taxi driver. New — try one here first.',
       groupLabel: 'Mini-game after daily practice',
       on: 'On',
       off: 'Off',
@@ -233,6 +270,7 @@ export default {
       bestSnake: 'Number snake — best count: {score}',
       bestBubbles: 'Bubble trouble — most bubbles popped: {score}',
       bestBazar: 'Bazar hero — biggest trolley: {score} soʻm',
+      bestTaxi: 'Taxi driver — most passengers delivered: {score}',
     },
 
     backup: {

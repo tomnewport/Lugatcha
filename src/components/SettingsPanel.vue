@@ -11,6 +11,7 @@ import { collectBackup, parseBackup, applyBackup, InvalidBackupError } from '@/d
 import { readHighScore as readSnakeBest } from '@/exercises/snake'
 import { readHighScore as readBubblesBest } from '@/exercises/bubbles'
 import { readHighScore as readBazarBest, formatSom } from '@/exercises/bazar'
+import { readHighScore as readTaxiBest } from '@/exercises/taxi'
 import BonusGame from '@/components/BonusGame.vue'
 import type { MiniGameId } from '@/exercises/miniGames'
 import { saveBackup, pickBackupText } from '@/db/backupIO'
@@ -134,12 +135,14 @@ const playingGame = ref<MiniGameId | 'random' | null>(null)
 const snakeBest = ref(readSnakeBest())
 const bubblesBest = ref(readBubblesBest())
 const bazarBest = ref(readBazarBest())
+const taxiBest = ref(readTaxiBest())
 
 function closeGame() {
   playingGame.value = null
   snakeBest.value = readSnakeBest()
   bubblesBest.value = readBubblesBest()
   bazarBest.value = readBazarBest()
+  taxiBest.value = readTaxiBest()
 }
 
 async function resetProgress() {
@@ -348,6 +351,9 @@ async function restoreFromFile() {
         <button class="btn btn--ghost" type="button" @click="playingGame = 'bazar'">
           {{ $t('bazar.title') }}
         </button>
+        <button class="btn btn--ghost" type="button" @click="playingGame = 'taxi'">
+          {{ $t('taxi.title') }}
+        </button>
       </div>
       <p v-if="snakeBest > 0" class="settings-card__note">
         {{ $t('settings.game.bestSnake', { score: snakeBest }) }}
@@ -357,6 +363,9 @@ async function restoreFromFile() {
       </p>
       <p v-if="bazarBest > 0" class="settings-card__note">
         {{ $t('settings.game.bestBazar', { score: formatSom(bazarBest, $i18n.locale) }) }}
+      </p>
+      <p v-if="taxiBest > 0" class="settings-card__note">
+        {{ $t('settings.game.bestTaxi', { score: taxiBest }) }}
       </p>
     </section>
 

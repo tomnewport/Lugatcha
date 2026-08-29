@@ -130,3 +130,21 @@ export function playSmash(): void {
   }
   crash(ctx, now + 0.14, 0.2, 0.1, 1200)
 }
+
+/**
+ * A taxi horn: two notes at once, leant on and let go.
+ *
+ * A car horn is a pair of tuned reeds a fourth or so apart sounding together —
+ * that beating between them is what makes it read as a horn rather than a
+ * beep — and it is square-ish rather than smooth, because the reeds clip. It
+ * ends the moment the driver's hand comes off, so there is no tail on it.
+ */
+export function playHorn(): void {
+  const ctx = audioContext()
+  if (!ctx) return
+  const now = ctx.currentTime
+  tone(ctx, now, 392, 0.42, 0.09, 'square')
+  tone(ctx, now, 523.25, 0.42, 0.07, 'square')
+  // A touch of the same pair underneath, for the body a small horn has.
+  tone(ctx, now, 196, 0.4, 0.05, 'triangle')
+}

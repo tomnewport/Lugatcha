@@ -5,9 +5,9 @@
  * rather than the same board every evening. Adding a game to the roster is the
  * only change needed for it to start appearing.
  */
-export type MiniGameId = 'snake' | 'bubbles' | 'bazar'
+export type MiniGameId = 'snake' | 'bubbles' | 'bazar' | 'taxi'
 
-export const MINI_GAMES: readonly MiniGameId[] = ['snake', 'bubbles', 'bazar']
+export const MINI_GAMES: readonly MiniGameId[] = ['snake', 'bubbles', 'bazar', 'taxi']
 
 /** Picks the mini-game for one bonus round, uniformly at random. */
 export function pickMiniGame(rng: () => number = Math.random): MiniGameId {
