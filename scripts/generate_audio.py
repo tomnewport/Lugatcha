@@ -211,6 +211,60 @@ def bazar_texts() -> list[str]:
     return [*words, *(" ".join(uzbek_cardinal_tokens(price)) for price in prices)]
 
 
+# ---------------------------------------------------------------------------
+# Taxi driver — MUST stay identical to allSpokenClauses() in
+# src/exercises/taxi.ts.
+#
+# The passenger's directions are generated at runtime, but they are assembled
+# out of a fixed, small set of whole clauses ("Birinchi koʻchadan chapga
+# buriling.") precisely so that every one of them can be recorded as a real
+# sentence rather than stitched together word by word. tests/taxi.spec.ts
+# checks that nothing the game generates falls outside this set; if a landmark
+# or an ordinal is added there, it has to be added here too and the generator
+# re-run.
+# ---------------------------------------------------------------------------
+
+TAXI_ORDINALS = ["birinchi", "ikkinchi", "uchinchi", "toʻrtinchi"]
+TAXI_CARDINALS = ["bir", "ikki", "uch", "toʻrt", "besh"]
+TAXI_SIDES = ["chapga", "oʻngga"]
+# Landmark names as the passenger says them, capitalised — every clause that
+# names one starts with it (LANDMARKS in src/exercises/taxi.ts).
+TAXI_LANDMARKS = [
+    "Kasalxona",
+    "Mehmonxona",
+    "Muzey",
+    "Bank",
+    "Kutubxona",
+    "Restoran",
+    "Kafe",
+    "Choyxona",
+    "Bozor",
+    "Bogʻ",
+    "Masjid",
+    "Maktab",
+    "Politsiya",
+    "Vokzal",
+    "Metro",
+    "Teatr",
+]
+
+
+def taxi_texts() -> list[str]:
+    """Every clause a passenger in Taxi driver can say."""
+    clauses: list[str] = []
+    for side in TAXI_SIDES:
+        for ordinal in TAXI_ORDINALS:
+            clauses.append(f"{ordinal.capitalize()} koʻchadan {side} buriling.")
+        clauses.append(f"{side.capitalize()} buriling.")
+        for place in TAXI_LANDMARKS:
+            clauses.append(f"{place}da {side} buriling.")
+    for cardinal in TAXI_CARDINALS:
+        clauses.append(f"Toʻgʻriga {cardinal} kvartal yuring.")
+    for place in TAXI_LANDMARKS:
+        clauses.append(f"{place}gacha yuring.")
+    return clauses
+
+
 def self_test() -> None:
     fixtures = json.loads(FIXTURES.read_text(encoding="utf-8"))
     failures = [
@@ -299,11 +353,12 @@ def collect_texts() -> dict[str, str]:
             for section in group.get("article", []):
                 phrases.extend(ex["uzbek"] for ex in section.get("examples", []))
 
-    # Counting quiz and Bazar hero: number readings are generated in code, not
-    # in public/data, so enumerate what they can speak (mirrors numbers.ts and
-    # bazar.ts).
+    # Counting quiz, Bazar hero and Taxi driver: these speak strings generated
+    # in code rather than stored in public/data, so enumerate what each of them
+    # can say (mirrors numbers.ts, bazar.ts and taxi.ts).
     phrases.extend(counting_quiz_texts())
     phrases.extend(bazar_texts())
+    phrases.extend(taxi_texts())
 
     collected: dict[str, str] = {}
 

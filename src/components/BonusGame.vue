@@ -19,6 +19,7 @@ import { coloursFromWords } from '@/exercises/bubbles'
 import SnakeGame from '@/components/SnakeGame.vue'
 import BubbleGame from '@/components/BubbleGame.vue'
 import BazarGame from '@/components/BazarGame.vue'
+import TaxiGame from '@/components/TaxiGame.vue'
 
 /** Omit to toss for it, which is what the post-practice bonus round does. */
 const props = defineProps<{ game?: MiniGameId }>()
@@ -45,5 +46,6 @@ onMounted(async () => {
 <template>
   <SnakeGame v-if="game === 'snake'" @done="emit('done')" />
   <BazarGame v-else-if="game === 'bazar'" @done="emit('done')" />
+  <TaxiGame v-else-if="game === 'taxi'" @done="emit('done')" />
   <BubbleGame v-else-if="colourWords" :words="colourWords" @done="emit('done')" />
 </template>
