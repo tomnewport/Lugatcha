@@ -67,6 +67,16 @@ let currentResolve: ((v: boolean) => void) | null = null
 let speakGen = 0
 
 /**
+ * How many times anything at all has been spoken, cancelling nothing.
+ *
+ * `speakGen` says which utterance is allowed to make a sound; this says who
+ * asked last, and is what {@link createSpeaker} uses to tell "my word is still
+ * the one playing" from "somebody else has taken over since". See there for
+ * why the difference matters.
+ */
+let speakSeq = 0
+
+/**
  * Something currently sounding over the top of the rest, and the two ways it
  * can be brought to an end. See {@link speakUzbekWord}.
  */
@@ -457,6 +467,7 @@ export interface SpeakOptions {
 export async function speakUzbek(text: string, { slow = false, langs }: SpeakOptions = {}): Promise<void> {
   // Record the word/phrase in view so the "Raise an issue" form can attach it.
   noteUzbekViewed(text)
+  speakSeq++
   stopSpeaking()
   const gen = speakGen
   const manifest = await getAudioManifest()
@@ -491,6 +502,7 @@ export async function speakUzbek(text: string, { slow = false, langs }: SpeakOpt
  */
 export function speakUzbekWord(word: string, options: SpeakOptions = {}): Promise<void> {
   noteUzbekViewed(word)
+  speakSeq++
   const gen = speakGen
   const url = clipUrl(word, loadedManifest)
   if (url === undefined) return speakWordOnceLoaded(word, options, gen)
@@ -541,6 +553,7 @@ function wait(ms: number): Promise<void> {
 export async function speakUzbekWords(words: readonly string[], options: SpeakOptions = {}): Promise<void> {
   if (!words.length) return
   noteUzbekViewed(words.join(' '))
+  speakSeq++
   stopSpeaking()
   const gen = speakGen
   const manifest = await getAudioManifest()
@@ -555,5 +568,65 @@ export async function speakUzbekWords(words: readonly string[], options: SpeakOp
     if (url && (await playFile(url))) continue
     if (gen !== speakGen) return
     await speakWithSynthesis(word, options)
+  }
+}
+
+/**
+ * A caller that can go quiet without silencing whatever spoke after it.
+ *
+ * {@link stopSpeaking} silences the app entire, which is what a component
+ * wants on the way out — nobody wants the last word of a lesson carrying on
+ * over the next screen. Called from a teardown hook, though, it also silences
+ * the screen that replaced it, because by then that screen has usually already
+ * started speaking: Vue runs a pre-flush watcher *before* it patches the DOM,
+ * so the incoming question's word is under way while the outgoing question's
+ * speaker buttons are still being unmounted, and their `onUnmounted` cuts it
+ * off. Every autoplay in the app sat behind that — the word a question asks
+ * you to recognise, the sentence a story reads out — and the learner heard
+ * nothing at all unless they tapped the speaker themselves.
+ *
+ * So a speaker remembers whether its own word is still the one being said, and
+ * {@link Speaker.stop} does nothing once it is not. Ordering stops mattering:
+ * whether the successor starts before or after the teardown, the last word
+ * asked for is the one that plays.
+ */
+export interface Speaker {
+  /** Speaks, and takes the floor. See {@link speakUzbek}. */
+  speak(text: string, options?: SpeakOptions): Promise<void>
+  /** Speaks one word over anything still ringing. See {@link speakUzbekWord}. */
+  speakWord(word: string, options?: SpeakOptions): Promise<void>
+  /** Speaks a run of words back to back. See {@link speakUzbekWords}. */
+  speakWords(words: readonly string[], options?: SpeakOptions): Promise<void>
+  /** Whether this speaker was the last to ask for anything to be said. */
+  readonly holdsFloor: boolean
+  /** Silences the app, unless something else has spoken since. */
+  stop(): void
+}
+
+export function createSpeaker(): Speaker {
+  // Nothing said yet, and never equal to a real turn: a speaker that has not
+  // spoken has nothing to stop.
+  let mine = -1
+  /**
+   * Runs `start`, and takes the floor if it really did ask for something —
+   * `speakWords([])` says nothing, and saying nothing is no claim on what
+   * somebody else is in the middle of saying.
+   */
+  function took<T>(start: () => T): T {
+    const before = speakSeq
+    const started = start()
+    if (speakSeq !== before) mine = speakSeq
+    return started
+  }
+  return {
+    speak: (text, options) => took(() => speakUzbek(text, options)),
+    speakWord: (word, options) => took(() => speakUzbekWord(word, options)),
+    speakWords: (words, options) => took(() => speakUzbekWords(words, options)),
+    get holdsFloor() {
+      return mine === speakSeq
+    },
+    stop() {
+      if (mine === speakSeq) stopSpeaking()
+    },
   }
 }

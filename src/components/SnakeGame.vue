@@ -23,7 +23,10 @@ import {
   type Point,
 } from '@/exercises/snake'
 import { numberToUzbek } from '@/exercises/numbers'
-import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
+
+/** Speaks the game's own words, and silences only those. */
+const speaker = createSpeaker()
 
 const emit = defineEmits<{ done: [] }>()
 
@@ -62,7 +65,7 @@ function tick() {
   state.value = result.state
   if (result.ate) {
     // The whole point of the game: hear the number you just caught.
-    void speakUzbek(result.ate.uzbek)
+    void speaker.speak(result.ate.uzbek)
     buzz(15)
   }
   if (result.over) {
@@ -78,7 +81,7 @@ function finish(over: OverReason) {
   best.value = readHighScore()
   buzz([40, 60, 90])
   // Say the number they were reaching for, so the run ends on the right word.
-  if (over.kind === 'wrong') void speakUzbek(numberToUzbek(over.expected))
+  if (over.kind === 'wrong') void speaker.speak(numberToUzbek(over.expected))
 }
 
 function buzz(pattern: number | number[]) {
@@ -164,7 +167,7 @@ function playAgain() {
 
 function done() {
   clearTimer()
-  stopSpeaking()
+  speaker.stop()
   emit('done')
 }
 
@@ -260,7 +263,7 @@ onBeforeUnmount(() => {
   observer?.disconnect()
   window.removeEventListener('keydown', onKey)
   document.removeEventListener('visibilitychange', onVisibility)
-  stopSpeaking()
+  speaker.stop()
 })
 </script>
 

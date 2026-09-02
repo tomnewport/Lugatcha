@@ -6,7 +6,7 @@ import { tokenize, buildDecoys } from '@/exercises/validate'
 import { pickLeastRecentlyShown } from '@/exercises/contentPicker'
 import { loadRoleplayShownMap } from '@/db/progress'
 import { phraseKey } from '@/exercises/phrases'
-import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
 import { useProgressStore } from '@/stores/progress'
 import AudioButton from '@/components/AudioButton.vue'
@@ -17,6 +17,7 @@ const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 const { name, pick } = useContentLang()
 const progress = useProgressStore()
+const speaker = createSpeaker()
 
 const roleplay = ref<Roleplay | null>(null)
 const stage = ref<'play' | 'done'>('play')
@@ -69,7 +70,8 @@ async function pickAndPlay() {
 
 onUnmounted(() => {
   runId++
-  stopSpeaking()
+  // Leaves anything that has spoken since alone — see `createSpeaker`.
+  speaker.stop()
 })
 
 const visibleTurns = computed(() => turns.value.slice(0, currentIndex.value))
@@ -109,7 +111,7 @@ async function processTurn() {
   if (turn.speaker === 'npc') {
     npcSpeaking.value = true
     await scrollLog()
-    await speakUzbek(turn.uzbek)
+    await speaker.speak(turn.uzbek)
     await new Promise((r) => setTimeout(r, 600))
     if (myRun !== runId) return
     npcSpeaking.value = false
@@ -126,7 +128,7 @@ async function onUserResult(result: AssemblyResult) {
   // A built turn is a phrase-building answer — enrol it in spaced repetition.
   void progress.recordPhraseResult(phraseKey(turn.uzbek), result.correct && !result.revealed)
   if (result.correct) {
-    await speakUzbek(turn.uzbek)
+    await speaker.speak(turn.uzbek)
     if (myRun !== runId) return
   }
   currentIndex.value++
@@ -135,7 +137,7 @@ async function onUserResult(result: AssemblyResult) {
 
 function restart() {
   runId++
-  stopSpeaking()
+  speaker.stop()
   void pickAndPlay()
 }
 </script>

@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { parseOptional, buildDecoys } from '@/exercises/validate'
 import { PHRASE_DECOYS, type PhrasePromptMode, type PracticePhrase } from '@/exercises/phrases'
 import { useContentLang } from '@/i18n/content'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 /**
  * One phrase-building question inside a mixed practice session — the same
@@ -35,7 +41,7 @@ const solved = ref(false)
 
 function onResult(result: AssemblyResult) {
   solved.value = true
-  if (result.correct) speakUzbek(props.phrase.uzbek)
+  if (result.correct) speaker.speak(props.phrase.uzbek)
   emit('answered', result.correct && !result.revealed)
 }
 </script>

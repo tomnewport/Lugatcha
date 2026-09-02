@@ -28,17 +28,13 @@ import {
   type BeltItem,
 } from '@/exercises/bazar'
 import { uzbekCardinalTokens } from '@/exercises/numbers'
-import {
-  primeUzbekAudio,
-  speakUzbek,
-  speakUzbekWord,
-  speakUzbekWords,
-  stopSpeaking,
-  NEIGHBOUR_VOICE_LANGS,
-} from '@/audio/audio'
+import { primeUzbekAudio, createSpeaker, NEIGHBOUR_VOICE_LANGS } from '@/audio/audio'
 import { playKerching, playSmash } from '@/audio/sfx'
 import { resumeAudio } from '@/audio/context'
 import { useContentLang } from '@/i18n/content'
+
+/** Speaks the game's own words, and silences only those. */
+const speaker = createSpeaker()
 
 const emit = defineEmits<{ done: [] }>()
 
@@ -202,8 +198,8 @@ function sayPrice(item: BeltItem) {
   const words = uzbekCardinalTokens(item.price)
   reading.value = true
   const finished = item.bonus
-    ? speakUzbek(words.join(' '), { langs: NEIGHBOUR_VOICE_LANGS })
-    : speakUzbekWords(words)
+    ? speaker.speak(words.join(' '), { langs: NEIGHBOUR_VOICE_LANGS })
+    : speaker.speakWords(words)
   void finished.finally(() => {
     reading.value = false
   })
@@ -230,7 +226,7 @@ function press(token: string) {
   // read out after the fact is read over the item that replaced it, and lands
   // as a number from nowhere. The bonus round is keyed in digits and says its
   // own price, so there is nothing to echo there.
-  if (result.accepted && front && !front.bonus) void speakUzbekWord(token)
+  if (result.accepted && front && !front.bonus) void speaker.speakWord(token)
   state.value = result.state
   if (result.bagged) {
     bag(result.bagged)
@@ -299,7 +295,7 @@ function onKeyDown(event: KeyboardEvent) {
 function onVisibility() {
   if (document.hidden && state.value.status === 'playing' && !paused.value) {
     paused.value = true
-    stopSpeaking()
+    speaker.stop()
   }
 }
 
@@ -322,7 +318,7 @@ function playAgain() {
 }
 
 function done() {
-  stopSpeaking()
+  speaker.stop()
   emit('done')
 }
 
@@ -338,7 +334,7 @@ onBeforeUnmount(() => {
   clearTimeout(shookAt)
   window.removeEventListener('keydown', onKeyDown)
   document.removeEventListener('visibilitychange', onVisibility)
-  stopSpeaking()
+  speaker.stop()
 })
 </script>
 

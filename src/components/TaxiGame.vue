@@ -49,17 +49,14 @@ import {
   type Word,
 } from '@/exercises/taxi'
 import { formatSom } from '@/exercises/bazar'
-import {
-  primeUzbekAudio,
-  speakUzbek,
-  speakUzbekWord,
-  stopSpeaking,
-  NEIGHBOUR_VOICE_LANGS,
-} from '@/audio/audio'
+import { primeUzbekAudio, createSpeaker, NEIGHBOUR_VOICE_LANGS } from '@/audio/audio'
 import { playChime, playHorn } from '@/audio/sfx'
 import { resumeAudio } from '@/audio/context'
 import { useContentLang } from '@/i18n/content'
 import { useI18n } from 'vue-i18n'
+
+/** Speaks the game's own words, and silences only those. */
+const speaker = createSpeaker()
 
 const emit = defineEmits<{ done: [] }>()
 
@@ -210,11 +207,11 @@ function wordGloss(word: Word): string {
 function tapWord(word: Word) {
   if (!playable.value) return
   if (bought(word)) {
-    void speakUzbekWord(word.text.toLowerCase())
+    void speaker.speakWord(word.text.toLowerCase())
     return
   }
   spendAnd(buyWord(state.value, word.text))
-  void speakUzbekWord(word.text.toLowerCase())
+  void speaker.speakWord(word.text.toLowerCase())
 }
 
 function placeName(id: string): string {
@@ -289,7 +286,7 @@ async function sayFare(current: Fare): Promise<void> {
       if (token !== sayToken) return
       if (index > 0) await wait(CLAUSE_GAP_MS)
       if (token !== sayToken) return
-      await speakUzbek(clause, { langs: NEIGHBOUR_VOICE_LANGS })
+      await speaker.speak(clause, { langs: NEIGHBOUR_VOICE_LANGS })
     }
   } finally {
     if (token === sayToken) speaking.value = false
@@ -438,7 +435,7 @@ function letThemOut() {
   if (!playable.value) return
   sayToken++
   speaking.value = false
-  stopSpeaking()
+  speaker.stop()
 
   const drop = dropOff(state.value)
   state.value = drop.state
@@ -534,7 +531,7 @@ function begin() {
 function playAgain() {
   clearAdvance()
   sayToken++
-  stopSpeaking()
+  speaker.stop()
   newBest.value = false
   paused.value = false
   state.value = startGame(createGame())
@@ -544,7 +541,7 @@ function playAgain() {
 function done() {
   clearAdvance()
   sayToken++
-  stopSpeaking()
+  speaker.stop()
   // A shift has no natural end, so a driver who has had enough and closes the
   // game still keeps what they delivered.
   recordHighScore(state.value.takings)
@@ -560,7 +557,7 @@ function onVisibility() {
     paused.value = true
     sayToken++
     speaking.value = false
-    stopSpeaking()
+    speaker.stop()
   }
 }
 
@@ -574,7 +571,7 @@ onBeforeUnmount(() => {
   clearAdvance()
   window.removeEventListener('keydown', onKey)
   document.removeEventListener('visibilitychange', onVisibility)
-  stopSpeaking()
+  speaker.stop()
 })
 </script>
 

@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import type { Word } from '@/db/types'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import { latinToCyrillic } from '@/exercises/transliterate'
+import { rankByGloss } from '@/exercises/glossSearch'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 const props = defineProps<{
   word: Word
@@ -41,13 +48,12 @@ const eq = (a: string, b: string) => a.toLowerCase() === b.toLowerCase()
 const isCorrect = computed(() => picked.value !== null && eq(gloss(picked.value), answer.value))
 
 onMounted(() => {
-  if (props.mode === 'listen') speakUzbek(props.word.uzbek)
+  if (props.mode === 'listen') speaker.speak(props.word.uzbek)
 })
 
-const filtered = computed(() => {
-  const q = query.value.trim().toLowerCase()
-  return q ? props.options.filter((o) => gloss(o).toLowerCase().includes(q)) : props.options
-})
+// Closest match first, so typing "I" leads with the answer that *is* "I"
+// rather than every gloss with an i in it. See exercises/glossSearch.ts.
+const filtered = computed(() => rankByGloss(props.options, gloss, query.value))
 
 function choose(option: Word) {
   if (answered.value) return
