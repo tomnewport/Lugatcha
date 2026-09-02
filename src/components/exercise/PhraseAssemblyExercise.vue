@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { db } from '@/db'
 import { tokenize, parseOptional, shuffle, buildDecoys, normalizeToken } from '@/exercises/validate'
 import { PHRASE_DECOYS, phraseKey } from '@/exercises/phrases'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
 import { useProgressStore } from '@/stores/progress'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -84,7 +90,7 @@ const isLast = computed(() => index.value >= phrases.value.length - 1)
 
 function onResult(result: AssemblyResult) {
   solved.value = true
-  if (result.correct) speakUzbek(current.value.uzbek)
+  if (result.correct) speaker.speak(current.value.uzbek)
   // Enrols the phrase in spaced repetition, so Daily Practice re-serves it.
   void progress.recordPhraseResult(phraseKey(current.value.uzbek), result.correct && !result.revealed)
 }

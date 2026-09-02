@@ -1,17 +1,23 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import type { Word } from '@/db/types'
 import { pickIntroWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
 import { db } from '@/db/useDb'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekWord from '@/components/UzbekWord.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import CyrillicSub from '@/components/CyrillicSub.vue'
 import VerbFormStrip from '@/components/VerbFormStrip.vue'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 type Step = 'listen' | 'quiz' | 'match' | 'phrases'
 
@@ -76,7 +82,7 @@ function buildQuiz() {
 }
 
 watch(currentQuestion, (q) => {
-  if (q) void speakUzbek(q.word.uzbek)
+  if (q) void speaker.speak(q.word.uzbek)
 })
 
 function selectOption(text: string) {
@@ -170,7 +176,7 @@ function matchUnpair(leftId: string) {
 
 function matchTap(side: 'left' | 'right', word: Word) {
   if (matchChecked.value) return
-  if (side === 'left') void speakUzbek(word.uzbek)
+  if (side === 'left') void speaker.speak(word.uzbek)
   if (side === 'left' && matchPairs.value.has(word.id)) {
     matchUnpair(word.id)
     return

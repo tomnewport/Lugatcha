@@ -10,12 +10,14 @@ import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from './TokenAssembly.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
 import { useContentLang } from '@/i18n/content'
-import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
 const { base, name, gloss, pick } = useContentLang()
 const progressStore = useProgressStore()
+
+const speaker = createSpeaker()
 
 const story = ref<Story | null>(null)
 const index = ref(0)
@@ -86,10 +88,10 @@ function next() {
 
 // Read each sentence aloud as it appears (initial load + each advance)
 watch(sentence, (s) => {
-  if (s && !replayMode.value) void speakUzbek(s.uzbek)
+  if (s && !replayMode.value) void speaker.speak(s.uzbek)
 })
 
-onUnmounted(stopSpeaking)
+onUnmounted(speaker.stop)
 </script>
 
 <template>

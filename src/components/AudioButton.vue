@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
-import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 
 const props = defineProps<{
   text: string
@@ -9,6 +9,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ played: [] }>()
+
+const speaker = createSpeaker()
 
 const playing = ref(false)
 // Cycles normal → slow → normal on successive clicks.
@@ -19,7 +21,7 @@ async function play() {
   playing.value = true
   const slow = nextSlow.value
   try {
-    await speakUzbek(props.text, { slow })
+    await speaker.speak(props.text, { slow })
   } finally {
     playing.value = false
     nextSlow.value = !slow
@@ -27,7 +29,10 @@ async function play() {
   }
 }
 
-onUnmounted(stopSpeaking)
+// Only ever silences its own word: the button is unmounted as the next
+// question arrives, and that question is usually already speaking. See
+// `createSpeaker`.
+onUnmounted(speaker.stop)
 </script>
 
 <template>

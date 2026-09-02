@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import type { Word, TestQuestionType } from '@/db/types'
 import {
   generateCountingQuiz,
@@ -10,10 +10,16 @@ import {
 import { foldTyping } from '@/exercises/test'
 import { normalizeToken } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import { playChime } from '@/audio/sfx'
 import { i18n } from '@/i18n'
 import AudioButton from '@/components/AudioButton.vue'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 const props = defineProps<{ words: Word[] }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -44,7 +50,7 @@ onMounted(() => {
 watch(
   current,
   (q) => {
-    if (q?.mode === 'listen') speakUzbek(q.uzbek)
+    if (q?.mode === 'listen') speaker.speak(q.uzbek)
   },
   { immediate: true },
 )

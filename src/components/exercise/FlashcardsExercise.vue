@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import type { Word } from '@/db/types'
 import { pickFlashcardWords } from '@/exercises/words'
 import { shuffle } from '@/exercises/validate'
 import { useProgressStore } from '@/stores/progress'
 import { useContentLang } from '@/i18n/content'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 const props = defineProps<{ locationId: string }>()
 const emit = defineEmits<{ complete: [] }>()
@@ -92,7 +98,7 @@ function unmatch(leftId: string) {
 function tap(side: 'left' | 'right', word: Word) {
   if (checked.value) return
 
-  if (side === 'left') void speakUzbek(word.uzbek)
+  if (side === 'left') void speaker.speak(word.uzbek)
 
   // Tapping a matched card dissolves that pair
   if (side === 'left' && pairs.value.has(word.id)) {

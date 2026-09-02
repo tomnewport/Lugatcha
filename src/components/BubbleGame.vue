@@ -33,7 +33,10 @@ import {
   type GameEvent,
   type Move,
 } from '@/exercises/bubbles'
-import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
+
+/** Speaks the game's own words, and silences only those. */
+const speaker = createSpeaker()
 
 const props = defineProps<{ words: Word[] }>()
 const emit = defineEmits<{ done: [] }>()
@@ -75,20 +78,20 @@ function frame(now: number) {
 function handle(event: GameEvent) {
   if (event.kind === 'pop') {
     // Hear the colour you just read correctly.
-    void speakUzbek(event.colour.uzbek)
+    void speaker.speak(event.colour.uzbek)
     buzz(15)
   } else if (event.kind === 'immune') {
     flash(event.id)
     buzz(8)
   } else if (event.kind === 'target') {
-    void speakUzbek(event.colour.uzbek)
+    void speaker.speak(event.colour.uzbek)
   } else if (event.kind === 'hurt') {
     buzz([40, 60, 90])
   } else if (event.kind === 'cleared') {
     // A beat on the banner, then straight into the next board.
     clearedAt = setTimeout(() => {
       state.value = nextLevel(state.value)
-      void speakUzbek(state.value.target.uzbek)
+      void speaker.speak(state.value.target.uzbek)
     }, 1300)
   } else if (event.kind === 'over') {
     finish()
@@ -121,7 +124,7 @@ function buzz(pattern: number | number[]) {
 function begin() {
   if (state.value.status !== 'ready') return
   state.value = startGame(state.value)
-  void speakUzbek(state.value.target.uzbek)
+  void speaker.speak(state.value.target.uzbek)
 }
 
 // The controls are inert until the Start button begins the run: a move or a
@@ -147,14 +150,14 @@ function reroll() {
   const before = state.value.target
   state.value = rerollTarget(state.value)
   if (state.value.target.id !== before.id) {
-    void speakUzbek(state.value.target.uzbek)
+    void speaker.speak(state.value.target.uzbek)
     buzz(10)
   }
 }
 
 /** Tapping the name hears it again — the word is the thing being learned. */
 function sayTarget() {
-  void speakUzbek(state.value.target.uzbek)
+  void speaker.speak(state.value.target.uzbek)
 }
 
 // --- Dragging the avatar ----------------------------------------------------
@@ -302,7 +305,7 @@ function playAgain() {
 
 function done() {
   clearTimeout(clearedAt)
-  stopSpeaking()
+  speaker.stop()
   emit('done')
 }
 
@@ -384,7 +387,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeyDown)
   window.removeEventListener('keyup', onKeyUp)
   document.removeEventListener('visibilitychange', onVisibility)
-  stopSpeaking()
+  speaker.stop()
 })
 </script>
 

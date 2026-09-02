@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { ref, computed, inject, onMounted, onBeforeUnmount, watch, nextTick } from 'vue'
+import { ref, computed, inject, onMounted, onBeforeUnmount, watch, nextTick, onUnmounted } from 'vue'
 import { getBreakdown, ensureBreakdownIndex } from '@/exercises/deagglutination'
 import { spokenWordForm } from '@/exercises/validate'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import {
   closeWordTooltip,
   isWordOpen,
   nextTooltipId,
   toggleWordTooltip,
 } from '@/components/wordTooltip'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 const props = defineProps<{
   word: string
@@ -52,7 +58,7 @@ const hasTooltip = computed(() => !props.noHint && (isAgglutinated.value || !!pr
 const fullMeaning = computed(() => breakdown.value?.meaning ?? props.meaning)
 
 function toggle() {
-  void speakUzbek(spokenWordForm(props.word))
+  void speaker.speak(spokenWordForm(props.word))
   if (!hasTooltip.value) return
   toggleWordTooltip(id, owner)
 }

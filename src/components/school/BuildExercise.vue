@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import type { LessonExercise } from '@/db/types'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import { playChime } from '@/audio/sfx'
 import AudioButton from '@/components/AudioButton.vue'
 import TokenAssembly, { type AssemblyResult } from '@/components/exercise/TokenAssembly.vue'
 import { useContentLang } from '@/i18n/content'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 const props = defineProps<{ exercise: LessonExercise }>()
 const emit = defineEmits<{ done: [passed: boolean] }>()
@@ -20,7 +26,7 @@ function onResult(r: AssemblyResult) {
   result.value = r
   if (r.correct) {
     playChime()
-    speakUzbek(spoken.value)
+    speaker.speak(spoken.value)
   }
 }
 

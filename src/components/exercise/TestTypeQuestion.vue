@@ -1,10 +1,16 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import type { Word } from '@/db/types'
 import { foldTyping, typingTarget } from '@/exercises/test'
 import { useContentLang } from '@/i18n/content'
-import { speakUzbek } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import UzbekKeyboard from './UzbekKeyboard.vue'
+
+/** Speaks this component's own words, and silences only those — a word left
+ * sounding as the learner moves on is cut off, the word that replaced it is
+ * not. See `createSpeaker`. */
+const speaker = createSpeaker()
+onUnmounted(speaker.stop)
 
 const props = defineProps<{
   word: Word
@@ -102,7 +108,7 @@ function useTip() {
 function finish(result: 'passed' | 'failed') {
   status.value = result
   litKeys.value = null
-  void speakUzbek(props.word.uzbek) // read the word aloud the moment it's revealed
+  void speaker.speak(props.word.uzbek) // read the word aloud the moment it's revealed
   emit('answered', score.value)
 }
 </script>

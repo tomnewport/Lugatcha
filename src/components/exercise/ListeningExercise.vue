@@ -2,7 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { db } from '@/db'
 import { normalizeToken, shuffle, tokenize } from '@/exercises/validate'
-import { speakUzbek, stopSpeaking } from '@/audio/audio'
+import { createSpeaker } from '@/audio/audio'
 import { useContentLang } from '@/i18n/content'
 import AudioButton from '@/components/AudioButton.vue'
 import UzbekSentence from '@/components/UzbekSentence.vue'
@@ -15,6 +15,8 @@ interface Phrase {
   uzbek: string
   translation: string
 }
+
+const speaker = createSpeaker()
 
 const PHRASES_PER_SESSION = 5
 
@@ -41,12 +43,11 @@ onMounted(async () => {
     .slice(0, PHRASES_PER_SESSION)
     .sort((a, b) => tokenize(a.uzbek).length - tokenize(b.uzbek).length)
   loading.value = false
-  if (phrases.value.length > 0) speakUzbek(phrases.value[0].uzbek)
+  if (phrases.value.length > 0) void speaker.speak(phrases.value[0].uzbek)
 })
 
-onUnmounted(() => {
-  stopSpeaking()
-})
+// Leaves anything that has spoken since alone — see `createSpeaker`.
+onUnmounted(speaker.stop)
 
 const current = computed(() => phrases.value[index.value])
 const isLast = computed(() => index.value >= phrases.value.length - 1)
@@ -58,7 +59,7 @@ function next() {
   }
   index.value++
   // The tap on Next is a user gesture, so playback is allowed
-  speakUzbek(phrases.value[index.value].uzbek)
+  void speaker.speak(phrases.value[index.value].uzbek)
 }
 </script>
 
