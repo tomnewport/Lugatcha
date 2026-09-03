@@ -35,6 +35,39 @@ export function isReviewed(entry: AudioManifestEntry | string | undefined): bool
 const manifestCache = new Map<string, Promise<AudioManifest | null>>()
 
 /**
+ * Our own copy of the manifest, kept beside the clips it indexes.
+ *
+ * The manifest is precached with the app shell, so offline it normally comes
+ * straight back out of the service worker. That is the braces; this is the
+ * belt. A learner who downloaded the audio under one build and went offline under
+ * another — or whose service worker is not controlling the page yet — still
+ * has the lookup, and so still hears the clips they downloaded rather than the
+ * device's English voice reading Uzbek.
+ */
+const MANIFEST_CACHE = 'audio-manifest'
+
+async function readCachedManifest(url: string): Promise<AudioManifest | null> {
+  if (typeof caches === 'undefined') return null
+  try {
+    // ignoreSearch: the precache stores it under a ?__WB_REVISION__ query.
+    const hit = await caches.match(url, { ignoreSearch: true })
+    return hit ? ((await hit.json()) as AudioManifest) : null
+  } catch {
+    return null
+  }
+}
+
+function keepManifest(url: string, res: Response): void {
+  if (typeof caches === 'undefined') return
+  void caches
+    .open(MANIFEST_CACHE)
+    .then((cache) => cache.put(url, res))
+    .catch(() => {
+      // Storage full or unavailable — the precached copy is still there.
+    })
+}
+
+/**
  * The default voice's manifest once it has arrived, for callers that cannot
  * afford to wait on the promise.
  *
@@ -47,9 +80,17 @@ let loadedManifest: AudioManifest | null = null
 export function getAudioManifest(voice?: string): Promise<AudioManifest | null> {
   const v = voice ?? AUDIO_VOICE
   if (!manifestCache.has(v)) {
-    const pending = fetch(`${base}audio/${v}/manifest.json`)
-      .then((res) => (res.ok ? (res.json() as Promise<AudioManifest>) : null))
-      .catch(() => null)
+    const url = `${base}audio/${v}/manifest.json`
+    const pending = fetch(url)
+      .then(async (res) => {
+        if (!res.ok) return readCachedManifest(url)
+        keepManifest(url, res.clone())
+        return (await res.json()) as AudioManifest
+      })
+      // Offline with no service worker to answer for it: fall back to the copy
+      // we kept. Without a manifest nothing is ever looked up, so every word
+      // in the app would be spoken by whatever voice the device defaults to.
+      .catch(() => readCachedManifest(url))
     if (v === AUDIO_VOICE) void pending.then((manifest) => (loadedManifest = manifest))
     manifestCache.set(v, pending)
   }
