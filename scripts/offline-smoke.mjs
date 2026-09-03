@@ -78,13 +78,50 @@ try {
     req.onsuccess = req.onerror = req.onblocked = () => resolve(null)
   }))
 
-  // 3. Go offline and reload
+  // 3. Warm a couple of clips the way the Settings download does, so the
+  //    offline pass can prove the audio path end to end: the manifest that maps
+  //    spoken text to a filename, and the clips themselves. Without the
+  //    manifest every word is invisible however much audio was downloaded, and
+  //    the app reads Uzbek out in the device's default voice.
+  const clips = await page.evaluate(async (baseUrl) => {
+    const res = await fetch(`${baseUrl}audio/yandex/manifest.json`)
+    if (!res.ok) return null
+    const manifest = await res.json()
+    const files = Object.values(manifest)
+      .map((e) => (typeof e === 'string' ? e : e.file))
+      .slice(0, 3)
+    for (const file of files) {
+      const clip = await fetch(`${baseUrl}audio/yandex/${file}`)
+      if (!clip.ok) return null
+      await clip.blob()
+    }
+    return files
+  }, URL_BASE)
+  if (!clips) fail('could not warm the audio cache online')
+  console.log(`warmed ${clips.length} audio clips`)
+
+  // 4. Go offline and reload
   await page.setOfflineMode(true)
   await page.reload({ waitUntil: 'networkidle0' })
   await page.waitForSelector('.tile', { timeout: 15000 }).catch(() => fail('home grid did not render offline'))
   console.log('home grid renders offline')
 
-  // 4. Pick a language. The wiped database means this is a first run, so the
+  // 5. The audio lookup and the warmed clips both survive the network going
+  //    away. A miss here is the difference between hearing the recordings you
+  //    downloaded and hearing an English voice mispronounce them.
+  const audio = await page.evaluate(async (baseUrl, files) => {
+    const res = await fetch(`${baseUrl}audio/yandex/manifest.json`).catch(() => null)
+    if (!res?.ok) return 'manifest'
+    for (const file of files) {
+      const clip = await fetch(`${baseUrl}audio/yandex/${file}`).catch(() => null)
+      if (!clip?.ok) return file
+    }
+    return null
+  }, URL_BASE, clips)
+  if (audio) fail(`audio unavailable offline: ${audio}`)
+  console.log('audio manifest and cached clips available offline')
+
+  // 6. Pick a language. The wiped database means this is a first run, so the
   //    picker is up; dismissing it the way a learner does keeps the rest of the
   //    walk honest rather than reaching past a modal.
   await page.waitForSelector('.lp-option', { timeout: 15000 }).catch(() => fail('language picker did not render offline'))
@@ -93,7 +130,7 @@ try {
     .catch(() => fail('language picker did not close'))
   console.log('language picker renders and closes offline')
 
-  // 5. Open a location and start the intro — requires the offline re-seed to have
+  // 7. Open a location and start the intro — requires the offline re-seed to have
   //    worked. With no progress the only unlocked tile is the Welcome Center,
   //    which opens on its induction checklist rather than the location menu.
   await page.evaluate(() => [...document.querySelectorAll('.tile')].find((t) => !t.disabled).click())
@@ -104,7 +141,7 @@ try {
   const word = await page.$eval('.word-card__uzbek', (e) => e.textContent.trim())
   console.log(`intro exercise loads offline (first word: ${word})`)
 
-  // 6. Settings page offline
+  // 8. Settings page offline
   await page.goto(`${URL_BASE}#/settings`, { waitUntil: 'networkidle0' }).catch(() => {})
   await page.waitForSelector('.settings-card', { timeout: 15000 }).catch(() => fail('settings did not render offline'))
   console.log('settings renders offline')
