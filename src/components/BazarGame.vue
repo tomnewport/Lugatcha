@@ -21,6 +21,8 @@ import {
   readHighScore,
   recordHighScore,
   registerCells,
+  registerGeneration,
+  registerLive,
   startGame,
   BIN_CAPACITY,
   BONUS_ITEMS,
@@ -73,10 +75,7 @@ const bonus = computed(() => state.value.phase === 'bonus')
  * holding the word after it and is drawn quiet until its turn comes. Null on
  * the keypad, which is one board with no halves and no waiting.
  */
-const liveHalf = computed(() => {
-  const front = state.value.items[0]
-  return front && !front.bonus ? front.typed % 2 : null
-})
+const liveHalf = computed(() => registerLive(state.value))
 /** Bin slots, filled first — three of them and the run is over. */
 const bins = computed(() =>
   Array.from({ length: BIN_CAPACITY }, (_, i) => i < state.value.binned),
@@ -282,8 +281,8 @@ const shown = ref<RegisterCell[]>([])
 /** Per button: 'out' while its old word fades, 'in' as the new one lands. */
 const swapping = ref<('out' | 'in' | null)[]>([])
 const swapTimers = new Map<number, ReturnType<typeof setTimeout>>()
-/** The item the drawn board belongs to; a new one arrives whole, not by halves. */
-let shownId: number | null = null
+/** The generation drawn; a rebuilt board arrives whole, not half at a time. */
+let shownGen = -1
 
 function clearSwaps() {
   for (const timer of swapTimers.values()) clearTimeout(timer)
@@ -310,16 +309,17 @@ function swapCell(index: number, cell: RegisterCell) {
 }
 
 /**
- * The board only changes at two moments — a new item reaches the front, or a
- * half retires — because that is when the state hands back a new array of
- * cells. Everything else the belt does leaves it alone.
+ * The board only changes when the state hands back a new array of cells: a
+ * half retiring, or — rarely — the whole board being rebuilt after the run
+ * loses its place. Everything else the belt does leaves it alone, and so does
+ * this: only the cells whose seq moved are animated, the rest are untouched.
  */
 watch(
   cells,
   (next) => {
-    const id = state.value.items[0]?.id ?? null
-    if (id !== shownId || next.length !== shown.value.length) {
-      shownId = id
+    const gen = registerGeneration(state.value)
+    if (gen !== shownGen || next.length !== shown.value.length) {
+      shownGen = gen
       clearSwaps()
       shown.value = [...next]
       swapping.value = next.map(() => null)
@@ -438,7 +438,7 @@ function playAgain() {
   clearTimeout(digitsUpAt)
   digitsUp.value = false
   clearSwaps()
-  shownId = null
+  shownGen = -1
   paused.value = false
   refused.value = false
   clearTimeout(shookAt)
