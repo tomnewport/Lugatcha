@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import {
   advance,
   BANDS,
@@ -22,6 +22,8 @@ import {
   msPerToken,
   priceForBand,
   pressToken,
+  readHighScore,
+  recordHighScore,
   refillRegister,
   REGISTER_HALF,
   REGISTER_SIZE,
@@ -665,6 +667,35 @@ describe('money', () => {
 
   it('groups soʻm so the digits stay countable', () => {
     expect(formatSom(230_000, 'en')).toBe('230,000')
+  })
+})
+
+describe('high score', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('starts at zero and only stores an improvement', () => {
+    expect(readHighScore()).toBe(0)
+    expect(recordHighScore(230_000)).toBe(true)
+    expect(readHighScore()).toBe(230_000)
+    expect(recordHighScore(1000)).toBe(false)
+    expect(readHighScore()).toBe(230_000)
+  })
+
+  it('survives junk in storage', () => {
+    localStorage.setItem('lugatcha.bazarHighScore.v2', 'not a number')
+    expect(readHighScore()).toBe(0)
+  })
+
+  it('ignores a best set under the old prices, and clears it out', () => {
+    // Scores from before the significant-figure ramp were earned under
+    // different prices; the board starts again rather than showing one.
+    localStorage.setItem('lugatcha.bazarHighScore', '99000000')
+    expect(readHighScore()).toBe(0)
+    expect(localStorage.getItem('lugatcha.bazarHighScore')).toBeNull()
+    // Including one an old backup puts back after this release.
+    expect(recordHighScore(5000)).toBe(true)
+    localStorage.setItem('lugatcha.bazarHighScore', '99000000')
+    expect(readHighScore()).toBe(5000)
   })
 })
 

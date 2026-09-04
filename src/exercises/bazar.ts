@@ -764,9 +764,38 @@ export function registerCells(state: BazarState): readonly RegisterCell[] {
 
 // --- High score -------------------------------------------------------------
 
-const HIGH_SCORE_KEY = 'lugatcha.bazarHighScore'
+/**
+ * Where the best run is kept — and which rules it was scored under.
+ *
+ * The score is the soʻm value of everything bagged, which only means something
+ * against runs played the same way. The significant-figure ramp changed the
+ * prices themselves, so a number from before it is not a target any more: the
+ * key carries a version, and this release starts the board again rather than
+ * leaving an incomparable best up there.
+ */
+const HIGH_SCORE_KEY = 'lugatcha.bazarHighScore.v2'
+
+/** Keys written under earlier rules; see `retireOldScores`. */
+const RETIRED_HIGH_SCORE_KEYS = ['lugatcha.bazarHighScore']
+
+/**
+ * Throws away the bests from earlier rules.
+ *
+ * Done on every read rather than once at startup, because a backup taken
+ * before this release restores the old key along with everything else, and it
+ * would otherwise sit in storage for good (see db/backup.ts, which captures
+ * every `lugatcha.*` key by prefix).
+ */
+function retireOldScores() {
+  try {
+    for (const key of RETIRED_HIGH_SCORE_KEYS) localStorage.removeItem(key)
+  } catch {
+    // private mode — there was nothing kept to clear
+  }
+}
 
 export function readHighScore(): number {
+  retireOldScores()
   try {
     const raw = localStorage.getItem(HIGH_SCORE_KEY)
     const n = raw === null ? 0 : Number.parseInt(raw, 10)
