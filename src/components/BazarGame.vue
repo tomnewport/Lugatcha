@@ -68,6 +68,15 @@ const digitsUp = ref(false)
 const currency = computed(() => currencyFor(locale.value))
 const cells = computed(() => registerCells(state.value))
 const bonus = computed(() => state.value.phase === 'bonus')
+/**
+ * The half of the board that answers the word now due; the other one is
+ * holding the word after it and is drawn quiet until its turn comes. Null on
+ * the keypad, which is one board with no halves and no waiting.
+ */
+const liveHalf = computed(() => {
+  const front = state.value.items[0]
+  return front && !front.bonus ? front.typed % 2 : null
+})
 /** Bin slots, filled first — three of them and the run is over. */
 const bins = computed(() =>
   Array.from({ length: BIN_CAPACITY }, (_, i) => i < state.value.binned),
@@ -251,9 +260,15 @@ function sayPrice(item: BeltItem) {
 
 // --- The register -----------------------------------------------------------
 
-/** The retiring half fades out; its replacement spawns in a little slower. */
+/**
+ * The retiring half fades out fast; its replacement takes its time arriving.
+ *
+ * The words that spawn are for the word *after* next — they are no use until
+ * the half opposite has had its turn — so they drift in slowly and stay dim
+ * until they are the ones being asked for (see `bh__key--queued`).
+ */
 const SWAP_OUT_MS = 100
-const SWAP_IN_MS = 200
+const SWAP_IN_MS = 500
 
 /**
  * The board as drawn.
@@ -620,7 +635,10 @@ onBeforeUnmount(() => {
           :key="index"
           class="bh__key"
           :class="[
-            { 'bh__key--zero': bonus && cell.token === '0' },
+            {
+              'bh__key--zero': bonus && cell.token === '0',
+              'bh__key--queued': cell.half !== null && cell.half !== liveHalf,
+            },
             swapping[index] === 'out' ? 'bh__key--out' : '',
             swapping[index] === 'in' ? 'bh__key--in' : '',
           ]"
@@ -1182,6 +1200,11 @@ onBeforeUnmount(() => {
 }
 
 .bh__key {
+  /* The queued half is drawn through this, so the spawn animation can land on
+     whichever value applies rather than always going to full strength. */
+  --bh-key-opacity: 1;
+  opacity: var(--bh-key-opacity);
+  transition: opacity 250ms ease;
   padding: 0.7rem 0.2rem;
   /*
    * Three columns of Uzbek number words, some of them eight characters long,
@@ -1208,16 +1231,23 @@ onBeforeUnmount(() => {
 }
 
 /*
- * A retiring button is on its way out and cannot be pressed, so it fades fast;
- * its replacement takes twice as long to arrive, which is what makes the swap
- * read as one thing leaving and another turning up rather than a flicker.
+ * A retiring button is on its way out and cannot be pressed, so it fades fast.
+ * Its replacement takes five times as long to arrive and arrives quiet: those
+ * words answer the word *after* next, and drifting in at half strength says so
+ * better than dropping them in ready to press.
  */
 .bh__key--out {
   animation: bh-key-out 100ms ease-in forwards;
 }
 
 .bh__key--in {
-  animation: bh-key-in 200ms cubic-bezier(0.2, 1.2, 0.5, 1) backwards;
+  animation: bh-key-in 500ms ease-out backwards;
+}
+
+/* Not this half's turn: it holds the word after next, and comes up to full
+   strength (through the transition above) when that word is the one due. */
+.bh__key--queued {
+  --bh-key-opacity: 0.45;
 }
 
 @keyframes bh-key-out {
@@ -1230,7 +1260,11 @@ onBeforeUnmount(() => {
 @keyframes bh-key-in {
   from {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.86);
+  }
+  to {
+    opacity: var(--bh-key-opacity);
+    transform: none;
   }
 }
 
