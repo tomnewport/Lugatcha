@@ -20,12 +20,13 @@ import {
   pressToken,
   readHighScore,
   recordHighScore,
-  registerKeys,
+  registerCells,
   startGame,
   BIN_CAPACITY,
   BONUS_ITEMS,
   type BazarState,
   type BeltItem,
+  type RegisterCell,
 } from '@/exercises/bazar'
 import { uzbekCardinalTokens } from '@/exercises/numbers'
 import { primeUzbekAudio, createSpeaker, NEIGHBOUR_VOICE_LANGS } from '@/audio/audio'
@@ -61,9 +62,11 @@ const bagging = ref<BeltItem[]>([])
 const dumping = ref<BeltItem[]>([])
 /** True while a bonus price is being read out, so the speaker can pulse. */
 const reading = ref(false)
+/** Set for a few seconds after the prices gain a significant figure. */
+const digitsUp = ref(false)
 
 const currency = computed(() => currencyFor(locale.value))
-const keys = computed(() => registerKeys(state.value))
+const cells = computed(() => registerCells(state.value))
 const bonus = computed(() => state.value.phase === 'bonus')
 /** Bin slots, filled first — three of them and the run is over. */
 const bins = computed(() =>
@@ -92,6 +95,16 @@ function converted(price: number): string {
   return formatConverted(price, currency.value, locale.value)
 }
 
+/**
+ * How big the word dots are. A four-figure price in the millions takes seven
+ * words, and seven dots at the full size are wider than the tag they sit under.
+ */
+function dotSize(tokens: number): string {
+  if (tokens <= 4) return '32px'
+  if (tokens <= 6) return '24px'
+  return '19px'
+}
+
 // --- Animation loop ---------------------------------------------------------
 
 let raf: number | undefined
@@ -109,6 +122,7 @@ function frame(now: number) {
   state.value = result.state
   for (const item of result.binned) dump(item)
   if (result.bonusStarted) buzz([20, 60, 20])
+  if (result.sigFigsUp) announceDigits()
   if (state.value.status === 'over') finish()
 }
 
@@ -116,6 +130,21 @@ function finish() {
   newBest.value = recordHighScore(state.value.score)
   best.value = readHighScore()
   buzz([40, 60, 90])
+}
+
+let digitsUpAt: ReturnType<typeof setTimeout> | undefined
+
+/**
+ * Says why the prices suddenly got longer. Worth an explicit note: a reset to
+ * hundreds looks like the game going backwards until you see the extra digit.
+ */
+function announceDigits() {
+  clearTimeout(digitsUpAt)
+  digitsUp.value = true
+  buzz([15, 50, 15, 50, 15])
+  digitsUpAt = setTimeout(() => {
+    digitsUp.value = false
+  }, 3500)
 }
 
 function buzz(pattern: number | number[]) {
@@ -205,6 +234,74 @@ function sayPrice(item: BeltItem) {
   })
 }
 
+// --- The register -----------------------------------------------------------
+
+/** The retiring half fades out; its replacement spawns in a little slower. */
+const SWAP_OUT_MS = 100
+const SWAP_IN_MS = 200
+
+/**
+ * The board as drawn.
+ *
+ * It lags the game state by one fade: a half that has just retired keeps its
+ * old words on screen while they fade, and only then takes the new ones. The
+ * game state has already moved on, so a fading button is dead to the touch —
+ * what you press is always the word the state expects.
+ */
+const shown = ref<RegisterCell[]>([])
+/** Per button: 'out' while its old word fades, 'in' as the new one lands. */
+const swapping = ref<('out' | 'in' | null)[]>([])
+const swapTimers = new Map<number, ReturnType<typeof setTimeout>>()
+/** The item the drawn board belongs to; a new one arrives whole, not by halves. */
+let shownId: number | null = null
+
+function clearSwaps() {
+  for (const timer of swapTimers.values()) clearTimeout(timer)
+  swapTimers.clear()
+}
+
+/** Retires one button: its word fades, then its replacement spawns in place. */
+function swapCell(index: number, cell: RegisterCell) {
+  clearTimeout(swapTimers.get(index))
+  swapping.value[index] = 'out'
+  swapTimers.set(
+    index,
+    setTimeout(() => {
+      shown.value[index] = cell
+      swapping.value[index] = 'in'
+      swapTimers.set(
+        index,
+        setTimeout(() => {
+          swapping.value[index] = null
+        }, SWAP_IN_MS),
+      )
+    }, SWAP_OUT_MS),
+  )
+}
+
+/**
+ * The board only changes at two moments — a new item reaches the front, or a
+ * half retires — because that is when the state hands back a new array of
+ * cells. Everything else the belt does leaves it alone.
+ */
+watch(
+  cells,
+  (next) => {
+    const id = state.value.items[0]?.id ?? null
+    if (id !== shownId || next.length !== shown.value.length) {
+      shownId = id
+      clearSwaps()
+      shown.value = [...next]
+      swapping.value = next.map(() => null)
+      return
+    }
+    next.forEach((cell, index) => {
+      if (cell.seq !== shown.value[index].seq) swapCell(index, cell)
+    })
+  },
+  { immediate: true },
+)
+
 // --- Input ------------------------------------------------------------------
 
 function begin() {
@@ -271,7 +368,7 @@ function flashRefusal() {
 
 /**
  * The number row is a shortcut to the register: in the bonus round the digits
- * are literal, and in the shop 1–8 press the buttons left to right.
+ * are literal, and in the shop 1–6 press the six buttons left to right.
  */
 function onKeyDown(event: KeyboardEvent) {
   if (event.metaKey || event.ctrlKey || event.altKey) return
@@ -288,8 +385,9 @@ function onKeyDown(event: KeyboardEvent) {
     return
   }
   const index = (Number(key) + 9) % 10
-  const token = keys.value[index]
-  if (token !== undefined) press(token)
+  const cell = shown.value[index]
+  // A button mid-fade is on its way out; it is not answering for anyone.
+  if (cell && swapping.value[index] !== 'out') press(cell.token)
 }
 
 function onVisibility() {
@@ -307,6 +405,10 @@ function resume() {
 
 function playAgain() {
   newBest.value = false
+  clearTimeout(digitsUpAt)
+  digitsUp.value = false
+  clearSwaps()
+  shownId = null
   paused.value = false
   refused.value = false
   clearTimeout(shookAt)
@@ -332,6 +434,8 @@ onBeforeUnmount(() => {
   if (raf !== undefined) cancelAnimationFrame(raf)
   clearTimeout(refusedAt)
   clearTimeout(shookAt)
+  clearTimeout(digitsUpAt)
+  clearSwaps()
   window.removeEventListener('keydown', onKeyDown)
   document.removeEventListener('visibilitychange', onVisibility)
   speaker.stop()
@@ -406,12 +510,18 @@ onBeforeUnmount(() => {
               🔊
             </button>
             <template v-else>
-              <strong class="bh__tag-som">{{ som(item.price) }} {{ $t('bazar.som') }}</strong>
+              <strong class="bh__tag-som" :class="{ 'bh__tag-som--long': som(item.price).length > 8 }">
+                {{ som(item.price) }} {{ $t('bazar.som') }}
+              </strong>
               <span class="bh__tag-fx">≈ {{ converted(item.price) }}</span>
             </template>
           </div>
 
-          <span class="bh__dots" :aria-label="$t('bazar.dots', { done: item.typed, total: item.tokens.length })">
+          <span
+            class="bh__dots"
+            :style="{ '--bh-dot': dotSize(item.tokens.length) }"
+            :aria-label="$t('bazar.dots', { done: item.typed, total: item.tokens.length })"
+          >
             <span
               v-for="dot in item.tokens.length"
               :key="dot"
@@ -471,28 +581,40 @@ onBeforeUnmount(() => {
         <p v-if="bonus" class="bh__banner">
           {{ $t('bazar.bonusHowTo', { count: BONUS_ITEMS }) }}
         </p>
+        <p v-else-if="digitsUp" class="bh__banner bh__banner--digits">
+          {{ $t('bazar.digitsUp', { count: state.sigFigs }) }}
+        </p>
         <p v-else class="bh__approx">{{ $t('bazar.approx') }}</p>
         <span class="bh__bin" :class="{ 'bh__bin--hit': dumping.length }" aria-hidden="true">🗑️</span>
       </div>
 
-      <!-- The cash register: number words in the shop, a keypad in the bonus round. -->
+      <!--
+        The cash register: six number words in the shop, half of them swapping
+        out on every correct tap, or the fixed keypad in the bonus round. Keyed
+        by position rather than by word, so a button that changes its word
+        animates in place instead of being replaced.
+      -->
       <div
         class="bh__register"
-        :class="{ 'bh__register--keypad': bonus, 'bh__register--wide': keys.length > 4 }"
+        :class="{ 'bh__register--keypad': bonus }"
         role="group"
         :aria-label="bonus ? $t('bazar.keypad') : $t('bazar.register')"
       >
         <button
-          v-for="key in keys"
-          :key="key"
+          v-for="(cell, index) in shown"
+          :key="index"
           class="bh__key"
-          :class="{ 'bh__key--zero': bonus && key === '0' }"
+          :class="[
+            { 'bh__key--zero': bonus && cell.token === '0' },
+            swapping[index] === 'out' ? 'bh__key--out' : '',
+            swapping[index] === 'in' ? 'bh__key--in' : '',
+          ]"
           type="button"
           :lang="bonus ? undefined : 'uz'"
-          :disabled="state.status === 'over' || paused"
-          @click="press(key)"
+          :disabled="state.status === 'over' || paused || swapping[index] === 'out'"
+          @click="press(cell.token)"
         >
-          {{ key }}
+          {{ cell.token }}
         </button>
       </div>
     </div>
@@ -739,6 +861,12 @@ onBeforeUnmount(() => {
   font-variant-numeric: tabular-nums;
 }
 
+/* Eight million-odd soʻm plus its unit is fifteen characters; at full size
+   that is wider than the tag on a narrow phone. */
+.bh__tag-som--long {
+  font-size: 1.3rem;
+}
+
 .bh__tag-fx {
   font-size: 0.68rem;
   font-weight: 400;
@@ -770,13 +898,14 @@ onBeforeUnmount(() => {
 
 .bh__dots {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.3rem;
   margin-top: 0.3rem;
 }
 
 .bh__dot {
-  width: 32px;
-  height: 32px;
+  /* Set per item from the word count; see dotSize. */
+  width: var(--bh-dot, 32px);
+  height: var(--bh-dot, 32px);
   border-radius: 50%;
   background: var(--color-border);
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -1015,25 +1144,27 @@ onBeforeUnmount(() => {
   color: var(--color-terracotta);
 }
 
+.bh__banner--digits {
+  color: var(--color-gold);
+}
+
 /* --- The register --- */
 
+/* Two rows of three, in the shop and on the keypad alike. */
 .bh__register {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.35rem;
 }
 
-.bh__register--wide {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.bh__register--keypad {
-  grid-template-columns: repeat(3, 1fr);
-}
-
 .bh__key {
-  padding: 0.6rem 0.2rem;
-  font-size: 0.95rem;
+  padding: 0.7rem 0.2rem;
+  /*
+   * Three columns of Uzbek number words, some of them eight characters long,
+   * on a screen that can be 320px wide: the type has to come down with the
+   * screen or "milliard" breaks across two lines mid-word.
+   */
+  font-size: min(0.95rem, 4.4vw);
   font-weight: 800;
   color: var(--color-primary);
   background: var(--color-surface);
@@ -1052,6 +1183,33 @@ onBeforeUnmount(() => {
   opacity: 0.5;
 }
 
+/*
+ * A retiring button is on its way out and cannot be pressed, so it fades fast;
+ * its replacement takes twice as long to arrive, which is what makes the swap
+ * read as one thing leaving and another turning up rather than a flicker.
+ */
+.bh__key--out {
+  animation: bh-key-out 100ms ease-in forwards;
+}
+
+.bh__key--in {
+  animation: bh-key-in 200ms cubic-bezier(0.2, 1.2, 0.5, 1) backwards;
+}
+
+@keyframes bh-key-out {
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@keyframes bh-key-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
 /* The wide zero bar along the bottom of the keypad. */
 .bh__key--zero {
   grid-column: span 3;
@@ -1063,6 +1221,12 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The board still swaps on the same clock; it just does not move to do it. */
+  .bh__key--out,
+  .bh__key--in {
+    animation: none;
+  }
+
   .bh__fly,
   .bh__refused,
   .bh__speaker--reading,

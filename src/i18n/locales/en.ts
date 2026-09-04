@@ -146,6 +146,7 @@ export default {
     keypad: 'Number keypad',
     hearPrice: 'Hear the price again',
     approx: 'Conversions are approximate',
+    digitsUp: 'Longer prices — {count} digits now',
     bonusHowTo: 'Listening round — key in the {count} prices you hear',
     over: 'Game over',
     finalScore: 'You bagged {score} {som}.',

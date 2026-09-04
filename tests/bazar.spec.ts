@@ -8,7 +8,8 @@ import {
   BONUS_ITEMS,
   BONUS_MIN_CLEARED,
   BONUS_PRICES,
-  buildKeys,
+  bandFloor,
+  buildRegister,
   convert,
   createGame,
   currencyFor,
@@ -16,10 +17,17 @@ import {
   formatSom,
   ITEMS,
   KEYPAD,
+  MAX_SIG_FIGS,
+  MIN_SIG_FIGS,
   msPerToken,
   priceForBand,
   pressToken,
-  registerKeys,
+  refillRegister,
+  REGISTER_HALF,
+  REGISTER_SIZE,
+  registerCells,
+  SIG_FIG_STEP,
+  sigFigsFor,
   SOM_PER_UNIT,
   startGame,
   TOP_BAND,
@@ -75,7 +83,7 @@ describe('the stall', () => {
 describe('priceForBand', () => {
   it('keeps the bottom band to a single soʻm digit', () => {
     for (const r of [0, 0.25, 0.5, 0.75, 0.999]) {
-      const price = priceForBand(0, () => r)
+      const price = priceForBand(0, MIN_SIG_FIGS, () => r)
       expect(price).toBeGreaterThanOrEqual(1)
       expect(price).toBeLessThanOrEqual(9)
     }
@@ -83,21 +91,36 @@ describe('priceForBand', () => {
 
   it('lands in its own decade above the bottom band', () => {
     for (let band = 1; band <= TOP_BAND; band++) {
-      for (const r of [0, 0.37, 0.99]) {
-        const price = priceForBand(band, () => r)
-        expect(price).toBeGreaterThanOrEqual(10 ** band)
-        expect(price).toBeLessThan(10 ** (band + 1))
+      for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
+        for (const r of [0, 0.37, 0.99, 1]) {
+          const price = priceForBand(band, sigFigs, () => r)
+          expect(price).toBeGreaterThanOrEqual(10 ** band)
+          expect(price).toBeLessThan(10 ** (band + 1))
+        }
       }
     }
   })
 
-  it('never carries more than two significant digits', () => {
+  it('carries exactly the significant figures asked for', () => {
     const rng = seeded(3)
-    for (let band = 0; band <= TOP_BAND; band++) {
-      for (let i = 0; i < 200; i++) {
-        const digits = String(priceForBand(band, rng)).replace(/0+$/, '')
-        expect(digits.length).toBeLessThanOrEqual(2)
+    for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
+      for (let band = bandFloor(sigFigs); band <= TOP_BAND; band++) {
+        for (let i = 0; i < 200; i++) {
+          const digits = String(priceForBand(band, sigFigs, rng)).replace(/0+$/, '')
+          expect(digits.length).toBeLessThanOrEqual(sigFigs)
+        }
       }
+    }
+  })
+
+  it('shortens the number rather than leave its band, low down the ladder', () => {
+    // Nothing below the band a figure needs is ever dealt, but a price asked
+    // for there must still be a price for *that* band.
+    const rng = seeded(8)
+    for (let i = 0; i < 50; i++) {
+      const price = priceForBand(0, MAX_SIG_FIGS, rng)
+      expect(price).toBeGreaterThanOrEqual(1)
+      expect(price).toBeLessThanOrEqual(9)
     }
   })
 
@@ -112,14 +135,14 @@ describe('priceForBand', () => {
 })
 
 describe('msPerToken', () => {
-  it('gives four seconds a word at the start and one in the millions', () => {
+  it('gives four seconds a word at the start and under one in the millions', () => {
     expect(msPerToken(0)).toBe(4000)
-    expect(msPerToken(6)).toBe(1000)
+    expect(msPerToken(6)).toBe(800)
   })
 
-  it('never speeds up past its floor', () => {
-    expect(msPerToken(TOP_BAND)).toBe(1000)
-    expect(msPerToken(99)).toBe(1000)
+  it('never speeds up past its floor for the band ramp alone', () => {
+    expect(msPerToken(TOP_BAND)).toBe(800)
+    expect(msPerToken(99)).toBe(800)
   })
 
   it('ramps monotonically', () => {
@@ -127,33 +150,132 @@ describe('msPerToken', () => {
       expect(msPerToken(band)).toBeLessThanOrEqual(msPerToken(band - 1))
     }
   })
-})
 
-describe('buildKeys', () => {
-  it('offers four buttons for a one-word price and eight for the rest', () => {
-    expect(buildKeys(['besh'], seeded(1))).toHaveLength(4)
-    expect(buildKeys(['ikki', 'yuz', 'ellik'], seeded(1))).toHaveLength(8)
+  it('tightens again with every significant figure earned', () => {
+    for (const band of [0, 3, TOP_BAND]) {
+      for (let sigFigs = MIN_SIG_FIGS + 1; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
+        expect(msPerToken(band, sigFigs)).toBeLessThan(msPerToken(band, sigFigs - 1))
+      }
+    }
+    // The endgame — four figures at the top of the ladder — is the fastest the
+    // game ever gets, and still leaves half a second a word.
+    expect(msPerToken(TOP_BAND, MAX_SIG_FIGS)).toBeLessThan(700)
+    expect(msPerToken(TOP_BAND, MAX_SIG_FIGS)).toBeGreaterThan(500)
   })
 
-  it('always includes every word the price needs', () => {
-    const rng = seeded(11)
-    for (const price of [8, 45, 250, 2300, 15_000, 230_000, 2_200_000, 99_000_000]) {
+  it('still gives a longer price more time than a shorter one', () => {
+    // Four figures cost more words than two, and the per-word budget is what
+    // makes that fair: the item as a whole gets longer, not shorter.
+    const short = msPerToken(TOP_BAND, MIN_SIG_FIGS) * uzbekCardinalTokens(20_000_000).length
+    const long = msPerToken(TOP_BAND, MAX_SIG_FIGS) * uzbekCardinalTokens(23_450_000).length
+    expect(long).toBeGreaterThan(short)
+  })
+})
+
+describe('significant figures', () => {
+  it('opens on two and climbs one every twenty items priced', () => {
+    expect(sigFigsFor(0)).toBe(MIN_SIG_FIGS)
+    expect(sigFigsFor(SIG_FIG_STEP - 1)).toBe(MIN_SIG_FIGS)
+    expect(sigFigsFor(SIG_FIG_STEP)).toBe(MIN_SIG_FIGS + 1)
+    expect(sigFigsFor(SIG_FIG_STEP * 2)).toBe(MIN_SIG_FIGS + 2)
+  })
+
+  it('caps at four, however long the run goes on', () => {
+    expect(sigFigsFor(SIG_FIG_STEP * 3)).toBe(MAX_SIG_FIGS)
+    expect(sigFigsFor(10_000)).toBe(MAX_SIG_FIGS)
+  })
+
+  it('restarts the ladder at the smallest band that can carry them', () => {
+    // Hundreds for three figures, thousands for four.
+    expect(bandFloor(3)).toBe(2)
+    expect(bandFloor(4)).toBe(3)
+    expect(10 ** bandFloor(MAX_SIG_FIGS)).toBe(1000)
+  })
+
+  it('leaves the register alone — six buttons, however long the price', () => {
+    const rng = seeded(21)
+    for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
+      for (let band = bandFloor(sigFigs); band <= TOP_BAND; band++) {
+        const tokens = uzbekCardinalTokens(priceForBand(band, sigFigs, rng))
+        expect(buildRegister(tokens, rng)).toHaveLength(REGISTER_SIZE)
+      }
+    }
+  })
+})
+
+describe('the board', () => {
+  /** The words on one half of a board. */
+  const half = (cells: readonly { token: string; half: number | null }[], which: number) =>
+    cells.filter((cell) => cell.half === which).map((cell) => cell.token)
+
+  it('is two halves of three, in grid order', () => {
+    const cells = buildRegister(uzbekCardinalTokens(230_000), seeded(1))
+    expect(cells).toHaveLength(REGISTER_SIZE)
+    expect(cells.map((cell) => cell.half)).toEqual([0, 0, 0, 1, 1, 1])
+    expect(half(cells, 0)).toHaveLength(REGISTER_HALF)
+  })
+
+  it('opens with the first two words up, one in each half', () => {
+    const tokens = uzbekCardinalTokens(230_000)
+    const cells = buildRegister(tokens, seeded(4))
+    expect(half(cells, 0)).toContain(tokens[0])
+    expect(half(cells, 1)).toContain(tokens[1])
+  })
+
+  it('retires the half the word came from and leaves the other standing', () => {
+    const tokens = uzbekCardinalTokens(230_000)
+    const rng = seeded(6)
+    const opened = buildRegister(tokens, rng)
+    const after = refillRegister(opened, tokens, 0, rng)
+    // The half that answered goes; the one holding the word now due does not.
+    expect(half(after, 1)).toEqual(half(opened, 1))
+    expect(half(after, 0)).not.toEqual(half(opened, 0))
+    // And it comes back holding the word after next, ready before it is needed.
+    expect(half(after, 0)).toContain(tokens[2])
+  })
+
+  it('marks the refilled half so the renderer can animate just that half', () => {
+    const tokens = uzbekCardinalTokens(230_000)
+    const rng = seeded(6)
+    const opened = buildRegister(tokens, rng)
+    const after = refillRegister(opened, tokens, 0, rng)
+    for (const cell of after) {
+      expect(cell.seq).toBe(cell.half === 0 ? 1 : 0)
+    }
+    expect(refillRegister(after, tokens, 1, rng).filter((c) => c.half === 1)[0].seq).toBe(1)
+  })
+
+  it('keeps the word due and the one after it up, all the way through a price', () => {
+    const rng = seeded(9)
+    for (const price of [8, 45, 250, 2300, 15_000, 230_000, 2_200_000, 91_630_000]) {
       const tokens = uzbekCardinalTokens(price)
-      const keys = buildKeys(tokens, rng)
-      for (const token of tokens) expect(keys).toContain(token)
+      let cells = buildRegister(tokens, rng)
+      for (let i = 0; i < tokens.length; i++) {
+        const words = cells.map((cell) => cell.token)
+        expect(words, `${price}: word ${i} of ${tokens.join(' ')}`).toContain(tokens[i])
+        if (i + 1 < tokens.length) expect(words).toContain(tokens[i + 1])
+        cells = refillRegister(cells, tokens, i, rng)
+      }
     }
   })
 
-  it('never repeats a button', () => {
+  it('never shows the same button twice unless the price says it twice', () => {
     const rng = seeded(5)
-    // 2 200 000 says "ikki" twice; the register still shows it once.
-    const keys = buildKeys(uzbekCardinalTokens(2_200_000), rng)
-    expect(new Set(keys).size).toBe(keys.length)
+    // 2 200 000 says "ikki" twice — and only then can both halves want it.
+    const tokens = uzbekCardinalTokens(230_000)
+    let cells = buildRegister(tokens, rng)
+    for (let i = 0; i < tokens.length; i++) {
+      const words = cells.map((cell) => cell.token)
+      expect(new Set(words).size).toBe(words.length)
+      cells = refillRegister(cells, tokens, i, rng)
+    }
   })
 
-  it('fills up with real number words, not blanks', () => {
-    const keys = buildKeys(['bir'], seeded(2))
-    for (const key of keys) expect(key.trim()).not.toHaveLength(0)
+  it('fills a half with real number words when the price has run out of them', () => {
+    // "besh" is one word long, so the second half answers nothing at all.
+    const cells = buildRegister(['besh'], seeded(2))
+    expect(cells).toHaveLength(REGISTER_SIZE)
+    for (const cell of cells) expect(cell.token.trim()).not.toHaveLength(0)
   })
 })
 
@@ -184,7 +306,7 @@ describe('a run', () => {
   it('refuses a token out of order without ending the run', () => {
     const started = startGame(createGame(seeded(1)))
     const front = started.items[0]
-    const wrong = front.keys.find((k) => k !== front.tokens[0])!
+    const wrong = front.cells.find((c) => c.token !== front.tokens[0])!.token
     const press = pressToken(started, wrong, seeded(1))
     expect(press.accepted).toBe(false)
     expect(press.bagged).toBeNull()
@@ -251,24 +373,90 @@ describe('a run', () => {
     let state = startGame(createGame(seeded(1)))
     const rng = seeded(1)
     const bandsSeen: number[] = [state.band]
-    // Bag everything the belt offers, so the run advances on merit.
+    // Bag everything the belt offers, so the run advances on merit — and stop
+    // before the first significant figure, which resets the ladder on purpose.
     for (let step = 0; step < 20_000 && state.band < TOP_BAND; step++) {
+      const before = state.sigFigs
       state = advance(state, 16, rng).state
-      if (state.status === 'over') break
+      if (state.status === 'over' || state.sigFigs !== before) break
       if (state.items.length) state = bagFront(state, rng)
       if (state.band !== bandsSeen[bandsSeen.length - 1]) bandsSeen.push(state.band)
     }
     expect(state.status).toBe('playing')
-    expect(bandsSeen).toEqual([0, 1, 2, 3, 4, 5, 6, 7])
+    // One band at a time from the bottom, as far as the run got before the
+    // first figure was earned — which is a reset, and a different test.
+    expect(bandsSeen.length).toBeGreaterThan(3)
+    expect(bandsSeen).toEqual(bandsSeen.map((_, i) => i))
+  })
+
+  it('climbs the whole ladder once the significant figures have topped out', () => {
+    let state = startGame(createGame(seeded(1)))
+    const rng = seeded(1)
+    const bandsSeen: number[] = []
+    for (let step = 0; step < 40_000 && state.band < TOP_BAND; step++) {
+      state = advance(state, 16, rng).state
+      if (state.status === 'over') break
+      if (state.items.length) state = bagFront(state, rng)
+      if (state.sigFigs === MAX_SIG_FIGS && state.band !== bandsSeen[bandsSeen.length - 1]) {
+        bandsSeen.push(state.band)
+      }
+    }
+    expect(state.status).toBe('playing')
+    expect(state.sigFigs).toBe(MAX_SIG_FIGS)
+    // Four figures start at thousands and climb to the top of the ladder.
+    expect(bandsSeen).toEqual([3, 4, 5, 6, 7])
+  })
+
+  it('resets the ladder to the smallest band each new figure can carry', () => {
+    let state = startGame(createGame(seeded(2)))
+    const rng = seeded(2)
+    const resets: { sigFigs: number; band: number }[] = []
+    for (let step = 0; step < 40_000; step++) {
+      const before = state.sigFigs
+      const stepped = advance(state, 16, rng)
+      state = stepped.state
+      if (state.status === 'over') break
+      if (state.sigFigs !== before) {
+        expect(stepped.sigFigsUp).toBe(true)
+        resets.push({ sigFigs: state.sigFigs, band: state.band })
+      }
+      if (state.sigFigs === MAX_SIG_FIGS && resets.length === 2) break
+      if (state.items.length) state = bagFront(state, rng)
+    }
+    expect(resets).toEqual([
+      { sigFigs: 3, band: bandFloor(3) },
+      { sigFigs: 4, band: bandFloor(4) },
+    ])
+  })
+
+  it('holds the register at six buttons however hard the run gets', () => {
+    let state = startGame(createGame(seeded(15)))
+    const rng = seeded(15)
+    let checked = 0
+    for (let step = 0; step < 40_000; step++) {
+      state = advance(state, 16, rng).state
+      if (state.status === 'over') break
+      for (const item of state.items.filter((i) => !i.bonus)) {
+        expect(item.cells).toHaveLength(REGISTER_SIZE)
+        checked++
+      }
+      if (state.sigFigs === MAX_SIG_FIGS && state.band === TOP_BAND) break
+      if (state.items.length) state = bagFront(state, rng)
+    }
+    expect(state.sigFigs).toBe(MAX_SIG_FIGS)
+    expect(state.band).toBe(TOP_BAND)
+    expect(checked).toBeGreaterThan(0)
   })
 
   it('serves each band for as long as the ladder says', () => {
     let state = startGame(createGame(seeded(6)))
     const rng = seeded(6)
     const dealtPerBand = new Map<number, Set<number>>()
-    for (let step = 0; step < 20_000 && state.band < TOP_BAND; step++) {
+    // Only the opening climb: a new significant figure deliberately deals a
+    // band a second time.
+    for (let step = 0; step < 20_000 && state.sigFigs === MIN_SIG_FIGS; step++) {
       state = advance(state, 16, rng).state
-      if (state.status === 'over') break
+      if (state.status === 'over' || state.sigFigs !== MIN_SIG_FIGS) break
       // Bonus items borrow stock from whichever band their price suits, so
       // they are not part of the ladder's own count.
       for (const item of state.items.filter((i) => !i.bonus)) {
@@ -277,12 +465,12 @@ describe('a run', () => {
       }
       if (state.items.length) state = bagFront(state, rng)
     }
-    for (let band = 0; band < TOP_BAND; band++) {
+    for (let band = 0; band < 4; band++) {
       expect(dealtPerBand.get(band)?.size).toBe(BANDS[band])
     }
   })
 
-  it('prices every item with the words its register offers', () => {
+  it('always offers the word the front item is waiting for', () => {
     let state = startGame(createGame(seeded(12)))
     const rng = seeded(12)
     for (let step = 0; step < 6000; step++) {
@@ -292,8 +480,16 @@ describe('a run', () => {
         expect(item.tokens).toEqual(
           item.bonus ? [...String(item.price)] : uzbekCardinalTokens(item.price),
         )
-        for (const token of item.tokens) expect(item.keys).toContain(token)
       }
+      const front = state.items[0]
+      if (!front) continue
+      // The board holds the word due and the one after it; the rest of the
+      // price is not on it yet, and does not need to be.
+      const words = front.cells.map((cell) => cell.token)
+      expect(words).toContain(front.tokens[front.typed])
+      // Enter a word now and again, so the board is tested part-way through a
+      // price as well as at the start of one.
+      if (step % 7 === 0) state = pressToken(state, front.tokens[front.typed], rng).state
     }
   })
 })
@@ -301,12 +497,27 @@ describe('a run', () => {
 describe('the register', () => {
   it('follows the front of the belt', () => {
     const state = startGame(createGame(seeded(1)))
-    expect(registerKeys(state)).toEqual(state.items[0].keys)
+    expect(registerCells(state)).toEqual(state.items[0].cells)
   })
 
   it('is empty when the belt is', () => {
     const empty: BazarState = { ...createGame(seeded(1)), items: [] }
-    expect(registerKeys(empty)).toEqual([])
+    expect(registerCells(empty)).toEqual([])
+  })
+
+  it('swaps out the half a correct word came from, and only that half', () => {
+    let state = startGame(createGame(seeded(1)))
+    const rng = seeded(1)
+    // Wind on to a price long enough to have a half left to swap.
+    while (!state.items.length || state.items[0].tokens.length < 3) {
+      state = advance(state, 16, rng).state
+      if (state.items.length && state.items[0].tokens.length < 3) state = bagFront(state, rng)
+    }
+    const before = registerCells(state)
+    const front = state.items[0]
+    const after = registerCells(pressToken(state, front.tokens[0], rng).state)
+    const moved = after.filter((cell, i) => cell.token !== before[i].token || cell.seq !== before[i].seq)
+    expect(moved.map((cell) => cell.half)).toEqual([0, 0, 0])
   })
 })
 
@@ -361,7 +572,7 @@ describe('the bonus round', () => {
   it('swaps the register for a calculator keypad', () => {
     const state = reachBonus()
     expect(state.phase).toBe('bonus')
-    expect(registerKeys(state)).toEqual(KEYPAD)
+    expect(registerCells(state).map((cell) => cell.token)).toEqual(KEYPAD)
   })
 
   it('hides the price behind its digits', () => {

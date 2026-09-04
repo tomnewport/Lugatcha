@@ -3,9 +3,11 @@
  *
  * Items ride a conveyor belt towards the till. Each wears a pricetag in soʻm,
  * and to get it into the trolley you have to *say* that price: the register
- * below the belt is a grid of Uzbek number words, and you tap them in spoken
- * order — "ikki", "yuz", "o'ttiz", "ming". Grey dots under the tag show how
- * many words the price takes and go green as you find them. Miss an item
+ * below the belt is a six-button grid of Uzbek number words, and you tap them
+ * in spoken order — "ikki", "yuz", "o'ttiz", "ming". The board only ever
+ * offers the word you need now and the one after it, and half of it swaps out
+ * on every correct tap (see the register section below). Grey dots under the
+ * tag show how many words the price takes and go green as you find them. Miss an item
  * before it reaches the end of the belt and it drops in the bin; three in the
  * bin and the run is over. Your score is the total value of what you bagged,
  * so the game rewards keeping up as the prices climb.
@@ -14,9 +16,17 @@
  * single soʻm — you genuinely cannot buy anything for 8 soʻm — and climbs a
  * band at a time through tens, hundreds and thousands until it settles where a
  * traveller actually spends: hundreds of thousands and millions of soʻm, which
- * is roughly £6–£600. Prices never carry more than two significant digits, so
- * the words stay learnable while the magnitudes get big. The belt speeds up as
- * it climbs too, from two seconds a word down to one.
+ * is roughly £6–£600. The belt speeds up as it climbs too, from four seconds a
+ * word down to well under one.
+ *
+ * Magnitude alone runs out of road: once the ladder tops out in the tens of
+ * millions, "ikki yuz ming" over and over is a chore rather than a challenge.
+ * So the *precision* ramps as well. Prices open on two significant figures,
+ * and every `SIG_FIG_STEP` items priced correctly buys another one, up to
+ * `MAX_SIG_FIGS`. Each new figure resets the ladder to the smallest band that
+ * can carry it — hundreds for three figures, thousands for four — so the
+ * number gets longer as the magnitude drops back, and then climbs again, with
+ * the clock tightening for each figure earned.
  *
  * Occasionally, once the player is clearly coping, a bonus round takes over:
  * the pricetags are replaced by a speaker, the register becomes a calculator
@@ -223,31 +233,78 @@ export const MIN_GAP = 1.2 / BELT_SLOTS
 /** Bin this many and the run is over. */
 export const BIN_CAPACITY = 3
 
-/** Seconds a learner gets per spoken word, at the bottom and top of the ramp. */
+/** Milliseconds a learner gets per spoken word, at the bottom and top of the ramp. */
 const START_MS_PER_TOKEN = 4000
-const FASTEST_MS_PER_TOKEN = 1000
+const FASTEST_MS_PER_TOKEN = 800
 /** The band where the belt reaches full speed — the millions. */
 const FASTEST_BAND = 6
+/**
+ * What each significant figure past the second does to the clock.
+ *
+ * It compounds with the band ramp rather than replacing it, so the reset that
+ * comes with a new figure is a genuine breather — a shorter belt time on a
+ * much smaller number — and the endgame, four figures in the tens of millions,
+ * is the fastest the game ever gets.
+ */
+const SIG_FIG_SPEEDUP = 0.9
 
 /**
  * Milliseconds of belt time per spoken word of the price.
  *
  * Budgeting per *word* rather than per item is what keeps the ramp fair: a
- * one-word price at the start gets its four seconds, and a four-word price in
- * the millions gets four times a shorter second. The item as a whole is on the
- * belt for `BELT_SLOTS` times this, since it spends most of that queueing
+ * one-word price at the start gets its four seconds, and a seven-word price in
+ * the millions gets seven times a much shorter one. The item as a whole is on
+ * the belt for `BELT_SLOTS` times this, since it spends most of that queueing
  * behind the items ahead of it.
  */
-export function msPerToken(band: number): number {
+export function msPerToken(band: number, sigFigs: number = MIN_SIG_FIGS): number {
   const t = Math.min(1, Math.max(0, band / FASTEST_BAND))
-  return Math.round(START_MS_PER_TOKEN + (FASTEST_MS_PER_TOKEN - START_MS_PER_TOKEN) * t)
+  const base = START_MS_PER_TOKEN + (FASTEST_MS_PER_TOKEN - START_MS_PER_TOKEN) * t
+  return Math.round(base * SIG_FIG_SPEEDUP ** Math.max(0, sigFigs - MIN_SIG_FIGS))
 }
 
-/** A price for `band`: one significant digit at the bottom, two above it. */
-export function priceForBand(band: number, rng: () => number = Math.random): number {
-  if (band <= 0) return 1 + Math.floor(rng() * 9)
-  const significand = 10 + Math.floor(rng() * 90)
-  return significand * 10 ** (band - 1)
+// --- Precision --------------------------------------------------------------
+
+/** Significant figures a price opens on, and the most it ever carries. */
+export const MIN_SIG_FIGS = 2
+/**
+ * Four figures is the ceiling. Five would restart the ladder in the tens of
+ * thousands and put nine spoken words on a pricetag, which is more reading
+ * than the belt has room for at the speed this end of the game runs at.
+ */
+export const MAX_SIG_FIGS = 4
+/** Items priced correctly between one significant figure and the next. */
+export const SIG_FIG_STEP = 20
+
+/** How many significant figures a player who has priced `cleared` items reads. */
+export function sigFigsFor(cleared: number): number {
+  return Math.min(MAX_SIG_FIGS, MIN_SIG_FIGS + Math.floor(cleared / SIG_FIG_STEP))
+}
+
+/**
+ * The band a new significant figure resets the ladder to: the smallest one
+ * whose prices can carry every figure. Three figures start at hundreds, four
+ * at thousands.
+ */
+export function bandFloor(sigFigs: number): number {
+  return sigFigs - 1
+}
+
+/**
+ * A price for `band`, carrying `sigFigs` significant figures — or as many as
+ * the band has room for, which is what keeps the opening single soʻm single.
+ */
+export function priceForBand(
+  band: number,
+  sigFigs: number = MIN_SIG_FIGS,
+  rng: () => number = Math.random,
+): number {
+  const digits = Math.max(1, Math.min(sigFigs, band + 1))
+  const low = 10 ** (digits - 1)
+  // Clamped, because an rng that hands back exactly 1 must not carry the
+  // significand into the next decade and the price into the next band.
+  const significand = Math.min(low * 10 - 1, low + Math.floor(rng() * low * 9))
+  return significand * 10 ** (band + 1 - digits)
 }
 
 // --- The bonus round --------------------------------------------------------
@@ -293,7 +350,7 @@ export interface BeltItem {
    */
   tokens: string[]
   /** The register offered while this item is at the front of the belt. */
-  keys: string[]
+  cells: RegisterCell[]
   /** How many tokens are in, i.e. how many dots have gone green. */
   typed: number
   /** 0 at the ramp, 1 at the bin. */
@@ -318,6 +375,8 @@ export interface BazarState {
   /** Items in the bin. `BIN_CAPACITY` of them ends the run. */
   binned: number
   band: number
+  /** Significant figures the prices currently carry; see `sigFigsFor`. */
+  sigFigs: number
   /** Items dealt in the current band, against `BANDS[band]`. */
   dealt: number
   /** Bonus items still to deal; 0 outside a bonus round. */
@@ -338,24 +397,108 @@ function shuffleWith<T>(items: readonly T[], rng: () => number): T[] {
   return copy
 }
 
+// --- The register -----------------------------------------------------------
+
 /**
- * The register for a price: every word it needs, padded out with number words
- * it does not, then shuffled.
+ * The register is six buttons: two rows of three, and each row is a *half*.
  *
- * A one-word price gets four buttons and anything longer gets eight, so the
- * grid grows with the difficulty rather than starting at its hardest. The
- * padding is drawn family-first — other tens against a tens word, other scale
- * words against "ming" — because a register of obvious duds is not a choice.
+ * A four-figure price in the millions is seven words long, and a board big
+ * enough to hold a choice for all seven at once would take half the screen and
+ * be unreadable at speed. So the board only ever answers two questions: the
+ * word you need now, and the one you need next. They sit in opposite halves,
+ * so entering a word retires the half it came from — that half fades out and
+ * spawns the choice for the word after next, while the half holding your new
+ * current word stays exactly where it was. The board churns constantly and
+ * never grows, and the two words that matter are always on it.
  */
-export function buildKeys(tokens: readonly string[], rng: () => number = Math.random): string[] {
-  const needed = [...new Set(tokens)]
-  const size = Math.max(tokens.length === 1 ? 4 : 8, needed.length)
-  const rest = UZBEK_NUMBER_WORDS.filter((word) => !needed.includes(word))
+export const REGISTER_COLUMNS = 3
+/** Buttons in one half of the board — a row. */
+export const REGISTER_HALF = REGISTER_COLUMNS
+/** Buttons on the board at once. */
+export const REGISTER_SIZE = REGISTER_HALF * 2
+
+export interface RegisterCell {
+  token: string
+  /**
+   * The half of the board this button belongs to, 0 or 1 — or null on the
+   * bonus keypad, which is a fixed board and never swaps.
+   */
+  half: number | null
+  /**
+   * Bumped every time the half is refilled. The renderer animates a cell whose
+   * seq has moved rather than swapping the word under the player's finger.
+   */
+  seq: number
+}
+
+/**
+ * One half of the board: the word `token` needs, plus distractors.
+ *
+ * The padding is drawn family-first — other tens against a tens word, other
+ * scale words against "ming" — because a row of obvious duds is not a choice.
+ * Words already on the other half are avoided, so the board never shows the
+ * same button twice unless the price itself repeats a word.
+ */
+function buildHalf(
+  token: string | undefined,
+  half: number,
+  seq: number,
+  taken: readonly string[],
+  rng: () => number,
+): RegisterCell[] {
+  // A price can run out of words before the board runs out of halves; the
+  // spare one is then all distractors, and the item is finished before it
+  // could have been needed.
+  const needed = token === undefined ? [] : [token]
+  const avoid = new Set([...taken, ...needed])
+  const rest = UZBEK_NUMBER_WORDS.filter((word) => !avoid.has(word))
   const family = (word: string) => (UZBEK_NUMBER_WORDS.indexOf(word) / 9) | 0
   const families = new Set(needed.map(family))
   const near = shuffleWith(rest.filter((w) => families.has(family(w))), rng)
   const far = shuffleWith(rest.filter((w) => !families.has(family(w))), rng)
-  return shuffleWith([...needed, ...near, ...far].slice(0, size), rng)
+  const words = shuffleWith([...needed, ...near, ...far].slice(0, REGISTER_HALF), rng)
+  return words.map((word) => ({ token: word, half, seq }))
+}
+
+/** The board a shop item opens on: the first word in one half, the second in the other. */
+export function buildRegister(
+  tokens: readonly string[],
+  rng: () => number = Math.random,
+): RegisterCell[] {
+  const first = buildHalf(tokens[0], 0, 0, [], rng)
+  const second = buildHalf(
+    tokens[1],
+    1,
+    0,
+    first.map((cell) => cell.token),
+    rng,
+  )
+  return [...first, ...second]
+}
+
+/**
+ * The board after the word at `index` has been entered: the half it came from
+ * is replaced by the choice for `index + 2`, and the other half — which holds
+ * the word now due — is left alone.
+ */
+export function refillRegister(
+  cells: readonly RegisterCell[],
+  tokens: readonly string[],
+  index: number,
+  rng: () => number = Math.random,
+): RegisterCell[] {
+  const half = index % 2
+  const keep = cells.filter((cell) => cell.half !== half)
+  const seq = Math.max(...cells.filter((cell) => cell.half === half).map((cell) => cell.seq)) + 1
+  const fresh = buildHalf(
+    tokens[index + 2],
+    half,
+    seq,
+    keep.map((cell) => cell.token),
+    rng,
+  )
+  // Rebuilt in grid order, because half 0 is the top row and half 1 the bottom.
+  return half === 0 ? [...fresh, ...keep] : [...keep, ...fresh]
 }
 
 /**
@@ -365,12 +508,17 @@ export function buildKeys(tokens: readonly string[], rng: () => number = Math.ra
  */
 export const KEYPAD: readonly string[] = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0']
 
+/** The keypad as a board: ten fixed buttons, none of which ever swaps. */
+function keypadCells(): RegisterCell[] {
+  return KEYPAD.map((token) => ({ token, half: null, seq: 0 }))
+}
+
 function makeItem(
   id: number,
   item: BazarItem,
   price: number,
   tokens: string[],
-  keys: string[],
+  cells: RegisterCell[],
   msPerTokenValue: number,
   bonus: boolean,
 ): BeltItem {
@@ -379,7 +527,7 @@ function makeItem(
     item,
     price,
     tokens,
-    keys,
+    cells,
     typed: 0,
     position: 0,
     travelMs: msPerTokenValue * tokens.length * BELT_SLOTS,
@@ -398,9 +546,17 @@ function pickItem(band: number, onBelt: readonly BeltItem[], rng: () => number):
 
 function dealShopItem(state: BazarState, rng: () => number): BeltItem {
   const item = pickItem(state.band, state.items, rng)
-  const price = priceForBand(state.band, rng)
+  const price = priceForBand(state.band, state.sigFigs, rng)
   const tokens = uzbekCardinalTokens(price)
-  return makeItem(state.nextId, item, price, tokens, buildKeys(tokens, rng), msPerToken(state.band), false)
+  return makeItem(
+    state.nextId,
+    item,
+    price,
+    tokens,
+    buildRegister(tokens, rng),
+    msPerToken(state.band, state.sigFigs),
+    false,
+  )
 }
 
 function dealBonusItem(state: BazarState, rng: () => number): BeltItem {
@@ -410,7 +566,7 @@ function dealBonusItem(state: BazarState, rng: () => number): BeltItem {
   const band = Math.min(TOP_BAND, String(price).length - 1)
   const item = pickItem(band, state.items, rng)
   const tokens = [...String(price)]
-  return makeItem(state.nextId, item, price, tokens, [...KEYPAD], BONUS_MS_PER_TOKEN, true)
+  return makeItem(state.nextId, item, price, tokens, keypadCells(), BONUS_MS_PER_TOKEN, true)
 }
 
 /** A run waiting for its first tap. */
@@ -423,6 +579,7 @@ export function createGame(rng: () => number = Math.random): BazarState {
     cleared: 0,
     binned: 0,
     band: 0,
+    sigFigs: MIN_SIG_FIGS,
     dealt: 0,
     bonusLeft: 0,
     bonusUsed: false,
@@ -453,10 +610,16 @@ function deal(state: BazarState, rng: () => number): BazarState {
   // gets binned while the till changes over.
   if (state.bonusPending) return state
 
+  // A significant figure earned outranks the band step, and resets the ladder:
+  // the number gets longer as the magnitude drops back to where that many
+  // figures start, and the climb begins again from there.
+  const sigFigs = sigFigsFor(state.cleared)
   const stepped =
-    state.dealt >= BANDS[state.band] && state.band < TOP_BAND
-      ? { ...state, band: state.band + 1, dealt: 0 }
-      : state
+    sigFigs > state.sigFigs
+      ? { ...state, sigFigs, band: bandFloor(sigFigs), dealt: 0 }
+      : state.dealt >= BANDS[state.band] && state.band < TOP_BAND
+        ? { ...state, band: state.band + 1, dealt: 0 }
+        : state
   return {
     ...stepped,
     items: [...stepped.items, dealShopItem(stepped, rng)],
@@ -477,6 +640,8 @@ export interface Advance {
   binned: BeltItem[]
   /** True on the step the bonus round takes over the till. */
   bonusStarted: boolean
+  /** True on the step the prices gained a significant figure. */
+  sigFigsUp: boolean
 }
 
 /**
@@ -489,7 +654,7 @@ export function advance(
   rng: () => number = Math.random,
 ): Advance {
   if (state.status !== 'playing' || dtMs <= 0) {
-    return { state, binned: [], bonusStarted: false }
+    return { state, binned: [], bonusStarted: false, sigFigsUp: false }
   }
 
   // Front of the belt first, so each item can be held behind the one ahead.
@@ -523,11 +688,12 @@ export function advance(
   }
 
   if (next.binned >= BIN_CAPACITY) {
-    return { state: { ...next, status: 'over' }, binned, bonusStarted }
+    return { state: { ...next, status: 'over' }, binned, bonusStarted, sigFigsUp: false }
   }
+  const sigFigsBefore = next.sigFigs
   if (needsItem(next)) next = deal(next, rng)
 
-  return { state: next, binned, bonusStarted }
+  return { state: next, binned, bonusStarted, sigFigsUp: next.sigFigs > sigFigsBefore }
 }
 
 export interface Press {
@@ -557,8 +723,12 @@ export function pressToken(
 
   const typed = front.typed + 1
   if (typed < front.tokens.length) {
+    // The half the word came from retires; the keypad is a fixed board.
+    const cells = front.bonus
+      ? front.cells
+      : refillRegister(front.cells, front.tokens, front.typed, rng)
     return {
-      state: { ...state, items: [{ ...front, typed }, ...state.items.slice(1)] },
+      state: { ...state, items: [{ ...front, typed, cells }, ...state.items.slice(1)] },
       accepted: true,
       bagged: null,
     }
@@ -587,9 +757,9 @@ function rollBonus(state: BazarState, rng: () => number): BazarState {
   return { ...state, bonusUsed: true, bonusPending: true }
 }
 
-/** The register showing under the belt: the front item's keys, or none. */
-export function registerKeys(state: BazarState): readonly string[] {
-  return state.items[0]?.keys ?? []
+/** The board showing under the belt: the front item's, or none. */
+export function registerCells(state: BazarState): readonly RegisterCell[] {
+  return state.items[0]?.cells ?? []
 }
 
 // --- High score -------------------------------------------------------------
