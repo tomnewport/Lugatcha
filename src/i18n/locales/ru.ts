@@ -146,6 +146,7 @@ const ru: MessageSchema = {
     keypad: 'Цифровая клавиатура',
     hearPrice: 'Послушать цену ещё раз',
     approx: 'Пересчёт приблизительный',
+    digitsUp: 'Цены длиннее — теперь {count} цифры',
     bonusHowTo: 'Раунд на слух — наберите {count} цен, которые услышите',
     over: 'Игра окончена',
     finalScore: 'В тележке: {score} {som}.',
