@@ -22,7 +22,6 @@ import {
   recordHighScore,
   registerCells,
   registerGeneration,
-  registerLive,
   startGame,
   BIN_CAPACITY,
   BONUS_ITEMS,
@@ -70,12 +69,6 @@ const digitsUp = ref(false)
 const currency = computed(() => currencyFor(locale.value))
 const cells = computed(() => registerCells(state.value))
 const bonus = computed(() => state.value.phase === 'bonus')
-/**
- * The half of the board that answers the word now due; the other one is
- * holding the word after it and is drawn quiet until its turn comes. Null on
- * the keypad, which is one board with no halves and no waiting.
- */
-const liveHalf = computed(() => registerLive(state.value))
 /** Bin slots, filled first — three of them and the run is over. */
 const bins = computed(() =>
   Array.from({ length: BIN_CAPACITY }, (_, i) => i < state.value.binned),
@@ -260,19 +253,18 @@ function sayPrice(item: BeltItem) {
 // --- The register -----------------------------------------------------------
 
 /**
- * The retiring half fades out fast; its replacement takes its time arriving.
- *
- * The words that spawn are for the word *after* next — they are no use until
- * the half opposite has had its turn — so they drift in slowly and stay dim
- * until they are the ones being asked for (see `bh__key--queued`).
+ * The retiring three fade out, then their replacements fade in a little
+ * slower. Every button on the board is live, so this is the only thing that
+ * marks the three going and the three arriving: it wants to be seen, not
+ * hurried past.
  */
-const SWAP_OUT_MS = 100
-const SWAP_IN_MS = 500
+const SWAP_OUT_MS = 200
+const SWAP_IN_MS = 300
 
 /**
  * The board as drawn.
  *
- * It lags the game state by one fade: a half that has just retired keeps its
+ * It lags the game state by one fade: a group that has just retired keeps its
  * old words on screen while they fade, and only then takes the new ones. The
  * game state has already moved on, so a fading button is dead to the touch —
  * what you press is always the word the state expects.
@@ -281,7 +273,7 @@ const shown = ref<RegisterCell[]>([])
 /** Per button: 'out' while its old word fades, 'in' as the new one lands. */
 const swapping = ref<('out' | 'in' | null)[]>([])
 const swapTimers = new Map<number, ReturnType<typeof setTimeout>>()
-/** The generation drawn; a rebuilt board arrives whole, not half at a time. */
+/** The generation drawn; a rebuilt board arrives whole, not group by group. */
 let shownGen = -1
 
 function clearSwaps() {
@@ -289,7 +281,7 @@ function clearSwaps() {
   swapTimers.clear()
 }
 
-/** Retires one button: its word fades, then its replacement spawns in place. */
+/** Retires one button: its word fades, then its replacement fades in place. */
 function swapCell(index: number, cell: RegisterCell) {
   clearTimeout(swapTimers.get(index))
   swapping.value[index] = 'out'
@@ -310,7 +302,7 @@ function swapCell(index: number, cell: RegisterCell) {
 
 /**
  * The board only changes when the state hands back a new array of cells: a
- * half retiring, or — rarely — the whole board being rebuilt after the run
+ * group retiring, or — rarely — the whole board being rebuilt after the run
  * loses its place. Everything else the belt does leaves it alone, and so does
  * this: only the cells whose seq moved are animated, the rest are untouched.
  */
@@ -398,7 +390,7 @@ function flashRefusal() {
 
 /**
  * The number row is a shortcut to the register: in the bonus round the digits
- * are literal, and in the shop 1–6 press the six buttons left to right.
+ * are literal, and in the shop 1–9 press the nine buttons left to right.
  */
 function onKeyDown(event: KeyboardEvent) {
   if (event.metaKey || event.ctrlKey || event.altKey) return
@@ -619,10 +611,10 @@ onBeforeUnmount(() => {
       </div>
 
       <!--
-        The cash register: six number words in the shop, half of them swapping
-        out on every correct tap, or the fixed keypad in the bonus round. Keyed
-        by position rather than by word, so a button that changes its word
-        animates in place instead of being replaced.
+        The cash register: nine number words in the shop, three of them
+        swapping out on every correct tap, or the fixed keypad in the bonus
+        round. Keyed by position rather than by word, so a button that changes
+        its word animates in place instead of being replaced.
       -->
       <div
         class="bh__register"
@@ -635,10 +627,7 @@ onBeforeUnmount(() => {
           :key="index"
           class="bh__key"
           :class="[
-            {
-              'bh__key--zero': bonus && cell.token === '0',
-              'bh__key--queued': cell.half !== null && cell.half !== liveHalf,
-            },
+            { 'bh__key--zero': bonus && cell.token === '0' },
             swapping[index] === 'out' ? 'bh__key--out' : '',
             swapping[index] === 'in' ? 'bh__key--in' : '',
           ]"
@@ -1200,12 +1189,7 @@ onBeforeUnmount(() => {
 }
 
 .bh__key {
-  /* The queued half is drawn through this, so the spawn animation can land on
-     whichever value applies rather than always going to full strength. */
-  --bh-key-opacity: 1;
-  opacity: var(--bh-key-opacity);
-  transition: opacity 250ms ease;
-  padding: 0.7rem 0.2rem;
+  padding: 0.55rem 0.2rem;
   /*
    * Three columns of Uzbek number words, some of them eight characters long,
    * on a screen that can be 320px wide: the type has to come down with the
@@ -1231,23 +1215,17 @@ onBeforeUnmount(() => {
 }
 
 /*
- * A retiring button is on its way out and cannot be pressed, so it fades fast.
- * Its replacement takes five times as long to arrive and arrives quiet: those
- * words answer the word *after* next, and drifting in at half strength says so
- * better than dropping them in ready to press.
+ * The three that answered leave, and three more arrive in their cells. A
+ * retiring button is on its way out and cannot be pressed; the rest of the
+ * board stays live throughout, which is why the swap can afford to be seen
+ * rather than hurried.
  */
 .bh__key--out {
-  animation: bh-key-out 100ms ease-in forwards;
+  animation: bh-key-out 200ms ease-in forwards;
 }
 
 .bh__key--in {
-  animation: bh-key-in 500ms ease-out backwards;
-}
-
-/* Not this half's turn: it holds the word after next, and comes up to full
-   strength (through the transition above) when that word is the one due. */
-.bh__key--queued {
-  --bh-key-opacity: 0.45;
+  animation: bh-key-in 300ms ease-out backwards;
 }
 
 @keyframes bh-key-out {
@@ -1261,10 +1239,6 @@ onBeforeUnmount(() => {
   from {
     opacity: 0;
     transform: scale(0.86);
-  }
-  to {
-    opacity: var(--bh-key-opacity);
-    transform: none;
   }
 }
 
