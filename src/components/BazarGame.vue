@@ -97,12 +97,27 @@ function converted(price: number): string {
 
 /**
  * How big the word dots are. A four-figure price in the millions takes seven
- * words, and seven dots at the full size are wider than the tag they sit under.
+ * words, and the ladder goes on lengthening from there — seven dots at the
+ * full size are already wider than the tag they sit under, and a row of
+ * seventeen wraps onto a second line however small they get.
  */
 function dotSize(tokens: number): string {
   if (tokens <= 4) return '32px'
   if (tokens <= 6) return '24px'
-  return '19px'
+  if (tokens <= 8) return '19px'
+  return '14px'
+}
+
+/**
+ * The pricetag's type size, from how long the number reads. A price in the
+ * hundreds of billions is twenty characters with its unit, and at full size
+ * that is twice the width of the tag.
+ */
+function priceClass(price: number): string | undefined {
+  const length = som(price).length
+  if (length > 12) return 'bh__tag-som--huge'
+  if (length > 8) return 'bh__tag-som--long'
+  return undefined
 }
 
 // --- Animation loop ---------------------------------------------------------
@@ -510,7 +525,7 @@ onBeforeUnmount(() => {
               🔊
             </button>
             <template v-else>
-              <strong class="bh__tag-som" :class="{ 'bh__tag-som--long': som(item.price).length > 8 }">
+              <strong class="bh__tag-som" :class="priceClass(item.price)">
                 {{ som(item.price) }} {{ $t('bazar.som') }}
               </strong>
               <span class="bh__tag-fx">≈ {{ converted(item.price) }}</span>
@@ -862,9 +877,14 @@ onBeforeUnmount(() => {
 }
 
 /* Eight million-odd soʻm plus its unit is fifteen characters; at full size
-   that is wider than the tag on a narrow phone. */
+   that is wider than the tag on a narrow phone. Ten figures and up — which the
+   endless significant-figure ramp gets to eventually — need another step. */
 .bh__tag-som--long {
   font-size: 1.3rem;
+}
+
+.bh__tag-som--huge {
+  font-size: 1.05rem;
 }
 
 .bh__tag-fx {
@@ -896,8 +916,12 @@ onBeforeUnmount(() => {
   }
 }
 
+/* A long enough price runs to more dots than fit across a tag; they wrap onto
+   a second line rather than shrinking past being seen. */
 .bh__dots {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.3rem;
   margin-top: 0.3rem;
 }

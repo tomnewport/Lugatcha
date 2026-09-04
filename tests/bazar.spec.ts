@@ -10,6 +10,7 @@ import {
   BONUS_PRICES,
   bandFloor,
   buildRegister,
+  MAX_BAND,
   convert,
   createGame,
   currencyFor,
@@ -35,7 +36,7 @@ import {
   TOP_BAND,
   type BazarState,
 } from '@/exercises/bazar'
-import { uzbekCardinalTokens } from '@/exercises/numbers'
+import { uzbekCardinalTokens, MAX_UZBEK_CARDINAL } from '@/exercises/numbers'
 
 /** A predictable rng: cycles a fixed sequence so a run can be pinned down. */
 function scripted(values: number[]): () => number {
@@ -92,7 +93,7 @@ describe('priceForBand', () => {
   })
 
   it('lands in its own decade above the bottom band', () => {
-    for (let band = 1; band <= TOP_BAND; band++) {
+    for (let band = 1; band <= MAX_BAND; band++) {
       for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
         for (const r of [0, 0.37, 0.99, 1]) {
           const price = priceForBand(band, sigFigs, () => r)
@@ -106,7 +107,7 @@ describe('priceForBand', () => {
   it('carries exactly the significant figures asked for', () => {
     const rng = seeded(3)
     for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
-      for (let band = bandFloor(sigFigs); band <= TOP_BAND; band++) {
+      for (let band = bandFloor(sigFigs); band <= MAX_BAND; band++) {
         for (let i = 0; i < 200; i++) {
           const digits = String(priceForBand(band, sigFigs, rng)).replace(/0+$/, '')
           expect(digits.length).toBeLessThanOrEqual(sigFigs)
@@ -156,20 +157,32 @@ describe('msPerToken', () => {
   it('tightens again with every significant figure earned', () => {
     for (const band of [0, 3, TOP_BAND]) {
       for (let sigFigs = MIN_SIG_FIGS + 1; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
-        expect(msPerToken(band, sigFigs)).toBeLessThan(msPerToken(band, sigFigs - 1))
+        expect(msPerToken(band, sigFigs)).toBeLessThanOrEqual(msPerToken(band, sigFigs - 1))
       }
     }
-    // The endgame — four figures at the top of the ladder — is the fastest the
-    // game ever gets, and still leaves half a second a word.
-    expect(msPerToken(TOP_BAND, MAX_SIG_FIGS)).toBeLessThan(700)
-    expect(msPerToken(TOP_BAND, MAX_SIG_FIGS)).toBeGreaterThan(500)
+    // Four figures at the top of the ladder is where a good run ends up, and
+    // it still leaves better than half a second a word.
+    expect(msPerToken(TOP_BAND, 4)).toBeLessThan(700)
+    expect(msPerToken(TOP_BAND, 4)).toBeGreaterThan(500)
+  })
+
+  it('stops tightening at half a second a word, however many figures are earned', () => {
+    // The figures keep coming; the tempo does not, or the price outruns the
+    // hands reading it. Only the fast end of the band ramp reaches the floor —
+    // the slow end never meets that many figures, since each one restarts the
+    // ladder further up it.
+    expect(msPerToken(TOP_BAND, MAX_SIG_FIGS)).toBe(500)
+    expect(msPerToken(TOP_BAND, 99)).toBe(500)
+    for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
+      expect(msPerToken(bandFloor(sigFigs), sigFigs)).toBeGreaterThanOrEqual(500)
+    }
   })
 
   it('still gives a longer price more time than a shorter one', () => {
     // Four figures cost more words than two, and the per-word budget is what
     // makes that fair: the item as a whole gets longer, not shorter.
     const short = msPerToken(TOP_BAND, MIN_SIG_FIGS) * uzbekCardinalTokens(20_000_000).length
-    const long = msPerToken(TOP_BAND, MAX_SIG_FIGS) * uzbekCardinalTokens(23_450_000).length
+    const long = msPerToken(TOP_BAND, 4) * uzbekCardinalTokens(23_450_000).length
     expect(long).toBeGreaterThan(short)
   })
 })
@@ -182,22 +195,41 @@ describe('significant figures', () => {
     expect(sigFigsFor(SIG_FIG_STEP * 2)).toBe(MIN_SIG_FIGS + 2)
   })
 
-  it('caps at four, however long the run goes on', () => {
-    expect(sigFigsFor(SIG_FIG_STEP * 3)).toBe(MAX_SIG_FIGS)
+  it('keeps climbing as long as there are words for the number', () => {
+    // No design cap: the only ceiling is the biggest number this app can say.
+    expect(sigFigsFor(SIG_FIG_STEP * 3)).toBe(5)
+    expect(sigFigsFor(SIG_FIG_STEP * 8)).toBe(10)
+    expect(sigFigsFor(SIG_FIG_STEP * (MAX_SIG_FIGS - MIN_SIG_FIGS))).toBe(MAX_SIG_FIGS)
     expect(sigFigsFor(10_000)).toBe(MAX_SIG_FIGS)
+    expect(String(MAX_UZBEK_CARDINAL)).toHaveLength(MAX_SIG_FIGS)
   })
 
   it('restarts the ladder at the smallest band that can carry them', () => {
     // Hundreds for three figures, thousands for four.
     expect(bandFloor(3)).toBe(2)
     expect(bandFloor(4)).toBe(3)
-    expect(10 ** bandFloor(MAX_SIG_FIGS)).toBe(1000)
+    expect(10 ** bandFloor(4)).toBe(1000)
+    // Until there is no bigger band to restart in, and only the precision
+    // goes on climbing.
+    expect(bandFloor(MAX_SIG_FIGS)).toBe(MAX_BAND)
+    expect(bandFloor(99)).toBe(MAX_BAND)
+  })
+
+  it('never asks for a price the language cannot read', () => {
+    const rng = seeded(31)
+    for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
+      for (let i = 0; i < 50; i++) {
+        const price = priceForBand(bandFloor(sigFigs), sigFigs, rng)
+        expect(price).toBeLessThanOrEqual(MAX_UZBEK_CARDINAL)
+        expect(uzbekCardinalTokens(price).length).toBeGreaterThan(0)
+      }
+    }
   })
 
   it('leaves the register alone — six buttons, however long the price', () => {
     const rng = seeded(21)
     for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
-      for (let band = bandFloor(sigFigs); band <= TOP_BAND; band++) {
+      for (let band = bandFloor(sigFigs); band <= MAX_BAND; band++) {
         const tokens = uzbekCardinalTokens(priceForBand(band, sigFigs, rng))
         expect(buildRegister(tokens, rng)).toHaveLength(REGISTER_SIZE)
       }
@@ -391,7 +423,7 @@ describe('a run', () => {
     expect(bandsSeen).toEqual(bandsSeen.map((_, i) => i))
   })
 
-  it('climbs the whole ladder once the significant figures have topped out', () => {
+  it('climbs the whole ladder inside a single significant figure', () => {
     let state = startGame(createGame(seeded(1)))
     const rng = seeded(1)
     const bandsSeen: number[] = []
@@ -399,14 +431,38 @@ describe('a run', () => {
       state = advance(state, 16, rng).state
       if (state.status === 'over') break
       if (state.items.length) state = bagFront(state, rng)
-      if (state.sigFigs === MAX_SIG_FIGS && state.band !== bandsSeen[bandsSeen.length - 1]) {
+      if (state.sigFigs === 4 && state.band !== bandsSeen[bandsSeen.length - 1]) {
         bandsSeen.push(state.band)
       }
     }
     expect(state.status).toBe('playing')
+    // Four figures start at thousands and climb from there, a band at a time,
+    // for as long as that figure lasts — which is until the next one is earned.
+    expect(bandsSeen.length).toBeGreaterThan(2)
+    expect(bandsSeen).toEqual(bandsSeen.map((_, i) => bandFloor(4) + i))
+  })
+
+  it('keeps earning figures past the top of the stock ladder', () => {
+    let state = startGame(createGame(seeded(3)))
+    const rng = seeded(3)
+    for (let step = 0; step < 200_000 && state.sigFigs < MAX_SIG_FIGS; step++) {
+      state = advance(state, 16, rng).state
+      if (state.status === 'over') break
+      // Every price the run deals is one the game can say out loud, all the
+      // way to the last band there is.
+      for (const item of state.items) {
+        expect(item.price).toBeLessThanOrEqual(MAX_UZBEK_CARDINAL)
+        expect(item.tokens.length).toBeGreaterThan(0)
+      }
+      if (state.items.length) state = bagFront(state, rng)
+    }
+    expect(state.status).toBe('playing')
     expect(state.sigFigs).toBe(MAX_SIG_FIGS)
-    // Four figures start at thousands and climb to the top of the ladder.
-    expect(bandsSeen).toEqual([3, 4, 5, 6, 7])
+    // Past the stock ladder the magnitude has nowhere left to go, so the band
+    // sits at its ceiling and the precision carries the run on alone.
+    expect(state.band).toBe(MAX_BAND)
+    // The stall keeps selling — its priciest goods, at ludicrous prices.
+    expect(state.items.every((i) => i.item.band === TOP_BAND)).toBe(true)
   })
 
   it('resets the ladder to the smallest band each new figure can carry', () => {
@@ -422,12 +478,13 @@ describe('a run', () => {
         expect(stepped.sigFigsUp).toBe(true)
         resets.push({ sigFigs: state.sigFigs, band: state.band })
       }
-      if (state.sigFigs === MAX_SIG_FIGS && resets.length === 2) break
+      if (resets.length === 3) break
       if (state.items.length) state = bagFront(state, rng)
     }
     expect(resets).toEqual([
       { sigFigs: 3, band: bandFloor(3) },
       { sigFigs: 4, band: bandFloor(4) },
+      { sigFigs: 5, band: bandFloor(5) },
     ])
   })
 
@@ -442,11 +499,12 @@ describe('a run', () => {
         expect(item.cells).toHaveLength(REGISTER_SIZE)
         checked++
       }
-      if (state.sigFigs === MAX_SIG_FIGS && state.band === TOP_BAND) break
+      if (state.sigFigs === MAX_SIG_FIGS) break
       if (state.items.length) state = bagFront(state, rng)
     }
+    // Right to the end of the ladder, where a price is twelve figures and
+    // seventeen spoken words, the board is still six buttons.
     expect(state.sigFigs).toBe(MAX_SIG_FIGS)
-    expect(state.band).toBe(TOP_BAND)
     expect(checked).toBeGreaterThan(0)
   })
 

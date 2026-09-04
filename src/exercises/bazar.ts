@@ -21,12 +21,14 @@
  *
  * Magnitude alone runs out of road: once the ladder tops out in the tens of
  * millions, "ikki yuz ming" over and over is a chore rather than a challenge.
- * So the *precision* ramps as well. Prices open on two significant figures,
- * and every `SIG_FIG_STEP` items priced correctly buys another one, up to
- * `MAX_SIG_FIGS`. Each new figure resets the ladder to the smallest band that
- * can carry it — hundreds for three figures, thousands for four — so the
- * number gets longer as the magnitude drops back, and then climbs again, with
- * the clock tightening for each figure earned.
+ * So the *precision* ramps as well, and it never stops. Prices open on two
+ * significant figures and every `SIG_FIG_STEP` items priced correctly buys
+ * another one. Each new figure resets the ladder to the smallest band that can
+ * carry it — hundreds for three figures, thousands for four — so the number
+ * gets longer as the magnitude drops back, and then climbs again, with the
+ * clock tightening for each figure earned until it hits its floor. The only
+ * ceiling is `MAX_SIG_FIGS`, which is not a design decision but the point
+ * where Uzbek, as this app speaks it, runs out of scale words.
  *
  * Occasionally, once the player is clearly coping, a bonus round takes over:
  * the pricetags are replaced by a speaker, the register becomes a calculator
@@ -39,7 +41,7 @@
  * delta: the component is a renderer and a clock, and the rules are tested
  * directly.
  */
-import { uzbekCardinalTokens, UZBEK_NUMBER_WORDS } from './numbers'
+import { uzbekCardinalTokens, MAX_UZBEK_CARDINAL, UZBEK_NUMBER_WORDS } from './numbers'
 
 // --- Money ------------------------------------------------------------------
 
@@ -213,7 +215,14 @@ export const ITEMS: readonly BazarItem[] = [
  */
 export const BANDS: readonly number[] = [3, 3, 3, 3, 4, 6, 8, Infinity]
 
-/** The band the ladder tops out at. */
+/**
+ * The top of the *stock* ladder — the last band with things of its own to sell.
+ *
+ * The prices climb past it, once enough significant figures have been earned
+ * to restart above it (see `bandFloor`), and the stall keeps selling its
+ * big-ticket items at those prices. A car for eighty billion soʻm is absurd,
+ * which is the same joke the run opens with when it sells you smoke for six.
+ */
 export const TOP_BAND = BANDS.length - 1
 
 /** The whole run happens between the ramp (0) and the bin (1). */
@@ -247,6 +256,15 @@ const FASTEST_BAND = 6
  * is the fastest the game ever gets.
  */
 const SIG_FIG_SPEEDUP = 0.9
+/**
+ * However many figures are earned, a word never gets less time than this.
+ *
+ * The figures go on being earned indefinitely, and each one makes the price
+ * longer as well as faster — past about six there is no tempo left to take,
+ * only words to add. So the clock stops here and the ladder carries on as a
+ * reading test at a fixed, quick tempo rather than an impossible one.
+ */
+const FLOOR_MS_PER_TOKEN = 500
 
 /**
  * Milliseconds of belt time per spoken word of the price.
@@ -260,19 +278,36 @@ const SIG_FIG_SPEEDUP = 0.9
 export function msPerToken(band: number, sigFigs: number = MIN_SIG_FIGS): number {
   const t = Math.min(1, Math.max(0, band / FASTEST_BAND))
   const base = START_MS_PER_TOKEN + (FASTEST_MS_PER_TOKEN - START_MS_PER_TOKEN) * t
-  return Math.round(base * SIG_FIG_SPEEDUP ** Math.max(0, sigFigs - MIN_SIG_FIGS))
+  const earned = base * SIG_FIG_SPEEDUP ** Math.max(0, sigFigs - MIN_SIG_FIGS)
+  return Math.round(Math.max(FLOOR_MS_PER_TOKEN, earned))
 }
 
 // --- Precision --------------------------------------------------------------
 
-/** Significant figures a price opens on, and the most it ever carries. */
+/** Significant figures a price opens on. */
 export const MIN_SIG_FIGS = 2
+
 /**
- * Four figures is the ceiling. Five would restart the ladder in the tens of
- * thousands and put nine spoken words on a pricetag, which is more reading
- * than the belt has room for at the speed this end of the game runs at.
+ * The last band there is: the biggest decade `uzbekCardinalTokens` can still
+ * read out. Uzbek borrows scale words from Russian and this app has learned as
+ * far as *milliard*, so the ladder ends in the hundreds of billions of soʻm.
  */
-export const MAX_SIG_FIGS = 4
+export const MAX_BAND = String(MAX_UZBEK_CARDINAL).length - 1
+
+/**
+ * The most significant figures a price can carry: enough to fill the last
+ * band, every digit of it significant.
+ *
+ * There is no design cap on the precision — the board is six buttons whatever
+ * the price does (see the register section), so nothing on screen has to grow
+ * to keep up, and the figures go on being earned for as long as a player keeps
+ * clearing items. This is only where the language this app speaks runs out of
+ * words for the number, and it takes some `SIG_FIG_STEP * 10` correct items to
+ * get there. Teach `numbers.ts` a bigger scale word and the ladder gets longer
+ * on its own.
+ */
+export const MAX_SIG_FIGS = MAX_BAND + 1
+
 /** Items priced correctly between one significant figure and the next. */
 export const SIG_FIG_STEP = 20
 
@@ -284,10 +319,11 @@ export function sigFigsFor(cleared: number): number {
 /**
  * The band a new significant figure resets the ladder to: the smallest one
  * whose prices can carry every figure. Three figures start at hundreds, four
- * at thousands.
+ * at thousands, and so on until the ladder runs out of bands to restart in —
+ * past that the reset stops happening and only the precision climbs.
  */
 export function bandFloor(sigFigs: number): number {
-  return sigFigs - 1
+  return Math.min(sigFigs - 1, MAX_BAND)
 }
 
 /**
@@ -537,7 +573,8 @@ function makeItem(
 
 /** An item from `band`, avoiding whatever is already on the belt where it can. */
 function pickItem(band: number, onBelt: readonly BeltItem[], rng: () => number): BazarItem {
-  const stock = ITEMS.filter((i) => i.band === band)
+  // Bands above the stock ladder sell the top band's goods; see TOP_BAND.
+  const stock = ITEMS.filter((i) => i.band === Math.min(band, TOP_BAND))
   const inPlay = new Set(onBelt.map((b) => b.item.uzbek))
   const fresh = stock.filter((i) => !inPlay.has(i.uzbek))
   const pool = fresh.length ? fresh : stock
