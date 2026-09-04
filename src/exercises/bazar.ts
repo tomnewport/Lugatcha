@@ -26,9 +26,9 @@
  * another one. Each new figure resets the ladder to the smallest band that can
  * carry it — hundreds for three figures, thousands for four — so the number
  * gets longer as the magnitude drops back, and then climbs again, with the
- * clock tightening for each figure earned until it hits its floor. The only
- * ceiling is `MAX_SIG_FIGS`, which is not a design decision but the point
- * where Uzbek, as this app speaks it, runs out of scale words.
+ * clock tightening for each figure earned and never stopping. The only ceiling
+ * is `MAX_SIG_FIGS`, which is not a design decision but the point where Uzbek,
+ * as this app speaks it, runs out of scale words.
  *
  * Occasionally, once the player is clearly coping, a bonus round takes over:
  * the pricetags are replaced by a speaker, the register becomes a calculator
@@ -105,123 +105,141 @@ export interface BazarItem {
   english: string
   /** Russian gloss; falls back to `english` when absent, as content does. */
   russian?: string
-  /** Which price band this item belongs on; see `BANDS`. */
-  band: number
+  /**
+   * What the thing honestly costs at a bozor, in soʻm — the low and high of a
+   * fair price for it. A price is dealt first and the stall then offers
+   * something that could really carry it, so these ranges are what keeps a
+   * cake from turning up at forty pounds.
+   */
+  from: number
+  to: number
 }
 
 /**
- * The stock, cheapest first.
+ * The stock, cheapest first, priced as of 2025 and deliberately loose: these
+ * are the range a traveller would recognise as fair, not a price list. £1 is
+ * about 16 000 soʻm (see `SOM_PER_UNIT`), so a 350 000 soʻm cake is about £22.
  *
- * Band 0–3 is the joke stretch: at these prices nothing real is for sale, so
- * the stall sells air, smoke and shadows, drifting towards things that might
- * *just* cost a few hundred soʻm — a paperclip, a match, a sheet of paper.
- * From band 4 on the prices are real, and so is the stock: this is a shopping
- * list you could take to a bozor, ending in the big-ticket items a very good
- * run earns the right to see.
+ * The bottom of the list is the joke stretch: at a few soʻm nothing real is
+ * for sale, so the stall sells air, smoke and shadows, drifting towards things
+ * that might *just* cost a few hundred — a paperclip, a match, a sheet of
+ * paper. From bread on it is a shopping list you could take to a bozor, ending
+ * in the big-ticket items a very good run earns the right to see.
+ *
+ * Between them the ranges have to cover every price the ladder can deal
+ * without a gap, or a price arrives with nothing to put it on; `LUXURIES`
+ * catches the far end, where the numbers stop being real at all.
  */
 export const ITEMS: readonly BazarItem[] = [
-  // Band 0 — 1–9 soʻm. Not things. Ideas of things.
-  { emoji: '🌬️', uzbek: 'havo', english: 'air', russian: 'воздух', band: 0 },
-  { emoji: '🚬', uzbek: 'tutun', english: 'smoke', russian: 'дым', band: 0 },
-  { emoji: '🍂', uzbek: 'barg', english: 'a leaf', russian: 'лист', band: 0 },
-  { emoji: '🪨', uzbek: 'tosh', english: 'a pebble', russian: 'камешек', band: 0 },
-  { emoji: '🌑', uzbek: 'soya', english: 'a shadow', russian: 'тень', band: 0 },
-  { emoji: '💨', uzbek: 'chang', english: 'dust', russian: 'пыль', band: 0 },
+  // Not things. Ideas of things.
+  { emoji: '🌬️', uzbek: 'havo', english: 'air', russian: 'воздух', from: 1, to: 9 },
+  { emoji: '🚬', uzbek: 'tutun', english: 'smoke', russian: 'дым', from: 1, to: 9 },
+  { emoji: '🍂', uzbek: 'barg', english: 'a leaf', russian: 'лист', from: 1, to: 9 },
+  { emoji: '🪨', uzbek: 'tosh', english: 'a pebble', russian: 'камешек', from: 1, to: 9 },
+  { emoji: '🌑', uzbek: 'soya', english: 'a shadow', russian: 'тень', from: 1, to: 9 },
+  { emoji: '💨', uzbek: 'chang', english: 'dust', russian: 'пыль', from: 1, to: 9 },
+  { emoji: '⏳', uzbek: 'qum', english: 'sand', russian: 'песок', from: 10, to: 99 },
+  { emoji: '💧', uzbek: 'tomchi', english: 'a drop', russian: 'капля', from: 10, to: 99 },
+  { emoji: '🫧', uzbek: 'pufak', english: 'a bubble', russian: 'пузырь', from: 10, to: 99 },
+  { emoji: '🪶', uzbek: 'pat', english: 'a feather', russian: 'перо', from: 10, to: 99 },
+  { emoji: '🧂', uzbek: 'tuz', english: 'a pinch of salt', russian: 'щепотка соли', from: 10, to: 99 },
+  { emoji: '🐜', uzbek: 'chumoli', english: 'an ant', russian: 'муравей', from: 10, to: 99 },
 
-  // Band 1 — 10–99 soʻm.
-  { emoji: '⏳', uzbek: 'qum', english: 'sand', russian: 'песок', band: 1 },
-  { emoji: '💧', uzbek: 'tomchi', english: 'a drop', russian: 'капля', band: 1 },
-  { emoji: '🫧', uzbek: 'pufak', english: 'a bubble', russian: 'пузырь', band: 1 },
-  { emoji: '🪶', uzbek: 'pat', english: 'a feather', russian: 'перо', band: 1 },
-  { emoji: '🧂', uzbek: 'tuz', english: 'salt', russian: 'соль', band: 1 },
-  { emoji: '🐜', uzbek: 'chumoli', english: 'an ant', russian: 'муравей', band: 1 },
+  // Small change: real things, but only just.
+  { emoji: '📎', uzbek: 'qisqich', english: 'a paperclip', russian: 'скрепка', from: 100, to: 500 },
+  { emoji: '🔥', uzbek: 'gugurt', english: 'a match', russian: 'спичка', from: 100, to: 300 },
+  { emoji: '📄', uzbek: "qog'oz", english: 'a sheet of paper', russian: 'лист бумаги', from: 100, to: 600 },
+  { emoji: '🔘', uzbek: 'tugma', english: 'a button', russian: 'пуговица', from: 200, to: 1_000 },
+  { emoji: '🧵', uzbek: 'ip', english: 'thread', russian: 'нитка', from: 300, to: 2_000 },
+  { emoji: '🍭', uzbek: 'konfet', english: 'a sweet', russian: 'конфета', from: 500, to: 2_000 },
+  { emoji: '🛍️', uzbek: 'paket', english: 'a carrier bag', russian: 'пакет', from: 500, to: 2_000 },
+  { emoji: '🍬', uzbek: 'saqich', english: 'chewing gum', russian: 'жвачка', from: 1_000, to: 4_000 },
+  { emoji: '🥚', uzbek: 'tuxum', english: 'an egg', russian: 'яйцо', from: 1_200, to: 2_500 },
+  { emoji: '📰', uzbek: 'gazeta', english: 'a newspaper', russian: 'газета', from: 2_000, to: 5_000 },
+  { emoji: '🖊️', uzbek: 'ruchka', english: 'a pen', russian: 'ручка', from: 2_000, to: 6_000 },
+  { emoji: '🥖', uzbek: 'non', english: 'bread', russian: 'хлеб', from: 2_500, to: 6_000 },
+  { emoji: '🧼', uzbek: 'sovun', english: 'soap', russian: 'мыло', from: 5_000, to: 15_000 },
 
-  // Band 2 — 100–990 soʻm.
-  { emoji: '📎', uzbek: 'qisqich', english: 'a paperclip', russian: 'скрепка', band: 2 },
-  { emoji: '🔥', uzbek: 'gugurt', english: 'a match', russian: 'спичка', band: 2 },
-  { emoji: '🧵', uzbek: 'ip', english: 'thread', russian: 'нитка', band: 2 },
-  { emoji: '🔘', uzbek: 'tugma', english: 'a button', russian: 'пуговица', band: 2 },
-  { emoji: '📄', uzbek: "qog'oz", english: 'a sheet of paper', russian: 'лист бумаги', band: 2 },
-  { emoji: '🍬', uzbek: 'saqich', english: 'chewing gum', russian: 'жвачка', band: 2 },
+  // The daily shop.
+  { emoji: '🥟', uzbek: 'somsa', english: 'a samsa', russian: 'самса', from: 8_000, to: 15_000 },
+  { emoji: '🍅', uzbek: 'pomidor', english: 'tomatoes', russian: 'помидоры', from: 8_000, to: 18_000 },
+  { emoji: '🍵', uzbek: 'choy', english: 'a pot of tea', russian: 'чайник чая', from: 8_000, to: 20_000 },
+  { emoji: '🥛', uzbek: 'sut', english: 'milk', russian: 'молоко', from: 10_000, to: 18_000 },
+  { emoji: '🍎', uzbek: 'olma', english: 'apples', russian: 'яблоки', from: 10_000, to: 20_000 },
+  { emoji: '🌷', uzbek: 'gul', english: 'a flower', russian: 'цветок', from: 10_000, to: 30_000 },
+  { emoji: '🧃', uzbek: 'sharbat', english: 'juice', russian: 'сок', from: 12_000, to: 25_000 },
+  { emoji: '🧲', uzbek: 'magnit', english: 'a fridge magnet', russian: 'магнит на холодильник', from: 15_000, to: 40_000 },
+  { emoji: '💊', uzbek: 'dori', english: 'medicine', russian: 'лекарство', from: 15_000, to: 150_000 },
+  { emoji: '☕', uzbek: 'kofe', english: 'a coffee', russian: 'кофе', from: 18_000, to: 40_000 },
+  { emoji: '🚕', uzbek: 'taksi', english: 'a taxi ride', russian: 'поездка на такси', from: 20_000, to: 70_000 },
+  { emoji: '🍲', uzbek: 'osh', english: 'a plate of plov', russian: 'порция плова', from: 25_000, to: 50_000 },
+  { emoji: '🧸', uzbek: "o'yinchoq", english: 'a toy', russian: 'игрушка', from: 30_000, to: 400_000 },
+  { emoji: '🍢', uzbek: 'kabob', english: 'kebabs', russian: 'шашлык', from: 30_000, to: 70_000 },
+  { emoji: '🎫', uzbek: 'chipta', english: 'a ticket', russian: 'билет', from: 30_000, to: 120_000 },
+  { emoji: '📚', uzbek: 'kitob', english: 'a book', russian: 'книга', from: 40_000, to: 150_000 },
+  { emoji: '🧀', uzbek: 'pishloq', english: 'cheese', russian: 'сыр', from: 50_000, to: 120_000 },
+  { emoji: '☂️', uzbek: 'soyabon', english: 'an umbrella', russian: 'зонт', from: 50_000, to: 150_000 },
 
-  // Band 3 — 1 000–9 900 soʻm.
-  { emoji: '🛍️', uzbek: 'paket', english: 'a carrier bag', russian: 'пакет', band: 3 },
-  { emoji: '🖊️', uzbek: 'ruchka', english: 'a pen', russian: 'ручка', band: 3 },
-  { emoji: '📰', uzbek: 'gazeta', english: 'a newspaper', russian: 'газета', band: 3 },
-  { emoji: '🧼', uzbek: 'sovun', english: 'soap', russian: 'мыло', band: 3 },
-  { emoji: '🥚', uzbek: 'tuxum', english: 'an egg', russian: 'яйцо', band: 3 },
-  { emoji: '🍭', uzbek: 'konfet', english: 'a sweet', russian: 'конфета', band: 3 },
+  // Worth going home with.
+  { emoji: '🧢', uzbek: "do'ppi", english: 'a skullcap', russian: 'тюбетейка', from: 60_000, to: 250_000 },
+  { emoji: '🧣', uzbek: "ro'mol", english: 'a scarf', russian: 'платок', from: 60_000, to: 250_000 },
+  { emoji: '🏺', uzbek: 'sopol', english: 'pottery', russian: 'керамика', from: 70_000, to: 400_000 },
+  { emoji: '🎩', uzbek: 'shlyapa', english: 'a hat', russian: 'шляпа', from: 80_000, to: 400_000 },
+  { emoji: '🍰', uzbek: 'tort', english: 'a cake', russian: 'торт', from: 120_000, to: 350_000 },
+  { emoji: '👗', uzbek: "ko'ylak", english: 'a dress', russian: 'платье', from: 200_000, to: 900_000 },
+  { emoji: '👜', uzbek: 'sumka', english: 'a handbag', russian: 'сумка', from: 200_000, to: 1_500_000 },
+  { emoji: '🛏️', uzbek: 'xona', english: 'a night in a hotel', russian: 'ночь в гостинице', from: 250_000, to: 1_200_000 },
+  { emoji: '⌚', uzbek: 'soat', english: 'a watch', russian: 'часы', from: 250_000, to: 3_000_000 },
+  { emoji: '👟', uzbek: 'poyabzal', english: 'shoes', russian: 'обувь', from: 300_000, to: 1_500_000 },
+  { emoji: '🧳', uzbek: 'chamadon', english: 'a suitcase', russian: 'чемодан', from: 400_000, to: 1_800_000 },
+  { emoji: '🧥', uzbek: 'palto', english: 'a coat', russian: 'пальто', from: 600_000, to: 3_000_000 },
+  { emoji: '🎸', uzbek: 'gitara', english: 'a guitar', russian: 'гитара', from: 800_000, to: 4_000_000 },
+  { emoji: '🚲', uzbek: 'velosiped', english: 'a bicycle', russian: 'велосипед', from: 1_200_000, to: 6_000_000 },
 
-  // Band 4 — 10 000–99 000 soʻm. Real prices start here.
-  { emoji: '🥖', uzbek: 'non', english: 'bread', russian: 'хлеб', band: 4 },
-  { emoji: '🍵', uzbek: 'choy', english: 'tea', russian: 'чай', band: 4 },
-  { emoji: '🥛', uzbek: 'sut', english: 'milk', russian: 'молоко', band: 4 },
-  { emoji: '🍎', uzbek: 'olma', english: 'apples', russian: 'яблоки', band: 4 },
-  { emoji: '🍅', uzbek: 'pomidor', english: 'tomatoes', russian: 'помидоры', band: 4 },
-  { emoji: '🥟', uzbek: 'somsa', english: 'a samsa', russian: 'самса', band: 4 },
-  { emoji: '🧃', uzbek: 'sharbat', english: 'juice', russian: 'сок', band: 4 },
-  { emoji: '☕', uzbek: 'kofe', english: 'coffee', russian: 'кофе', band: 4 },
-  { emoji: '🌷', uzbek: 'gul', english: 'a flower', russian: 'цветок', band: 4 },
-  { emoji: '🧀', uzbek: 'pishloq', english: 'cheese', russian: 'сыр', band: 4 },
-
-  // Band 5 — 100 000–990 000 soʻm.
-  { emoji: '🍲', uzbek: 'osh', english: 'plov', russian: 'плов', band: 5 },
-  { emoji: '🍢', uzbek: 'kabob', english: 'kebabs', russian: 'шашлык', band: 5 },
-  { emoji: '🍰', uzbek: 'tort', english: 'a cake', russian: 'торт', band: 5 },
-  { emoji: '📚', uzbek: 'kitob', english: 'a book', russian: 'книга', band: 5 },
-  { emoji: '🧲', uzbek: 'magnit', english: 'a fridge magnet', russian: 'магнит на холодильник', band: 5 },
-  { emoji: '🚕', uzbek: 'taksi', english: 'a taxi ride', russian: 'поездка на такси', band: 5 },
-  { emoji: '🎫', uzbek: 'chipta', english: 'a ticket', russian: 'билет', band: 5 },
-  { emoji: '💊', uzbek: 'dori', english: 'medicine', russian: 'лекарство', band: 5 },
-  { emoji: '☂️', uzbek: 'soyabon', english: 'an umbrella', russian: 'зонт', band: 5 },
-  { emoji: '🧣', uzbek: "ro'mol", english: 'a scarf', russian: 'платок', band: 5 },
-  { emoji: '🏺', uzbek: 'sopol', english: 'pottery', russian: 'керамика', band: 5 },
-  { emoji: '🧢', uzbek: "do'ppi", english: 'a skullcap', russian: 'тюбетейка', band: 5 },
-
-  // Band 6 — 1–9.9 million soʻm.
-  { emoji: '👗', uzbek: "ko'ylak", english: 'a dress', russian: 'платье', band: 6 },
-  { emoji: '📱', uzbek: 'telefon', english: 'a phone', russian: 'телефон', band: 6 },
-  { emoji: '👜', uzbek: 'sumka', english: 'a handbag', russian: 'сумка', band: 6 },
-  { emoji: '👟', uzbek: 'poyabzal', english: 'shoes', russian: 'обувь', band: 6 },
-  { emoji: '⌚', uzbek: 'soat', english: 'a watch', russian: 'часы', band: 6 },
-  { emoji: '🧳', uzbek: 'chamadon', english: 'a suitcase', russian: 'чемодан', band: 6 },
-  { emoji: '🧥', uzbek: 'palto', english: 'a coat', russian: 'пальто', band: 6 },
-  { emoji: '🎸', uzbek: 'gitara', english: 'a guitar', russian: 'гитара', band: 6 },
-  { emoji: '🧸', uzbek: "o'yinchoq", english: 'a toy', russian: 'игрушка', band: 6 },
-  { emoji: '🎩', uzbek: 'shlyapa', english: 'a hat', russian: 'шляпа', band: 6 },
-  { emoji: '🚲', uzbek: 'velosiped', english: 'a bicycle', russian: 'велосипед', band: 6 },
-  { emoji: '🛏️', uzbek: 'xona', english: 'a hotel room', russian: 'номер в гостинице', band: 6 },
-
-  // Band 7 — 10 million soʻm and up. The endless top of the ladder.
-  { emoji: '💻', uzbek: 'kompyuter', english: 'a computer', russian: 'компьютер', band: 7 },
-  { emoji: '📺', uzbek: 'televizor', english: 'a television', russian: 'телевизор', band: 7 },
-  { emoji: '🛋️', uzbek: 'divan', english: 'a sofa', russian: 'диван', band: 7 },
-  { emoji: '🧊', uzbek: 'muzlatgich', english: 'a fridge', russian: 'холодильник', band: 7 },
-  { emoji: '💍', uzbek: 'uzuk', english: 'a ring', russian: 'кольцо', band: 7 },
-  { emoji: '✈️', uzbek: 'aviachipta', english: 'a plane ticket', russian: 'авиабилет', band: 7 },
-  { emoji: '🛵', uzbek: 'mototsikl', english: 'a motorbike', russian: 'мотоцикл', band: 7 },
-  { emoji: '🎹', uzbek: 'pianino', english: 'a piano', russian: 'пианино', band: 7 },
-  { emoji: '🐎', uzbek: 'ot', english: 'a horse', russian: 'лошадь', band: 7 },
-  { emoji: '🚗', uzbek: 'mashina', english: 'a car', russian: 'машина', band: 7 },
+  // The end of the ladder, where a very good run gets to.
+  { emoji: '💍', uzbek: 'uzuk', english: 'a ring', russian: 'кольцо', from: 1_500_000, to: 20_000_000 },
+  { emoji: '📱', uzbek: 'telefon', english: 'a phone', russian: 'телефон', from: 1_500_000, to: 9_000_000 },
+  { emoji: '✈️', uzbek: 'aviachipta', english: 'a plane ticket', russian: 'авиабилет', from: 2_500_000, to: 12_000_000 },
+  { emoji: '📺', uzbek: 'televizor', english: 'a television', russian: 'телевизор', from: 3_000_000, to: 18_000_000 },
+  { emoji: '🛋️', uzbek: 'divan', english: 'a sofa', russian: 'диван', from: 3_000_000, to: 15_000_000 },
+  { emoji: '💻', uzbek: 'kompyuter', english: 'a computer', russian: 'компьютер', from: 5_000_000, to: 25_000_000 },
+  { emoji: '🧊', uzbek: 'muzlatgich', english: 'a fridge', russian: 'холодильник', from: 5_000_000, to: 20_000_000 },
+  { emoji: '🛵', uzbek: 'mototsikl', english: 'a motorbike', russian: 'мотоцикл', from: 10_000_000, to: 50_000_000 },
+  { emoji: '🎹', uzbek: 'pianino', english: 'a piano', russian: 'пианино', from: 12_000_000, to: 60_000_000 },
+  { emoji: '🐎', uzbek: 'ot', english: 'a horse', russian: 'лошадь', from: 15_000_000, to: 70_000_000 },
+  { emoji: '🚗', uzbek: 'mashina', english: 'a car', russian: 'машина', from: 70_000_000, to: 500_000_000 },
 ]
 
+/** The dearest thing on the stall. */
+const DEAREST = Math.max(...ITEMS.map((item) => item.to))
+
 /**
- * How many items each band serves before the prices step up a decimal place.
+ * What the stall offers for a price nothing on it could honestly carry.
+ *
+ * The precision ramp keeps going after the prices stop being real (see
+ * `MAX_SIG_FIGS`), so somebody has to sell you a fridge for eight billion
+ * soʻm. It is the top tier that does it — everything within a decade of the
+ * dearest thing here — which keeps some variety up there and keeps the joke
+ * the right way round: absurd prices on the things that were dear anyway.
+ */
+export const LUXURIES: readonly BazarItem[] = ITEMS.filter((item) => item.to * 10 >= DEAREST)
+
+/**
+ * How many prices each band deals before the ladder steps up a decimal place.
  *
  * The cheap bands are a warm-up and go by quickly; the bands that matter — the
  * hundreds of thousands and the millions, where a traveller's actual prices
- * live — are the long ones. The last band never ends: once you are counting in
- * tens of millions the game just keeps dealing until you fill the bin.
+ * live — are the long ones. The last one never ends: once you are counting in
+ * tens of millions the ladder stays there until a new significant figure
+ * restarts it (see `bandFloor`).
  */
 export const BANDS: readonly number[] = [3, 3, 3, 3, 4, 6, 8, Infinity]
 
 /**
- * The top of the *stock* ladder — the last band with things of its own to sell.
- *
- * The prices climb past it, once enough significant figures have been earned
- * to restart above it (see `bandFloor`), and the stall keeps selling its
- * big-ticket items at those prices. A car for eighty billion soʻm is absurd,
- * which is the same joke the run opens with when it sells you smoke for six.
+ * The highest band the climb steps up to — the tens of millions, which is a
+ * car. Prices above it exist, but only a significant-figure reset puts the
+ * ladder there (see `bandFloor`), and by then nothing on the stall is really
+ * worth that (see `LUXURIES`).
  */
 export const TOP_BAND = BANDS.length - 1
 
@@ -245,8 +263,8 @@ export const BIN_CAPACITY = 3
 /** Milliseconds a learner gets per spoken word, at the bottom and top of the ramp. */
 const START_MS_PER_TOKEN = 4000
 const FASTEST_MS_PER_TOKEN = 800
-/** The band where the belt reaches full speed — the millions. */
-const FASTEST_BAND = 6
+/** The band where the belt ramp reaches full speed — the tens of thousands. */
+const FASTEST_BAND = 4
 /**
  * What each significant figure past the second does to the clock.
  *
@@ -256,15 +274,6 @@ const FASTEST_BAND = 6
  * is the fastest the game ever gets.
  */
 const SIG_FIG_SPEEDUP = 0.9
-/**
- * However many figures are earned, a word never gets less time than this.
- *
- * The figures go on being earned indefinitely, and each one makes the price
- * longer as well as faster — past about six there is no tempo left to take,
- * only words to add. So the clock stops here and the ladder carries on as a
- * reading test at a fixed, quick tempo rather than an impossible one.
- */
-const FLOOR_MS_PER_TOKEN = 500
 
 /**
  * Milliseconds of belt time per spoken word of the price.
@@ -278,8 +287,10 @@ const FLOOR_MS_PER_TOKEN = 500
 export function msPerToken(band: number, sigFigs: number = MIN_SIG_FIGS): number {
   const t = Math.min(1, Math.max(0, band / FASTEST_BAND))
   const base = START_MS_PER_TOKEN + (FASTEST_MS_PER_TOKEN - START_MS_PER_TOKEN) * t
-  const earned = base * SIG_FIG_SPEEDUP ** Math.max(0, sigFigs - MIN_SIG_FIGS)
-  return Math.round(Math.max(FLOOR_MS_PER_TOKEN, earned))
+  // No floor under this: the band ramp bottoms out, but the figures keep being
+  // earned and keep taking their tenth off, so the game goes on getting faster
+  // for as long as a player goes on deserving it.
+  return Math.round(base * SIG_FIG_SPEEDUP ** Math.max(0, sigFigs - MIN_SIG_FIGS))
 }
 
 // --- Precision --------------------------------------------------------------
@@ -571,10 +582,17 @@ function makeItem(
   }
 }
 
-/** An item from `band`, avoiding whatever is already on the belt where it can. */
-function pickItem(band: number, onBelt: readonly BeltItem[], rng: () => number): BazarItem {
-  // Bands above the stock ladder sell the top band's goods; see TOP_BAND.
-  const stock = ITEMS.filter((i) => i.band === Math.min(band, TOP_BAND))
+/**
+ * Something the stall could honestly sell for `price`, avoiding whatever is
+ * already on the belt where it can.
+ *
+ * The price comes first and the item answers it, rather than the other way
+ * round: that is what keeps every tag believable, because an item only ever
+ * appears inside its own range.
+ */
+function pickItem(price: number, onBelt: readonly BeltItem[], rng: () => number): BazarItem {
+  const honest = ITEMS.filter((item) => price >= item.from && price <= item.to)
+  const stock = honest.length ? honest : LUXURIES
   const inPlay = new Set(onBelt.map((b) => b.item.uzbek))
   const fresh = stock.filter((i) => !inPlay.has(i.uzbek))
   const pool = fresh.length ? fresh : stock
@@ -582,8 +600,8 @@ function pickItem(band: number, onBelt: readonly BeltItem[], rng: () => number):
 }
 
 function dealShopItem(state: BazarState, rng: () => number): BeltItem {
-  const item = pickItem(state.band, state.items, rng)
   const price = priceForBand(state.band, state.sigFigs, rng)
+  const item = pickItem(price, state.items, rng)
   const tokens = uzbekCardinalTokens(price)
   return makeItem(
     state.nextId,
@@ -597,11 +615,8 @@ function dealShopItem(state: BazarState, rng: () => number): BeltItem {
 }
 
 function dealBonusItem(state: BazarState, rng: () => number): BeltItem {
-  // Bonus stock comes from the bands where the price would be believable, so
-  // a 90-million-soʻm price never turns up on a boiled sweet.
   const price = BONUS_PRICES[Math.floor(rng() * BONUS_PRICES.length) % BONUS_PRICES.length]
-  const band = Math.min(TOP_BAND, String(price).length - 1)
-  const item = pickItem(band, state.items, rng)
+  const item = pickItem(price, state.items, rng)
   const tokens = [...String(price)]
   return makeItem(state.nextId, item, price, tokens, keypadCells(), BONUS_MS_PER_TOKEN, true)
 }

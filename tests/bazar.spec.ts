@@ -18,6 +18,7 @@ import {
   formatSom,
   ITEMS,
   KEYPAD,
+  LUXURIES,
   MAX_SIG_FIGS,
   MIN_SIG_FIGS,
   msPerToken,
@@ -66,20 +67,62 @@ function bagFront(state: BazarState, rng: () => number = seeded(7)): BazarState 
 }
 
 describe('the stall', () => {
-  it('stocks every band on the ladder', () => {
-    for (let band = 0; band <= TOP_BAND; band++) {
-      expect(ITEMS.filter((i) => i.band === band).length).toBeGreaterThanOrEqual(4)
+  it('has something honest to sell at every price the ladder deals', () => {
+    // Every soʻm from one to the dearest thing on the stall has to belong to
+    // something, or a price turns up with nothing to put it on. Checked at the
+    // ends of every range and either side of them, which is where a gap would
+    // open.
+    const edges = ITEMS.flatMap((item) => [item.from - 1, item.from, item.to, item.to + 1])
+    const dearest = Math.max(...ITEMS.map((item) => item.to))
+    for (const price of edges) {
+      if (price < 1 || price > dearest) continue
+      const honest = ITEMS.filter((item) => price >= item.from && price <= item.to)
+      expect(honest.length, `nothing on the stall costs ${price} soʻm`).toBeGreaterThan(0)
     }
   })
 
-  it('never lists an item outside the ladder', () => {
+  it('offers a choice at every band the climb reaches', () => {
+    for (let band = 0; band <= TOP_BAND; band++) {
+      const low = 10 ** band
+      const high = 10 ** (band + 1) - 1
+      const stock = ITEMS.filter((item) => item.from <= high && item.to >= low)
+      expect(stock.length, `band ${band} has too little stock`).toBeGreaterThanOrEqual(4)
+    }
+  })
+
+  it('prices every item as a real thing', () => {
     for (const item of ITEMS) {
-      expect(item.band).toBeGreaterThanOrEqual(0)
-      expect(item.band).toBeLessThanOrEqual(TOP_BAND)
+      expect(item.from).toBeGreaterThanOrEqual(1)
+      expect(item.to).toBeGreaterThan(item.from)
+      // A range wider than three decades is not a price, it is a shrug.
+      expect(item.to / item.from).toBeLessThanOrEqual(1000)
       expect(item.emoji).not.toHaveLength(0)
       expect(item.uzbek).not.toHaveLength(0)
       expect(item.english).not.toHaveLength(0)
     }
+  })
+
+  it('keeps the everyday things at everyday money', () => {
+    // The prices are the point of the game, so a few of them are pinned here
+    // in pounds: if the rate or a range drifts far enough to make a cake cost
+    // forty pounds again, this is what says so.
+    const cost = (uzbek: string) => {
+      const item = ITEMS.find((i) => i.uzbek === uzbek)!
+      return [convert(item.from, 'GBP'), convert(item.to, 'GBP')]
+    }
+    const [, breadHigh] = cost('non')
+    expect(breadHigh).toBeLessThan(1)
+    const [, cakeHigh] = cost('tort')
+    expect(cakeHigh).toBeLessThan(25)
+    const [, plovHigh] = cost('osh')
+    expect(plovHigh).toBeLessThan(5)
+    const [carLow] = cost('mashina')
+    expect(carLow).toBeGreaterThan(2000)
+  })
+
+  it('keeps the absurd prices on the things that were dear anyway', () => {
+    expect(LUXURIES.length).toBeGreaterThan(1)
+    for (const item of LUXURIES) expect(item.to).toBeGreaterThanOrEqual(10 ** TOP_BAND)
   })
 })
 
@@ -166,16 +209,13 @@ describe('msPerToken', () => {
     expect(msPerToken(TOP_BAND, 4)).toBeGreaterThan(500)
   })
 
-  it('stops tightening at half a second a word, however many figures are earned', () => {
-    // The figures keep coming; the tempo does not, or the price outruns the
-    // hands reading it. Only the fast end of the band ramp reaches the floor —
-    // the slow end never meets that many figures, since each one restarts the
-    // ladder further up it.
-    expect(msPerToken(TOP_BAND, MAX_SIG_FIGS)).toBe(500)
-    expect(msPerToken(TOP_BAND, 99)).toBe(500)
-    for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
-      expect(msPerToken(bandFloor(sigFigs), sigFigs)).toBeGreaterThanOrEqual(500)
+  it('never stops tightening, however many figures are earned', () => {
+    // The band ramp bottoms out; the figures do not, and neither does the
+    // clock. Nothing floors it — the run ends when the player cannot keep up.
+    for (let sigFigs = MIN_SIG_FIGS + 1; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
+      expect(msPerToken(TOP_BAND, sigFigs)).toBeLessThan(msPerToken(TOP_BAND, sigFigs - 1))
     }
+    expect(msPerToken(MAX_BAND, MAX_SIG_FIGS)).toBeLessThan(300)
   })
 
   it('still gives a longer price more time than a shorter one', () => {
@@ -513,21 +553,48 @@ describe('a run', () => {
     const rng = seeded(6)
     const dealtPerBand = new Map<number, Set<number>>()
     // Only the opening climb: a new significant figure deliberately deals a
-    // band a second time.
+    // band a second time. An item is counted against the band the ladder was
+    // on when it was dealt, which is the first step it is seen on.
+    const seen = new Set<number>()
     for (let step = 0; step < 20_000 && state.sigFigs === MIN_SIG_FIGS; step++) {
       state = advance(state, 16, rng).state
       if (state.status === 'over' || state.sigFigs !== MIN_SIG_FIGS) break
-      // Bonus items borrow stock from whichever band their price suits, so
-      // they are not part of the ladder's own count.
+      // Bonus prices come from their own list, so they are not part of the
+      // ladder's own count.
       for (const item of state.items.filter((i) => !i.bonus)) {
-        if (!dealtPerBand.has(item.item.band)) dealtPerBand.set(item.item.band, new Set())
-        dealtPerBand.get(item.item.band)!.add(item.id)
+        if (seen.has(item.id)) continue
+        seen.add(item.id)
+        if (!dealtPerBand.has(state.band)) dealtPerBand.set(state.band, new Set())
+        dealtPerBand.get(state.band)!.add(item.id)
       }
       if (state.items.length) state = bagFront(state, rng)
     }
     for (let band = 0; band < 4; band++) {
       expect(dealtPerBand.get(band)?.size).toBe(BANDS[band])
     }
+  })
+
+  it('never puts a price on something that could not carry it', () => {
+    let state = startGame(createGame(seeded(17)))
+    const rng = seeded(17)
+    let checked = 0
+    for (let step = 0; step < 60_000 && state.sigFigs < 8; step++) {
+      state = advance(state, 16, rng).state
+      if (state.status === 'over') break
+      for (const belt of state.items) {
+        const { item, price } = belt
+        // Either the thing really costs that, or the price has left the real
+        // economy altogether and the stall has fallen back on its dearest.
+        const honest = price >= item.from && price <= item.to
+        expect(
+          honest || LUXURIES.includes(item),
+          `${item.english} for ${price} soʻm`,
+        ).toBe(true)
+        checked++
+      }
+      if (state.items.length) state = bagFront(state, rng)
+    }
+    expect(checked).toBeGreaterThan(100)
   })
 
   it('always offers the word the front item is waiting for', () => {
