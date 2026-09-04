@@ -9,7 +9,6 @@ import {
   BONUS_MIN_CLEARED,
   BONUS_PRICES,
   bandFloor,
-  buildRegister,
   MAX_BAND,
   convert,
   createGame,
@@ -26,10 +25,12 @@ import {
   pressToken,
   readHighScore,
   recordHighScore,
-  refillRegister,
+  openRegister,
+  turnRegister,
   REGISTER_HALF,
   REGISTER_SIZE,
   registerCells,
+  registerLive,
   SIG_FIG_STEP,
   sigFigsFor,
   SOM_PER_UNIT,
@@ -271,85 +272,112 @@ describe('significant figures', () => {
     for (let sigFigs = MIN_SIG_FIGS; sigFigs <= MAX_SIG_FIGS; sigFigs++) {
       for (let band = bandFloor(sigFigs); band <= MAX_BAND; band++) {
         const tokens = uzbekCardinalTokens(priceForBand(band, sigFigs, rng))
-        expect(buildRegister(tokens, rng)).toHaveLength(REGISTER_SIZE)
+        expect(openRegister(tokens, 0, rng).cells).toHaveLength(REGISTER_SIZE)
       }
     }
   })
 })
 
 describe('the board', () => {
-  /** The words on one half of a board. */
+  /** The words on one half. */
   const half = (cells: readonly { token: string; half: number | null }[], which: number) =>
     cells.filter((cell) => cell.half === which).map((cell) => cell.token)
 
-  it('is two halves of three, in grid order', () => {
-    const cells = buildRegister(uzbekCardinalTokens(230_000), seeded(1))
+  /** Every button in the order the player sees them. */
+  const picture = (cells: readonly { token: string }[]) => cells.map((cell) => cell.token)
+
+  it('is six buttons dealt between two halves of three', () => {
+    const cells = openRegister(uzbekCardinalTokens(230_000), 0, seeded(1)).cells
     expect(cells).toHaveLength(REGISTER_SIZE)
-    expect(cells.map((cell) => cell.half)).toEqual([0, 0, 0, 1, 1, 1])
     expect(half(cells, 0)).toHaveLength(REGISTER_HALF)
+    expect(half(cells, 1)).toHaveLength(REGISTER_HALF)
   })
 
-  it('opens with the first two words up, one in each half', () => {
-    const tokens = uzbekCardinalTokens(230_000)
-    const cells = buildRegister(tokens, seeded(4))
-    expect(half(cells, 0)).toContain(tokens[0])
-    expect(half(cells, 1)).toContain(tokens[1])
-  })
-
-  it('retires the half the word came from and leaves the other standing', () => {
-    const tokens = uzbekCardinalTokens(230_000)
-    const rng = seeded(6)
-    const opened = buildRegister(tokens, rng)
-    const after = refillRegister(opened, tokens, 0, rng)
-    // The half that answered goes; the one holding the word now due does not.
-    expect(half(after, 1)).toEqual(half(opened, 1))
-    expect(half(after, 0)).not.toEqual(half(opened, 0))
-    // And it comes back holding the word after next, ready before it is needed.
-    expect(half(after, 0)).toContain(tokens[2])
-  })
-
-  it('marks the refilled half so the renderer can animate just that half', () => {
-    const tokens = uzbekCardinalTokens(230_000)
-    const rng = seeded(6)
-    const opened = buildRegister(tokens, rng)
-    const after = refillRegister(opened, tokens, 0, rng)
-    for (const cell of after) {
-      expect(cell.seq).toBe(cell.half === 0 ? 1 : 0)
+  it('scatters the halves through the grid rather than laying them out in rows', () => {
+    // Which buttons belong together is not a shape to be learned once and then
+    // stopped reading: over enough boards the halves land all over the grid,
+    // and only now and then as the top three and the bottom three.
+    const rng = seeded(5)
+    const shapes = new Set<string>()
+    let rows = 0
+    for (let i = 0; i < 60; i++) {
+      const shape = openRegister(uzbekCardinalTokens(230_000), 0, rng)
+        .cells.map((cell) => cell.half)
+        .join('')
+      shapes.add(shape)
+      if (shape === '000111' || shape === '111000') rows++
     }
-    expect(refillRegister(after, tokens, 1, rng).filter((c) => c.half === 1)[0].seq).toBe(1)
+    expect(shapes.size).toBeGreaterThan(10)
+    expect(rows).toBeLessThan(10)
+  })
+
+  it('opens with the word due and the word after it, one in each half', () => {
+    const tokens = uzbekCardinalTokens(230_000)
+    const register = openRegister(tokens, 0, seeded(4))
+    expect(half(register.cells, register.live!)).toContain(tokens[0])
+    expect(half(register.cells, 1 - register.live!)).toContain(tokens[1])
+  })
+
+  it('retires the half that answered and does not touch the other', () => {
+    const tokens = uzbekCardinalTokens(230_000)
+    const rng = seeded(6)
+    const opened = openRegister(tokens, 0, rng)
+    const turned = turnRegister(opened, tokens.slice(1), rng)
+
+    // The half now due keeps its words *and its cells* — a correct answer must
+    // never cost a rescan — so it is checked cell by cell, in place.
+    for (const [index, cell] of turned.cells.entries()) {
+      if (cell.half === turned.live) expect(cell).toEqual(opened.cells[index])
+    }
+    expect(turned.live).toBe(1 - opened.live!)
+    expect(half(turned.cells, turned.live!)).toContain(tokens[1])
+    // And the retired half comes back holding the word after next.
+    expect(half(turned.cells, 1 - turned.live!)).toContain(tokens[2])
+  })
+
+  it('marks only the retired half for the renderer to animate', () => {
+    const tokens = uzbekCardinalTokens(230_000)
+    const rng = seeded(6)
+    const opened = openRegister(tokens, 0, rng)
+    const turned = turnRegister(opened, tokens.slice(1), rng)
+    for (const cell of turned.cells) {
+      expect(cell.seq).toBe(cell.half === opened.live ? 1 : 0)
+    }
+    // A turn is not a rebuild: the renderer animates halves, not whole boards.
+    expect(turned.gen).toBe(opened.gen)
   })
 
   it('keeps the word due and the one after it up, all the way through a price', () => {
     const rng = seeded(9)
     for (const price of [8, 45, 250, 2300, 15_000, 230_000, 2_200_000, 91_630_000]) {
       const tokens = uzbekCardinalTokens(price)
-      let cells = buildRegister(tokens, rng)
+      let register = openRegister(tokens, 0, rng)
       for (let i = 0; i < tokens.length; i++) {
-        const words = cells.map((cell) => cell.token)
+        const words = picture(register.cells)
         expect(words, `${price}: word ${i} of ${tokens.join(' ')}`).toContain(tokens[i])
         if (i + 1 < tokens.length) expect(words).toContain(tokens[i + 1])
-        cells = refillRegister(cells, tokens, i, rng)
+        register = turnRegister(register, tokens.slice(i + 1), rng)
       }
     }
   })
 
-  it('never shows the same button twice unless the price says it twice', () => {
+  it('never shows the same button twice unless the price says a word twice', () => {
     const rng = seeded(5)
-    // 2 200 000 says "ikki" twice — and only then can both halves want it.
     const tokens = uzbekCardinalTokens(230_000)
-    let cells = buildRegister(tokens, rng)
+    let register = openRegister(tokens, 0, rng)
     for (let i = 0; i < tokens.length; i++) {
-      const words = cells.map((cell) => cell.token)
+      const words = picture(register.cells)
       expect(new Set(words).size).toBe(words.length)
-      cells = refillRegister(cells, tokens, i, rng)
+      register = turnRegister(register, tokens.slice(i + 1), rng)
     }
   })
 
-  it('fills a half with real number words when the price has run out of them', () => {
-    // "besh" is one word long, so the second half answers nothing at all.
-    const cells = buildRegister(['besh'], seeded(2))
-    expect(cells).toHaveLength(REGISTER_SIZE)
-    for (const cell of cells) expect(cell.token.trim()).not.toHaveLength(0)
+  it('fills a half with real number words when the belt has run out of them', () => {
+    // "besh" is one word long with nothing queued behind it, so the second
+    // half has nothing to answer and is all distractors.
+    const register = openRegister(['besh'], 0, seeded(2))
+    expect(register.cells).toHaveLength(REGISTER_SIZE)
+    for (const cell of register.cells) expect(cell.token.trim()).not.toHaveLength(0)
   })
 })
 
@@ -380,7 +408,7 @@ describe('a run', () => {
   it('refuses a token out of order without ending the run', () => {
     const started = startGame(createGame(seeded(1)))
     const front = started.items[0]
-    const wrong = front.cells.find((c) => c.token !== front.tokens[0])!.token
+    const wrong = registerCells(started).find((c) => c.token !== front.tokens[0])!.token
     const press = pressToken(started, wrong, seeded(1))
     expect(press.accepted).toBe(false)
     expect(press.bagged).toBeNull()
@@ -535,8 +563,8 @@ describe('a run', () => {
     for (let step = 0; step < 40_000; step++) {
       state = advance(state, 16, rng).state
       if (state.status === 'over') break
-      for (const item of state.items.filter((i) => !i.bonus)) {
-        expect(item.cells).toHaveLength(REGISTER_SIZE)
+      if (state.phase === 'shop') {
+        expect(registerCells(state)).toHaveLength(REGISTER_SIZE)
         checked++
       }
       if (state.sigFigs === MAX_SIG_FIGS) break
@@ -559,18 +587,26 @@ describe('a run', () => {
     for (let step = 0; step < 20_000 && state.sigFigs === MIN_SIG_FIGS; step++) {
       state = advance(state, 16, rng).state
       if (state.status === 'over' || state.sigFigs !== MIN_SIG_FIGS) break
-      // Bonus prices come from their own list, so they are not part of the
-      // ladder's own count.
+      // Counted by the price's own decade rather than by the band the ladder
+      // happens to be on: an item is made one ahead of being wanted, so the
+      // ladder can have moved on by the time it reaches the belt. Bonus prices
+      // come from their own list and are no part of this count.
       for (const item of state.items.filter((i) => !i.bonus)) {
         if (seen.has(item.id)) continue
         seen.add(item.id)
-        if (!dealtPerBand.has(state.band)) dealtPerBand.set(state.band, new Set())
-        dealtPerBand.get(state.band)!.add(item.id)
+        const band = String(item.price).length - 1
+        if (!dealtPerBand.has(band)) dealtPerBand.set(band, new Set())
+        dealtPerBand.get(band)!.add(item.id)
       }
       if (state.items.length) state = bagFront(state, rng)
     }
-    for (let band = 0; band < 4; band++) {
-      expect(dealtPerBand.get(band)?.size).toBe(BANDS[band])
+    // Every band the run finished with dealt exactly what the ladder says. The
+    // one it was still on when the figure landed is cut short by definition,
+    // and so is anything the bonus round's ten entries bring forward.
+    const bands = [...dealtPerBand.keys()].sort((a, b) => a - b)
+    expect(bands.length).toBeGreaterThan(2)
+    for (const band of bands.slice(0, -1)) {
+      expect(dealtPerBand.get(band)!.size, `band ${band}`).toBe(BANDS[band])
     }
   })
 
@@ -612,7 +648,7 @@ describe('a run', () => {
       if (!front) continue
       // The board holds the word due and the one after it; the rest of the
       // price is not on it yet, and does not need to be.
-      const words = front.cells.map((cell) => cell.token)
+      const words = registerCells(state).map((cell) => cell.token)
       expect(words).toContain(front.tokens[front.typed])
       // Enter a word now and again, so the board is tested part-way through a
       // price as well as at the start of one.
@@ -622,29 +658,106 @@ describe('a run', () => {
 })
 
 describe('the register', () => {
-  it('follows the front of the belt', () => {
-    const state = startGame(createGame(seeded(1)))
-    expect(registerCells(state)).toEqual(state.items[0].cells)
-  })
+  /** The cells whose word or seq moved between two boards, by position. */
+  const changed = (
+    before: readonly { token: string; seq: number }[],
+    after: readonly { token: string; seq: number }[],
+  ) =>
+    after
+      .map((cell, i) => (cell.token !== before[i].token || cell.seq !== before[i].seq ? i : -1))
+      .filter((i) => i >= 0)
 
-  it('is empty when the belt is', () => {
-    const empty: BazarState = { ...createGame(seeded(1)), items: [] }
-    expect(registerCells(empty)).toEqual([])
+  /** Winds a run on to a price with at least `words` words left to enter. */
+  const reachPrice = (state: BazarState, words: number, rng: () => number) => {
+    let next = state
+    while (!next.items.length || next.items[0].tokens.length < words) {
+      next = advance(next, 16, rng).state
+      if (next.items.length && next.items[0].tokens.length < words) next = bagFront(next, rng)
+    }
+    return next
+  }
+
+  it('is up before the run starts, holding the first word of the first price', () => {
+    const state = createGame(seeded(1))
+    expect(registerCells(state)).toHaveLength(REGISTER_SIZE)
+    expect(registerCells(state).map((c) => c.token)).toContain(state.items[0].tokens[0])
   })
 
   it('swaps out the half a correct word came from, and only that half', () => {
-    let state = startGame(createGame(seeded(1)))
     const rng = seeded(1)
-    // Wind on to a price long enough to have a half left to swap.
-    while (!state.items.length || state.items[0].tokens.length < 3) {
-      state = advance(state, 16, rng).state
-      if (state.items.length && state.items[0].tokens.length < 3) state = bagFront(state, rng)
-    }
+    const state = reachPrice(startGame(createGame(seeded(1))), 3, rng)
     const before = registerCells(state)
+    const live = registerLive(state)
     const front = state.items[0]
     const after = registerCells(pressToken(state, front.tokens[0], rng).state)
-    const moved = after.filter((cell, i) => cell.token !== before[i].token || cell.seq !== before[i].seq)
-    expect(moved.map((cell) => cell.half)).toEqual([0, 0, 0])
+
+    // Exactly three buttons change, and they are the three that answered.
+    const moved = changed(before, after)
+    expect(moved).toHaveLength(REGISTER_HALF)
+    for (const index of moved) expect(before[index].half).toBe(live)
+    // Everything else is untouched, in place — nothing to find again.
+    for (const [index, cell] of after.entries()) {
+      if (!moved.includes(index)) expect(cell).toEqual(before[index])
+    }
+  })
+
+  it('carries the word after a price into the next one, so finishing costs no rescan', () => {
+    // The board reads from the belt, not from the item at the till: the first
+    // word of the next price is up before that item arrives, and bagging one
+    // moves no more buttons than any other correct word.
+    const rng = seeded(3)
+    let state = reachPrice(startGame(createGame(seeded(3))), 2, rng)
+    // Get the belt to two items, so there is a next price to look ahead to.
+    while (state.items.length < 2) state = advance(state, 16, rng).state
+    const front = state.items[0]
+    for (const token of front.tokens.slice(0, -1)) state = pressToken(state, token, rng).state
+
+    const next = state.items[1]
+    const before = registerCells(state)
+    expect(before.map((c) => c.token)).toContain(next.tokens[0])
+
+    const last = front.tokens[front.tokens.length - 1]
+    const press = pressToken(state, last, rng)
+    expect(press.bagged).not.toBeNull()
+    const after = registerCells(press.state)
+    const moved = changed(before, after)
+    expect(moved).toHaveLength(REGISTER_HALF)
+    expect(after.map((c) => c.token)).toContain(next.tokens[0])
+  })
+
+  it('picks itself up when an item is binned out from under it', () => {
+    const rng = seeded(11)
+    let state = reachPrice(startGame(createGame(seeded(11))), 2, rng)
+    while (state.items.length < 2) state = advance(state, 16, rng).state
+    // Run the front item off the end of the belt.
+    const stepped = advance(state, state.items[0].travelMs, rng)
+    expect(stepped.binned.length).toBeGreaterThan(0)
+    const front = stepped.state.items[0]
+    expect(registerCells(stepped.state).map((c) => c.token)).toContain(front.tokens[front.typed])
+  })
+
+  it('hands the till to the keypad and back without leaving the board stale', () => {
+    // 0 wins every bonus roll and picks the first of every pool.
+    let state = startGame(createGame(scripted([0])))
+    const rng = scripted([0])
+    for (let step = 0; step < 20_000; step++) {
+      const stepped = advance(state, 16, rng)
+      state = stepped.state
+      if (state.status === 'over') break
+      if (stepped.bonusStarted) {
+        expect(registerCells(state).map((c) => c.token)).toEqual(KEYPAD)
+        expect(registerLive(state)).toBeNull()
+      }
+      if (state.phase === 'shop' && state.bonusUsed && state.items.length) {
+        // The till is back: six word buttons, and the word due among them.
+        const front = state.items[0]
+        expect(registerCells(state)).toHaveLength(REGISTER_SIZE)
+        expect(registerCells(state).map((c) => c.token)).toContain(front.tokens[front.typed])
+        return
+      }
+      if (state.items.length) state = bagFront(state, rng)
+    }
+    throw new Error('the bonus round never handed the till back')
   })
 })
 
