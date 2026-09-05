@@ -3,11 +3,11 @@
  *
  * Items ride a conveyor belt towards the till. Each wears a pricetag in soʻm,
  * and to get it into the trolley you have to *say* that price: the register
- * below the belt is a six-button grid of Uzbek number words, and you tap them
- * in spoken order — "ikki", "yuz", "o'ttiz", "ming". The board only ever
- * offers the word you need now and the one after it, and half of it swaps out
- * on every correct tap (see the register section below). Grey dots under the
- * tag show how many words the price takes and go green as you find them. Miss an item
+ * below the belt is a nine-button grid of Uzbek number words, and you tap them
+ * in spoken order — "ikki", "yuz", "o'ttiz", "ming". The board carries the
+ * next three words you need among six decoys, and a third of it swaps out on
+ * every correct tap (see the register section below). Grey dots under the tag
+ * show how many words the price takes and go green as you find them. Miss an item
  * before it reaches the end of the belt and it drops in the bin; three in the
  * bin and the run is over. Your score is the total value of what you bagged,
  * so the game rewards keeping up as the prices climb.
@@ -309,7 +309,7 @@ export const MAX_BAND = String(MAX_UZBEK_CARDINAL).length - 1
  * The most significant figures a price can carry: enough to fill the last
  * band, every digit of it significant.
  *
- * There is no design cap on the precision — the board is six buttons whatever
+ * There is no design cap on the precision — the board is nine buttons whatever
  * the price does (see the register section), so nothing on screen has to grow
  * to keep up, and the figures go on being earned for as long as a player keeps
  * clearing items. This is only where the language this app speaks runs out of
@@ -431,16 +431,16 @@ export interface BazarState {
   /** True between winning the bonus and the shop belt draining for it. */
   bonusPending: boolean
   /**
-   * The next item, made but not yet on the belt.
+   * Items made but not yet on the belt.
    *
-   * The board reads two words ahead, and at the end of a price the second of
-   * those is the first word of the *next* one — so the next price has to exist
-   * before the belt has room to show it. Without this the board would lose its
-   * look-ahead every time a player cleared an item faster than the belt refills
-   * it, which at the slow end of the ramp is every item.
+   * The board reads `REGISTER_GROUPS` words ahead, and at the end of a price
+   * those run into the price behind it — so the next prices have to exist
+   * before the belt has room to show them. Without this the board would lose
+   * its look-ahead every time a player cleared an item faster than the belt
+   * refills it, which at the slow end of the ramp is every item.
    */
-  queued: BeltItem | null
-  /** The six buttons under the belt; see the register section. */
+  queue: BeltItem[]
+  /** The nine buttons under the belt; see the register section. */
   register: Register
   nextId: number
 }
@@ -454,7 +454,7 @@ export interface BazarState {
  */
 function upcomingTokens(state: BazarState, count: number): string[] {
   const words: string[] = []
-  const coming = state.queued ? [...state.items, state.queued] : state.items
+  const coming = [...state.items, ...state.queue]
   for (const [index, item] of coming.entries()) {
     words.push(...(index === 0 ? item.tokens.slice(item.typed) : item.tokens))
     if (words.length >= count) break
@@ -466,53 +466,53 @@ function upcomingTokens(state: BazarState, count: number): string[] {
  * Puts the board back in step with the belt, moving as little as it can.
  *
  * An ordinary correct word never comes through here — `turnRegister` handles
- * that, and by design nothing moves but the half that answered. This is for
+ * that, and by design nothing moves but the group that answered. This is for
  * the things that change the future out from under the board: an item binned,
- * a new item dealt behind the last one, a player fast enough to empty the belt
+ * a new item made behind the last one, a player fast enough to empty the belt
  * before it can be topped up.
  *
- * It never re-deals the halves across the grid. Where a button sits is the
+ * It never re-deals the groups across the grid. Where a button sits is the
  * player's map of the board, and the whole design is built on not making them
- * draw it again: at worst the words inside the two halves change, in place.
+ * draw it again: at worst the words inside a group change, in place.
  */
 function syncRegister(state: BazarState, rng: () => number): BazarState {
   const register = state.register
   if (state.phase === 'bonus') {
     return register.live === null ? state : { ...state, register: keypadRegister(register.gen + 1) }
   }
-  const upcoming = upcomingTokens(state, 2)
+  const upcoming = upcomingTokens(state, LOOK_AHEAD)
   // Nothing on the belt to answer for: leave the board exactly as it is until
-  // there is. Whatever arrives will claim the quiet half (below).
+  // there is. Whatever arrives is picked up below.
   if (!upcoming.length) return state
   // Coming back from the keypad there is no shop board to keep, so this is the
-  // one place the halves are dealt across the grid again.
+  // one place the groups are dealt across the grid again.
   if (register.live === null) {
     return { ...state, register: openRegister(upcoming, register.gen + 1, rng) }
   }
 
-  // Which half is holding the word due? The one on duty gets the benefit of
+  // Which group is carrying the word due? The one on duty gets the benefit of
   // the doubt, so a price that says a word twice does not shuffle the board.
-  const holding = halfWords(register.cells, register.live).includes(upcoming[0])
-    ? register.live
-    : halfWords(register.cells, 1 - register.live).includes(upcoming[0])
-      ? 1 - register.live
-      : null
-  // Nobody is holding it — the belt lost the thread. The quiet half takes the
-  // word and the duty; the other three buttons stay where they are, holding
-  // what they held. A board the player is about to read cannot fade in at
-  // them, so this one lands at once (a new `gen`) rather than animating.
-  const live = holding ?? 1 - register.live
+  const turns = Array.from({ length: REGISTER_GROUPS }, (_, i) => (register.live! + i) % REGISTER_GROUPS)
+  const holding = turns.find((group) => groupWords(register.cells, group).includes(upcoming[0]))
+  const live = holding ?? register.live
   let cells = register.cells
   let gen = register.gen
-  if (holding === null) {
-    cells = fillHalf(cells, live, upcoming[0], rng)
+  // Nobody is carrying it — the belt lost the thread, so the group on duty
+  // takes the word where it stands. A board the player is about to read cannot
+  // fade in at them, so this lands at once (a new `gen`) rather than animating.
+  if (holding === undefined) {
+    cells = fillGroup(cells, live, upcoming[0], rng, upcoming)
     gen += 1
   }
-  // The quiet half is meant to be holding the word after next before it is
-  // wanted. When the belt has only just produced that word, this is where it
-  // arrives — dim, and well ahead of its turn.
-  if (upcoming[1] !== undefined && !halfWords(cells, 1 - live).includes(upcoming[1])) {
-    cells = fillHalf(cells, 1 - live, upcoming[1], rng)
+  // The groups behind it are meant to be carrying the words after next before
+  // they are wanted. When the belt has only just produced one, this is where
+  // it arrives — well ahead of its turn.
+  for (let ahead = 1; ahead < REGISTER_GROUPS; ahead++) {
+    const group = (live + ahead) % REGISTER_GROUPS
+    const word = upcoming[ahead]
+    if (word !== undefined && !groupWords(cells, group).includes(word)) {
+      cells = fillGroup(cells, group, word, rng, upcoming)
+    }
   }
   if (cells === register.cells && live === register.live) return state
   return { ...state, register: { cells, live, gen } }
@@ -530,55 +530,72 @@ function shuffleWith<T>(items: readonly T[], rng: () => number): T[] {
 // --- The register -----------------------------------------------------------
 
 /**
- * The register is six buttons, and it belongs to the *run* rather than to any
+ * The register is nine buttons, and it belongs to the *run* rather than to any
  * one item on the belt.
  *
  * A four-figure price in the millions is seven words long, and a board big
  * enough to offer a choice for all seven at once would take half the screen
- * and be unreadable at speed. So the board only ever answers two questions:
- * the word due now and the word after it. Its six cells are dealt at random
- * between two *halves* of three — scattered across the grid, not a top row and
- * a bottom row — and one half holds each answer.
+ * and be unreadable at speed. So the board runs three words ahead: the word
+ * due, the two after it, and six decoys. Every button is live — the three that
+ * matter are somewhere among the nine, and finding them is the game.
  *
- * Entering a word retires the half it came from: those three fade out where
- * they stand and the choice for the word after next fades in, in the very same
- * three cells. The other three do not move, do not change, and are the ones
- * you now need — so a correct answer never costs you a rescan of the board.
- * That is the whole point of the arrangement, and it is why the words the
- * board offers run *past the end of the item in front of you*: the word after
- * the last word of this price is the first word of the next one, and it is
- * already up there before the item it belongs to reaches the till.
+ * The nine cells are dealt at random between three *groups* of three,
+ * scattered across the grid rather than laid out in rows, and each group
+ * carries one of the three answers plus two decoys. Entering a word retires
+ * the group it came from: those three cells fade out where they stand and come
+ * back holding the word three ahead and two fresh decoys. The other six do not
+ * move and do not change, so a correct answer never costs a rescan of the
+ * board.
+ *
+ * It is also why the words on the board run *past the end of the item in front
+ * of you*: after the last word of this price comes the first word of the next,
+ * and it is up there before the item it belongs to reaches the till.
  */
 export const REGISTER_COLUMNS = 3
-/** Buttons in one half of the board. */
-export const REGISTER_HALF = REGISTER_COLUMNS
+/** Buttons in one group — one answer and two decoys. */
+export const REGISTER_GROUP = 3
+/** Groups on the board, which is also how many words ahead it reads. */
+export const REGISTER_GROUPS = 3
 /** Buttons on the board at once. */
-export const REGISTER_SIZE = REGISTER_HALF * 2
+export const REGISTER_SIZE = REGISTER_GROUP * REGISTER_GROUPS
+/**
+ * How far ahead the board looks when it picks decoys.
+ *
+ * Only the first `REGISTER_GROUPS` words are ever *placed*, but a decoy that
+ * turns out to be the answer a few words later would put the same word on two
+ * buttons. Looking this far ahead keeps that rare rather than routine; it
+ * cannot rule it out, because decoys outlive the price they were dealt for,
+ * and when it does happen both buttons answer.
+ */
+const LOOK_AHEAD = REGISTER_SIZE
 
 export interface RegisterCell {
   token: string
   /**
-   * The half of the board this button answers for, 0 or 1 — or null on the
-   * bonus keypad, which is one fixed board with no halves at all.
+   * The group of three this button belongs to — or null on the bonus keypad,
+   * which is one fixed board with no groups at all.
    */
-  half: number | null
+  group: number | null
   /**
-   * Bumped every time the half is refilled. The renderer animates the cells
+   * Bumped every time the group is refilled. The renderer animates the cells
    * whose seq has moved and leaves the others completely alone.
    */
   seq: number
 }
 
 export interface Register {
-  /** Six buttons in grid order; a cell keeps its place for the board's life. */
+  /** Nine buttons in grid order; a cell keeps its place for the board's life. */
   cells: RegisterCell[]
-  /** The half answering the word now due; null on the bonus keypad. */
+  /**
+   * The group carrying the word now due. It steps on by one with every correct
+   * word, so the three groups take it in turns. Null on the bonus keypad.
+   */
   live: number | null
   /**
    * Bumped only when the whole board is rebuilt — which happens when the run
    * loses its place (an item binned, the bonus round handing back the till),
    * and never on an ordinary turn. The renderer swaps a new generation in at
-   * once instead of animating it half by half.
+   * once instead of animating it group by group.
    */
   gen: number
 }
@@ -590,17 +607,17 @@ export interface Register {
  */
 export const KEYPAD: readonly string[] = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0']
 
-/** The words on one half of the board. */
-function halfWords(cells: readonly RegisterCell[], half: number | null): string[] {
-  return cells.filter((cell) => cell.half === half).map((cell) => cell.token)
+/** The words in one group. */
+function groupWords(cells: readonly RegisterCell[], group: number | null): string[] {
+  return cells.filter((cell) => cell.group === group).map((cell) => cell.token)
 }
 
 /**
- * Three words for a half: the one it has to answer, plus distractors.
+ * Three words for a group: the one it has to carry, plus two decoys.
  *
- * The padding is drawn family-first — other tens against a tens word, other
- * scale words against "ming" — because three obvious duds are not a choice.
- * Words on the other half are avoided, so the board never shows the same
+ * The decoys are drawn family-first — other tens against a tens word, other
+ * scale words against "ming" — because two obvious duds are not a choice.
+ * Words in the other groups are avoided, so the board never shows the same
  * button twice unless the price itself says a word twice.
  */
 function chooseWords(
@@ -608,8 +625,8 @@ function chooseWords(
   taken: readonly string[],
   rng: () => number,
 ): string[] {
-  // The belt can run out of words before the board runs out of halves — at the
-  // end of the last item on it. That half is then all distractors, and gets
+  // The belt can run out of words before the board runs out of groups — at the
+  // very end of a run's last item. That group is then all decoys, and is
   // refilled the moment there is something to put in it.
   const needed = token === undefined ? [] : [token]
   const avoid = new Set([...taken, ...needed])
@@ -618,36 +635,43 @@ function chooseWords(
   const families = new Set(needed.map(family))
   const near = shuffleWith(rest.filter((w) => families.has(family(w))), rng)
   const far = shuffleWith(rest.filter((w) => !families.has(family(w))), rng)
-  return shuffleWith([...needed, ...near, ...far].slice(0, REGISTER_HALF), rng)
+  return shuffleWith([...needed, ...near, ...far].slice(0, REGISTER_GROUP), rng)
 }
 
 /**
- * Rewrites one half of the board in place: every cell keeps its position, and
- * only the words on that half's three cells change.
+ * Rewrites one group in place: every cell keeps its position, and only the
+ * words on that group's three cells change.
+ *
+ * `coming` is the words the board is about to want, kept out of the decoys so
+ * that a word does not turn up as a decoy in one group and as the answer in
+ * another. It cannot rule that out entirely — a decoy can be needed later than
+ * the board can see — and when it happens both buttons answer, so it costs the
+ * player nothing.
  */
-function fillHalf(
+function fillGroup(
   cells: readonly RegisterCell[],
-  half: number,
+  group: number,
   token: string | undefined,
   rng: () => number,
+  coming: readonly string[] = [],
 ): RegisterCell[] {
-  const mine = cells.filter((cell) => cell.half === half)
+  const mine = cells.filter((cell) => cell.group === group)
   const seq = Math.max(...mine.map((cell) => cell.seq)) + 1
   const words = chooseWords(
     token,
-    cells.filter((cell) => cell.half !== half).map((cell) => cell.token),
+    [...cells.filter((cell) => cell.group !== group).map((cell) => cell.token), ...coming],
     rng,
   )
   let next = 0
   return cells.map((cell) =>
-    cell.half === half ? { token: words[next++], half, seq } : cell,
+    cell.group === group ? { token: words[next++], group, seq } : cell,
   )
 }
 
 /**
- * A board from scratch for `upcoming` — the word due and the word after it.
+ * A board from scratch for `upcoming` — the word due and the two after it.
  *
- * The two halves are dealt across the six cells at random, so which buttons
+ * The three groups are dealt across the nine cells at random, so which buttons
  * belong together is not a shape the player can learn and stop reading.
  */
 export function openRegister(
@@ -655,20 +679,24 @@ export function openRegister(
   gen = 0,
   rng: () => number = Math.random,
 ): Register {
-  const blank = shuffleWith([0, 0, 0, 1, 1, 1], rng).map((half) => ({ token: '', half, seq: 0 }))
-  const cells = fillHalf(fillHalf(blank, 0, upcoming[0], rng), 1, upcoming[1], rng)
+  const spread = Array.from({ length: REGISTER_SIZE }, (_, i) => i % REGISTER_GROUPS)
+  const blank = shuffleWith(spread, rng).map((group) => ({ token: '', group, seq: 0 }))
+  let cells: RegisterCell[] = blank
+  for (let group = 0; group < REGISTER_GROUPS; group++) {
+    cells = fillGroup(cells, group, upcoming[group], rng, upcoming)
+  }
   return { cells: cells.map((cell) => ({ ...cell, seq: 0 })), live: 0, gen }
 }
 
-/** The bonus round's board: ten fixed buttons, no halves, nothing to retire. */
+/** The bonus round's board: ten fixed buttons, no groups, nothing to retire. */
 export function keypadRegister(gen = 0): Register {
-  return { cells: KEYPAD.map((token) => ({ token, half: null, seq: 0 })), live: null, gen }
+  return { cells: KEYPAD.map((token) => ({ token, group: null, seq: 0 })), live: null, gen }
 }
 
 /**
- * The board after a correct word: the half that answered retires and takes the
- * choice for the word after next, and the other half — already holding the
- * word now due — is handed the turn without moving.
+ * The board after a correct word: the group that carried it retires and comes
+ * back holding the word three ahead, and the duty steps on to the group that
+ * is already holding the word now due. Six buttons are untouched.
  */
 export function turnRegister(
   register: Register,
@@ -677,8 +705,8 @@ export function turnRegister(
 ): Register {
   if (register.live === null) return register
   return {
-    cells: fillHalf(register.cells, register.live, upcoming[1], rng),
-    live: 1 - register.live,
+    cells: fillGroup(register.cells, register.live, upcoming[REGISTER_GROUPS - 1], rng, upcoming),
+    live: (register.live + 1) % REGISTER_GROUPS,
     gen: register.gen,
   }
 }
@@ -722,14 +750,14 @@ function pickItem(price: number, onBelt: readonly BeltItem[], rng: () => number)
 
 function dealShopItem(state: BazarState, rng: () => number): BeltItem {
   const price = priceForBand(state.band, state.sigFigs, rng)
-  const item = pickItem(price, state.items, rng)
+  const item = pickItem(price, [...state.items, ...state.queue], rng)
   const tokens = uzbekCardinalTokens(price)
   return makeItem(state.nextId, item, price, tokens, msPerToken(state.band, state.sigFigs), false)
 }
 
 function dealBonusItem(state: BazarState, rng: () => number): BeltItem {
   const price = BONUS_PRICES[Math.floor(rng() * BONUS_PRICES.length) % BONUS_PRICES.length]
-  const item = pickItem(price, state.items, rng)
+  const item = pickItem(price, [...state.items, ...state.queue], rng)
   const tokens = [...String(price)]
   return makeItem(state.nextId, item, price, tokens, BONUS_MS_PER_TOKEN, true)
 }
@@ -749,7 +777,7 @@ export function createGame(rng: () => number = Math.random): BazarState {
     bonusLeft: 0,
     bonusUsed: false,
     bonusPending: false,
-    queued: null,
+    queue: [],
     register: openRegister([], 0, rng),
     nextId: 1,
   }
@@ -765,17 +793,16 @@ export function startGame(state: BazarState): BazarState {
 
 /** Puts the next item on the ramp, stepping the band up when one is served out. */
 /**
- * Makes the next item and stands it in the wings, stepping the band when one
- * is served out. It is made one item ahead of being wanted, so the board can
- * offer its first word before the belt has room to carry it (see `queued`).
+ * Makes one more item and stands it in the wings, stepping the band when one
+ * is served out. Items are made ahead of being wanted so the board can offer
+ * their words before the belt has room to carry them (see `queue`).
  */
 function restock(state: BazarState, rng: () => number): BazarState {
-  if (state.queued) return state
   if (state.phase === 'bonus') {
     if (state.bonusLeft <= 0) return state
     return {
       ...state,
-      queued: dealBonusItem(state, rng),
+      queue: [...state.queue, dealBonusItem(state, rng)],
       bonusLeft: state.bonusLeft - 1,
       nextId: state.nextId + 1,
     }
@@ -796,7 +823,7 @@ function restock(state: BazarState, rng: () => number): BazarState {
         : state
   return {
     ...stepped,
-    queued: dealShopItem(stepped, rng),
+    queue: [...stepped.queue, dealShopItem(stepped, rng)],
     dealt: stepped.dealt + 1,
     nextId: stepped.nextId + 1,
   }
@@ -808,18 +835,33 @@ function hasRoom(state: BazarState): boolean {
   return !last || last.position >= 1 / BELT_SLOTS
 }
 
-/** Puts the waiting item on the ramp once the belt has room for it. */
+/** Puts the next waiting item on the ramp once the belt has room for it. */
 function place(state: BazarState): BazarState {
-  if (!state.queued || !hasRoom(state)) return state
-  return { ...state, items: [...state.items, state.queued], queued: null }
+  if (!state.queue.length || !hasRoom(state)) return state
+  return { ...state, items: [...state.items, state.queue[0]], queue: state.queue.slice(1) }
 }
 
 /**
- * Keeps the ramp fed and the wings full: make one if the wings are empty, put
- * it on the belt if there is room, and make the one after it.
+ * Makes items until the board can see the words it needs to show — three, one
+ * per group — however short the prices are. Two one-word prices in a row is
+ * three items' worth of look-ahead.
  */
+function stock(state: BazarState, rng: () => number): BazarState {
+  let next = state
+  for (let made = 0; made < REGISTER_GROUPS; made++) {
+    if (upcomingTokens(next, REGISTER_GROUPS).length >= REGISTER_GROUPS) break
+    const restocked = restock(next, rng)
+    // Nothing more to make — a bonus round that has dealt its ten, or a won
+    // bonus waiting for the shop belt to drain.
+    if (restocked === next) break
+    next = restocked
+  }
+  return next
+}
+
+/** Keeps the ramp fed and the wings deep enough for the board to read ahead. */
 function deal(state: BazarState, rng: () => number): BazarState {
-  return restock(place(restock(state, rng)), rng)
+  return stock(place(stock(state, rng)), rng)
 }
 
 export interface Advance {
@@ -866,7 +908,7 @@ export function advance(
   let bonusStarted = false
   // Nothing on the belt and nothing in the wings: the round can change hands.
   // A belt that empties with an item still waiting is just a fast player.
-  if (!next.items.length && !next.queued) {
+  if (!next.items.length && !next.queue.length) {
     if (next.phase === 'bonus' && next.bonusLeft <= 0) {
       // All ten dealt and off the belt — hand the till back to the shop.
       next = { ...next, phase: 'shop' }
@@ -921,15 +963,16 @@ export function pressToken(
         score: state.score + front.price,
         cleared: state.cleared + 1,
       }
-  // The half that answered retires and takes the word after next; the other
-  // half is holding the word now due and does not move. That word is the next
-  // item's first when this one is finished, which is why the board is read
-  // from the belt rather than from the item — see `upcomingTokens`.
+  // The group that answered retires and takes the word three ahead; the other
+  // six do not move, and the next of them is already holding the word now due.
+  // That word is the next item's first when this one is finished, which is why
+  // the board is read from the belt rather than from the item — see
+  // `upcomingTokens`.
   //
   // Unless the belt is now empty, which a fast player can manage: then there
   // is no word to retire *to*, and turning would churn the board for nothing.
-  // It waits, and the next item claims the quiet half (see `syncRegister`).
-  const upcoming = upcomingTokens(next, 2)
+  // It waits, and what arrives next is picked up by `syncRegister`.
+  const upcoming = upcomingTokens(next, LOOK_AHEAD)
   if (upcoming.length) {
     next = { ...next, register: turnRegister(next.register, upcoming, rng) }
   }
@@ -954,7 +997,7 @@ export function registerCells(state: BazarState): readonly RegisterCell[] {
   return state.register.cells
 }
 
-/** The half of the board answering the word now due; null on the keypad. */
+/** The group carrying the word now due; null on the keypad. */
 export function registerLive(state: BazarState): number | null {
   return state.register.live
 }

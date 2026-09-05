@@ -26,11 +26,12 @@ import {
   readHighScore,
   recordHighScore,
   openRegister,
+  registerLive,
   turnRegister,
-  REGISTER_HALF,
+  REGISTER_GROUP,
+  REGISTER_GROUPS,
   REGISTER_SIZE,
   registerCells,
-  registerLive,
   SIG_FIG_STEP,
   sigFigsFor,
   SOM_PER_UNIT,
@@ -279,102 +280,121 @@ describe('significant figures', () => {
 })
 
 describe('the board', () => {
-  /** The words on one half. */
-  const half = (cells: readonly { token: string; half: number | null }[], which: number) =>
-    cells.filter((cell) => cell.half === which).map((cell) => cell.token)
+  /** The words in one group. */
+  const group = (cells: readonly { token: string; group: number | null }[], which: number) =>
+    cells.filter((cell) => cell.group === which).map((cell) => cell.token)
 
   /** Every button in the order the player sees them. */
   const picture = (cells: readonly { token: string }[]) => cells.map((cell) => cell.token)
 
-  it('is six buttons dealt between two halves of three', () => {
+  /** The words a price still has to answer for, from `index` on. */
+  const ahead = (tokens: readonly string[], index: number) => tokens.slice(index)
+
+  it('is nine buttons dealt between three groups of three', () => {
     const cells = openRegister(uzbekCardinalTokens(230_000), 0, seeded(1)).cells
     expect(cells).toHaveLength(REGISTER_SIZE)
-    expect(half(cells, 0)).toHaveLength(REGISTER_HALF)
-    expect(half(cells, 1)).toHaveLength(REGISTER_HALF)
+    for (let g = 0; g < REGISTER_GROUPS; g++) {
+      expect(group(cells, g)).toHaveLength(REGISTER_GROUP)
+    }
   })
 
-  it('scatters the halves through the grid rather than laying them out in rows', () => {
+  it('scatters the groups through the grid rather than laying them out in rows', () => {
     // Which buttons belong together is not a shape to be learned once and then
-    // stopped reading: over enough boards the halves land all over the grid,
-    // and only now and then as the top three and the bottom three.
+    // stopped reading: over enough boards the groups land all over the grid,
+    // and only now and then as three tidy rows.
     const rng = seeded(5)
     const shapes = new Set<string>()
     let rows = 0
     for (let i = 0; i < 60; i++) {
       const shape = openRegister(uzbekCardinalTokens(230_000), 0, rng)
-        .cells.map((cell) => cell.half)
+        .cells.map((cell) => cell.group)
         .join('')
       shapes.add(shape)
-      if (shape === '000111' || shape === '111000') rows++
+      if (/^(\d)\1\1(\d)\2\2(\d)\3\3$/.test(shape)) rows++
     }
-    expect(shapes.size).toBeGreaterThan(10)
-    expect(rows).toBeLessThan(10)
+    expect(shapes.size).toBeGreaterThan(20)
+    expect(rows).toBeLessThan(5)
   })
 
-  it('opens with the word due and the word after it, one in each half', () => {
+  it('opens with the next three words up, one to a group', () => {
     const tokens = uzbekCardinalTokens(230_000)
     const register = openRegister(tokens, 0, seeded(4))
-    expect(half(register.cells, register.live!)).toContain(tokens[0])
-    expect(half(register.cells, 1 - register.live!)).toContain(tokens[1])
+    for (let i = 0; i < REGISTER_GROUPS; i++) {
+      expect(group(register.cells, (register.live! + i) % REGISTER_GROUPS)).toContain(tokens[i])
+    }
   })
 
-  it('retires the half that answered and does not touch the other', () => {
-    const tokens = uzbekCardinalTokens(230_000)
+  it('retires the group that answered and does not touch the other six', () => {
+    const tokens = uzbekCardinalTokens(2_200_000)
     const rng = seeded(6)
     const opened = openRegister(tokens, 0, rng)
-    const turned = turnRegister(opened, tokens.slice(1), rng)
+    const turned = turnRegister(opened, ahead(tokens, 1), rng)
 
-    // The half now due keeps its words *and its cells* — a correct answer must
-    // never cost a rescan — so it is checked cell by cell, in place.
+    // Six buttons keep their words *and their cells* — a correct answer must
+    // never cost a rescan — so they are checked cell by cell, in place.
     for (const [index, cell] of turned.cells.entries()) {
-      if (cell.half === turned.live) expect(cell).toEqual(opened.cells[index])
+      if (cell.group !== opened.live) expect(cell).toEqual(opened.cells[index])
     }
-    expect(turned.live).toBe(1 - opened.live!)
-    expect(half(turned.cells, turned.live!)).toContain(tokens[1])
-    // And the retired half comes back holding the word after next.
-    expect(half(turned.cells, 1 - turned.live!)).toContain(tokens[2])
+    // The duty steps on to the group already holding the word now due.
+    expect(turned.live).toBe((opened.live! + 1) % REGISTER_GROUPS)
+    expect(group(turned.cells, turned.live!)).toContain(tokens[1])
+    // And the retired group comes back holding the word three ahead.
+    expect(group(turned.cells, opened.live!)).toContain(tokens[3])
   })
 
-  it('marks only the retired half for the renderer to animate', () => {
-    const tokens = uzbekCardinalTokens(230_000)
+  it('marks only the retired group for the renderer to animate', () => {
+    const tokens = uzbekCardinalTokens(2_200_000)
     const rng = seeded(6)
     const opened = openRegister(tokens, 0, rng)
-    const turned = turnRegister(opened, tokens.slice(1), rng)
+    const turned = turnRegister(opened, ahead(tokens, 1), rng)
     for (const cell of turned.cells) {
-      expect(cell.seq).toBe(cell.half === opened.live ? 1 : 0)
+      expect(cell.seq).toBe(cell.group === opened.live ? 1 : 0)
     }
-    // A turn is not a rebuild: the renderer animates halves, not whole boards.
+    // A turn is not a rebuild: the renderer animates groups, not whole boards.
     expect(turned.gen).toBe(opened.gen)
   })
 
-  it('keeps the word due and the one after it up, all the way through a price', () => {
+  it('keeps the next three words up, all the way through a price', () => {
     const rng = seeded(9)
     for (const price of [8, 45, 250, 2300, 15_000, 230_000, 2_200_000, 91_630_000]) {
       const tokens = uzbekCardinalTokens(price)
       let register = openRegister(tokens, 0, rng)
       for (let i = 0; i < tokens.length; i++) {
         const words = picture(register.cells)
-        expect(words, `${price}: word ${i} of ${tokens.join(' ')}`).toContain(tokens[i])
-        if (i + 1 < tokens.length) expect(words).toContain(tokens[i + 1])
-        register = turnRegister(register, tokens.slice(i + 1), rng)
+        for (let look = 0; look < REGISTER_GROUPS; look++) {
+          const word = tokens[i + look]
+          if (word === undefined) break
+          expect(words, `${price}: word ${i + look} of ${tokens.join(' ')}`).toContain(word)
+        }
+        register = turnRegister(register, ahead(tokens, i + 1), rng)
       }
     }
   })
 
-  it('never shows the same button twice unless the price says a word twice', () => {
+  it('never repeats a word inside a group', () => {
+    // Across the board a word can appear twice — because the price says it
+    // twice (2 200 000 is "ikki million ikki yuz ming"), or because a decoy
+    // chosen earlier turns out to be needed later than the board could see.
+    // Both buttons then answer, so it costs the player nothing. Inside a group
+    // of three, though, a repeat would be two decoys pretending to be a
+    // choice, and that never happens.
     const rng = seeded(5)
-    const tokens = uzbekCardinalTokens(230_000)
-    let register = openRegister(tokens, 0, rng)
-    for (let i = 0; i < tokens.length; i++) {
-      const words = picture(register.cells)
-      expect(new Set(words).size).toBe(words.length)
-      register = turnRegister(register, tokens.slice(i + 1), rng)
+    for (const price of [230_000, 2_200_000, 91_630_000]) {
+      const tokens = uzbekCardinalTokens(price)
+      let register = openRegister(tokens, 0, rng)
+      for (let i = 0; i < tokens.length; i++) {
+        for (let g = 0; g < REGISTER_GROUPS; g++) {
+          const words = group(register.cells, g)
+          expect(new Set(words).size, words.join(' ')).toBe(words.length)
+        }
+        register = turnRegister(register, ahead(tokens, i + 1), rng)
+      }
     }
   })
 
-  it('fills a half with real number words when the belt has run out of them', () => {
-    // "besh" is one word long with nothing queued behind it, so the second
-    // half has nothing to answer and is all distractors.
+  it('fills a group with real number words when the belt has run out of them', () => {
+    // "besh" is one word long with nothing queued behind it, so two of the
+    // three groups have nothing to carry and are all decoys.
     const register = openRegister(['besh'], 0, seeded(2))
     expect(register.cells).toHaveLength(REGISTER_SIZE)
     for (const cell of register.cells) expect(cell.token.trim()).not.toHaveLength(0)
@@ -683,7 +703,7 @@ describe('the register', () => {
     expect(registerCells(state).map((c) => c.token)).toContain(state.items[0].tokens[0])
   })
 
-  it('swaps out the half a correct word came from, and only that half', () => {
+  it('swaps out the group a correct word came from, and only that group', () => {
     const rng = seeded(1)
     const state = reachPrice(startGame(createGame(seeded(1))), 3, rng)
     const before = registerCells(state)
@@ -693,8 +713,8 @@ describe('the register', () => {
 
     // Exactly three buttons change, and they are the three that answered.
     const moved = changed(before, after)
-    expect(moved).toHaveLength(REGISTER_HALF)
-    for (const index of moved) expect(before[index].half).toBe(live)
+    expect(moved).toHaveLength(REGISTER_GROUP)
+    for (const index of moved) expect(before[index].group).toBe(live)
     // Everything else is untouched, in place — nothing to find again.
     for (const [index, cell] of after.entries()) {
       if (!moved.includes(index)) expect(cell).toEqual(before[index])
@@ -721,7 +741,7 @@ describe('the register', () => {
     expect(press.bagged).not.toBeNull()
     const after = registerCells(press.state)
     const moved = changed(before, after)
-    expect(moved).toHaveLength(REGISTER_HALF)
+    expect(moved).toHaveLength(REGISTER_GROUP)
     expect(after.map((c) => c.token)).toContain(next.tokens[0])
   })
 
