@@ -7,6 +7,10 @@ import {
   CITY_WIDTH,
   buyWord,
   canDrive,
+  FIRST_SECONDS,
+  LAST_SECONDS,
+  secondsFor,
+  tick,
   continueRun,
   createGame,
   currentLevel,
@@ -332,6 +336,57 @@ describe('following the directions', () => {
 
   it('refuses an empty instruction rather than dropping the fare on the spot', () => {
     expect(resolve(city, north, [])).toBeNull()
+  })
+
+  it('remembers which blocks each clause was worth, for the map to read back', () => {
+    const route = resolve(city, north, [
+      { kind: 'straight', blocks: 2 },
+      { kind: 'turnNow', side: 'left' },
+    ])!
+    // Two blocks north, then the turn — and the block driven into the street
+    // it turned into belongs to the clause that named it, not to the driving
+    // before it.
+    expect(route.legs).toEqual([2, 3])
+    expect(route.path.slice(0, route.legs[0] + 1)).toEqual([
+      { x: 2, y: 4 },
+      { x: 2, y: 3 },
+      { x: 2, y: 2 },
+    ])
+    expect(route.path.slice(route.legs[0], route.legs[1] + 1)).toEqual([
+      { x: 2, y: 2 },
+      { x: 1, y: 2 },
+    ])
+  })
+
+  it('remembers the way each clause left the taxi pointing, even a bare turn', () => {
+    // From the middle of the city, where turning twice is possible at all.
+    const route = resolve(city, { x: 2, y: 2, dir: NORTH }, [
+      { kind: 'turnNow', side: 'left' },
+      { kind: 'turnNow', side: 'left' },
+    ])!
+    // Two turns on the spot: the first covers no ground at all, and the
+    // heading is the only thing it has to show for itself.
+    expect(route.legs[0]).toBe(0)
+    expect(route.dirs).toEqual([WEST, SOUTH])
+    expect(route.dirs[route.dirs.length - 1]).toBe(route.dir)
+  })
+
+  it('gives every clause a leg, in order, covering the whole route', () => {
+    const rng = seeded(11)
+    const built = buildCity(seeded(7))
+    for (const level of LEVELS) {
+      for (let i = 0; i < 20; i++) {
+        const pose = { x: i % built.width, y: (i * 3) % built.height, dir: (i % 4) as Dir }
+        const fare = pickFare(built, pose, level, rng)
+        if (!fare) continue
+        const { legs, path } = fare.route
+        expect(legs).toHaveLength(fare.steps.length)
+        expect(legs[legs.length - 1]).toBe(path.length - 1)
+        for (let leg = 1; leg < legs.length; leg++) {
+          expect(legs[leg]).toBeGreaterThanOrEqual(legs[leg - 1])
+        }
+      }
+    }
   })
 })
 
@@ -709,8 +764,9 @@ describe('dropping off', () => {
           const put = pickRedirect(game.city, { ...p, dir }, dest, 0, rng)
           if (!put) continue
           found++
-          // Whatever it says, it says it to the door and it drives.
-          expect(resolve(game.city, { ...p, dir }, put.steps)!.dest).toEqual(dest)
+          // Whatever it says, it says it to the door and it drives — and it
+          // is cut into clauses the same way driving it would be.
+          expect(resolve(game.city, { ...p, dir }, put.steps)).toEqual(put.route)
         }
       }
     }
@@ -853,6 +909,79 @@ describe('the meter', () => {
       }
     }
     expect(state.status).toBe('over')
+  })
+})
+
+describe('the clock', () => {
+  it('gives fifteen seconds at the start and takes one off every other fare', () => {
+    expect(secondsFor(0)).toBe(FIRST_SECONDS)
+    expect(secondsFor(1)).toBe(FIRST_SECONDS)
+    expect(secondsFor(2)).toBe(FIRST_SECONDS - 1)
+    expect(secondsFor(3)).toBe(FIRST_SECONDS - 1)
+    expect(secondsFor(4)).toBe(FIRST_SECONDS - 2)
+  })
+
+  it('never drops below five, however long the shift runs', () => {
+    expect(secondsFor(2 * (FIRST_SECONDS - LAST_SECONDS))).toBe(LAST_SECONDS)
+    expect(secondsFor(1000)).toBe(LAST_SECONDS)
+  })
+
+  it('starts every fare on the clock its driver has earned', () => {
+    const state = startGame(createGame(seeded(21)))
+    expect(state.clock).toBe(FIRST_SECONDS * 1000)
+    expect(state.clockFull).toBe(state.clock)
+
+    // Delivered fares are what tighten it, so a driver eight fares in is on
+    // eleven seconds whatever else has happened.
+    const eight = continueRun({ ...dropOff(driveRoute(state)).state, delivered: 8 })
+    expect(eight.clock).toBe(secondsFor(8) * 1000)
+  })
+
+  it('counts down while the fare is being driven', () => {
+    const state = startGame(createGame(seeded(3)))
+    const later = tick(state, 4000)
+    expect(later.clock).toBe(state.clock - 4000)
+    expect(later.outcome).toBeNull()
+    expect(later.lives).toBe(state.lives)
+  })
+
+  it('writes the fare off when it runs out, and shows what was meant', () => {
+    const state = startGame(createGame(seeded(3)))
+    const out = tick(state, state.clock)
+    expect(out.clock).toBe(0)
+    expect(out.outcome?.result).toBe('timeout')
+    expect(out.outcome?.route).toEqual(state.fare!.route)
+    expect(out.outcome?.steps).toEqual(state.fare!.steps)
+    expect(out.outcome?.paid).toBe(0)
+    expect(out.lives).toBe(state.lives - 1)
+    expect(out.takings).toBe(state.takings)
+  })
+
+  it('stops once the fare is over, and before the shift has started', () => {
+    const ready = createGame(seeded(3))
+    expect(tick(ready, 5000)).toBe(ready)
+
+    const out = tick(startGame(ready), 60_000)
+    expect(tick(out, 5000)).toBe(out)
+  })
+
+  it('ends the shift when the last life goes with it', () => {
+    const state = { ...startGame(createGame(seeded(3))), lives: 1 }
+    const out = tick(state, state.clock)
+    expect(out.lives).toBe(0)
+    expect(out.status).toBe('over')
+  })
+
+  it('keeps running through a correction: the clock belongs to the journey', () => {
+    // Otherwise a hopeful drop-off on any old corner would be a way of buying
+    // time, which is the one thing being put right must not be worth.
+    const rng = seeded(4)
+    let state = startGame(createGame(seeded(21)))
+    state = tick(state, 2000)
+    const drop = dropOff(driveShort(state), rng)
+    expect(drop.result).toBe('redirected')
+    expect(drop.state.clock).toBe(state.clock)
+    expect(drop.state.clockFull).toBe(state.clockFull)
   })
 })
 
