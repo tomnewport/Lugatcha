@@ -5,13 +5,22 @@
  * A fare is one instruction and one drop-off. The passenger speaks: *birinchi
  * koʻchadan chapga buriling* — first on the left. You drag the taxi along the
  * streets to where you think that is, and tap it to let them out; get there and
- * they pay. Nothing is timed. The pressure is the meter: every block burns
- * fuel, every word of the instruction you tap to have translated costs money,
- * and a fare pays for its words and its distance at a rate only a little above
- * what the driving costs. Understand the directions and the shift turns a
- * profit; buy the whole instruction in translation and it barely pays at all.
- * Nothing takes money off the driver: the meter belongs to the fare in hand, so
- * the worst a fare can do is eat itself, and that costs one of three lives.
+ * they pay. The pressure is the meter and the clock, and both of them tighten
+ * as the shift goes on. Every block burns fuel and every word of the
+ * instruction you tap to have translated costs money, and what a fare pays is
+ * the fuel to drive it door to door plus an allowance of translations on top —
+ * four of them at the start of a shift, one by the end of it (see
+ * {@link wordsAllowed}). On that last setting the whole game is in three
+ * lines: drive the route they asked for and you keep a word's worth, buy the
+ * word you needed and you keep nothing, buy two and the fare has eaten itself.
+ * Nothing takes money off the driver: the meter belongs to the fare in hand,
+ * so the worst a fare can do is eat itself, and that costs one of three lives.
+ *
+ * The clock is the other half of it — fifteen seconds at the start of a shift
+ * and six by the end of one (see {@link secondsFor}) — and it is why the
+ * instruction has to be understood rather than puzzled out. A fare that runs
+ * out of either is written off, and the route it meant is then read back
+ * clause by clause on the map, which is where the game does its teaching.
  *
  * The ramp is the *directions*, not the city. A run opens on the shortest
  * thing anyone ever says to a driver — an ordinal and a side — then adds
@@ -26,6 +35,11 @@
  * flashcard: they are relative to the way the taxi is *pointing*, which the
  * game changes on you every fare, and the count of "the third on the left"
  * only includes streets that actually exist — a few of this city's are closed.
+ *
+ * The map is a window, not the whole city: its streets run off the edge and
+ * fade out rather than stopping, so every intersection drawn is a crossroads
+ * and the counting reads the same at the edge as in the middle. The driving
+ * stays in the window — no fare is ever out in the haze.
  *
  * Everything in this module is pure and deterministic given an `rng`: the
  * component is a renderer and an input handler, and the rules are tested
@@ -165,31 +179,50 @@ export interface City {
   places: Place[]
 }
 
-/** Whether a street leaves `p` in `dir` — the only thing the taxi may drive. */
+/**
+ * Whether a street leaves `p` in `dir`.
+ *
+ * The streets that run off the edge count. The map is a window on a city that
+ * carries on past it — the drawing fades out rather than stopping — so every
+ * intersection on it is a crossroads with four ways off, even the ones in the
+ * corners, and *the second on the left* counts a turning that leaves the map
+ * the same as any other. Where the taxi may actually go is {@link canDrive}:
+ * the fares are all in the district the map shows.
+ */
 export function hasRoad(city: City, p: Point, dir: Dir): boolean {
   switch (dir) {
     case NORTH:
-      return p.y > 0 && city.v[p.y - 1][p.x]
+      return p.y > 0 ? city.v[p.y - 1][p.x] : true
     case EAST:
-      return p.x < city.width - 1 && city.h[p.y][p.x]
+      return p.x < city.width - 1 ? city.h[p.y][p.x] : true
     case SOUTH:
-      return p.y < city.height - 1 && city.v[p.y][p.x]
+      return p.y < city.height - 1 ? city.v[p.y][p.x] : true
     default:
-      return p.x > 0 && city.h[p.y][p.x - 1]
+      return p.x > 0 ? city.h[p.y][p.x - 1] : true
   }
 }
 
-/** The intersection one block on, or null when the street does not go there. */
+/**
+ * The intersection one block on, or null when the taxi cannot get there —
+ * either nothing runs that way, or what does is a street off the map.
+ */
 export function step(city: City, p: Point, dir: Dir): Point | null {
   if (!hasRoad(city, p, dir)) return null
   const d = DIR_STEPS[dir]
-  return { x: p.x + d.x, y: p.y + d.y }
+  const next = { x: p.x + d.x, y: p.y + d.y }
+  const off = next.x < 0 || next.y < 0 || next.x >= city.width || next.y >= city.height
+  return off ? null : next
 }
 
-/** How many streets meet at an intersection. */
+/** Whether the taxi may take that street: it is open, and it stays on the map. */
+export function canDrive(city: City, p: Point, dir: Dir): boolean {
+  return step(city, p, dir) !== null
+}
+
+/** How many streets the taxi can leave an intersection by. */
 function degree(city: City, p: Point): number {
   let n = 0
-  for (const dir of [NORTH, EAST, SOUTH, WEST] as Dir[]) if (hasRoad(city, p, dir)) n++
+  for (const dir of [NORTH, EAST, SOUTH, WEST] as Dir[]) if (canDrive(city, p, dir)) n++
   return n
 }
 
@@ -293,7 +326,7 @@ export function buildCity(rng: () => number = Math.random): City {
 export function randomPose(city: City, rng: () => number = Math.random): Pose {
   const spots = shuffleWith(intersections(city), rng)
   for (const spot of spots) {
-    const dirs = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((dir) => hasRoad(city, spot, dir))
+    const dirs = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((dir) => canDrive(city, spot, dir))
     if (dirs.length) return { ...spot, dir: pickOne(dirs, rng) }
   }
   return { x: 0, y: 0, dir: EAST }
@@ -605,6 +638,24 @@ export function allSpokenClauses(): string[] {
 export interface Route {
   /** Every intersection driven through, the starting one first. */
   path: Point[]
+  /**
+   * Where each clause's driving ends, as an index into `path` — one per step.
+   *
+   * It is what lets the map show an instruction a clause at a time: clause `i`
+   * covers `path` from `legs[i - 1]` (or the start) to `legs[i]`. A fare the
+   * driver loses is read back through it, which is the only place a driver
+   * ever finds out which words were the ones they misread.
+   */
+  legs: number[]
+  /**
+   * The way the taxi is left pointing by each clause — one per step, so the
+   * last of them is {@link Route.dir}.
+   *
+   * *Chapga buriling* covers no blocks at all: it turns you and nothing else,
+   * and without this there would be nothing for the map to show for it. With
+   * it, every clause has something to point at, whether or not it moved you.
+   */
+  dirs: Dir[]
   /** Where the passenger gets out. */
   dest: Point
   /** The way the taxi is pointing when it arrives. */
@@ -652,7 +703,11 @@ function driveStep(
     }
     case 'turn': {
       // Counting starts at the *next* junction: the turning you are sitting
-      // on is the one you are coming out of, not the first one ahead.
+      // on is the one you are coming out of, not the first one ahead. What is
+      // counted is every street on that side, the ones leaving the map
+      // included — see {@link hasRoad} — so the count matches what the driver
+      // can see. Turning into one of those is what the taxi cannot do, and
+      // such an instruction simply never gets offered.
       let counted = 0
       for (;;) {
         if (!forward()) return null
@@ -664,7 +719,7 @@ function driveStep(
     }
     case 'turnNow': {
       const turned = turnDir(dir, instruction.side)
-      if (!hasRoad(city, at, turned)) return null
+      if (!canDrive(city, at, turned)) return null
       dir = turned
       break
     }
@@ -676,7 +731,7 @@ function driveStep(
       }
       if (instruction.kind === 'landmarkTurn') {
         const turned = turnDir(dir, instruction.side)
-        if (!hasRoad(city, at, turned)) return null
+        if (!canDrive(city, at, turned)) return null
         dir = turned
       }
       break
@@ -715,17 +770,24 @@ export function resolve(city: City, start: Pose, steps: readonly Step[]): Route 
 
   let pose: Pose = { ...start }
   const path: Point[] = [{ x: start.x, y: start.y }]
+  const legs: number[] = []
+  const dirs: Dir[] = []
   for (const instruction of steps) {
     const leg = driveStep(city, pose, instruction)
     if (!leg) return null
     pose = leg.pose
     path.push(...leg.path)
+    legs.push(path.length - 1)
+    dirs.push(pose.dir)
   }
 
   const last = lastBlock(city, pose, steps)
   if (!last) return null
   path.push(...last.path)
-  return { path, dest: { x: last.pose.x, y: last.pose.y }, dir: last.pose.dir }
+  // The block driven into the street they named belongs to the clause that
+  // named it — pulling up on that street is what the clause meant.
+  legs[legs.length - 1] = path.length - 1
+  return { path, legs, dirs, dest: { x: last.pose.x, y: last.pose.y }, dir: last.pose.dir }
 }
 
 // --- The ramp ---------------------------------------------------------------
@@ -856,25 +918,38 @@ const MAX_ROUTE_BLOCKS = 12
 /**
  * The money, all of it in soʻm, and all of it in thousands.
  *
- * A fare pays for the words it took to say and the distance it covers, and the
- * driver pays for the fuel to get there and for every word they could not
- * manage without. The rate is set a little above the fuel so that a fare driven
- * straight to the door turns a profit and a fare found by wandering does not —
- * that margin, `DISTANCE_RATE` minus one block of fuel, is the whole game.
+ * A fare's purse is the fuel to drive it door to door and nothing else, plus
+ * an allowance of translations on top — and the allowance is the ramp. It
+ * opens at four words, which is a whole level-one instruction and change, and
+ * comes down by one every five fares until the purse will carry exactly one
+ * (see {@link wordsAllowed}). By then the arithmetic is the game: drive the
+ * route the passenger asked for and you keep a word's worth; buy one word to
+ * get there and you keep nothing; buy two and the fare has eaten itself.
  *
- * The numbers are small on purpose: a fare comes out around 6 000–15 000 soʻm,
- * which is roughly what a short hop across Tashkent actually costs, and a word
- * costs about what a minute of driving does. Understand the instruction and the
- * shift pays; buy the whole thing in translation and you have worked for
- * nothing.
+ * A word costs three blocks of driving, which is what leaves a late fare any
+ * room to be wrong in — a wrong turn is two blocks, out and back, and that
+ * still has to be survivable when a translation is not.
+ *
+ * The numbers are small on purpose: a fare comes out around 6 000–16 000 soʻm,
+ * which is roughly what a short hop across Tashkent actually costs.
  */
 export const FUEL_PER_BLOCK = 1_000
-export const WORD_PRICE = 1_000
-export const DISTANCE_RATE = 1.25
+export const WORD_PRICE = 3_000
 
-/** What a fare is worth: a word each, plus the distance at `DISTANCE_RATE`. */
-export function fareValue(words: number, blocks: number): number {
-  return (words + Math.round(DISTANCE_RATE * blocks)) * FUEL_PER_BLOCK
+/** Translations a fare's purse will carry, first shift to last. */
+export const FIRST_WORDS = 4
+export const LAST_WORDS = 1
+/** Fares between one of them coming off the allowance. */
+export const FARES_PER_WORD = 5
+
+/** How many translations the purse will bear for a driver this far in. */
+export function wordsAllowed(delivered: number): number {
+  return Math.max(LAST_WORDS, FIRST_WORDS - Math.floor(delivered / FARES_PER_WORD))
+}
+
+/** What a fare is worth: the driving it asks for, plus its allowance. */
+export function fareValue(blocks: number, delivered: number): number {
+  return blocks * FUEL_PER_BLOCK + wordsAllowed(delivered) * WORD_PRICE
 }
 
 /** A fare: what was said, what it pays, and where doing as you are told puts you. */
@@ -901,6 +976,10 @@ export interface Fare {
  * Puts an instruction into words: one of the level's wordings per step, drawn
  * independently, so a two-clause fare can come out in two different voices the
  * way a real one does.
+ *
+ * The purse comes in from outside because a correction does not get one of its
+ * own: what the passenger pays was agreed when they got in, and being put
+ * right neither adds to it nor takes from it.
  */
 function makeFare(
   steps: Step[],
@@ -908,7 +987,7 @@ function makeFare(
   from: Pose,
   voices: number,
   rng: () => number,
-  pay?: number,
+  pay: number,
 ): Fare {
   const said = steps.map((step) => Math.floor(rng() * Math.min(voices, sayings(step.kind))))
   const words = steps.map((step, index) => stepWords(step, said[index]))
@@ -921,10 +1000,7 @@ function makeFare(
     words,
     wordCount,
     blocks,
-    // A correction inherits the fare it belongs to: what the passenger pays was
-    // agreed when they got in, and being put right neither adds to it nor
-    // takes from it.
-    pay: pay ?? fareValue(wordCount, blocks),
+    pay,
     route,
     from,
   }
@@ -943,6 +1019,7 @@ export function pickFare(
   city: City,
   pose: Pose,
   level: Level,
+  delivered: number,
   rng: () => number = Math.random,
   avoid?: string,
 ): Fare | null {
@@ -969,7 +1046,8 @@ export function pickFare(
   // The wording is only chosen once the route is, so a level with four voices
   // does not cost four times the search.
   const picked = pickOne(pickOne(byShape, rng), rng)
-  return makeFare(picked.steps, picked.route, pose, level.voices, rng)
+  const pay = fareValue(picked.route.path.length - 1, delivered)
+  return makeFare(picked.steps, picked.route, pose, level.voices, rng, pay)
 }
 
 // --- Correcting the driver --------------------------------------------------
@@ -1045,7 +1123,7 @@ export function pickRedirect(
     // shape happens to have the most ways of being filled in.
     const byShape = new Map<string, { steps: Step[]; route: Route }[]>()
 
-    const search = (pose: Pose, taken: Step[], path: Point[]) => {
+    const search = (pose: Pose, taken: Step[], path: Point[], legs: number[], dirs: Dir[]) => {
       if (taken.length === length) {
         const last = lastBlock(city, pose, taken)
         if (!last) return
@@ -1057,7 +1135,15 @@ export function pickRedirect(
         const found = byShape.get(shape) ?? []
         found.push({
           steps: [...taken],
-          route: { path: whole, dest: { x: last.pose.x, y: last.pose.y }, dir: last.pose.dir },
+          route: {
+            path: whole,
+            // As in {@link resolve}: the last clause owns the block driven
+            // into the street it named.
+            legs: [...legs.slice(0, -1), whole.length - 1],
+            dirs: [...dirs],
+            dest: { x: last.pose.x, y: last.pose.y },
+            dir: last.pose.dir,
+          },
         })
         byShape.set(shape, found)
         return
@@ -1066,11 +1152,17 @@ export function pickRedirect(
         const leg = driveStep(city, pose, choice)
         if (!leg) continue
         taken.push(choice)
-        search(leg.pose, taken, [...path, ...leg.path])
+        search(
+          leg.pose,
+          taken,
+          [...path, ...leg.path],
+          [...legs, path.length + leg.path.length - 1],
+          [...dirs, leg.pose.dir],
+        )
         taken.pop()
       }
     }
-    search(from, [], [{ x: from.x, y: from.y }])
+    search(from, [], [{ x: from.x, y: from.y }], [], [])
 
     const shapes = [...byShape.values()].map((options) => {
       // Saying the very same thing again reads as the passenger not having
@@ -1101,8 +1193,8 @@ export function pickRedirect(
  */
 export type DropResult = 'arrived' | 'redirected' | 'refused' | 'ignored'
 
-/** How a fare ended: paid, or driven into the ground. */
-export type FareEnd = 'arrived' | 'broke'
+/** How a fare ended: paid, driven into the ground, or waited out. */
+export type FareEnd = 'arrived' | 'broke' | 'timeout'
 
 /** A fare that has ended, kept on state so the map can show what was meant. */
 export interface Outcome {
@@ -1116,6 +1208,30 @@ export interface Outcome {
   said: number[]
   /** Soʻm banked; zero unless they arrived. */
   paid: number
+}
+
+/**
+ * The clock a passenger gives you, in seconds.
+ *
+ * A fare is a job, and a job has someone at the other end of it: the first
+ * ones are unhurried, and the shift gets busier the longer it runs, a second
+ * off every other fare until nobody will wait more than six. It is the ramp
+ * that ends a shift — the directions themselves stop getting harder at the
+ * last level, and it is the clock that keeps a good driver honest after that.
+ *
+ * It is short on purpose. Nothing here takes more than a second or two of
+ * driving once you have understood the instruction, and a drag crosses as many
+ * blocks as the finger does, so what the clock actually asks is whether the
+ * words meant anything to you — which is the thing the game is for.
+ */
+export const FIRST_SECONDS = 15
+export const LAST_SECONDS = 6
+/** Fares between one second and the next coming off the clock. */
+export const FARES_PER_SECOND = 2
+
+/** Seconds on the clock for a driver who has delivered this many fares. */
+export function secondsFor(delivered: number): number {
+  return Math.max(LAST_SECONDS, FIRST_SECONDS - Math.floor(delivered / FARES_PER_SECOND))
 }
 
 /**
@@ -1144,6 +1260,16 @@ export interface TaxiState {
   lives: number
   /** Soʻm of the current fare already spent on fuel and translations. */
   spent: number
+  /**
+   * Milliseconds left to get this passenger to their door.
+   *
+   * It runs for the fare, not for the instruction: a driver put right on a
+   * wrong corner has the rest of the same clock to act on the correction,
+   * which is what stops a hopeful drop-off from being a way of buying time.
+   */
+  clock: number
+  /** What that clock was set to when this passenger got in. */
+  clockFull: number
   /** Fares delivered; the ramp is keyed off it. */
   delivered: number
   /** Times this passenger has had to put the driver right; see {@link dropOff}. */
@@ -1175,22 +1301,25 @@ export function nextFare(state: TaxiState, rng: () => number = Math.random): Tax
   const avoid = state.fare ? routeUzbek(state.fare.steps) : undefined
 
   const here = ([NORTH, EAST, SOUTH, WEST] as Dir[])
-    .filter((dir) => dir !== state.taxi.dir && hasRoad(state.city, state.taxi, dir))
+    .filter((dir) => dir !== state.taxi.dir && canDrive(state.city, state.taxi, dir))
     .map((dir) => ({ x: state.taxi.x, y: state.taxi.y, dir }))
 
   let pose = state.taxi
-  let fare = pickFare(state.city, pose, level, rng, avoid)
+  let fare = pickFare(state.city, pose, level, state.delivered, rng, avoid)
   for (const turned of shuffleWith(here, rng)) {
     if (fare) break
     pose = turned
-    fare = pickFare(state.city, pose, level, rng, avoid)
+    fare = pickFare(state.city, pose, level, state.delivered, rng, avoid)
   }
   for (let tries = 0; !fare && tries < 40; tries++) {
     pose = randomPose(state.city, rng)
-    fare = pickFare(state.city, pose, level, rng, avoid)
+    fare = pickFare(state.city, pose, level, state.delivered, rng, avoid)
   }
   if (!fare) return state
 
+  // A fresh passenger is a fresh clock, and it is the count of fares already
+  // delivered that sets it: the shift gets busier as the driver gets better.
+  const clock = secondsFor(state.delivered) * 1000
   return {
     ...state,
     taxi: pose,
@@ -1199,6 +1328,8 @@ export function nextFare(state: TaxiState, rng: () => number = Math.random): Tax
     outcome: null,
     corrections: 0,
     spent: 0,
+    clock,
+    clockFull: clock,
     bought: [],
   }
 }
@@ -1216,6 +1347,8 @@ export function createGame(rng: () => number = Math.random): TaxiState {
     takings: 0,
     lives: LIVES,
     spent: 0,
+    clock: FIRST_SECONDS * 1000,
+    clockFull: FIRST_SECONDS * 1000,
     delivered: 0,
     corrections: 0,
     bought: [],
@@ -1238,9 +1371,10 @@ export function purse(state: TaxiState): number {
  * Writes the current fare off: the driver keeps nothing and a life goes.
  *
  * The taxi and the route stay on screen, because a fare lost is the one the
- * driver most needs to see the answer to.
+ * driver most needs to see the answer to — and the route it leaves behind is
+ * read back a clause at a time, which is the whole of the lesson in it.
  */
-function writeOff(state: TaxiState): TaxiState {
+function writeOff(state: TaxiState, result: FareEnd): TaxiState {
   const lives = state.lives - 1
   return {
     ...state,
@@ -1248,7 +1382,7 @@ function writeOff(state: TaxiState): TaxiState {
     status: lives <= 0 ? 'over' : state.status,
     outcome: state.fare
       ? {
-          result: 'broke',
+          result,
           dropped: { x: state.taxi.x, y: state.taxi.y },
           route: state.fare.route,
           steps: state.fare.steps,
@@ -1260,17 +1394,37 @@ function writeOff(state: TaxiState): TaxiState {
 }
 
 /**
- * Takes money off the meter, and writes the fare off if that empties it.
+ * Takes money off the meter, and writes the fare off if that overdraws it.
  *
  * Spending is always against the fare in hand, never against the shift's
  * takings, so a driver cannot end a fare poorer than they began it — the worst
  * that can happen is that the whole purse goes on fuel and translations, and
  * then it is a life rather than money that is lost.
+ *
+ * The last soʻm of the purse is spendable: a driver who buys the one word they
+ * needed and then drives straight there arrives with nothing, which is a fare
+ * worked for nothing rather than a fare lost. It is the soʻm after it that
+ * ends the fare.
  */
 function spend(state: TaxiState, som: number): TaxiState {
   const spent = state.spent + som
   const next = { ...state, spent }
-  return state.fare && spent >= state.fare.pay ? writeOff(next) : next
+  return state.fare && spent > state.fare.pay ? writeOff(next, 'broke') : next
+}
+
+/**
+ * Runs the clock down, and writes the fare off when it reaches zero.
+ *
+ * The caller decides when time passes — the component stops calling this while
+ * the game is paused, while the shift has not started and while a finished
+ * fare is being read back — so nothing here is timed against a wall clock and
+ * a run can be replayed a tick at a time in a test.
+ */
+export function tick(state: TaxiState, ms: number): TaxiState {
+  if (state.status !== 'playing' || !state.fare || state.outcome) return state
+  const clock = Math.max(0, state.clock - ms)
+  const next = { ...state, clock }
+  return clock > 0 ? next : writeOff(next, 'timeout')
 }
 
 /**

@@ -27,8 +27,9 @@ import {
   purse,
   readHighScore,
   recordHighScore,
-  routeUzbek,
   startGame,
+  stepUzbek,
+  tick,
   wordKey,
   CITY_HEIGHT,
   CITY_WIDTH,
@@ -42,6 +43,7 @@ import {
   type Dir,
   type Fare,
   type Landmark,
+  type Outcome,
   type Point,
   type Step,
   type TaxiState,
@@ -71,9 +73,10 @@ const speaking = ref(false)
 
 // --- Laying the city out ----------------------------------------------------
 
-/** SVG units per block, and the margin that leaves room for the edge labels. */
+/** SVG units per block, and the margin the edge labels and the streets
+ *  running out of the map share. */
 const STEP = 100
-const PAD = 52
+const PAD = 60
 
 const viewWidth = PAD * 2 + (CITY_WIDTH - 1) * STEP
 const viewHeight = PAD * 2 + (CITY_HEIGHT - 1) * STEP
@@ -83,7 +86,53 @@ function px(value: number): number {
   return PAD + value * STEP
 }
 
-/** Every open street, as a line to draw. */
+/**
+ * The four sides of the map, and the fade the streets leaving by them are
+ * drawn with.
+ *
+ * The city does not stop at the edge of the map — every intersection has four
+ * ways off it, and the ones the passenger counts at the edge are these — so
+ * each is drawn running out of the window and dissolving. The gradient goes
+ * from the last intersection outwards, which is why they are one per side
+ * rather than one per street: everything leaving by the north fades over the
+ * same stretch of `y`, and nothing of the west's fade touches it.
+ */
+const edges = [
+  { side: 'n', x1: 0, y1: px(0), x2: 0, y2: px(0) - PAD },
+  { side: 'e', x1: px(CITY_WIDTH - 1), y1: 0, x2: px(CITY_WIDTH - 1) + PAD, y2: 0 },
+  { side: 's', x1: 0, y1: px(CITY_HEIGHT - 1), x2: 0, y2: px(CITY_HEIGHT - 1) + PAD },
+  { side: 'w', x1: px(0), y1: 0, x2: px(0) - PAD, y2: 0 },
+] as const
+
+/** The stubs themselves: one off every intersection along each side. */
+const edgeStreets: Record<string, { x1: number; y1: number; x2: number; y2: number }[]> = {
+  n: Array.from({ length: CITY_WIDTH }, (_, x) => ({
+    x1: px(x),
+    y1: px(0),
+    x2: px(x),
+    y2: px(0) - PAD,
+  })),
+  e: Array.from({ length: CITY_HEIGHT }, (_, y) => ({
+    x1: px(CITY_WIDTH - 1),
+    y1: px(y),
+    x2: px(CITY_WIDTH - 1) + PAD,
+    y2: px(y),
+  })),
+  s: Array.from({ length: CITY_WIDTH }, (_, x) => ({
+    x1: px(x),
+    y1: px(CITY_HEIGHT - 1),
+    x2: px(x),
+    y2: px(CITY_HEIGHT - 1) + PAD,
+  })),
+  w: Array.from({ length: CITY_HEIGHT }, (_, y) => ({
+    x1: px(0),
+    y1: px(y),
+    x2: px(0) - PAD,
+    y2: px(y),
+  })),
+}
+
+/** Every open street inside the map, as a line to draw. */
 const streets = computed(() => {
   const city = state.value.city
   const lines: { x1: number; y1: number; x2: number; y2: number }[] = []
@@ -248,10 +297,82 @@ const answerGloss = computed(() =>
   outcome.value ? outcome.value.steps.map(stepGloss).join(' ') : '',
 )
 
-/** What the passenger actually said, in the wording they said it in. */
-const answerUzbek = computed(() =>
-  outcome.value ? routeUzbek(outcome.value.steps, outcome.value.said) : '',
+/** What the passenger actually said, clause by clause, in their own wording. */
+const answerClauses = computed(() => {
+  const out = outcome.value
+  return out ? out.steps.map((step, i) => stepUzbek(step, out.said[i])) : []
+})
+
+/** The route the instruction meant, cut into one line per clause. */
+const answerLegs = computed(() => {
+  const out = outcome.value
+  if (!out) return []
+  const { path, legs } = out.route
+  return legs.map((end, i) => path.slice(i ? legs[i - 1] : 0, end + 1))
+})
+
+// --- Reading a lost fare back -----------------------------------------------
+
+/**
+ * Which clause the map is going through, or -1 for the whole route at once.
+ *
+ * A fare that runs out of money or time is not simply marked wrong: the
+ * passenger says the instruction again on the way out, a clause at a time,
+ * and the map draws that clause's blocks as it is said. Being shown which
+ * words were the ones you misread is the only lesson a lost fare has in it,
+ * and it is the one thing a driver cannot work out for themselves.
+ */
+const explaining = ref(-1)
+
+/** How many of the route's legs are on the map: all, unless one is being read. */
+const shownLegs = computed(() =>
+  explaining.value < 0 ? answerLegs.value.length : explaining.value + 1,
 )
+
+/**
+ * Where the clause being read out leaves the taxi, and pointing which way.
+ *
+ * The heading is the half that matters: *chapga buriling* covers no ground at
+ * all, so an arrow swinging round on the spot is the only thing that clause
+ * has to show for itself.
+ */
+const headTransform = computed(() => {
+  const out = outcome.value
+  const leg = answerLegs.value[explaining.value]
+  if (!out || !leg || !leg.length) return null
+  const at = leg[leg.length - 1]
+  return `translate(${px(at.x)} ${px(at.y)}) rotate(${out.route.dirs[explaining.value] * 90})`
+})
+
+// --- The clock --------------------------------------------------------------
+
+/** Whole seconds left: it reads 1 until the last of that second is gone. */
+const secondsLeft = computed(() => Math.ceil(state.value.clock / 1000))
+/** How much of the clock is left, for the bar. */
+const clockLeft = computed(() => (state.value.clock / state.value.clockFull) * 100)
+/** The last third, where the bar turns and the driver should be worried. */
+const lowOnTime = computed(() => state.value.clock <= state.value.clockFull / 3)
+
+/**
+ * Runs the clock down a frame at a time.
+ *
+ * It ticks only while the fare is actually being driven — not on the ready
+ * screen, not while paused, and not while a finished fare is on screen — and a
+ * gap longer than a stutter is clamped, so a browser that throttles frames in a
+ * background tab cannot eat a whole fare's clock in one step.
+ */
+let raf: number | undefined
+let lastFrame = 0
+/** The longest a single frame may take off the clock. */
+const MAX_FRAME_MS = 250
+
+function frame(now: number) {
+  raf = requestAnimationFrame(frame)
+  const ms = lastFrame ? now - lastFrame : 0
+  lastFrame = now
+  if (!playable.value) return
+  spendAnd(tick(state.value, Math.min(ms, MAX_FRAME_MS)))
+}
 
 // --- Saying it --------------------------------------------------------------
 
@@ -274,6 +395,8 @@ function wait(ms: number): Promise<void> {
 }
 
 const CLAUSE_GAP_MS = 260
+/** A clause of a lost fare is held at least this long, recording or no. */
+const EXPLAIN_MS = 1500
 
 async function sayFare(current: Fare): Promise<void> {
   const token = ++sayToken
@@ -287,6 +410,38 @@ async function sayFare(current: Fare): Promise<void> {
     }
   } finally {
     if (token === sayToken) speaking.value = false
+  }
+}
+
+/**
+ * Reads a lost fare back, clause by clause, lighting up the map as it goes.
+ *
+ * It shares {@link sayFare}'s token, so the passenger cannot be reading the
+ * route back and giving fresh directions at the same time, and each clause is
+ * held for a moment whether or not there is a recording to pace it — where the
+ * audio is missing or muted the map still has to be followable.
+ */
+async function explain(lost: Outcome): Promise<void> {
+  const token = ++sayToken
+  speaking.value = true
+  try {
+    for (const [index, step] of lost.steps.entries()) {
+      if (token !== sayToken) return
+      explaining.value = index
+      await Promise.all([
+        speaker.speak(stepUzbek(step, lost.said[index]), { langs: NEIGHBOUR_VOICE_LANGS }),
+        wait(EXPLAIN_MS),
+      ])
+      if (token !== sayToken) return
+      await wait(CLAUSE_GAP_MS)
+    }
+  } finally {
+    // However it ends, the map goes back to showing the whole route: that is
+    // what the driver is left looking at while they decide to carry on.
+    if (token === sayToken) {
+      explaining.value = -1
+      speaking.value = false
+    }
   }
 }
 
@@ -471,11 +626,20 @@ function spendAnd(next: TaxiState) {
   const spent = next.spent - before.spent
   state.value = next
   if (spent > 0) throwCoin(spent, false)
-  if (next.lives >= before.lives) return
+  if (next.lives < before.lives) lostFare()
+}
 
+/**
+ * A fare written off, by the meter or by the clock: the horn, and then the
+ * passenger reads the way they meant back on their way out.
+ *
+ * Nothing is read back on the last life, because the shift is over and the
+ * end-of-shift card is over the map by then.
+ */
+function lostFare() {
   playHorn()
   buzz([60, 80, 60])
-  if (next.status === 'over') {
+  if (state.value.status === 'over') {
     finish()
     return
   }
@@ -485,6 +649,8 @@ function spendAnd(next: TaxiState) {
   setTimeout(() => {
     if (bustKey.value === shown) bust.value = false
   }, BUST_MS)
+  const lost = state.value.outcome
+  if (lost) void explain(lost)
 }
 
 /** Shows what the passenger said about the corner, for a moment. */
@@ -500,6 +666,10 @@ function flashRefusal(said: string) {
 function nextPassenger() {
   clearAdvance()
   if (!state.value.outcome) return
+  // Whatever the passenger was still explaining, they are out of the cab.
+  sayToken++
+  speaker.stop()
+  explaining.value = -1
   state.value = continueRun(state.value)
 }
 
@@ -535,6 +705,7 @@ function playAgain() {
   clearAdvance()
   sayToken++
   speaker.stop()
+  explaining.value = -1
   newBest.value = false
   paused.value = false
   state.value = startGame(createGame())
@@ -565,6 +736,7 @@ function onVisibility() {
 }
 
 onMounted(() => {
+  raf = requestAnimationFrame(frame)
   window.addEventListener('keydown', onKey)
   document.addEventListener('visibilitychange', onVisibility)
   if (fare.value) void primeUzbekAudio(fare.value.clauses)
@@ -572,6 +744,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   clearAdvance()
+  if (raf !== undefined) cancelAnimationFrame(raf)
   window.removeEventListener('keydown', onKey)
   document.removeEventListener('visibilitychange', onVisibility)
   speaker.stop()
@@ -625,12 +798,27 @@ onBeforeUnmount(() => {
         </span>
       </div>
 
+      <!-- The clock the passenger is keeping, draining as it is kept. -->
+      <div
+        class="taxi__clock"
+        :class="{ 'taxi__clock--low': lowOnTime }"
+        role="timer"
+        :aria-label="$t('taxi.timeLeft', { seconds: secondsLeft })"
+      >
+        <span class="taxi__clock-track" aria-hidden="true">
+          <span class="taxi__clock-fill" :style="{ width: `${clockLeft}%` }" />
+        </span>
+        <strong class="taxi__clock-value" aria-hidden="true">
+          {{ $t('taxi.seconds', { seconds: secondsLeft }) }}
+        </strong>
+      </div>
+
       <!-- What the passenger said, or what they meant, once they are out. -->
       <div
         class="taxi__fare"
         :class="{
           'taxi__fare--right': outcome?.result === 'arrived',
-          'taxi__fare--wrong': outcome?.result === 'broke' || !!refusal || bust,
+          'taxi__fare--wrong': (!!outcome && outcome.result !== 'arrived') || !!refusal || bust,
         }"
       >
         <span class="taxi__rider" aria-hidden="true">
@@ -646,8 +834,19 @@ onBeforeUnmount(() => {
               {{ $t('taxi.paid', { amount: som(outcome.paid) }) }}
             </strong>
           </p>
-          <p class="taxi__verdict-said">{{ answerUzbek }}</p>
-          <p class="taxi__verdict-body">{{ answerGloss }}</p>
+          <p class="taxi__verdict-said" :class="{ 'taxi__verdict-said--reading': explaining >= 0 }">
+            <span
+              v-for="(clause, i) in answerClauses"
+              :key="i"
+              class="taxi__said-clause"
+              :class="{ 'taxi__said-clause--lit': i === explaining }"
+            >
+              {{ clause }}
+            </span>
+          </p>
+          <p class="taxi__verdict-body">
+            {{ explaining < 0 ? answerGloss : stepGloss(outcome.steps[explaining]) }}
+          </p>
         </div>
 
         <!-- Every word is a button: tapping one buys its meaning, and having
@@ -714,7 +913,44 @@ onBeforeUnmount(() => {
           @pointerup="onPointerUp"
           @pointercancel="onPointerUp"
         >
-          <!-- The streets: a dark casing with the carriageway laid over it. -->
+          <!-- One fade per side of the map, for the streets that leave by it. -->
+          <defs>
+            <linearGradient
+              v-for="edge in edges"
+              :id="`taxi-haze-${edge.side}`"
+              :key="`g-${edge.side}`"
+              gradientUnits="userSpaceOnUse"
+              :x1="edge.x1"
+              :y1="edge.y1"
+              :x2="edge.x2"
+              :y2="edge.y2"
+            >
+              <stop offset="0" stop-color="#fff" />
+              <stop offset="0.85" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+            <mask
+              v-for="edge in edges"
+              :id="`taxi-edge-${edge.side}`"
+              :key="`m-${edge.side}`"
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              :width="viewWidth"
+              :height="viewHeight"
+            >
+              <rect
+                x="0"
+                y="0"
+                :width="viewWidth"
+                :height="viewHeight"
+                :fill="`url(#taxi-haze-${edge.side})`"
+              />
+            </mask>
+          </defs>
+
+          <!-- The streets: a dark casing with the carriageway laid over it.
+               The map is a window on the city, so the streets carry on out of
+               it and fade rather than stopping at the last intersection. -->
           <g class="taxi__casing">
             <line
               v-for="(road, i) in streets"
@@ -724,6 +960,20 @@ onBeforeUnmount(() => {
               :x2="road.x2"
               :y2="road.y2"
             />
+            <g
+              v-for="edge in edges"
+              :key="`ce-${edge.side}`"
+              :mask="`url(#taxi-edge-${edge.side})`"
+            >
+              <line
+                v-for="(road, i) in edgeStreets[edge.side]"
+                :key="i"
+                :x1="road.x1"
+                :y1="road.y1"
+                :x2="road.x2"
+                :y2="road.y2"
+              />
+            </g>
           </g>
           <g class="taxi__road">
             <line
@@ -734,6 +984,20 @@ onBeforeUnmount(() => {
               :x2="road.x2"
               :y2="road.y2"
             />
+            <g
+              v-for="edge in edges"
+              :key="`re-${edge.side}`"
+              :mask="`url(#taxi-edge-${edge.side})`"
+            >
+              <line
+                v-for="(road, i) in edgeStreets[edge.side]"
+                :key="i"
+                :x1="road.x1"
+                :y1="road.y1"
+                :x2="road.x2"
+                :y2="road.y2"
+              />
+            </g>
           </g>
 
           <!-- Where the driver has been since this passenger got in. -->
@@ -743,12 +1007,23 @@ onBeforeUnmount(() => {
             :points="pointsOf(state.trail)"
           />
 
-          <!-- After a drop-off: the route the instruction described. -->
+          <!-- After a drop-off: the route the instruction described, drawn a
+               clause at a time while the passenger reads it back. -->
           <polyline
-            v-if="outcome"
+            v-for="(leg, i) in answerLegs.slice(0, shownLegs)"
+            :key="`leg-${i}`"
             class="taxi__answer"
-            :class="{ 'taxi__answer--right': outcome.result === 'arrived' }"
-            :points="pointsOf(outcome.route.path)"
+            :class="{
+              'taxi__answer--right': outcome?.result === 'arrived',
+              'taxi__answer--live': i === explaining,
+            }"
+            :points="pointsOf(leg)"
+          />
+          <path
+            v-if="headTransform"
+            class="taxi__answer-head"
+            :transform="headTransform"
+            d="M-13 9L0 -13L13 9Z"
           />
 
           <g v-for="place in places" :key="place.id" class="taxi__place">
@@ -784,8 +1059,10 @@ onBeforeUnmount(() => {
           </text>
 
           <!-- The corner they wanted, and the one they were left on. Drawn
-               last, so a cross over the cab is a cross over the cab. -->
-          <g v-if="outcome" class="taxi__marks">
+               last, so a cross over the cab is a cross over the cab, and held
+               back while the route is being read: where they wanted to be is
+               the end of that story, not the start of it. -->
+          <g v-if="outcome && explaining < 0" class="taxi__marks">
             <circle
               class="taxi__target"
               :cx="px(outcome.route.dest.x)"
@@ -993,6 +1270,47 @@ onBeforeUnmount(() => {
   box-shadow: inset 0 0 0 1.5px var(--color-border);
 }
 
+/* The clock: a bar that empties and the seconds beside it, because a bar
+   alone cannot be counted down under pressure and a number alone cannot be
+   read at a glance. */
+.taxi__clock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.taxi__clock-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  overflow: hidden;
+}
+
+.taxi__clock-fill {
+  display: block;
+  height: 100%;
+  background: var(--color-gold);
+}
+
+.taxi__clock-value {
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  min-width: 2.6rem;
+  text-align: right;
+}
+
+.taxi__clock--low .taxi__clock-fill {
+  background: var(--color-terracotta);
+}
+
+.taxi__clock--low .taxi__clock-value {
+  color: var(--color-terracotta);
+}
+
 .taxi__fare {
   display: flex;
   align-items: flex-start;
@@ -1133,11 +1451,29 @@ onBeforeUnmount(() => {
 }
 
 .taxi__verdict-said {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.35em;
   margin: 0 0 0.1rem;
   font-size: 0.85rem;
   font-weight: 700;
   line-height: 1.25;
   color: var(--color-primary);
+}
+
+/* While the route is being read back, everything but the clause the map is
+   drawing is dimmed — the rest of the sentence stays there to be read, it is
+   just not what is on the map this second. */
+.taxi__said-clause {
+  transition: opacity 120ms ease;
+}
+
+.taxi__verdict-said--reading .taxi__said-clause {
+  opacity: 0.4;
+}
+
+.taxi__verdict-said--reading .taxi__said-clause--lit {
+  opacity: 1;
 }
 
 .taxi__verdict-body {
@@ -1199,6 +1535,21 @@ onBeforeUnmount(() => {
 
 .taxi__answer--right {
   stroke: var(--color-teal);
+}
+
+/* The clause being read out: solid, and heavier than the rest of the route. */
+.taxi__answer--live {
+  stroke-width: 13;
+  stroke-dasharray: none;
+}
+
+/* The nose of the cab as that clause would have left it: where it had got to,
+   and which way it was then facing. */
+.taxi__answer-head {
+  fill: var(--color-terracotta);
+  stroke: #f6f1e4;
+  stroke-width: 3;
+  stroke-linejoin: round;
 }
 
 .taxi__place circle {
