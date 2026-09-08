@@ -7,19 +7,19 @@
     "ru": "Числа"
   },
   "icon": "🔢",
-  "blurb": "Count to a thousand with a dozen building blocks",
-  "blurbRu": "Считайте до тысячи с помощью десятка строительных блоков",
+  "blurb": "A dozen building blocks count you to 999,999",
+  "blurbRu": "Десяток строительных блоков доводит счёт до 999 999",
   "quiz": "counting",
   "article": [
     {
       "heading": "Numbers that play fair",
       "headingRu": "Числа, которые играют честно",
       "body": [
-        "If you have ever fought with French *quatre-vingt-dix* or German *einundzwanzig*, Uzbek numbers will feel like a holiday. They are **completely regular** — no special words for eleven or twelve, no swapping the order of the digits. Learn the units, the tens, plus **yuz** (hundred) and **ming** (thousand), and you can say every number up to 9,999.",
+        "If you have ever fought with French *quatre-vingt-dix* or German *einundzwanzig*, Uzbek numbers will feel like a holiday. They are **completely regular** — no special words for eleven or twelve, no swapping the order of the digits. Learn the units, the tens, plus **yuz** (hundred) and **ming** (thousand), and you can say every number up to 999,999.",
         "The rule is simply: say the parts **biggest first**, in a row, with a space between them. No joining words, no exceptions."
       ],
       "bodyRu": [
-        "Если вы когда-нибудь мучились с французским *quatre-vingt-dix* или немецким *einundzwanzig*, узбекские числа покажутся вам праздником. Они **совершенно регулярны** — нет особых слов для одиннадцати или двенадцати, нет перестановки порядка цифр. Выучите единицы, десятки, плюс **yuz** (сто) и **ming** (тысяча) — и вы сможете назвать любое число до 9 999.",
+        "Если вы когда-нибудь мучились с французским *quatre-vingt-dix* или немецким *einundzwanzig*, узбекские числа покажутся вам праздником. Они **совершенно регулярны** — нет особых слов для одиннадцати или двенадцати, нет перестановки порядка цифр. Выучите единицы, десятки, плюс **yuz** (сто) и **ming** (тысяча) — и вы сможете назвать любое число до 999 999.",
         "Правило простое: называйте части **от большего к меньшему**, подряд, с пробелом между ними. Никаких соединительных слов, никаких исключений."
       ],
       "examples": [
@@ -64,11 +64,13 @@
       "headingRu": "Десятки, затем сотни и тысячи",
       "body": [
         "The tens each have their own word: **yigirma** 20, **o'ttiz** 30, **qirq** 40, **ellik** 50, **oltmish** 60, **yetmish** 70, **sakson** 80, **to'qson** 90. After that it is just **yuz** (100) and **ming** (1,000).",
-        "One handy quirk: a lone hundred or thousand drops the **bir**. 100 is just **yuz**, not *bir yuz*; 1,000 is just **ming**. But 200 is **ikki yuz** and 2,000 is **ikki ming**."
+        "One handy quirk: a lone hundred or thousand drops the **bir**. 100 is just **yuz**, not *bir yuz*; 1,000 is just **ming**. But 200 is **ikki yuz** and 2,000 is **ikki ming**.",
+        "**ming** is counted like anything else, so the count in front of it can itself run up to 999: 245,000 is *ikki yuz qirq besh ming*. That is what carries this dozen words all the way to 999,999 — *to'qqiz yuz to'qson to'qqiz ming to'qqiz yuz to'qson to'qqiz* — before you need to borrow **million**."
       ],
       "bodyRu": [
         "У каждого десятка своё слово: **yigirma** 20, **o'ttiz** 30, **qirq** 40, **ellik** 50, **oltmish** 60, **yetmish** 70, **sakson** 80, **to'qson** 90. После этого остаются только **yuz** (100) и **ming** (1 000).",
-        "Одна удобная особенность: одинокая сотня или тысяча опускает **bir**. 100 — это просто **yuz**, а не *bir yuz*; 1 000 — это просто **ming**. Но 200 — это **ikki yuz**, а 2 000 — это **ikki ming**."
+        "Одна удобная особенность: одинокая сотня или тысяча опускает **bir**. 100 — это просто **yuz**, а не *bir yuz*; 1 000 — это просто **ming**. Но 200 — это **ikki yuz**, а 2 000 — это **ikki ming**.",
+        "**ming** считается так же, как всё остальное, поэтому число перед ним само может доходить до 999: 245 000 — это *ikki yuz qirq besh ming*. Именно поэтому этого десятка слов хватает до 999 999 — *to'qqiz yuz to'qson to'qqiz ming to'qqiz yuz to'qson to'qqiz* — и только дальше приходится заимствовать **million**."
       ],
       "examples": [
         {
@@ -113,6 +115,32 @@
             "тысяча",
             "сум"
           ]
+        },
+        {
+          "uzbek": "ikki yuz qirq besh ming",
+          "english": "245,000 (two hundred forty-five thousand)",
+          "russian": "245 000 (двести сорок пять тысяч)",
+          "breakdown": [
+            "ikki",
+            "yuz",
+            "qirq",
+            "besh",
+            "ming"
+          ],
+          "gloss": [
+            "two",
+            "hundred",
+            "forty",
+            "five",
+            "thousand"
+          ],
+          "glossRu": [
+            "два",
+            "сто",
+            "сорок",
+            "пять",
+            "тысяча"
+          ]
         }
       ]
     },
@@ -120,10 +148,12 @@
       "heading": "Why it matters",
       "headingRu": "Почему это важно",
       "body": [
-        "Prices in Uzbekistan run into the thousands of som, so the words **ming** and **yuz** do a lot of heavy lifting at the bazaar. Get comfortable hearing *o'ttiz ming* (30,000) and *ellik ming* (50,000) and haggling gets a great deal easier."
+        "Prices in Uzbekistan run into the thousands of som, so the words **ming** and **yuz** do a lot of heavy lifting at the bazaar. Get comfortable hearing *o'ttiz ming* (30,000) and *ellik ming* (50,000) and haggling gets a great deal easier.",
+        "Because everything is priced in thousands, sellers usually stop saying **ming** at all: a stallholder who says *ellik* means 50,000 so'm, and *ikki yuz* means 200,000. Nothing at a bazaar costs fifty so'm, so the thousands are taken as read — and if a price sounds absurdly cheap, that is what has happened."
       ],
       "bodyRu": [
-        "Цены в Узбекистане доходят до тысяч сумов, поэтому слова **ming** и **yuz** выполняют большую работу на базаре. Привыкните слышать *o'ttiz ming* (30 000) и *ellik ming* (50 000) — и торговаться станет намного легче."
+        "Цены в Узбекистане доходят до тысяч сумов, поэтому слова **ming** и **yuz** выполняют большую работу на базаре. Привыкните слышать *o'ttiz ming* (30 000) и *ellik ming* (50 000) — и торговаться станет намного легче.",
+        "Поскольку всё считается тысячами, продавцы обычно вообще не говорят **ming**: если торговец называет *ellik*, речь о 50 000 сумов, а *ikki yuz* — это 200 000. На базаре ничего не стоит пятьдесят сумов, поэтому тысячи подразумеваются — и если цена звучит абсурдно низкой, дело именно в этом."
       ]
     }
   ],
