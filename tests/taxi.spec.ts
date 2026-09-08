@@ -23,13 +23,16 @@ import {
   NORTH,
   fareValue,
   FUEL_PER_BLOCK,
+  kindsBy,
   LIVES,
-  PATIENCE,
+  MAX_REDIRECT_STEPS,
   pickFare,
+  pickRedirect,
   placeAt,
   purse,
   resolve,
   routeUzbek,
+  samePoint,
   sayings,
   SOUTH,
   startGame,
@@ -108,6 +111,28 @@ function driveRoute(state: TaxiState): TaxiState {
   let next = state
   for (let i = 1; i < path.length; i++) {
     next = drive(next, headingBetween(path[i - 1], path[i]))
+  }
+  return next
+}
+
+/** Drives the fare's route but stops a block short: the classic wrong corner. */
+function driveShort(state: TaxiState): TaxiState {
+  const path = state.fare!.route.path
+  let next = state
+  for (let i = 1; i < path.length - 1; i++) {
+    next = drive(next, headingBetween(path[i - 1], path[i]))
+  }
+  return next
+}
+
+/** Drives back and forth over one block until the meter is empty. */
+function runDry(state: TaxiState): TaxiState {
+  const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
+    hasRoad(state.city, state.taxi, dir),
+  )!
+  let next = state
+  for (let i = 0; i < 40 && !next.outcome; i++) {
+    next = drive(next, i % 2 ? (((open + 2) % 4) as Dir) : open)
   }
   return next
 }
@@ -529,29 +554,142 @@ describe('dropping off', () => {
     expect(fare.pay).toBeGreaterThan(fare.blocks * FUEL_PER_BLOCK)
   })
 
-  it('keeps the passenger in the cab on a wrong corner, and says so', () => {
-    const state = startGame(createGame(seeded(21)))
-    const drop = dropOff(state) // let them out where they got in
-    expect(drop.result).toBe('refused')
+  it('puts the driver right from where they stopped, for nothing', () => {
+    const state = driveShort(startGame(createGame(seeded(21)))) // a block short
+    const drop = dropOff(state, seeded(4))
+    expect(drop.result).toBe('redirected')
     expect(drop.paid).toBe(0)
     expect(drop.state.outcome).toBeNull()
-    expect(drop.state.fare).toBe(state.fare)
-    expect(drop.state.patience).toBe(1)
+    expect(drop.state.corrections).toBe(1)
+    // Nothing but the driving has been charged for, and the fare is the fare
+    // that was agreed when the passenger got in.
     expect(drop.state.spent).toBe(state.spent)
     expect(drop.state.lives).toBe(state.lives)
+    expect(drop.state.fare!.pay).toBe(state.fare!.pay)
+    expect(purse(drop.state)).toBe(purse(state))
+
+    // Same door, described again from the corner the taxi is standing on.
+    const fare = drop.state.fare!
+    expect(fare.route.dest).toEqual(state.fare!.route.dest)
+    expect(fare.from).toEqual(state.taxi)
+    expect(fare.route.path[0]).toEqual({ x: state.taxi.x, y: state.taxi.y })
+    expect(drop.state.trail).toEqual([{ x: state.taxi.x, y: state.taxi.y }])
+    // A new instruction, so the component reads it out rather than redrawing.
+    expect(drop.state.fareId).toBe(state.fareId + 1)
   })
 
-  it('writes the fare off for a life once the passenger runs out of patience', () => {
+  it('pays out in full when the correction is followed', () => {
+    const state = dropOff(driveShort(startGame(createGame(seeded(21)))), seeded(4)).state
+    const drop = dropOff(driveRoute(state))
+    expect(drop.result).toBe('arrived')
+    expect(drop.paid).toBe(purse(state) - state.fare!.blocks * FUEL_PER_BLOCK)
+    expect(drop.state.delivered).toBe(1)
+  })
+
+  it('says the same thing twice on the corner it was said on', () => {
+    // Nothing has changed since the passenger spoke, and there is only one way
+    // of putting it: repeating it word for word would read as the game not
+    // having noticed the drop-off, so the instruction simply stands.
+    const state = startGame(createGame(seeded(21)))
+    const drop = dropOff(state, seeded(4)) // let them out where they got in
+    expect(drop.result).toBe('refused')
+    expect(drop.state).toBe(state)
+  })
+
+  it('never costs a life, however many corners are tried', () => {
     let state = startGame(createGame(seeded(13)))
-    for (let i = 1; i < PATIENCE; i++) state = dropOff(state).state
-    const drop = dropOff(state)
-    expect(drop.result).toBe('gaveUp')
-    expect(drop.state.outcome?.result).toBe('gaveUp')
-    expect(drop.state.outcome?.route.dest).toEqual(state.fare!.route.dest)
-    expect(drop.state.delivered).toBe(0)
-    expect(drop.state.takings).toBe(0)
-    expect(drop.state.lives).toBe(LIVES - 1)
-    expect(drop.state.status).toBe('playing')
+    const rng = seeded(5)
+    const dest = state.fare!.route.dest
+    const fuel = state.spent
+    let corrected = 0
+    for (let i = 0; i < 4; i++) {
+      const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((dir) =>
+        hasRoad(state.city, state.taxi, dir),
+      )
+      state = drive(state, open[i % open.length])
+      expect(samePoint(state.taxi, dest)).toBe(false)
+      const drop = dropOff(state, rng)
+      expect(drop.result).not.toBe('arrived')
+      if (drop.result === 'redirected') corrected++
+      state = drop.state
+      expect(state.fare!.route.dest).toEqual(dest)
+      expect(state.lives).toBe(LIVES)
+      expect(state.status).toBe('playing')
+      expect(state.outcome).toBeNull()
+    }
+    // Only the wandering was charged for: four blocks of fuel, and not a soʻm
+    // for any of the wrong corners.
+    expect(state.spent).toBe(fuel + 4 * FUEL_PER_BLOCK)
+    expect(purse(state)).toBeGreaterThan(0)
+    expect(corrected).toBeGreaterThanOrEqual(3)
+    expect(state.corrections).toBe(corrected)
+  })
+
+  it('corrects the driver in the words they have already met', () => {
+    // A correction is free, so it must not be a way of hearing the vocabulary
+    // of a level the driver has not reached.
+    for (let seed = 1; seed <= 20; seed++) {
+      let state = startGame(createGame(seeded(seed)))
+      const rng = seeded(seed + 100)
+      // The first level says *the nth street on the left* and nothing else,
+      // plus the bare "turn left" a correction is always allowed — which is
+      // made of words that clause already contains.
+      const allowed = kindsBy(levelFor(state.delivered))
+      expect(allowed.sort()).toEqual(['turn', 'turnNow'])
+      for (let i = 0; i < 3; i++) {
+        state = driveShort(state)
+        const drop = dropOff(state, rng)
+        if (drop.result !== 'redirected') break
+        state = drop.state
+        for (const step of state.fare!.steps) expect(allowed).toContain(step.kind)
+        expect(state.fare!.steps.length).toBeLessThanOrEqual(MAX_REDIRECT_STEPS)
+      }
+    }
+  })
+
+  it('can point the way back from all but a few of the corners in a city', () => {
+    // The first level is the tight one: *the nth street on the left* is all
+    // anyone can say, and it still reaches nine corners in ten.
+    let found = 0
+    let corners = 0
+    for (let seed = 1; seed <= 10; seed++) {
+      const rng = seeded(seed)
+      const game = createGame(rng)
+      const dest = game.fare!.route.dest
+      for (const p of intersections(game.city)) {
+        if (p.x === dest.x && p.y === dest.y) continue
+        for (const dir of [NORTH, EAST, SOUTH, WEST] as Dir[]) {
+          if (!hasRoad(game.city, p, dir)) continue
+          corners++
+          const put = pickRedirect(game.city, { ...p, dir }, dest, 0, rng)
+          if (!put) continue
+          found++
+          // Whatever it says, it says it to the door and it drives.
+          expect(resolve(game.city, { ...p, dir }, put.steps)!.dest).toEqual(dest)
+        }
+      }
+    }
+    expect(found / corners).toBeGreaterThan(0.85)
+  })
+
+  it('leaves the instruction as it was given when the door is too far to describe', () => {
+    // A correction is a dozen blocks at the outside, so a door sixteen away
+    // cannot be pointed at from here in any words at all.
+    const far = lattice(9, 9)
+    expect(pickRedirect(far, { x: 0, y: 0, dir: EAST }, { x: 8, y: 8 }, 0, seeded(2))).toBeNull()
+
+    // The same corner put to a whole drop-off: the passenger has nothing to
+    // add, so what they said stands and the fare carries on untouched.
+    const state = startGame(createGame(seeded(21)))
+    const stranded: TaxiState = {
+      ...state,
+      city: far,
+      taxi: { x: 0, y: 0, dir: EAST },
+      fare: { ...state.fare!, route: { ...state.fare!.route, dest: { x: 8, y: 8 } } },
+    }
+    const drop = dropOff(stranded, seeded(2))
+    expect(drop.result).toBe('refused')
+    expect(drop.state).toBe(stranded)
   })
 
   it('ignores a second tap once the fare is over', () => {
@@ -563,13 +701,13 @@ describe('dropping off', () => {
   })
 
   it('leaves the taxi where it stopped, and starts the next fare from there', () => {
-    let state = startGame(createGame(seeded(17)))
-    for (let i = 0; i < PATIENCE; i++) state = dropOff(state).state
+    const state = runDry(startGame(createGame(seeded(17))))
+    expect(state.outcome?.result).toBe('broke')
     const next = continueRun(state, seeded(3))
     expect(next.taxi).toMatchObject({ x: state.taxi.x, y: state.taxi.y })
     expect(next.trail).toEqual([{ x: state.taxi.x, y: state.taxi.y }])
     expect(next.outcome).toBeNull()
-    expect(next.patience).toBe(0)
+    expect(next.corrections).toBe(0)
     expect(next.spent).toBe(0)
     expect(next.fareId).toBe(state.fareId + 1)
   })
@@ -662,7 +800,7 @@ describe('the meter', () => {
   it('ends the shift on the third fare written off, and only then', () => {
     let state = startGame(createGame(seeded(13)))
     for (let life = 1; life <= LIVES; life++) {
-      for (let i = 0; i < PATIENCE; i++) state = dropOff(state).state
+      state = runDry(state)
       expect(state.lives).toBe(LIVES - life)
       if (life < LIVES) {
         expect(state.status).toBe('playing')
