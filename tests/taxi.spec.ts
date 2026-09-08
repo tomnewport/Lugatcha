@@ -7,6 +7,12 @@ import {
   CITY_WIDTH,
   buyWord,
   canDrive,
+  FARES_PER_WORD,
+  FIRST_WORDS,
+  LAST_WORDS,
+  nextFare,
+  wordKey,
+  wordsAllowed,
   FIRST_SECONDS,
   LAST_SECONDS,
   secondsFor,
@@ -377,7 +383,7 @@ describe('following the directions', () => {
     for (const level of LEVELS) {
       for (let i = 0; i < 20; i++) {
         const pose = { x: i % built.width, y: (i * 3) % built.height, dir: (i % 4) as Dir }
-        const fare = pickFare(built, pose, level, rng)
+        const fare = pickFare(built, pose, level, 0, rng)
         if (!fare) continue
         const { legs, path } = fare.route
         expect(legs).toHaveLength(fare.steps.length)
@@ -514,7 +520,7 @@ describe('the ramp', () => {
     const city = buildCity(seeded(6))
     for (let i = 0; i < 20; i++) {
       const pose = { x: i % city.width, y: (i * 3) % city.height, dir: (i % 4) as Dir }
-      const fare = pickFare(city, pose, LEVELS[0], rng)
+      const fare = pickFare(city, pose, LEVELS[0], 0, rng)
       if (!fare) continue
       expect(fare.said).toEqual(fare.steps.map(() => 0))
     }
@@ -527,7 +533,7 @@ describe('the ramp', () => {
     const heard = new Map<string, Set<number>>()
     for (let i = 0; i < 400; i++) {
       const pose = { x: i % city.width, y: (i * 7) % city.height, dir: (i % 4) as Dir }
-      const fare = pickFare(city, pose, last, rng)
+      const fare = pickFare(city, pose, last, 0, rng)
       if (!fare) continue
       fare.steps.forEach((step, index) => {
         const seen = heard.get(step.kind) ?? new Set<number>()
@@ -557,7 +563,7 @@ describe('picking a fare', () => {
       for (const level of LEVELS) {
         for (let i = 0; i < 20; i++) {
           const pose = { x: i % city.width, y: (i * 3) % city.height, dir: (i % 4) as Dir }
-          const fare = pickFare(city, pose, level, rng)
+          const fare = pickFare(city, pose, level, 0, rng)
           if (!fare) continue
           const route = resolve(city, pose, fare.steps)
           expect(route).not.toBeNull()
@@ -574,7 +580,7 @@ describe('picking a fare', () => {
     for (const level of LEVELS) {
       for (let i = 0; i < 30; i++) {
         const pose = { x: i % city.width, y: (i * 2) % city.height, dir: (i % 4) as Dir }
-        const fare = pickFare(city, pose, level, rng)
+        const fare = pickFare(city, pose, level, 0, rng)
         if (!fare) continue
         expect(fare.route.dest).not.toEqual({ x: pose.x, y: pose.y })
         expect(fare.route.path.length - 1).toBeGreaterThanOrEqual(2)
@@ -589,7 +595,7 @@ describe('picking a fare', () => {
     for (const level of LEVELS) {
       for (let i = 0; i < 40; i++) {
         const pose = { x: i % city.width, y: (i * 5) % city.height, dir: (i % 4) as Dir }
-        const fare = pickFare(city, pose, level, rng)
+        const fare = pickFare(city, pose, level, 0, rng)
         if (!fare) continue
         for (const clause of fare.clauses) expect(recorded).toContain(clause)
         expect(fare.clauses).toEqual(fare.steps.map((step, i) => stepUzbek(step, fare.said[i])))
@@ -646,12 +652,11 @@ describe('dropping off', () => {
     expect(drop.state.outcome?.result).toBe('arrived')
   })
 
-  it('is worth the words said and the distance covered, a little over the fuel', () => {
+  it('is worth the drive there, plus the translations the shift still allows', () => {
     const state = startGame(createGame(seeded(21)))
     const fare = state.fare!
-    expect(fare.pay).toBe(fareValue(fare.wordCount, fare.blocks))
-    // The margin over the fuel is what makes a well-driven fare worth taking.
-    expect(fare.pay).toBeGreaterThan(fare.blocks * FUEL_PER_BLOCK)
+    expect(fare.pay).toBe(fareValue(fare.blocks, 0))
+    expect(fare.pay).toBe(fare.blocks * FUEL_PER_BLOCK + FIRST_WORDS * WORD_PRICE)
   })
 
   it('puts the driver right from where they stopped, for nothing', () => {
@@ -863,21 +868,45 @@ describe('the meter', () => {
     expect(state.bought).toEqual([])
   })
 
-  it('always leaves something over for a driver who buys every word and drives straight', () => {
-    // The whole promise of the rate: translation is never the thing that
-    // bankrupts you, it is just the thing that leaves you working for pennies.
-    let state = startGame(createGame(seeded(55)))
-    const rng = seeded(8)
-    for (let fare = 0; fare < 15; fare++) {
-      for (const clause of state.fare!.words) {
-        for (const word of clause) state = buyWord(state, word.text)
-      }
-      const drop = dropOff(driveRoute(state))
-      expect(drop.result).toBe('arrived')
-      expect(drop.paid).toBeGreaterThan(0)
-      state = continueRun(drop.state, rng)
-    }
-    expect(state.lives).toBe(LIVES)
+  it('opens generous and tightens to one translation a fare', () => {
+    expect(wordsAllowed(0)).toBe(FIRST_WORDS)
+    expect(wordsAllowed(FARES_PER_WORD - 1)).toBe(FIRST_WORDS)
+    expect(wordsAllowed(FARES_PER_WORD)).toBe(FIRST_WORDS - 1)
+    expect(wordsAllowed(FARES_PER_WORD * (FIRST_WORDS - LAST_WORDS))).toBe(LAST_WORDS)
+    expect(wordsAllowed(1000)).toBe(LAST_WORDS)
+  })
+
+  it('pays a perfect fare a word, a translated one nothing, and a second one a life', () => {
+    // The three lines the whole late shift comes down to. It is put to a
+    // driver far enough in to be on the tight setting, where the purse is the
+    // driving plus one word and nothing else.
+    const late = nextFare(
+      { ...startGame(createGame(seeded(21))), delivered: FARES_PER_WORD * FIRST_WORDS },
+      seeded(2),
+    )
+    const fare = late.fare!
+    expect(fare.pay).toBe(fare.blocks * FUEL_PER_BLOCK + LAST_WORDS * WORD_PRICE)
+
+    // Driven as asked, with nothing bought: a word's worth in the driver's
+    // pocket, which on this setting is the whole of the wage.
+    const straight = dropOff(driveRoute(late))
+    expect(straight.result).toBe('arrived')
+    expect(straight.paid).toBe(WORD_PRICE)
+
+    // The word they could not manage without costs exactly what they would
+    // have kept: they arrive, and they have worked for nothing.
+    const words = fare.words.flat()
+    const one = buyWord(late, words[0].text)
+    const paid = dropOff(driveRoute(one))
+    expect(paid.result).toBe('arrived')
+    expect(paid.paid).toBe(0)
+    expect(paid.state.lives).toBe(LIVES)
+
+    // A second word is more than the fare has: it eats itself on the way.
+    const second = words.find((word) => wordKey(word.text) !== wordKey(words[0].text))!
+    const two = driveRoute(buyWord(one, second.text))
+    expect(two.outcome?.result).toBe('broke')
+    expect(two.lives).toBe(LIVES - 1)
   })
 
   it('writes the fare off when the driving eats all of it, and costs a life', () => {
@@ -887,7 +916,7 @@ describe('the meter', () => {
     const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
       canDrive(state.city, state.taxi, dir),
     )!
-    for (let i = 0; i < fare.pay / FUEL_PER_BLOCK && !state.outcome; i++) {
+    for (let i = 0; i <= fare.pay / FUEL_PER_BLOCK && !state.outcome; i++) {
       state = drive(state, i % 2 ? (((open + 2) % 4) as Dir) : open)
     }
     expect(state.outcome?.result).toBe('broke')
@@ -1006,7 +1035,10 @@ describe('a whole shift', () => {
     expect(state.takings).toBeGreaterThan(40 * 4 * FUEL_PER_BLOCK)
   })
 
-  it('works for pennies when every word has to be translated', () => {
+  it('cannot be worked by buying the whole instruction', () => {
+    // Reading is the living. Buying every word is affordable for a fare or
+    // two, and then the allowance comes down and it stops being a way of
+    // driving at all: the shift ends on lives rather than on takings.
     let read = startGame(createGame(seeded(77)))
     let translated = startGame(createGame(seeded(77)))
     const readRng = seeded(101)
@@ -1014,15 +1046,16 @@ describe('a whole shift', () => {
 
     for (let fare = 0; fare < 12; fare++) {
       read = continueRun(dropOff(driveRoute(read)).state, readRng)
+      if (translated.status !== 'playing') continue
       for (const clause of translated.fare!.words) {
         for (const word of clause) translated = buyWord(translated, word.text)
       }
       translated = continueRun(dropOff(driveRoute(translated)).state, translatedRng)
     }
 
-    // Both shifts delivered every passenger; only one of them made a living.
-    expect(translated.delivered).toBe(read.delivered)
-    expect(translated.takings).toBeGreaterThan(0)
-    expect(translated.takings * 4).toBeLessThan(read.takings)
+    expect(read.delivered).toBe(12)
+    expect(read.takings).toBeGreaterThan(0)
+    expect(translated.status).toBe('over')
+    expect(translated.delivered).toBeLessThan(read.delivered)
   })
 })

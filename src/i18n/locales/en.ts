@@ -165,7 +165,7 @@ export default {
     title: 'Taxi driver',
     level: 'Level {level}',
     howTo:
-      'Your passenger gives directions in Uzbek. Drag the taxi along the streets to where they mean, then tap it to let them out — turn where you were told, and pull up in the street they named. Stop on the wrong corner and they will tell you the way from there instead, as often as it takes; it costs nothing but the driving. The fare is worth a word each plus its distance, and that is the purse: fuel and every word you tap to have translated come out of it, and you keep what is left when they step out. They are in a hurry, too — fifteen seconds at the start of a shift, and less the busier it gets. Spend the fare or run the clock out and it costs one of your three, and on the way out they show you what they meant, a phrase at a time.',
+      'Your passenger gives directions in Uzbek. Drag the taxi along the streets to where they mean, then tap it to let them out — turn where you were told, and pull up in the street they named. Stop on the wrong corner and they will tell you the way from there instead, as often as it takes; it costs nothing but the driving. The fare covers the drive to their door and a few translations on top — four of them at the start of a shift, one by the end of it: fuel and every word you tap to have translated come out of that purse, and you keep what is left when they step out. They are in a hurry, too — fifteen seconds at the start of a shift, and less the busier it gets. Spend the fare or run the clock out and it costs one of your three, and on the way out they show you what they meant, a phrase at a time.',
     start: 'Start the shift',
     takings: 'Takings',
     fare: 'Fare',

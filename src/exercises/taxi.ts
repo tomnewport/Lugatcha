@@ -5,16 +5,19 @@
  * A fare is one instruction and one drop-off. The passenger speaks: *birinchi
  * koʻchadan chapga buriling* — first on the left. You drag the taxi along the
  * streets to where you think that is, and tap it to let them out; get there and
- * they pay. The pressure is the meter and the clock. Every block burns fuel,
- * every word of the instruction you tap to have translated costs money, and a
- * fare pays for its words and its distance at a rate only a little above what
- * the driving costs. Understand the directions and the shift turns a profit;
- * buy the whole instruction in translation and it barely pays at all. Nothing
- * takes money off the driver: the meter belongs to the fare in hand, so the
- * worst a fare can do is eat itself, and that costs one of three lives.
+ * they pay. The pressure is the meter and the clock, and both of them tighten
+ * as the shift goes on. Every block burns fuel and every word of the
+ * instruction you tap to have translated costs money, and what a fare pays is
+ * the fuel to drive it door to door plus an allowance of translations on top —
+ * four of them at the start of a shift, one by the end of it (see
+ * {@link wordsAllowed}). On that last setting the whole game is in three
+ * lines: drive the route they asked for and you keep a word's worth, buy the
+ * word you needed and you keep nothing, buy two and the fare has eaten itself.
+ * Nothing takes money off the driver: the meter belongs to the fare in hand,
+ * so the worst a fare can do is eat itself, and that costs one of three lives.
  *
  * The clock is the other half of it — fifteen seconds at the start of a shift
- * and five by the end of one (see {@link secondsFor}) — and it is why the
+ * and six by the end of one (see {@link secondsFor}) — and it is why the
  * instruction has to be understood rather than puzzled out. A fare that runs
  * out of either is written off, and the route it meant is then read back
  * clause by clause on the map, which is where the game does its teaching.
@@ -915,25 +918,38 @@ const MAX_ROUTE_BLOCKS = 12
 /**
  * The money, all of it in soʻm, and all of it in thousands.
  *
- * A fare pays for the words it took to say and the distance it covers, and the
- * driver pays for the fuel to get there and for every word they could not
- * manage without. The rate is set a little above the fuel so that a fare driven
- * straight to the door turns a profit and a fare found by wandering does not —
- * that margin, `DISTANCE_RATE` minus one block of fuel, is the whole game.
+ * A fare's purse is the fuel to drive it door to door and nothing else, plus
+ * an allowance of translations on top — and the allowance is the ramp. It
+ * opens at four words, which is a whole level-one instruction and change, and
+ * comes down by one every five fares until the purse will carry exactly one
+ * (see {@link wordsAllowed}). By then the arithmetic is the game: drive the
+ * route the passenger asked for and you keep a word's worth; buy one word to
+ * get there and you keep nothing; buy two and the fare has eaten itself.
  *
- * The numbers are small on purpose: a fare comes out around 6 000–15 000 soʻm,
- * which is roughly what a short hop across Tashkent actually costs, and a word
- * costs about what a minute of driving does. Understand the instruction and the
- * shift pays; buy the whole thing in translation and you have worked for
- * nothing.
+ * A word costs three blocks of driving, which is what leaves a late fare any
+ * room to be wrong in — a wrong turn is two blocks, out and back, and that
+ * still has to be survivable when a translation is not.
+ *
+ * The numbers are small on purpose: a fare comes out around 6 000–16 000 soʻm,
+ * which is roughly what a short hop across Tashkent actually costs.
  */
 export const FUEL_PER_BLOCK = 1_000
-export const WORD_PRICE = 1_000
-export const DISTANCE_RATE = 1.25
+export const WORD_PRICE = 3_000
 
-/** What a fare is worth: a word each, plus the distance at `DISTANCE_RATE`. */
-export function fareValue(words: number, blocks: number): number {
-  return (words + Math.round(DISTANCE_RATE * blocks)) * FUEL_PER_BLOCK
+/** Translations a fare's purse will carry, first shift to last. */
+export const FIRST_WORDS = 4
+export const LAST_WORDS = 1
+/** Fares between one of them coming off the allowance. */
+export const FARES_PER_WORD = 5
+
+/** How many translations the purse will bear for a driver this far in. */
+export function wordsAllowed(delivered: number): number {
+  return Math.max(LAST_WORDS, FIRST_WORDS - Math.floor(delivered / FARES_PER_WORD))
+}
+
+/** What a fare is worth: the driving it asks for, plus its allowance. */
+export function fareValue(blocks: number, delivered: number): number {
+  return blocks * FUEL_PER_BLOCK + wordsAllowed(delivered) * WORD_PRICE
 }
 
 /** A fare: what was said, what it pays, and where doing as you are told puts you. */
@@ -960,6 +976,10 @@ export interface Fare {
  * Puts an instruction into words: one of the level's wordings per step, drawn
  * independently, so a two-clause fare can come out in two different voices the
  * way a real one does.
+ *
+ * The purse comes in from outside because a correction does not get one of its
+ * own: what the passenger pays was agreed when they got in, and being put
+ * right neither adds to it nor takes from it.
  */
 function makeFare(
   steps: Step[],
@@ -967,7 +987,7 @@ function makeFare(
   from: Pose,
   voices: number,
   rng: () => number,
-  pay?: number,
+  pay: number,
 ): Fare {
   const said = steps.map((step) => Math.floor(rng() * Math.min(voices, sayings(step.kind))))
   const words = steps.map((step, index) => stepWords(step, said[index]))
@@ -980,10 +1000,7 @@ function makeFare(
     words,
     wordCount,
     blocks,
-    // A correction inherits the fare it belongs to: what the passenger pays was
-    // agreed when they got in, and being put right neither adds to it nor
-    // takes from it.
-    pay: pay ?? fareValue(wordCount, blocks),
+    pay,
     route,
     from,
   }
@@ -1002,6 +1019,7 @@ export function pickFare(
   city: City,
   pose: Pose,
   level: Level,
+  delivered: number,
   rng: () => number = Math.random,
   avoid?: string,
 ): Fare | null {
@@ -1028,7 +1046,8 @@ export function pickFare(
   // The wording is only chosen once the route is, so a level with four voices
   // does not cost four times the search.
   const picked = pickOne(pickOne(byShape, rng), rng)
-  return makeFare(picked.steps, picked.route, pose, level.voices, rng)
+  const pay = fareValue(picked.route.path.length - 1, delivered)
+  return makeFare(picked.steps, picked.route, pose, level.voices, rng, pay)
 }
 
 // --- Correcting the driver --------------------------------------------------
@@ -1196,7 +1215,7 @@ export interface Outcome {
  *
  * A fare is a job, and a job has someone at the other end of it: the first
  * ones are unhurried, and the shift gets busier the longer it runs, a second
- * off every other fare until nobody will wait more than five. It is the ramp
+ * off every other fare until nobody will wait more than six. It is the ramp
  * that ends a shift — the directions themselves stop getting harder at the
  * last level, and it is the clock that keeps a good driver honest after that.
  *
@@ -1206,7 +1225,7 @@ export interface Outcome {
  * words meant anything to you — which is the thing the game is for.
  */
 export const FIRST_SECONDS = 15
-export const LAST_SECONDS = 5
+export const LAST_SECONDS = 6
 /** Fares between one second and the next coming off the clock. */
 export const FARES_PER_SECOND = 2
 
@@ -1286,15 +1305,15 @@ export function nextFare(state: TaxiState, rng: () => number = Math.random): Tax
     .map((dir) => ({ x: state.taxi.x, y: state.taxi.y, dir }))
 
   let pose = state.taxi
-  let fare = pickFare(state.city, pose, level, rng, avoid)
+  let fare = pickFare(state.city, pose, level, state.delivered, rng, avoid)
   for (const turned of shuffleWith(here, rng)) {
     if (fare) break
     pose = turned
-    fare = pickFare(state.city, pose, level, rng, avoid)
+    fare = pickFare(state.city, pose, level, state.delivered, rng, avoid)
   }
   for (let tries = 0; !fare && tries < 40; tries++) {
     pose = randomPose(state.city, rng)
-    fare = pickFare(state.city, pose, level, rng, avoid)
+    fare = pickFare(state.city, pose, level, state.delivered, rng, avoid)
   }
   if (!fare) return state
 
@@ -1375,17 +1394,22 @@ function writeOff(state: TaxiState, result: FareEnd): TaxiState {
 }
 
 /**
- * Takes money off the meter, and writes the fare off if that empties it.
+ * Takes money off the meter, and writes the fare off if that overdraws it.
  *
  * Spending is always against the fare in hand, never against the shift's
  * takings, so a driver cannot end a fare poorer than they began it — the worst
  * that can happen is that the whole purse goes on fuel and translations, and
  * then it is a life rather than money that is lost.
+ *
+ * The last soʻm of the purse is spendable: a driver who buys the one word they
+ * needed and then drives straight there arrives with nothing, which is a fare
+ * worked for nothing rather than a fare lost. It is the soʻm after it that
+ * ends the fare.
  */
 function spend(state: TaxiState, som: number): TaxiState {
   const spent = state.spent + som
   const next = { ...state, spent }
-  return state.fare && spent >= state.fare.pay ? writeOff(next, 'broke') : next
+  return state.fare && spent > state.fare.pay ? writeOff(next, 'broke') : next
 }
 
 /**
