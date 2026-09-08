@@ -36,10 +36,26 @@ const progressMap = computed(() => {
   for (const p of allProgress.value) map.set(p.wordId, p)
   return map
 })
+/**
+ * When this set's article was last read, if ever. Live, so the tick appears on
+ * the menu the moment the learner comes back from the review.
+ */
+const reviewedAt = useLiveQuery(
+  async () => (await db.groupProgress.get(route.params.id as string))?.reviewedAt,
+  undefined as number | undefined,
+)
+const reviewed = computed(() => reviewedAt.value !== undefined)
+
 const learnedCount = computed(() =>
   group.value ? learnedInGroup(group.value.words, progressMap.value) : 0,
 )
 const total = computed(() => group.value?.words.length ?? 0)
+/**
+ * Every word in the set fully learned — the test has nothing left to prove, so
+ * it steps back to a ticked, quieter card rather than disappearing: a finished
+ * set is still worth re-testing whenever the learner fancies it.
+ */
+const allLearned = computed(() => total.value > 0 && learnedCount.value === total.value)
 
 function back() {
   if (stage.value === 'menu') {
@@ -84,20 +100,56 @@ function back() {
         </div>
 
         <div class="actions">
-          <button class="action action--review" type="button" @click="stage = 'review'">
+          <button
+            class="action action--review"
+            :class="{ 'action--done': reviewed }"
+            type="button"
+            @click="stage = 'review'"
+          >
             <span class="action__emoji" aria-hidden="true">📖</span>
             <span class="action__text">
               <span class="action__title">{{ $t('group.review') }}</span>
-              <span class="action__sub">{{ $t('group.reviewDesc') }}</span>
+              <span class="action__sub">{{
+                reviewed ? $t('group.reviewedDesc') : $t('group.reviewDesc')
+              }}</span>
+            </span>
+            <span
+              v-if="reviewed"
+              class="action__tick"
+              role="img"
+              :aria-label="$t('group.reviewedLabel')"
+            >
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2.5 8l4 4 7-7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
-          <button class="action action--test" type="button" @click="stage = 'test'">
+          <button
+            class="action action--test"
+            :class="{ 'action--done': allLearned }"
+            type="button"
+            @click="stage = 'test'"
+          >
             <span class="action__emoji" aria-hidden="true">{{ group.quiz === 'counting' ? '🧮' : '🎯' }}</span>
             <span class="action__text">
               <span class="action__title">{{ group.quiz === 'counting' ? $t('group.countingQuiz') : $t('group.test') }}</span>
               <span class="action__sub">{{
-                group.quiz === 'counting' ? $t('group.countingDesc') : $t('group.testDesc')
+                allLearned
+                  ? $t('group.testedDesc')
+                  : group.quiz === 'counting'
+                    ? $t('group.countingDesc')
+                    : $t('group.testDesc')
               }}</span>
+            </span>
+            <span
+              v-if="allLearned"
+              class="action__tick"
+              role="img"
+              :aria-label="$t('group.learnedLabel')"
+            >
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2.5 8l4 4 7-7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <button
@@ -293,14 +345,53 @@ function back() {
   border-color: var(--color-gold);
 }
 
+/*
+ * Done, but never closed: a finished card drops its accent and shadow so the
+ * unfinished ones lead the eye, keeping only the tick to say so. It stays a
+ * full-size, tappable button — going back for another look costs nothing.
+ */
+.action--done {
+  border-color: var(--color-border);
+  background: var(--color-bg);
+  box-shadow: none;
+}
+
+.action--done .action__emoji {
+  opacity: 0.65;
+}
+
+.action--done .action__title {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
 .action__emoji {
   font-size: 1.7rem;
   flex-shrink: 0;
 }
 
 .action__text {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+.action__tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-teal);
+  color: #fff;
+}
+
+.action__tick svg {
+  width: 13px;
+  height: 13px;
 }
 
 .action__title {

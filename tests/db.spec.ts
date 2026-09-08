@@ -10,6 +10,7 @@ import {
   recordLocationVisit,
   recordRoleplayShown,
   loadRoleplayShownMap,
+  recordGroupReview,
   resetAllProgress,
 } from '@/db/progress'
 import { isWordKnown } from '@/db/useDb'
@@ -192,15 +193,37 @@ describe('roleplay shown tracking', () => {
   })
 })
 
+describe('recordGroupReview', () => {
+  it('stamps the first read and only counts the later ones', async () => {
+    await recordGroupReview(db, 'colours')
+    const first = await db.groupProgress.get('colours')
+    expect(first?.reviewedAt).toBeTypeOf('number')
+    expect(first?.reviewCount).toBe(1)
+
+    await recordGroupReview(db, 'colours')
+    const second = await db.groupProgress.get('colours')
+    // Re-reading is always allowed, and never rewrites when it was first seen.
+    expect(second?.reviewedAt).toBe(first?.reviewedAt)
+    expect(second?.reviewCount).toBe(2)
+  })
+
+  it('keeps sets apart', async () => {
+    await recordGroupReview(db, 'colours')
+    expect(await db.groupProgress.get('numbers')).toBeUndefined()
+  })
+})
+
 describe('resetAllProgress', () => {
   it('clears progress but keeps content', async () => {
     await markWordsSeen(db, ['core.hello'])
     await completeExercise(db, 'airport', 'intro')
     await recordRoleplayShown(db, 'base')
+    await recordGroupReview(db, 'colours')
     await resetAllProgress(db)
     expect(await db.wordProgress.count()).toBe(0)
     expect(await db.locationProgress.count()).toBe(0)
     expect(await db.roleplayProgress.count()).toBe(0)
+    expect(await db.groupProgress.count()).toBe(0)
     expect(await db.words.count()).toBe(2)
   })
 })

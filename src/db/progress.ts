@@ -391,6 +391,22 @@ export async function completeLesson(db: LugatchaDB, lessonId: string): Promise<
 }
 
 /**
+ * Records that a vocab set's article has been opened for review. The first read
+ * stamps `reviewedAt` — what the School shows a tick for — and every later read
+ * only bumps the count, so re-reading never rewrites when it was first seen.
+ */
+export async function recordGroupReview(db: LugatchaDB, groupId: string): Promise<void> {
+  await db.transaction('rw', db.groupProgress, async () => {
+    const existing = await db.groupProgress.get(groupId)
+    await db.groupProgress.put({
+      groupId,
+      reviewedAt: existing?.reviewedAt ?? Date.now(),
+      reviewCount: (existing?.reviewCount ?? 0) + 1,
+    })
+  })
+}
+
+/**
  * A review schedule for a word declared already-known during recovery: a few
  * reps in and spaced a few days out, so restored words settle into retention
  * review instead of all falling due at once. A short spread keeps a big batch
@@ -466,12 +482,13 @@ export async function markExercisesDone(
   })
 }
 
-/** Wipes all word, location, and lesson progress. Content tables are untouched. */
+/** Wipes all word, location, lesson, and vocab-set progress. Content tables are untouched. */
 export async function resetAllProgress(db: LugatchaDB): Promise<void> {
   await Promise.all([
     db.wordProgress.clear(),
     db.locationProgress.clear(),
     db.lessonProgress.clear(),
+    db.groupProgress.clear(),
     db.storyProgress.clear(),
     db.roleplayProgress.clear(),
     db.phraseProgress.clear(),

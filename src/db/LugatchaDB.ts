@@ -6,6 +6,7 @@ import type {
   WordProgress,
   LocationProgress,
   LessonProgress,
+  GroupProgress,
   StoryProgress,
   RoleplayProgress,
   PhraseProgress,
@@ -19,6 +20,7 @@ export class LugatchaDB extends Dexie {
   wordProgress!: Table<WordProgress, string>
   locationProgress!: Table<LocationProgress, string>
   lessonProgress!: Table<LessonProgress, string>
+  groupProgress!: Table<GroupProgress, string>
   storyProgress!: Table<StoryProgress, string>
   roleplayProgress!: Table<RoleplayProgress, string>
   phraseProgress!: Table<PhraseProgress, string>
@@ -61,6 +63,11 @@ export class LugatchaDB extends Dexie {
     // topics list) can be looked up when progress is written
     this.version(8).stores({
       words: 'id, theme, sameAs',
+    })
+    // v9: remember which vocab-set articles have been read, so the School can
+    // mark a set's review as already seen without locking it
+    this.version(9).stores({
+      groupProgress: 'groupId',
     })
     // Fires only on first-ever open of this DB in the browser
     this.on('populate', () => seedDatabase(this))

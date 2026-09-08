@@ -353,6 +353,20 @@ export interface VocabGroup extends VocabGroupMeta {
   game?: 'bubbles'
 }
 
+/**
+ * How a learner has got on with one vocab set. Only the article's read history
+ * lives here — word mastery stays in `wordProgress` — so the School can show
+ * that a set's review has already been read without closing it off: it stays
+ * open to be read again as often as the learner likes.
+ */
+export interface GroupProgress {
+  groupId: string
+  /** When the article was first read through. */
+  reviewedAt?: number
+  /** How many times it has been opened for review. */
+  reviewCount: number
+}
+
 
 // Static config — not stored in IndexedDB, read from locations.yaml at startup
 export interface Location {
