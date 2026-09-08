@@ -15,6 +15,7 @@ import {
   recordRoleplayShown,
   recordLessonExercise,
   completeLesson,
+  recordGroupReview,
   resetAllProgress,
 } from '@/db/progress'
 
@@ -68,6 +69,9 @@ export const useProgressStore = defineStore('progress', {
     },
     completeLesson(lessonId: string) {
       return completeLesson(db, lessonId)
+    },
+    recordGroupReview(groupId: string) {
+      return recordGroupReview(db, groupId)
     },
     resetAllProgress() {
       return resetAllProgress(db)

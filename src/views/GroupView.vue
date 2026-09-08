@@ -36,6 +36,16 @@ const progressMap = computed(() => {
   for (const p of allProgress.value) map.set(p.wordId, p)
   return map
 })
+/**
+ * When this set's article was last read, if ever. Live, so the tick appears on
+ * the menu the moment the learner comes back from the review.
+ */
+const reviewedAt = useLiveQuery(
+  async () => (await db.groupProgress.get(route.params.id as string))?.reviewedAt,
+  undefined as number | undefined,
+)
+const reviewed = computed(() => reviewedAt.value !== undefined)
+
 const learnedCount = computed(() =>
   group.value ? learnedInGroup(group.value.words, progressMap.value) : 0,
 )
@@ -84,11 +94,28 @@ function back() {
         </div>
 
         <div class="actions">
-          <button class="action action--review" type="button" @click="stage = 'review'">
+          <button
+            class="action action--review"
+            :class="{ 'action--reviewed': reviewed }"
+            type="button"
+            @click="stage = 'review'"
+          >
             <span class="action__emoji" aria-hidden="true">📖</span>
             <span class="action__text">
               <span class="action__title">{{ $t('group.review') }}</span>
-              <span class="action__sub">{{ $t('group.reviewDesc') }}</span>
+              <span class="action__sub">{{
+                reviewed ? $t('group.reviewedDesc') : $t('group.reviewDesc')
+              }}</span>
+            </span>
+            <span
+              v-if="reviewed"
+              class="action__tick"
+              role="img"
+              :aria-label="$t('group.reviewedLabel')"
+            >
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2.5 8l4 4 7-7" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
             </span>
           </button>
           <button class="action action--test" type="button" @click="stage = 'test'">
@@ -285,6 +312,10 @@ function back() {
   box-shadow: var(--shadow-md);
 }
 
+.action--reviewed {
+  border-color: var(--color-teal);
+}
+
 .action--test {
   border-color: var(--color-teal);
 }
@@ -299,8 +330,27 @@ function back() {
 }
 
 .action__text {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+}
+
+.action__tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-teal);
+  color: #fff;
+}
+
+.action__tick svg {
+  width: 13px;
+  height: 13px;
 }
 
 .action__title {

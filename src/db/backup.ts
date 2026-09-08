@@ -24,6 +24,7 @@ export const PROGRESS_TABLES = [
   'wordProgress',
   'locationProgress',
   'lessonProgress',
+  'groupProgress',
   'storyProgress',
   'roleplayProgress',
   'phraseProgress',
