@@ -436,6 +436,8 @@ export default {
     reviewDesc: 'Read about them, then meet the words',
     reviewedDesc: "You've read this — have another look any time",
     reviewedLabel: 'Already reviewed',
+    testedDesc: 'All learned — test yourself again any time',
+    learnedLabel: 'All words learned',
     seenBefore: "You've read this before — it's here whenever you want it again.",
     countingQuiz: 'Counting quiz',
     test: 'Test',
