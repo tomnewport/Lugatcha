@@ -27,6 +27,11 @@
  * game changes on you every fare, and the count of "the third on the left"
  * only includes streets that actually exist — a few of this city's are closed.
  *
+ * The map is a window, not the whole city: its streets run off the edge and
+ * fade out rather than stopping, so every intersection drawn is a crossroads
+ * and the counting reads the same at the edge as in the middle. The driving
+ * stays in the window — no fare is ever out in the haze.
+ *
  * Everything in this module is pure and deterministic given an `rng`: the
  * component is a renderer and an input handler, and the rules are tested
  * directly.
@@ -165,31 +170,50 @@ export interface City {
   places: Place[]
 }
 
-/** Whether a street leaves `p` in `dir` — the only thing the taxi may drive. */
+/**
+ * Whether a street leaves `p` in `dir`.
+ *
+ * The streets that run off the edge count. The map is a window on a city that
+ * carries on past it — the drawing fades out rather than stopping — so every
+ * intersection on it is a crossroads with four ways off, even the ones in the
+ * corners, and *the second on the left* counts a turning that leaves the map
+ * the same as any other. Where the taxi may actually go is {@link canDrive}:
+ * the fares are all in the district the map shows.
+ */
 export function hasRoad(city: City, p: Point, dir: Dir): boolean {
   switch (dir) {
     case NORTH:
-      return p.y > 0 && city.v[p.y - 1][p.x]
+      return p.y > 0 ? city.v[p.y - 1][p.x] : true
     case EAST:
-      return p.x < city.width - 1 && city.h[p.y][p.x]
+      return p.x < city.width - 1 ? city.h[p.y][p.x] : true
     case SOUTH:
-      return p.y < city.height - 1 && city.v[p.y][p.x]
+      return p.y < city.height - 1 ? city.v[p.y][p.x] : true
     default:
-      return p.x > 0 && city.h[p.y][p.x - 1]
+      return p.x > 0 ? city.h[p.y][p.x - 1] : true
   }
 }
 
-/** The intersection one block on, or null when the street does not go there. */
+/**
+ * The intersection one block on, or null when the taxi cannot get there —
+ * either nothing runs that way, or what does is a street off the map.
+ */
 export function step(city: City, p: Point, dir: Dir): Point | null {
   if (!hasRoad(city, p, dir)) return null
   const d = DIR_STEPS[dir]
-  return { x: p.x + d.x, y: p.y + d.y }
+  const next = { x: p.x + d.x, y: p.y + d.y }
+  const off = next.x < 0 || next.y < 0 || next.x >= city.width || next.y >= city.height
+  return off ? null : next
 }
 
-/** How many streets meet at an intersection. */
+/** Whether the taxi may take that street: it is open, and it stays on the map. */
+export function canDrive(city: City, p: Point, dir: Dir): boolean {
+  return step(city, p, dir) !== null
+}
+
+/** How many streets the taxi can leave an intersection by. */
 function degree(city: City, p: Point): number {
   let n = 0
-  for (const dir of [NORTH, EAST, SOUTH, WEST] as Dir[]) if (hasRoad(city, p, dir)) n++
+  for (const dir of [NORTH, EAST, SOUTH, WEST] as Dir[]) if (canDrive(city, p, dir)) n++
   return n
 }
 
@@ -293,7 +317,7 @@ export function buildCity(rng: () => number = Math.random): City {
 export function randomPose(city: City, rng: () => number = Math.random): Pose {
   const spots = shuffleWith(intersections(city), rng)
   for (const spot of spots) {
-    const dirs = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((dir) => hasRoad(city, spot, dir))
+    const dirs = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((dir) => canDrive(city, spot, dir))
     if (dirs.length) return { ...spot, dir: pickOne(dirs, rng) }
   }
   return { x: 0, y: 0, dir: EAST }
@@ -652,7 +676,11 @@ function driveStep(
     }
     case 'turn': {
       // Counting starts at the *next* junction: the turning you are sitting
-      // on is the one you are coming out of, not the first one ahead.
+      // on is the one you are coming out of, not the first one ahead. What is
+      // counted is every street on that side, the ones leaving the map
+      // included — see {@link hasRoad} — so the count matches what the driver
+      // can see. Turning into one of those is what the taxi cannot do, and
+      // such an instruction simply never gets offered.
       let counted = 0
       for (;;) {
         if (!forward()) return null
@@ -664,7 +692,7 @@ function driveStep(
     }
     case 'turnNow': {
       const turned = turnDir(dir, instruction.side)
-      if (!hasRoad(city, at, turned)) return null
+      if (!canDrive(city, at, turned)) return null
       dir = turned
       break
     }
@@ -676,7 +704,7 @@ function driveStep(
       }
       if (instruction.kind === 'landmarkTurn') {
         const turned = turnDir(dir, instruction.side)
-        if (!hasRoad(city, at, turned)) return null
+        if (!canDrive(city, at, turned)) return null
         dir = turned
       }
       break
@@ -1175,7 +1203,7 @@ export function nextFare(state: TaxiState, rng: () => number = Math.random): Tax
   const avoid = state.fare ? routeUzbek(state.fare.steps) : undefined
 
   const here = ([NORTH, EAST, SOUTH, WEST] as Dir[])
-    .filter((dir) => dir !== state.taxi.dir && hasRoad(state.city, state.taxi, dir))
+    .filter((dir) => dir !== state.taxi.dir && canDrive(state.city, state.taxi, dir))
     .map((dir) => ({ x: state.taxi.x, y: state.taxi.y, dir }))
 
   let pose = state.taxi

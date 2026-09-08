@@ -71,9 +71,10 @@ const speaking = ref(false)
 
 // --- Laying the city out ----------------------------------------------------
 
-/** SVG units per block, and the margin that leaves room for the edge labels. */
+/** SVG units per block, and the margin the edge labels and the streets
+ *  running out of the map share. */
 const STEP = 100
-const PAD = 52
+const PAD = 60
 
 const viewWidth = PAD * 2 + (CITY_WIDTH - 1) * STEP
 const viewHeight = PAD * 2 + (CITY_HEIGHT - 1) * STEP
@@ -83,7 +84,53 @@ function px(value: number): number {
   return PAD + value * STEP
 }
 
-/** Every open street, as a line to draw. */
+/**
+ * The four sides of the map, and the fade the streets leaving by them are
+ * drawn with.
+ *
+ * The city does not stop at the edge of the map — every intersection has four
+ * ways off it, and the ones the passenger counts at the edge are these — so
+ * each is drawn running out of the window and dissolving. The gradient goes
+ * from the last intersection outwards, which is why they are one per side
+ * rather than one per street: everything leaving by the north fades over the
+ * same stretch of `y`, and nothing of the west's fade touches it.
+ */
+const edges = [
+  { side: 'n', x1: 0, y1: px(0), x2: 0, y2: px(0) - PAD },
+  { side: 'e', x1: px(CITY_WIDTH - 1), y1: 0, x2: px(CITY_WIDTH - 1) + PAD, y2: 0 },
+  { side: 's', x1: 0, y1: px(CITY_HEIGHT - 1), x2: 0, y2: px(CITY_HEIGHT - 1) + PAD },
+  { side: 'w', x1: px(0), y1: 0, x2: px(0) - PAD, y2: 0 },
+] as const
+
+/** The stubs themselves: one off every intersection along each side. */
+const edgeStreets: Record<string, { x1: number; y1: number; x2: number; y2: number }[]> = {
+  n: Array.from({ length: CITY_WIDTH }, (_, x) => ({
+    x1: px(x),
+    y1: px(0),
+    x2: px(x),
+    y2: px(0) - PAD,
+  })),
+  e: Array.from({ length: CITY_HEIGHT }, (_, y) => ({
+    x1: px(CITY_WIDTH - 1),
+    y1: px(y),
+    x2: px(CITY_WIDTH - 1) + PAD,
+    y2: px(y),
+  })),
+  s: Array.from({ length: CITY_WIDTH }, (_, x) => ({
+    x1: px(x),
+    y1: px(CITY_HEIGHT - 1),
+    x2: px(x),
+    y2: px(CITY_HEIGHT - 1) + PAD,
+  })),
+  w: Array.from({ length: CITY_HEIGHT }, (_, y) => ({
+    x1: px(0),
+    y1: px(y),
+    x2: px(0) - PAD,
+    y2: px(y),
+  })),
+}
+
+/** Every open street inside the map, as a line to draw. */
 const streets = computed(() => {
   const city = state.value.city
   const lines: { x1: number; y1: number; x2: number; y2: number }[] = []
@@ -714,7 +761,44 @@ onBeforeUnmount(() => {
           @pointerup="onPointerUp"
           @pointercancel="onPointerUp"
         >
-          <!-- The streets: a dark casing with the carriageway laid over it. -->
+          <!-- One fade per side of the map, for the streets that leave by it. -->
+          <defs>
+            <linearGradient
+              v-for="edge in edges"
+              :id="`taxi-haze-${edge.side}`"
+              :key="`g-${edge.side}`"
+              gradientUnits="userSpaceOnUse"
+              :x1="edge.x1"
+              :y1="edge.y1"
+              :x2="edge.x2"
+              :y2="edge.y2"
+            >
+              <stop offset="0" stop-color="#fff" />
+              <stop offset="0.85" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+            <mask
+              v-for="edge in edges"
+              :id="`taxi-edge-${edge.side}`"
+              :key="`m-${edge.side}`"
+              maskUnits="userSpaceOnUse"
+              x="0"
+              y="0"
+              :width="viewWidth"
+              :height="viewHeight"
+            >
+              <rect
+                x="0"
+                y="0"
+                :width="viewWidth"
+                :height="viewHeight"
+                :fill="`url(#taxi-haze-${edge.side})`"
+              />
+            </mask>
+          </defs>
+
+          <!-- The streets: a dark casing with the carriageway laid over it.
+               The map is a window on the city, so the streets carry on out of
+               it and fade rather than stopping at the last intersection. -->
           <g class="taxi__casing">
             <line
               v-for="(road, i) in streets"
@@ -724,6 +808,20 @@ onBeforeUnmount(() => {
               :x2="road.x2"
               :y2="road.y2"
             />
+            <g
+              v-for="edge in edges"
+              :key="`ce-${edge.side}`"
+              :mask="`url(#taxi-edge-${edge.side})`"
+            >
+              <line
+                v-for="(road, i) in edgeStreets[edge.side]"
+                :key="i"
+                :x1="road.x1"
+                :y1="road.y1"
+                :x2="road.x2"
+                :y2="road.y2"
+              />
+            </g>
           </g>
           <g class="taxi__road">
             <line
@@ -734,6 +832,20 @@ onBeforeUnmount(() => {
               :x2="road.x2"
               :y2="road.y2"
             />
+            <g
+              v-for="edge in edges"
+              :key="`re-${edge.side}`"
+              :mask="`url(#taxi-edge-${edge.side})`"
+            >
+              <line
+                v-for="(road, i) in edgeStreets[edge.side]"
+                :key="i"
+                :x1="road.x1"
+                :y1="road.y1"
+                :x2="road.x2"
+                :y2="road.y2"
+              />
+            </g>
           </g>
 
           <!-- Where the driver has been since this passenger got in. -->

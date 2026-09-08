@@ -6,6 +6,7 @@ import {
   CITY_LANDMARKS,
   CITY_WIDTH,
   buyWord,
+  canDrive,
   continueRun,
   createGame,
   currentLevel,
@@ -128,7 +129,7 @@ function driveShort(state: TaxiState): TaxiState {
 /** Drives back and forth over one block until the meter is empty. */
 function runDry(state: TaxiState): TaxiState {
   const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
-    hasRoad(state.city, state.taxi, dir),
+    canDrive(state.city, state.taxi, dir),
   )!
   let next = state
   for (let i = 0; i < 40 && !next.outcome; i++) {
@@ -144,7 +145,7 @@ describe('the city', () => {
       const all = intersections(city)
 
       for (const p of all) {
-        const streets = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((d) => hasRoad(city, p, d))
+        const streets = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((d) => canDrive(city, p, d))
         expect(streets.length).toBeGreaterThanOrEqual(2)
       }
 
@@ -153,7 +154,7 @@ describe('the city', () => {
       while (queue.length) {
         const p = queue.shift()!
         for (const dir of [NORTH, EAST, SOUTH, WEST] as Dir[]) {
-          if (!hasRoad(city, p, dir)) continue
+          if (!canDrive(city, p, dir)) continue
           const to = { x: p.x + [0, 1, 0, -1][dir], y: p.y + [-1, 0, 1, 0][dir] }
           const key = `${to.x},${to.y}`
           if (seen.has(key)) continue
@@ -163,6 +164,50 @@ describe('the city', () => {
       }
       expect(seen.size).toBe(all.length)
     }
+  })
+
+  it('runs a street off every edge, so the map has no corners that are only bends', () => {
+    for (let seed = 1; seed <= 10; seed++) {
+      const city = buildCity(seeded(seed))
+
+      for (const p of intersections(city)) {
+        // A street leaving the map is a street: it is counted like any other,
+        // and the taxi is the only thing that cannot take it.
+        const leaving = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter(
+          (dir) => hasRoad(city, p, dir) && !canDrive(city, p, dir),
+        )
+        const sides =
+          (p.x === 0 ? 1 : 0) +
+          (p.x === city.width - 1 ? 1 : 0) +
+          (p.y === 0 ? 1 : 0) +
+          (p.y === city.height - 1 ? 1 : 0)
+        expect(leaving).toHaveLength(sides)
+      }
+
+      // Which is what the corners of the map are for: two of their four
+      // streets run out of the window, and none of them is ever closed.
+      for (const dir of [NORTH, WEST] as Dir[]) {
+        expect(hasRoad(city, { x: 0, y: 0 }, dir)).toBe(true)
+        expect(canDrive(city, { x: 0, y: 0 }, dir)).toBe(false)
+      }
+    }
+  })
+
+  it('counts a turning that leaves the map, and never sends the taxi down one', () => {
+    const city = lattice(5, 5)
+    const east = { x: 0, y: 0, dir: EAST }
+
+    // Driving along the top of the map, every street on the left is one that
+    // leaves it: the passenger can see them, so they count, and the first on
+    // the left is one block on rather than four.
+    expect(hasRoad(city, { x: 1, y: 0 }, NORTH)).toBe(true)
+    expect(resolve(city, east, [{ kind: 'turn', side: 'left', ordinal: 1 }])).toBeNull()
+
+    // The same count on the other side is a street the taxi can take.
+    expect(resolve(city, east, [{ kind: 'turn', side: 'right', ordinal: 1 }])?.dest).toEqual({
+      x: 1,
+      y: 1,
+    })
   })
 
   it('closes some streets, or "the third on the left" would just be counting blocks', () => {
@@ -500,14 +545,14 @@ describe('picking a fare', () => {
 
 describe('driving', () => {
   it('only goes where there is a street, and turns to face the way it went', () => {
-    // Parked in the top-left corner, where two of the four headings are the
-    // edge of the map rather than a street.
+    // Parked in the top-left corner, where two of the four streets run off
+    // the map rather than to the next intersection.
     const base = startGame(createGame(seeded(2)))
     const state = { ...base, taxi: { x: 0, y: 0, dir: EAST }, trail: [{ x: 0, y: 0 }] }
     expect(drive(state, NORTH)).toBe(state)
     expect(drive(state, WEST)).toBe(state)
 
-    const open = ([EAST, SOUTH] as Dir[]).find((dir) => hasRoad(state.city, state.taxi, dir))!
+    const open = ([EAST, SOUTH] as Dir[]).find((dir) => canDrive(state.city, state.taxi, dir))!
     const moved = drive(state, open)
     expect(moved.taxi.dir).toBe(open)
     expect(moved.trail).toHaveLength(2)
@@ -516,7 +561,7 @@ describe('driving', () => {
   it('rubs the trail out again when the driver doubles back', () => {
     const state = startGame(createGame(seeded(8)))
     const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
-      hasRoad(state.city, state.taxi, dir),
+      canDrive(state.city, state.taxi, dir),
     )!
     const there = drive(state, open)
     const back = drive(there, ((open + 2) % 4) as Dir)
@@ -527,7 +572,7 @@ describe('driving', () => {
   it('stays put before the shift starts', () => {
     const ready = createGame(seeded(6))
     const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
-      hasRoad(ready.city, ready.taxi, dir),
+      canDrive(ready.city, ready.taxi, dir),
     )!
     expect(drive(ready, open)).toBe(ready)
   })
@@ -604,7 +649,7 @@ describe('dropping off', () => {
     let corrected = 0
     for (let i = 0; i < 4; i++) {
       const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).filter((dir) =>
-        hasRoad(state.city, state.taxi, dir),
+        canDrive(state.city, state.taxi, dir),
       )
       state = drive(state, open[i % open.length])
       expect(samePoint(state.taxi, dest)).toBe(false)
@@ -659,7 +704,7 @@ describe('dropping off', () => {
       for (const p of intersections(game.city)) {
         if (p.x === dest.x && p.y === dest.y) continue
         for (const dir of [NORTH, EAST, SOUTH, WEST] as Dir[]) {
-          if (!hasRoad(game.city, p, dir)) continue
+          if (!canDrive(game.city, p, dir)) continue
           corners++
           const put = pickRedirect(game.city, { ...p, dir }, dest, 0, rng)
           if (!put) continue
@@ -733,7 +778,7 @@ describe('the meter', () => {
   it('takes the fuel out of the fare, not out of the takings', () => {
     const state = startGame(createGame(seeded(2)))
     const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
-      hasRoad(state.city, state.taxi, dir),
+      canDrive(state.city, state.taxi, dir),
     )!
     const there = drive(state, open)
     expect(there.spent).toBe(FUEL_PER_BLOCK)
@@ -784,7 +829,7 @@ describe('the meter', () => {
     const fare = state.fare!
     // Drive back and forth over one block until the purse is gone.
     const open = ([NORTH, EAST, SOUTH, WEST] as Dir[]).find((dir) =>
-      hasRoad(state.city, state.taxi, dir),
+      canDrive(state.city, state.taxi, dir),
     )!
     for (let i = 0; i < fare.pay / FUEL_PER_BLOCK && !state.outcome; i++) {
       state = drive(state, i % 2 ? (((open + 2) % 4) as Dir) : open)
