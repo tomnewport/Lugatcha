@@ -35,7 +35,6 @@ import {
   EAST,
   LIVES,
   NORTH,
-  PATIENCE,
   SOUTH,
   FUEL_PER_BLOCK,
   WEST,
@@ -125,8 +124,6 @@ const playable = computed(() => state.value.status === 'playing' && !outcome.val
 const level = computed(() => levelFor(state.value.delivered) + 1)
 /** The three lives, spent lamps first. */
 const lamps = computed(() => Array.from({ length: LIVES }, (_, i) => i >= state.value.lives))
-/** The passenger's patience with your wrong corners, spent pips first. */
-const pips = computed(() => Array.from({ length: PATIENCE }, (_, i) => i < state.value.patience))
 
 /** Every sum on screen is soʻm, grouped the way the bazar prints its prices. */
 function som(amount: number): string {
@@ -416,14 +413,16 @@ function onKey(event: KeyboardEvent) {
 
 /** How long the payslip is left up before the next passenger gets in. */
 const THANKS_MS = 1900
-/** How long "not here" stays over the instruction after a refused corner. */
-const REFUSAL_MS = 1400
+/** How long "not here" stays over the instruction after a wrong corner. */
+const REFUSAL_MS = 2600
 /** How long the depot's re-float stays up after the meter runs dry. */
 const BUST_MS = 2200
 
-/** Set while the passenger is saying this is not the place; keyed so a second
- *  refusal re-runs the flash rather than sitting on the first one. */
-const refused = ref(false)
+/** What the passenger said about the wrong corner, if anything; keyed so a
+ *  second wrong corner re-runs the flash rather than sitting on the first one.
+ *  It stays up longer than the horn does, because underneath it are the new
+ *  directions and the driver has to know they are new. */
+const refusal = ref('')
 const refusedKey = ref(0)
 /** Set when the depot has just had to float the driver again. */
 const bust = ref(false)
@@ -446,14 +445,18 @@ function letThemOut() {
     buzz(20)
     if (drop.paid > 0) throwCoin(drop.paid, true)
     // The payslip stays up for a moment and then the next passenger gets in;
-    // a passenger who gave up leaves the route they wanted on screen until the
-    // driver has looked at it.
+    // a fare driven into the ground leaves the route on screen instead, until
+    // the driver has looked at it.
     advance = setTimeout(nextPassenger, THANKS_MS)
   } else {
     playHorn()
     buzz([40, 60, 90])
-    // Refused: they stay in the cab, so all that changes is the nudge.
-    if (drop.result === 'refused') flashRefusal()
+    // They stay in the cab either way. Normally they point the way again from
+    // here, and the fareId watcher reads the new directions out; where they
+    // have nothing to add, the ones they gave stand and all that changes is
+    // the nudge.
+    if (drop.result === 'redirected') flashRefusal(t('taxi.redirected'))
+    if (drop.result === 'refused') flashRefusal(t('taxi.notThere'))
   }
   if (state.value.status === 'over') finish()
 }
@@ -484,13 +487,13 @@ function spendAnd(next: TaxiState) {
   }, BUST_MS)
 }
 
-/** Shows "not here" over the instruction for a moment. */
-function flashRefusal() {
-  refused.value = true
+/** Shows what the passenger said about the corner, for a moment. */
+function flashRefusal(said: string) {
+  refusal.value = said
   refusedKey.value++
   const shown = refusedKey.value
   setTimeout(() => {
-    if (refusedKey.value === shown) refused.value = false
+    if (refusedKey.value === shown) refusal.value = ''
   }, REFUSAL_MS)
 }
 
@@ -627,27 +630,11 @@ onBeforeUnmount(() => {
         class="taxi__fare"
         :class="{
           'taxi__fare--right': outcome?.result === 'arrived',
-          'taxi__fare--wrong': outcome?.result === 'gaveUp' || refused || bust,
+          'taxi__fare--wrong': outcome?.result === 'broke' || !!refusal || bust,
         }"
       >
-        <span class="taxi__who">
-          <span class="taxi__rider" aria-hidden="true">
-            {{ outcome?.result === 'arrived' ? '🙋' : '🧕' }}
-          </span>
-          <!-- How many more wrong corners this passenger will sit through. -->
-          <span
-            v-if="!outcome"
-            class="taxi__pips"
-            :aria-label="$t('taxi.patience', { count: PATIENCE - state.patience })"
-          >
-            <span
-              v-for="(spent, i) in pips"
-              :key="i"
-              class="taxi__pip"
-              :class="{ 'taxi__pip--spent': spent }"
-              aria-hidden="true"
-            />
-          </span>
+        <span class="taxi__rider" aria-hidden="true">
+          {{ outcome?.result === 'arrived' ? '🙋' : '🧕' }}
         </span>
 
         <!-- The words they used, kept next to what they meant: reading the
@@ -668,7 +655,7 @@ onBeforeUnmount(() => {
         <div v-else class="taxi__bubble" :class="{ 'taxi__bubble--speaking': speaking }">
           <span class="taxi__clauses">
             <span v-if="bust" class="taxi__refusal">{{ $t('taxi.bust') }}</span>
-            <span v-else-if="refused" class="taxi__refusal">{{ $t('taxi.notThere') }}</span>
+            <span v-else-if="refusal" class="taxi__refusal">{{ refusal }}</span>
             <span v-for="(clause, i) in fare?.words ?? []" :key="i" class="taxi__clause">
               <button
                 v-for="(word, j) in clause"
@@ -1027,33 +1014,9 @@ onBeforeUnmount(() => {
   border-color: var(--color-terracotta);
 }
 
-.taxi__who {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-}
-
 .taxi__rider {
   font-size: 1.6rem;
   line-height: 1.2;
-}
-
-.taxi__pips {
-  display: flex;
-  gap: 0.15rem;
-}
-
-.taxi__pip {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-primary-light);
-}
-
-.taxi__pip--spent {
-  background: transparent;
-  box-shadow: inset 0 0 0 1px var(--color-border);
 }
 
 .taxi__bubble {

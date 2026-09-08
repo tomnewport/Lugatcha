@@ -617,9 +617,77 @@ function isTurn(step: Step): boolean {
 }
 
 /**
- * Drives the instruction and reports where it ends, or null when the city does
- * not allow it — the street runs out, there is no such turning, that landmark
- * is not ahead of you.
+ * Drives one clause and reports the pose it leaves you in, or null when the
+ * city does not allow it — the street runs out, there is no such turning, that
+ * landmark is not ahead of you.
+ *
+ * The path it returns is the intersections newly driven through, not counting
+ * the one you set off from, so legs can be strung together end to end. Clauses
+ * are driven one at a time rather than in one pass because a correction has to
+ * try thousands of instructions and throw most of them away: sharing a prefix
+ * means sharing the driving of it (see {@link pickRedirect}).
+ */
+function driveStep(
+  city: City,
+  from: Pose,
+  instruction: Step,
+): { pose: Pose; path: Point[] } | null {
+  let at: Point = { x: from.x, y: from.y }
+  let dir = from.dir
+  const path: Point[] = []
+
+  /** One block on, recorded. False when there is no street to take. */
+  const forward = (): boolean => {
+    const next = step(city, at, dir)
+    if (!next) return false
+    at = next
+    path.push(at)
+    return true
+  }
+
+  switch (instruction.kind) {
+    case 'straight': {
+      for (let i = 0; i < instruction.blocks; i++) if (!forward()) return null
+      break
+    }
+    case 'turn': {
+      // Counting starts at the *next* junction: the turning you are sitting
+      // on is the one you are coming out of, not the first one ahead.
+      let counted = 0
+      for (;;) {
+        if (!forward()) return null
+        if (!hasRoad(city, at, turnDir(dir, instruction.side))) continue
+        if (++counted === instruction.ordinal) break
+      }
+      dir = turnDir(dir, instruction.side)
+      break
+    }
+    case 'turnNow': {
+      const turned = turnDir(dir, instruction.side)
+      if (!hasRoad(city, at, turned)) return null
+      dir = turned
+      break
+    }
+    case 'landmarkTurn':
+    case 'toLandmark': {
+      for (;;) {
+        if (!forward()) return null
+        if (placeAt(city, at)?.id === instruction.place) break
+      }
+      if (instruction.kind === 'landmarkTurn') {
+        const turned = turnDir(dir, instruction.side)
+        if (!hasRoad(city, at, turned)) return null
+        dir = turned
+      }
+      break
+    }
+  }
+
+  return { pose: { ...at, dir }, path }
+}
+
+/**
+ * The last block of an instruction that ends on a turn, or nothing.
  *
  * The one rule that is not spoken: **an instruction that ends on a turn ends
  * one block into the street it turned into.** "First on the left" names a
@@ -629,64 +697,35 @@ function isTurn(step: Step): boolean {
  * meant after every drop-off, so the rule is learned by watching rather than by
  * being told.
  */
+function lastBlock(
+  city: City,
+  pose: Pose,
+  steps: readonly Step[],
+): { pose: Pose; path: Point[] } | null {
+  if (!isTurn(steps[steps.length - 1])) return { pose, path: [] }
+  return driveStep(city, pose, { kind: 'straight', blocks: 1 })
+}
+
+/**
+ * Drives the whole instruction and reports where it ends, or null when the
+ * city does not allow one of its clauses.
+ */
 export function resolve(city: City, start: Pose, steps: readonly Step[]): Route | null {
   if (!steps.length) return null
 
-  let at: Point = { x: start.x, y: start.y }
-  let dir = start.dir
-  const path: Point[] = [at]
-
-  /** One block on, recorded. Null when there is no street to take. */
-  const forward = (): boolean => {
-    const next = step(city, at, dir)
-    if (!next) return false
-    at = next
-    path.push(at)
-    return true
-  }
-
+  let pose: Pose = { ...start }
+  const path: Point[] = [{ x: start.x, y: start.y }]
   for (const instruction of steps) {
-    switch (instruction.kind) {
-      case 'straight': {
-        for (let i = 0; i < instruction.blocks; i++) if (!forward()) return null
-        break
-      }
-      case 'turn': {
-        // Counting starts at the *next* junction: the turning you are sitting
-        // on is the one you are coming out of, not the first one ahead.
-        let counted = 0
-        for (;;) {
-          if (!forward()) return null
-          if (!hasRoad(city, at, turnDir(dir, instruction.side))) continue
-          if (++counted === instruction.ordinal) break
-        }
-        dir = turnDir(dir, instruction.side)
-        break
-      }
-      case 'turnNow': {
-        const turned = turnDir(dir, instruction.side)
-        if (!hasRoad(city, at, turned)) return null
-        dir = turned
-        break
-      }
-      case 'landmarkTurn':
-      case 'toLandmark': {
-        for (;;) {
-          if (!forward()) return null
-          if (placeAt(city, at)?.id === instruction.place) break
-        }
-        if (instruction.kind === 'landmarkTurn') {
-          const turned = turnDir(dir, instruction.side)
-          if (!hasRoad(city, at, turned)) return null
-          dir = turned
-        }
-        break
-      }
-    }
+    const leg = driveStep(city, pose, instruction)
+    if (!leg) return null
+    pose = leg.pose
+    path.push(...leg.path)
   }
 
-  if (isTurn(steps[steps.length - 1]) && !forward()) return null
-  return { path, dest: at, dir }
+  const last = lastBlock(city, pose, steps)
+  if (!last) return null
+  path.push(...last.path)
+  return { path, dest: { x: last.pose.x, y: last.pose.y }, dir: last.pose.dir }
 }
 
 // --- The ramp ---------------------------------------------------------------
@@ -851,7 +890,7 @@ export interface Fare {
   wordCount: number
   /** Blocks between the pick-up and the door: the other half. */
   blocks: number
-  /** What it pays on arrival, in soʻm. */
+  /** What it pays on arrival, in soʻm — carried over across a correction. */
   pay: number
   route: Route
   /** The pose the instruction was given from; left and right depend on it. */
@@ -869,6 +908,7 @@ function makeFare(
   from: Pose,
   voices: number,
   rng: () => number,
+  pay?: number,
 ): Fare {
   const said = steps.map((step) => Math.floor(rng() * Math.min(voices, sayings(step.kind))))
   const words = steps.map((step, index) => stepWords(step, said[index]))
@@ -881,7 +921,10 @@ function makeFare(
     words,
     wordCount,
     blocks,
-    pay: fareValue(wordCount, blocks),
+    // A correction inherits the fare it belongs to: what the passenger pays was
+    // agreed when they got in, and being put right neither adds to it nor
+    // takes from it.
+    pay: pay ?? fareValue(wordCount, blocks),
     route,
     from,
   }
@@ -929,21 +972,137 @@ export function pickFare(
   return makeFare(picked.steps, picked.route, pose, level.voices, rng)
 }
 
+// --- Correcting the driver --------------------------------------------------
+
+/**
+ * Clauses a correction may run to.
+ *
+ * A passenger putting you right says the shortest thing that gets you there,
+ * and the search below looks for that first — most corrections come out in one
+ * or two clauses. The limit is set by the first level, where counting streets
+ * and *turn left* are the whole of the vocabulary: with those, three clauses
+ * leave about one corner in ten with nothing to be said from it, and four
+ * leave one in a hundred. Longer than that is not a correction, it is the
+ * journey given again.
+ */
+export const MAX_REDIRECT_STEPS = 4
+
+/**
+ * The kinds of clause a driver has met by this level, plus the one the
+ * correction always needs.
+ *
+ * A correction is free, so it must not be a way of hearing next level's
+ * vocabulary early: the passenger puts it in the words this driver has already
+ * been given, however far away the door has ended up.
+ *
+ * *Chapga buriling* — turn left, here, now — is the exception, and it is not
+ * really one: both its words are in the first clause the game ever says, since
+ * *birinchi koʻchadan chapga buriling* is made of them. Without it the door one
+ * block to the side is the one thing a passenger cannot point at, every clause
+ * that counts streets having to drive on before it turns — and stopping on the
+ * corner you should have turned at is the commonest wrong corner there is.
+ */
+export function kindsBy(levelIndex: number): StepKind[] {
+  const kinds: StepKind[] = ['turnNow']
+  for (const level of LEVELS.slice(0, levelIndex + 1)) {
+    for (const shape of level.shapes) {
+      for (const kind of shape) if (!kinds.includes(kind)) kinds.push(kind)
+    }
+  }
+  return kinds
+}
+
+/**
+ * A fresh instruction from `from` to `dest`, or null when nothing this driver
+ * has the words for describes the way back.
+ *
+ * This is the search {@link pickFare} does turned around: there, any drivable
+ * instruction will do and the door is wherever it ends; here the door is fixed
+ * and the instruction has to be found for it. So it walks the instructions
+ * clause by clause, sharing the driving of a prefix between everything built on
+ * it and dropping a branch the moment a clause will not drive — without which
+ * the last levels' vocabulary would mean tens of thousands of routes to try.
+ *
+ * Shorter is better and is looked for first, because a passenger correcting you
+ * says the least they can: they are pointing at a door, not giving the whole
+ * journey again. Within a length it picks a shape and then an instruction, the
+ * way {@link pickFare} does, so a rare shape is as likely as a common one.
+ */
+export function pickRedirect(
+  city: City,
+  from: Pose,
+  dest: Point,
+  levelIndex: number,
+  rng: () => number = Math.random,
+  avoid?: string,
+): { steps: Step[]; route: Route } | null {
+  const level = LEVELS[levelIndex]
+  const kinds = kindsBy(levelIndex)
+  const choices = kinds.flatMap((kind) => stepChoices(city, kind, level))
+
+  for (let length = 1; length <= MAX_REDIRECT_STEPS; length++) {
+    // Keyed by shape, so the pick below is not weighted towards whichever
+    // shape happens to have the most ways of being filled in.
+    const byShape = new Map<string, { steps: Step[]; route: Route }[]>()
+
+    const search = (pose: Pose, taken: Step[], path: Point[]) => {
+      if (taken.length === length) {
+        const last = lastBlock(city, pose, taken)
+        if (!last) return
+        const whole = [...path, ...last.path]
+        const blocks = whole.length - 1
+        if (blocks < 1 || blocks > MAX_ROUTE_BLOCKS) return
+        if (!samePoint(last.pose, dest)) return
+        const shape = taken.map((step) => step.kind).join('+')
+        const found = byShape.get(shape) ?? []
+        found.push({
+          steps: [...taken],
+          route: { path: whole, dest: { x: last.pose.x, y: last.pose.y }, dir: last.pose.dir },
+        })
+        byShape.set(shape, found)
+        return
+      }
+      for (const choice of choices) {
+        const leg = driveStep(city, pose, choice)
+        if (!leg) continue
+        taken.push(choice)
+        search(leg.pose, taken, [...path, ...leg.path])
+        taken.pop()
+      }
+    }
+    search(from, [], [{ x: from.x, y: from.y }])
+
+    const shapes = [...byShape.values()].map((options) => {
+      // Saying the very same thing again reads as the passenger not having
+      // noticed, so it is dropped wherever there is anything else to say.
+      const fresh = options.filter((option) => routeUzbek(option.steps) !== avoid)
+      return fresh.length ? fresh : options
+    })
+    if (shapes.length) return pickOne(pickOne(shapes, rng), rng)
+  }
+  return null
+}
+
 // --- State ------------------------------------------------------------------
 
 /**
  * What a drop-off came to.
  *
- * A wrong corner is not a life lost on its own: directions can be read more
- * than one way, and the driver has already paid for the mistake out of the
- * fare. The passenger stays in the cab and says this is not it — until they
- * have said it {@link PATIENCE} times, at which point they get out where they
- * are and the fare is written off.
+ * A wrong corner is not a life lost, and it is not a dead end either:
+ * directions can be read more than one way, and a passenger let out on the
+ * wrong street says so and tells you the way from where you have stopped. It
+ * costs nothing to be put right — the fuel to drive the correction and any of
+ * its words you buy are the whole of the price — so the fare that has run round
+ * the houses is a fare worked for pennies rather than a fare lost. `refused` is
+ * the corner they have nothing to add from — either nothing this driver has the
+ * words for describes the way back, or they are being let out where they were
+ * picked up and would only be repeating themselves — and there the instruction
+ * stands as it was given.
  */
-export type DropResult = 'arrived' | 'refused' | 'gaveUp' | 'ignored'
+export type DropResult = 'arrived' | 'redirected' | 'refused' | 'ignored'
 
-/** How a fare ended: paid, walked out on, or driven into the ground. */
-export type FareEnd = 'arrived' | 'gaveUp' | 'broke'
+/** How a fare ended: paid, or driven into the ground. */
+export type FareEnd = 'arrived' | 'broke'
 
 /** A fare that has ended, kept on state so the map can show what was meant. */
 export interface Outcome {
@@ -959,16 +1118,13 @@ export interface Outcome {
   paid: number
 }
 
-/** Wrong corners one passenger will sit through before giving up on you. */
-export const PATIENCE = 3
-
 /**
  * Fares a driver may write off before the shift is over.
  *
  * Nothing takes money off a driver: what is on the meter belongs to the fare
- * being driven, and the worst a fare can do is eat itself. A fare that ends
- * without a passenger at their door — driven into the ground, or abandoned by
- * the passenger — costs one of these instead.
+ * being driven, and the worst a fare can do is eat itself. A fare driven into
+ * the ground — the only way one ever ends without a passenger at their door —
+ * costs one of these instead.
  */
 export const LIVES = 3
 
@@ -990,11 +1146,12 @@ export interface TaxiState {
   spent: number
   /** Fares delivered; the ramp is keyed off it. */
   delivered: number
-  /** Wrong corners tried on the current fare, against `PATIENCE`. */
-  patience: number
+  /** Times this passenger has had to put the driver right; see {@link dropOff}. */
+  corrections: number
   /** Words of this fare already paid for, keyed by {@link wordKey}. */
   bought: string[]
-  /** Bumped per fare, so the component can tell a new instruction from a redraw. */
+  /** Bumped whenever the instruction changes, so the component knows to read
+   *  the new one out rather than treating it as a redraw. */
   fareId: number
 }
 
@@ -1040,7 +1197,7 @@ export function nextFare(state: TaxiState, rng: () => number = Math.random): Tax
     fare,
     trail: [{ x: pose.x, y: pose.y }],
     outcome: null,
-    patience: 0,
+    corrections: 0,
     spent: 0,
     bought: [],
   }
@@ -1060,7 +1217,7 @@ export function createGame(rng: () => number = Math.random): TaxiState {
     lives: LIVES,
     spent: 0,
     delivered: 0,
-    patience: 0,
+    corrections: 0,
     bought: [],
     fareId: 0,
   }
@@ -1083,7 +1240,7 @@ export function purse(state: TaxiState): number {
  * The taxi and the route stay on screen, because a fare lost is the one the
  * driver most needs to see the answer to.
  */
-function writeOff(state: TaxiState, result: FareEnd): TaxiState {
+function writeOff(state: TaxiState): TaxiState {
   const lives = state.lives - 1
   return {
     ...state,
@@ -1091,7 +1248,7 @@ function writeOff(state: TaxiState, result: FareEnd): TaxiState {
     status: lives <= 0 ? 'over' : state.status,
     outcome: state.fare
       ? {
-          result,
+          result: 'broke',
           dropped: { x: state.taxi.x, y: state.taxi.y },
           route: state.fare.route,
           steps: state.fare.steps,
@@ -1113,7 +1270,7 @@ function writeOff(state: TaxiState, result: FareEnd): TaxiState {
 function spend(state: TaxiState, som: number): TaxiState {
   const spent = state.spent + som
   const next = { ...state, spent }
-  return state.fare && spent >= state.fare.pay ? writeOff(next, 'broke') : next
+  return state.fare && spent >= state.fare.pay ? writeOff(next) : next
 }
 
 /**
@@ -1163,21 +1320,28 @@ export interface Drop {
  * Lets the passenger out where the taxi is standing.
  *
  * The corner alone is judged: a driver who found the right street the long way
- * round still found it, and has already paid for the detour in fuel. A wrong
- * corner is refused rather than punished — the passenger stays put and says so
- * — until they have said it {@link PATIENCE} times and give up on you, which
- * writes the fare off for a life. Arriving banks whatever is left on the meter.
- * Every ending carries the route the instruction meant, which the map then
- * draws: being shown the answer is how the rules of "first on the left" are
- * actually learned.
+ * round still found it, and has already paid for the detour in fuel. Arriving
+ * banks whatever is left on the meter, and the outcome carries the route the
+ * instruction meant, which the map then draws: being shown the answer is how
+ * the rules of "first on the left" are actually learned.
+ *
+ * A wrong corner is not an ending at all. The passenger says this is not it and
+ * gives fresh directions from where the taxi has stopped — the same door,
+ * described again from here — and the fare goes on with what it has already
+ * earned and spent. That is free by design: the driver still burns the fuel to
+ * drive the correction and still pays for any of its words they cannot manage
+ * without, and that is punishment enough for a misread instruction. The one
+ * corner it cannot help with is one nothing in this driver's vocabulary can
+ * describe the way back from — {@link pickRedirect} finds nothing — and then
+ * the instruction simply stands as it was given.
  */
-export function dropOff(state: TaxiState): Drop {
+export function dropOff(state: TaxiState, rng: () => number = Math.random): Drop {
   if (state.status !== 'playing' || !state.fare || state.outcome) {
     return { state, result: 'ignored', paid: 0 }
   }
 
   const dropped = { x: state.taxi.x, y: state.taxi.y }
-  const { route, steps, said } = state.fare
+  const { route, steps, said: wordings } = state.fare
 
   if (samePoint(dropped, route.dest)) {
     const paid = purse(state)
@@ -1186,27 +1350,51 @@ export function dropOff(state: TaxiState): Drop {
         ...state,
         takings: state.takings + paid,
         delivered: state.delivered + 1,
-        outcome: { result: 'arrived', dropped, route, steps, said, paid },
+        outcome: { result: 'arrived', dropped, route, steps, said: wordings, paid },
       },
       result: 'arrived',
       paid,
     }
   }
 
-  const patience = state.patience + 1
-  if (patience < PATIENCE) {
-    return { state: { ...state, patience }, result: 'refused', paid: 0 }
+  const level = currentLevel(state)
+  const said = routeUzbek(steps)
+  const put = pickRedirect(state.city, state.taxi, route.dest, levelFor(state.delivered), rng, said)
+  // Standing where the instruction was given, with nothing to say but the
+  // instruction itself, the passenger is not correcting anybody — they are
+  // repeating themselves, which looks to a driver like the game not having
+  // noticed. What they said stands instead.
+  const repeat =
+    put &&
+    samePoint(state.taxi, state.fare.from) &&
+    state.taxi.dir === state.fare.from.dir &&
+    routeUzbek(put.steps) === said
+  if (!put || repeat) return { state, result: 'refused', paid: 0 }
+
+  return {
+    state: {
+      ...state,
+      fare: makeFare(put.steps, put.route, state.taxi, level.voices, rng, state.fare.pay),
+      // The correction starts a leg of its own, so the trail begins again here:
+      // what is on the map is the driving this instruction asked for, not the
+      // wandering that led to it.
+      trail: [dropped],
+      corrections: state.corrections + 1,
+      fareId: state.fareId + 1,
+    },
+    result: 'redirected',
+    paid: 0,
   }
-  return { state: writeOff({ ...state, patience }, 'gaveUp'), result: 'gaveUp', paid: 0 }
 }
 
 /**
  * Clears the last drop-off and flags down the next passenger.
  *
- * The taxi stays where it stopped either way. A passenger who gave up got out
- * on the wrong corner, and that corner is now on screen next to the route they
- * wanted — which is a better place to start reading the next instruction from
- * than anywhere the game could move the driver to.
+ * The taxi stays where it stopped either way. A fare driven into the ground
+ * ended on whatever corner the money ran out on, and that corner is now on
+ * screen next to the route the passenger wanted — which is a better place to
+ * start reading the next instruction from than anywhere the game could move
+ * the driver to.
  */
 export function continueRun(state: TaxiState, rng: () => number = Math.random): TaxiState {
   if (!state.outcome) return state
