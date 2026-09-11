@@ -172,6 +172,8 @@
     "cyrillic": "яхши",
     "english": "good",
     "russian": "хорошо",
+    "usageNotes": "Good, and also the everyday yes-that-works: Yaxshi, rahmat = Good, thank you. It answers Qalaysiz? (how are you?) and accepts an offer, a price or a plan.",
+    "usageNotesRu": "«Хорошо» — и оценка, и повседневное согласие: Yaxshi, rahmat = Хорошо, спасибо. Отвечает на Qalaysiz? (как дела?) и принимает предложение, цену или план.",
     "theme": "core",
     "level": 1
   },

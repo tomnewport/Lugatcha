@@ -162,7 +162,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, soat ikkida kelaman.",
-            "english": "Fine, I will come at two o'clock.",
+            "english": "Good, I will come at two o'clock.",
             "russian": "Хорошо, я приду в два часа.",
             "tokens": [
               "Yaxshi,",
@@ -471,7 +471,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, ertaga kelaman.",
-            "english": "Fine, I will come tomorrow.",
+            "english": "Good, I will come tomorrow.",
             "russian": "Хорошо, я приду завтра.",
             "tokens": [
               "Yaxshi,",
@@ -525,7 +525,7 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi, kutamiz.",
-            "english": "Fine, we will wait.",
+            "english": "Good, we will wait.",
             "russian": "Хорошо, мы подождём."
           }
         ]
@@ -602,7 +602,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, besh daqiqada kelaman.",
-            "english": "Fine, I will be back in five minutes.",
+            "english": "Good, I will be back in five minutes.",
             "russian": "Хорошо, я вернусь через пять минут.",
             "tokens": [
               "Yaxshi,",

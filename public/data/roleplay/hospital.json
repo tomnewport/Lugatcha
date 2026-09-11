@@ -144,7 +144,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, kutaman.",
-            "english": "Fine, I will wait.",
+            "english": "Good, I will wait.",
             "russian": "Хорошо, подожду.",
             "tokens": [
               "Yaxshi,",
@@ -429,7 +429,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
-            "english": "Fine, thank you.",
+            "english": "Good, thank you.",
             "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",

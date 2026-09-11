@@ -229,7 +229,7 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Xush kelibsiz!",
-            "english": "Fine. Welcome!",
+            "english": "Good. Welcome!",
             "russian": "Хорошо. Добро пожаловать!"
           }
         ]
@@ -322,7 +322,7 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi, rahmat. O'tishingiz mumkin.",
-            "english": "Fine, thank you. You may go through.",
+            "english": "Good, thank you. You may go through.",
             "russian": "Хорошо, спасибо. Можете проходить."
           }
         ]
@@ -645,7 +645,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, soat ikkida kelaman.",
-            "english": "Fine, I will come at two o'clock.",
+            "english": "Good, I will come at two o'clock.",
             "russian": "Хорошо, я приду в два часа.",
             "tokens": [
               "Yaxshi,",

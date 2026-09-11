@@ -191,8 +191,8 @@
           {
             "speaker": "user",
             "uzbek": "Rahmat. Aytasizmi?",
-            "english": "Thank you. Will you tell me?",
-            "russian": "Спасибо. Вы скажете мне?",
+            "english": "Thank you — will you tell me?",
+            "russian": "Спасибо — вы скажете мне?",
             "tokens": [
               "Rahmat.",
               "Aytasizmi?"
@@ -313,7 +313,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
-            "english": "Fine, thank you.",
+            "english": "Good, thank you.",
             "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",

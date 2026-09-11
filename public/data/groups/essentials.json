@@ -136,14 +136,14 @@
       "id": "essentials.siz",
       "uzbek": "siz",
       "cyrillic": "сиз",
-      "english": "you (polite)",
-      "russian": "вы (вежливо)",
+      "english": "you (polite / plural)",
+      "russian": "вы (вежливо / мн. ч.)",
       "theme": "core",
       "group": "essentials",
       "level": 1,
       "highFrequency": true,
-      "usageNotes": "Use siz with everyone you meet as a visitor. The familiar sen is for family and close friends, and can sound rude from a stranger.",
-      "usageNotesRu": "Гостю следует говорить siz всем. Фамильярное sen — для семьи и близких друзей; от незнакомца оно звучит грубо."
+      "usageNotes": "One word for two jobs: politely to one person, and to a whole group. Use siz with everyone you meet as a visitor — the familiar sen is for family and close friends, and can sound rude from a stranger. Sizlar spells the plural out when you want to make clear you mean all of you.",
+      "usageNotesRu": "Одно слово на две задачи: вежливо к одному человеку и ко всей группе. Гостю следует говорить siz всем — фамильярное sen для семьи и близких друзей, от незнакомца оно звучит грубо. Sizlar прямо указывает на множественное число, когда нужно подчеркнуть «вы все»."
     },
     {
       "id": "essentials.u",

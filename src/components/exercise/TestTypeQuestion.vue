@@ -233,6 +233,14 @@ function finish(result: 'passed' | 'failed') {
   color: var(--color-terracotta);
 }
 
+/* A space at the end of a line is collapsed away by default, so pressing the
+   space bar looked like nothing had happened and a two-word answer read as one
+   (issue #148). pre-wrap keeps every space the learner typed — and the one in
+   the answer when it is revealed. */
+.type-q__typed {
+  white-space: pre-wrap;
+}
+
 .type-q__typed--off {
   color: var(--color-terracotta);
 }

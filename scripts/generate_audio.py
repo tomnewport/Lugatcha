@@ -30,6 +30,7 @@ Usage:
     uv run python scripts/generate_audio.py                 # generate everything missing
     uv run python scripts/generate_audio.py --force         # regenerate all clips
     uv run python scripts/generate_audio.py --self-test     # verify hash parity only
+    uv run python scripts/generate_audio.py --audit-silence # find clips that play as silence
     # Russia cloud instead of Kazakhstan:
     #   --yandex-host tts.api.cloud.yandex.net
 
@@ -53,6 +54,12 @@ DATA_DIR = REPO_ROOT / "public" / "data"
 AUDIO_ROOT = REPO_ROOT / "public" / "audio"
 FIXTURES = REPO_ROOT / "tests" / "audio-key-fixtures.json"
 TAXI_CLAUSES = REPO_ROOT / "tests" / "taxi-clauses.json"
+
+# Peak level below which a clip counts as silent. Yandex occasionally returns a
+# near-empty MP3 for very short texts — the bare vowel "u" came back at about
+# -63 dBFS, a file that looks fine on disk and plays as nothing (issue #196).
+# Real speech in this set peaks above -10 dBFS, so the gap is wide.
+SILENCE_DBFS = -45.0
 
 # ---------------------------------------------------------------------------
 # Text keying — MUST stay identical to src/audio/key.ts.
@@ -536,6 +543,38 @@ def load_yandex_synthesizer(
 # ---------------------------------------------------------------------------
 
 
+def peak_dbfs(src: Path, ffmpeg: str) -> float | None:
+    """Peak level of a clip in dBFS, or None if ffmpeg could not measure it."""
+    proc = subprocess.run(
+        [ffmpeg, "-i", str(src), "-af", "volumedetect", "-f", "null", "-"],
+        capture_output=True,
+        text=True,
+    )
+    match = re.search(r"max_volume:\s*(-?\d+(?:\.\d+)?) dB", proc.stderr)
+    return float(match.group(1)) if match else None
+
+
+def is_silent(src: Path, ffmpeg: str) -> bool:
+    """Whether a clip is too quiet to hear. Unmeasurable clips are kept."""
+    peak = peak_dbfs(src, ffmpeg)
+    return peak is not None and peak < SILENCE_DBFS
+
+
+def audit_silence(out_dir: Path, ffmpeg: str) -> int:
+    """Report clips already on disk that play as silence. Returns the count."""
+    clips = sorted(out_dir.glob("*.mp3"), key=lambda path: path.name)
+    print(f"checking {len(clips)} clips for silence…")
+    silent = 0
+    for clip in clips:
+        peak = peak_dbfs(clip, ffmpeg)
+        if peak is not None and peak < SILENCE_DBFS:
+            silent += 1
+            print(f"  {clip.name}: peak {peak:.0f} dBFS")
+    print(f"{silent} silent clip(s); delete them and the app will fall back to "
+          "the device voice")
+    return silent
+
+
 def make_slow_mp3(src: Path, target: Path, ffmpeg: str, speed: float = 0.75) -> None:
     """Time-stretch an MP3 to `speed` (pitch-preserving) and write to target."""
     subprocess.run(
@@ -637,6 +676,8 @@ def main() -> None:
     parser.add_argument("--force", action="store_true", help="regenerate existing clips")
     parser.add_argument("--dry-run", action="store_true", help="list texts and exit")
     parser.add_argument("--self-test", action="store_true", help="verify hash parity and exit")
+    parser.add_argument("--audit-silence", action="store_true",
+                        help="check existing clips for silence and exit")
     args = parser.parse_args()
 
     if args.self_test:
@@ -655,6 +696,10 @@ def main() -> None:
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         sys.exit("ffmpeg not found — install it with `brew install ffmpeg`")
+
+    if args.audit_silence:
+        audit_silence(args.out, ffmpeg)
+        return
 
     args.out.mkdir(parents=True, exist_ok=True)
     pruned = prune_main_orphans(args.out)
@@ -692,6 +737,13 @@ def main() -> None:
             print(f"[{i}/{len(pending_normal)}] {text}")
             mp3_path = args.out / f"{key}.mp3"
             mp3_path.write_bytes(synthesize(text))
+            # A silent clip is worse than no clip: the app can fall back to the
+            # device voice for a missing key, but a file that exists and plays
+            # as nothing just sounds broken.
+            if is_silent(mp3_path, ffmpeg):
+                mp3_path.unlink()
+                print(f"  dropped — synthesised silence; {text!r} will use the device voice")
+                continue
             if args.slow:
                 slow_path = args.out / f"{key}_slow.mp3"
                 make_slow_mp3(mp3_path, slow_path, ffmpeg)

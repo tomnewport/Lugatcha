@@ -115,7 +115,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, shuni olaman.",
-            "english": "Fine, I will take that one.",
+            "english": "Good, I will take that one.",
             "russian": "Хорошо, возьму его.",
             "tokens": [
               "Yaxshi,",
@@ -211,7 +211,7 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Yuz qirq ming so'm.",
-            "english": "Fine. One hundred and forty thousand som.",
+            "english": "Good. One hundred and forty thousand som.",
             "russian": "Хорошо. Сто сорок тысяч сумов."
           },
           {
@@ -297,7 +297,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, ertaga ertalabga.",
-            "english": "Fine, for tomorrow morning.",
+            "english": "Good, for tomorrow morning.",
             "russian": "Хорошо, на завтра утром.",
             "tokens": [
               "Yaxshi,",

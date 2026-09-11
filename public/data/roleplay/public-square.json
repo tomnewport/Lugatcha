@@ -156,7 +156,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
-            "english": "Fine, thank you.",
+            "english": "Good, thank you.",
             "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",
@@ -392,7 +392,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, haykal yonida.",
-            "english": "Fine, by the statue.",
+            "english": "Good, by the statue.",
             "russian": "Хорошо, у памятника.",
             "tokens": [
               "Yaxshi,",
@@ -451,7 +451,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, choyxonada kutaman.",
-            "english": "Fine, I will wait at the teahouse.",
+            "english": "Good, I will wait at the teahouse.",
             "russian": "Хорошо, подожду в чайхане.",
             "tokens": [
               "Yaxshi,",

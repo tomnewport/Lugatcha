@@ -676,13 +676,13 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi, muammo emas. O'n ming so'm bo'ladi.",
-            "english": "Fine, no problem. It will be ten thousand som.",
+            "english": "Good, no problem. It will be ten thousand som.",
             "russian": "Хорошо, не проблема. Это будет десять тысяч сумов."
           },
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat.",
-            "english": "Fine, thank you.",
+            "english": "Good, thank you.",
             "russian": "Хорошо, спасибо.",
             "tokens": [
               "Yaxshi,",
