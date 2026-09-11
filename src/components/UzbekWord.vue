@@ -91,7 +91,11 @@ function place() {
 
   // Above the word by default; flip below when there isn't room up there.
   const below = anchor.top - box.height - GAP < EDGE && anchor.bottom + box.height + GAP < vh
-  const top = below ? anchor.bottom + GAP : anchor.top - box.height - GAP
+  // Neither side fits on a short screen with the word near an edge. Sitting
+  // over the word beats hanging off the top, where the box is unreachable —
+  // the page behind it doesn't scroll the tooltip back into view (issue #158).
+  const wantedTop = below ? anchor.bottom + GAP : anchor.top - box.height - GAP
+  const top = Math.min(Math.max(EDGE, wantedTop), Math.max(EDGE, vh - box.height - EDGE))
 
   const centre = anchor.left + anchor.width / 2 - left
   placement.value = {
