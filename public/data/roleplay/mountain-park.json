@@ -107,7 +107,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat!",
-            "english": "Fine, thank you!",
+            "english": "Good, thank you!",
             "russian": "Хорошо, спасибо!",
             "tokens": [
               "Yaxshi,",
@@ -158,7 +158,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, piyoda chiqaman!",
-            "english": "Fine, I will walk up!",
+            "english": "Good, I will walk up!",
             "russian": "Хорошо, поднимусь пешком!",
             "tokens": [
               "Yaxshi,",
@@ -424,7 +424,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, rahmat!",
-            "english": "Fine, thank you!",
+            "english": "Good, thank you!",
             "russian": "Хорошо, спасибо!",
             "tokens": [
               "Yaxshi,",

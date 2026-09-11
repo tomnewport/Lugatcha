@@ -156,7 +156,7 @@
           {
             "speaker": "user",
             "uzbek": "Yaxshi, ertaga kelamiz.",
-            "english": "Fine, we will come tomorrow.",
+            "english": "Good, we will come tomorrow.",
             "russian": "Хорошо, мы придём завтра.",
             "tokens": [
               "Yaxshi,",
@@ -244,7 +244,7 @@
           {
             "speaker": "npc",
             "uzbek": "Yaxshi. Birinchi zalda kuting.",
-            "english": "Fine. Wait in the first hall.",
+            "english": "Good. Wait in the first hall.",
             "russian": "Хорошо. Подождите в первом зале."
           },
           {
