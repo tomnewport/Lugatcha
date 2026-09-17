@@ -5,6 +5,7 @@ import {
   parseOptional,
   validateStrictOrder,
   validateLoose,
+  validateOrdered,
   contentWords,
   buildDecoys,
   spokenWordForm,
@@ -121,6 +122,51 @@ describe('contentWords', () => {
       'checked',
       'passport',
     ])
+  })
+})
+
+describe('validateOrdered', () => {
+  // The sentence from issue #199: loose matching accepted a swap that inverts
+  // the meaning, because it only ever compared the set of content words.
+  const canonical = tokenize('In the teahouse garden there was a grapevine.')
+  const alternatives = [tokenize('There was a grapevine in the teahouse garden.')]
+
+  it('accepts the canonical order', () => {
+    expect(validateOrdered(tokenize('In the teahouse garden there was a grapevine.'), canonical)).toBe(
+      true,
+    )
+  })
+
+  it('rejects a swap that changes the meaning', () => {
+    const swapped = tokenize('In the grapevine garden there was a teahouse.')
+    expect(validateLoose(swapped, canonical)).toBe(true) // what #199 reported
+    expect(validateOrdered(swapped, canonical, alternatives)).toBe(false)
+  })
+
+  it('accepts a listed alternative ordering', () => {
+    const built = tokenize('There was a grapevine in the teahouse garden.')
+    expect(validateOrdered(built, canonical)).toBe(false)
+    expect(validateOrdered(built, canonical, alternatives)).toBe(true)
+  })
+
+  it('still lets function words be built or left out', () => {
+    expect(validateOrdered(['teahouse', 'garden', 'grapevine'], canonical)).toBe(true)
+    expect(validateOrdered(tokenize('In teahouse garden was grapevine'), canonical)).toBe(true)
+  })
+
+  it('still rejects missing and foreign content words', () => {
+    expect(validateOrdered(['teahouse', 'garden'], canonical, alternatives)).toBe(false)
+    expect(
+      validateOrdered(['teahouse', 'garden', 'grapevine', 'bazaar'], canonical, alternatives),
+    ).toBe(false)
+  })
+
+  it('ignores optional words on both sides', () => {
+    const { tokens, optional } = parseOptional('Can you tell me [when we get there]?')
+    expect(validateOrdered(['tell'], tokens, [], optional)).toBe(true)
+    expect(validateOrdered(tokenize('Can you tell me when we get there?'), tokens, [], optional)).toBe(
+      true,
+    )
   })
 })
 

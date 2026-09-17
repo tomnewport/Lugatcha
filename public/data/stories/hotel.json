@@ -36,6 +36,7 @@
       {
         "uzbek": "Derazadan buyuk Registon maydoni ko'rinardi.",
         "english": "From the window the great Registan square was visible.",
+        "englishAlt": ["The great Registan square was visible from the window."],
         "russian": "Из окна была видна великая площадь Регистан."
       }
     ],
@@ -106,6 +107,7 @@
       {
         "uzbek": "Ertalab men nonushtaga tushdim.",
         "english": "In the morning I went down to breakfast.",
+        "englishAlt": ["I went down to breakfast in the morning."],
         "russian": "Утром я спустился к завтраку."
       },
       {

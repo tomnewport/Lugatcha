@@ -79,6 +79,13 @@ export interface StorySentence {
   english: string
   /** Russian translation; falls back to `english` when absent. */
   russian?: string
+  /**
+   * Other English orderings that are just as correct a translation — e.g.
+   * "There was a grapevine in the teahouse garden" beside "In the teahouse
+   * garden there was a grapevine". Each is a rearrangement of the same words,
+   * and Storytime accepts any of them (issue #199).
+   */
+  englishAlt?: string[]
 }
 
 export interface Story {

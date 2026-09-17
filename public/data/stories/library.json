@@ -16,6 +16,7 @@
       {
         "uzbek": "Ichkarida juda jim edi.",
         "english": "Inside it was very quiet.",
+        "englishAlt": ["It was very quiet inside."],
         "russian": "Внутри было очень тихо."
       },
       {
@@ -26,6 +27,7 @@
       {
         "uzbek": "Har bir sahifada yangi so'zlar bor edi.",
         "english": "On every page there were new words.",
+        "englishAlt": ["There were new words on every page."],
         "russian": "На каждой странице были новые слова."
       },
       {
@@ -110,6 +112,7 @@
       {
         "uzbek": "Kutubxonada men eski kitob ko'rdim.",
         "english": "In the library I saw an old book.",
+        "englishAlt": ["I saw an old book in the library."],
         "russian": "В библиотеке я увидел старую книгу."
       },
       {

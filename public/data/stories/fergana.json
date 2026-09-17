@@ -6,9 +6,9 @@
     "sentences": [
       { "uzbek": "Fargʻona yashil vodiy.", "english": "Fergana is a green valley.", "russian": "Фергана — зелёная долина." },
       { "uzbek": "Dalalarda paxta oʻsadi.", "english": "Cotton grows in the fields.", "russian": "На полях растёт хлопок." },
-      { "uzbek": "Bogʻlarda shirin meva bor.", "english": "There is sweet fruit in the orchards.", "russian": "В садах есть сладкие фрукты." },
+      { "uzbek": "Bogʻlarda shirin meva bor.", "english": "There is sweet fruit in the orchards.", "englishAlt": ["In the orchards there is sweet fruit."], "russian": "В садах есть сладкие фрукты." },
       { "uzbek": "Margʻilonda atlas toʻqiladi.", "english": "Atlas silk is woven in Margilan.", "russian": "В Маргилане ткут атласный шёлк." },
-      { "uzbek": "Kuzda dehqonlar hosil yigʻadi.", "english": "In autumn the farmers gather the harvest.", "russian": "Осенью земледельцы собирают урожай." }
+      { "uzbek": "Kuzda dehqonlar hosil yigʻadi.", "english": "In autumn the farmers gather the harvest.", "englishAlt": ["The farmers gather the harvest in autumn."], "russian": "Осенью земледельцы собирают урожай." }
     ],
     "glossary": {
       "Fargʻona": "Fergana",

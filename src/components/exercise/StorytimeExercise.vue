@@ -61,6 +61,26 @@ const sentenceTranslation = computed(() =>
   sentence.value ? pick(sentence.value.english, sentence.value.russian) : '',
 )
 const englishTokens = computed(() => (sentence.value ? tokenize(sentenceTranslation.value) : []))
+
+/**
+ * True when the sentence on screen is the English one — either the learner's
+ * base language is English, or no Russian translation exists and `pick` fell
+ * back to English.
+ */
+const showingEnglish = computed(() => base.value === 'en' || !sentence.value?.russian)
+
+/**
+ * Accepted rearrangements of the shown translation. Only English is checked
+ * for word order (issue #199): the alternatives are authored per sentence in
+ * English, and Russian's word order is free enough that an order check would
+ * reject correct answers, so Russian keeps the older set-only matching.
+ */
+const alternatives = computed(() =>
+  showingEnglish.value ? (sentence.value?.englishAlt ?? []).map(tokenize) : [],
+)
+const assemblyMode = computed<'loose' | 'ordered'>(() =>
+  showingEnglish.value ? 'ordered' : 'loose',
+)
 const isLast = computed(() => !!story.value && index.value >= story.value.sentences.length - 1)
 
 /** Content words from the rest of the story (base language), used as decoys. */
@@ -147,7 +167,8 @@ onUnmounted(speaker.stop)
         :key="index"
         :tokens="englishTokens"
         :decoys="decoys"
-        mode="loose"
+        :alternatives="alternatives"
+        :mode="assemblyMode"
         @result="onResult"
       />
 

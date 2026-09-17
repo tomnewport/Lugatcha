@@ -7,8 +7,8 @@
       { "uzbek": "Xiva kichik va goʻzal shahar.", "english": "Khiva is a small and beautiful city.", "russian": "Хива — маленький и красивый город." },
       { "uzbek": "Baland devorlar shaharni oʻraydi.", "english": "Tall walls surround the city.", "russian": "Высокие стены окружают город." },
       { "uzbek": "Biz katta darvozadan kiramiz.", "english": "We enter through the big gate.", "russian": "Мы входим через большие ворота." },
-      { "uzbek": "Ichkarida yogʻoch ustunlar bor.", "english": "Inside there are wooden columns.", "russian": "Внутри есть деревянные колонны." },
-      { "uzbek": "Tashqarida issiq choʻl yotadi.", "english": "Outside lies the hot desert.", "russian": "Снаружи раскинулась жаркая пустыня." }
+      { "uzbek": "Ichkarida yogʻoch ustunlar bor.", "english": "Inside there are wooden columns.", "englishAlt": ["There are wooden columns inside."], "russian": "Внутри есть деревянные колонны." },
+      { "uzbek": "Tashqarida issiq choʻl yotadi.", "english": "Outside lies the hot desert.", "englishAlt": ["The hot desert lies outside."], "russian": "Снаружи раскинулась жаркая пустыня." }
     ],
     "glossary": {
       "Xiva": "Khiva",
@@ -63,7 +63,7 @@
     "title": { "en": "On Foot and by Taxi", "ru": "Пешком и на такси", "uz": "Piyoda va taksida" },
     "sentences": [
       { "uzbek": "Xiva kichik, koʻp joyga piyoda boramiz.", "english": "Khiva is small, we walk to many places.", "russian": "Хива маленькая, во многие места мы ходим пешком." },
-      { "uzbek": "Ichan qalʼa ichida mashina yoʻq.", "english": "Inside the Ichan Qala there are no cars.", "russian": "Внутри Ичан-Калы нет машин." },
+      { "uzbek": "Ichan qalʼa ichida mashina yoʻq.", "english": "Inside the Ichan Qala there are no cars.", "englishAlt": ["There are no cars inside the Ichan Qala."], "russian": "Внутри Ичан-Калы нет машин." },
       { "uzbek": "Shahardan tashqariga marshrutka qatnaydi.", "english": "Marshrutkas run to outside the city.", "russian": "За город ходят маршрутки." },
       { "uzbek": "Men haydovchiga naqd pul toʻlayman.", "english": "I pay the driver cash.", "russian": "Я плачу водителю наличными." },
       { "uzbek": "Urganchga taksi bilan boramiz.", "english": "We go to Urgench by taxi.", "russian": "В Ургенч мы едем на такси." },

@@ -60,10 +60,10 @@
     "theme": "tashkent",
     "title": { "en": "Getting Around the City", "ru": "Передвижение по городу", "uz": "Shahar boʻylab yurish" },
     "sentences": [
-      { "uzbek": "Toshkentda metro, avtobus va marshrutka bor.", "english": "In Tashkent there is the metro, the bus and the marshrutka.", "russian": "В Ташкенте есть метро, автобусы и маршрутки." },
+      { "uzbek": "Toshkentda metro, avtobus va marshrutka bor.", "english": "In Tashkent there is the metro, the bus and the marshrutka.", "englishAlt": ["There is the metro, the bus and the marshrutka in Tashkent."], "russian": "В Ташкенте есть метро, автобусы и маршрутки." },
       { "uzbek": "Metro eng tez va arzon.", "english": "The metro is the fastest and cheapest.", "russian": "Метро — самое быстрое и дешёвое." },
-      { "uzbek": "Avtobusda men plastik karta bilan toʻlayman.", "english": "On the bus I pay with a plastic card.", "russian": "В автобусе я плачу пластиковой картой." },
-      { "uzbek": "Har bir bekatda nom yozilgan.", "english": "At every stop the name is written.", "russian": "На каждой остановке написано название." },
+      { "uzbek": "Avtobusda men plastik karta bilan toʻlayman.", "english": "On the bus I pay with a plastic card.", "englishAlt": ["I pay with a plastic card on the bus."], "russian": "В автобусе я плачу пластиковой картой." },
+      { "uzbek": "Har bir bekatda nom yozilgan.", "english": "At every stop the name is written.", "englishAlt": ["The name is written at every stop."], "russian": "На каждой остановке написано название." },
       { "uzbek": "Men telefonda xaritaga qarayman.", "english": "I look at the map on my phone.", "russian": "Я смотрю на карту в телефоне." },
       { "uzbek": "Agar adashsam, haydovchidan soʻrayman.", "english": "If I get lost, I ask the driver.", "russian": "Если я заблужусь, я спрашиваю у водителя." }
     ],

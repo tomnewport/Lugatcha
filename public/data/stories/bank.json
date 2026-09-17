@@ -36,6 +36,7 @@
       {
         "uzbek": "Endi men osh va sovg'a sotib olaman.",
         "english": "Now I will buy plov and gifts.",
+        "englishAlt": ["I will buy plov and gifts now."],
         "russian": "Теперь я куплю плов и подарки."
       }
     ],
@@ -123,6 +124,7 @@
       {
         "uzbek": "Avval men adashdim.",
         "english": "At first I got confused.",
+        "englishAlt": ["I got confused at first."],
         "russian": "Сначала я запутался."
       },
       {
@@ -133,6 +135,7 @@
       {
         "uzbek": "Endi men tez sanayman!",
         "english": "Now I count quickly!",
+        "englishAlt": ["I count quickly now!"],
         "russian": "Теперь я считаю быстро!"
       }
     ],

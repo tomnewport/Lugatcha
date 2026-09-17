@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue'
-import { validateStrictOrder, validateLoose, shuffle } from '@/exercises/validate'
+import { validateStrictOrder, validateLoose, validateOrdered, shuffle } from '@/exercises/validate'
 
 export interface AssemblyResult {
   correct: boolean
@@ -14,13 +14,25 @@ const props = withDefaults(
     tokens: string[]
     /** Extra wrong tokens mixed into the bank. */
     decoys?: string[]
-    /** strict = exact order (Uzbek phrases); loose = content words, any order (English translations). */
-    mode?: 'strict' | 'loose'
-    /** Normalised words that may be built or omitted (loose mode only). */
+    /**
+     * strict = exact order (Uzbek phrases); loose = content words in any order;
+     * ordered = content words in the canonical order or one of `alternatives`
+     * (English translations, where a scrambled order changes the meaning).
+     */
+    mode?: 'strict' | 'loose' | 'ordered'
+    /** Accepted rearrangements of `tokens`, as token lists (ordered mode only). */
+    alternatives?: string[][]
+    /** Normalised words that may be built or omitted (loose and ordered modes). */
     optional?: string[]
     checkLabel?: string
   }>(),
-  { decoys: () => [], mode: 'strict', optional: () => [], checkLabel: '' },
+  {
+    decoys: () => [],
+    mode: 'strict',
+    alternatives: () => [],
+    optional: () => [],
+    checkLabel: '',
+  },
 )
 
 const emit = defineEmits<{ result: [AssemblyResult] }>()
@@ -216,10 +228,13 @@ onBeforeUnmount(() => {
 function check() {
   if (settled.value) return
   const assembled = answer.value.map((t) => t.text)
+  const optional = new Set(props.optional)
   const ok =
-    props.mode === 'loose'
-      ? validateLoose(assembled, props.tokens, new Set(props.optional))
-      : validateStrictOrder(assembled, props.tokens)
+    props.mode === 'ordered'
+      ? validateOrdered(assembled, props.tokens, props.alternatives, optional)
+      : props.mode === 'loose'
+        ? validateLoose(assembled, props.tokens, optional)
+        : validateStrictOrder(assembled, props.tokens)
   attempts.value++
   if (ok) {
     feedback.value = 'correct'

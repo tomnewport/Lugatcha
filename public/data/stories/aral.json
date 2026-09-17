@@ -5,10 +5,10 @@
     "title": { "en": "The Lost Sea", "ru": "Исчезнувшее море", "uz": "Yoʻqolgan dengiz" },
     "sentences": [
       { "uzbek": "Orol katta dengiz edi.", "english": "The Aral was a big sea.", "russian": "Арал был большим морем." },
-      { "uzbek": "Endi suv deyarli yoʻq.", "english": "Now there is almost no water.", "russian": "Теперь воды почти нет." },
+      { "uzbek": "Endi suv deyarli yoʻq.", "english": "Now there is almost no water.", "englishAlt": ["There is almost no water now."], "russian": "Теперь воды почти нет." },
       { "uzbek": "Qum ustida eski kemalar turadi.", "english": "Old ships stand on the sand.", "russian": "На песке стоят старые корабли." },
       { "uzbek": "Baliqchilar bu yerni tark etgan.", "english": "The fishermen have left this place.", "russian": "Рыбаки покинули это место." },
-      { "uzbek": "Nukusda mashhur muzey bor.", "english": "There is a famous museum in Nukus.", "russian": "В Нукусе есть знаменитый музей." }
+      { "uzbek": "Nukusda mashhur muzey bor.", "english": "There is a famous museum in Nukus.", "englishAlt": ["In Nukus there is a famous museum."], "russian": "В Нукусе есть знаменитый музей." }
     ],
     "glossary": {
       "Orol": "Aral",

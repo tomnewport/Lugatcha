@@ -21,6 +21,7 @@
       {
         "uzbek": "Nihoyat eski avtobus keldi.",
         "english": "At last an old bus came.",
+        "englishAlt": ["An old bus came at last."],
         "russian": "Наконец приехал старый автобус."
       },
       {
@@ -31,6 +32,7 @@
       {
         "uzbek": "Yo'lda paxta dalalari bor edi.",
         "english": "On the road there were cotton fields.",
+        "englishAlt": ["There were cotton fields on the road."],
         "russian": "Вдоль дороги были хлопковые поля."
       },
       {

@@ -11,6 +11,7 @@
       {
         "uzbek": "Ertalab men vokzalga bordim.",
         "english": "In the morning I went to the station.",
+        "englishAlt": ["I went to the station in the morning."],
         "russian": "Утром я пошёл на вокзал."
       },
       {
@@ -31,11 +32,13 @@
       {
         "uzbek": "Tashqarida cho'l va tog'lar edi.",
         "english": "Outside were desert and mountains.",
+        "englishAlt": ["Desert and mountains were outside."],
         "russian": "Снаружи были пустыня и горы."
       },
       {
         "uzbek": "Ikki soatda Samarqandga keldim.",
         "english": "In two hours I arrived in Samarkand.",
+        "englishAlt": ["I arrived in Samarkand in two hours."],
         "russian": "Через два часа я прибыл в Самарканд."
       }
     ],
@@ -100,6 +103,7 @@
       {
         "uzbek": "Poyezdda mening joyim band edi.",
         "english": "On the train my seat was taken.",
+        "englishAlt": ["My seat was taken on the train."],
         "russian": "В поезде моё место было занято."
       },
       {

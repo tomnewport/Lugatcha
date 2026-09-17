@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { tokenize, normalizeToken } from '@/exercises/validate'
+import { tokenize, normalizeToken, contentSequence, validateOrdered } from '@/exercises/validate'
 import { canonicalId } from '@/exercises/wordFamilies'
 import type { Word, Story, Roleplay, TravelPlace, VocabGroup, VocabGroupMeta } from '@/db/types'
 
@@ -110,6 +110,44 @@ describe('stories', () => {
           [...lookup].some((stem) => stem.length >= 3 && norm.startsWith(stem))
         expect(resolved, `${story.id}: no gloss for "${token}"`).toBe(true)
       }
+    }
+  })
+})
+
+describe('story alternative translations', () => {
+  const sentences = allStories.flatMap((story) =>
+    story.sentences.map((sentence, i) => [`${story.id}[${i}]`, sentence] as const),
+  )
+
+  // Storytime hands the learner exactly the canonical tokens, so an alternative
+  // it will never be able to build is a trap: every one must be a rearrangement
+  // of the same words (issue #199).
+  it.each(sentences.filter(([, s]) => s.englishAlt?.length))(
+    '%s alternatives rearrange the canonical tokens',
+    (id, sentence) => {
+      const canonical = tokenize(sentence.english).map(normalizeToken).sort()
+      for (const alt of sentence.englishAlt ?? []) {
+        expect(tokenize(alt).map(normalizeToken).sort(), `${id}: "${alt}"`).toEqual(canonical)
+      }
+    },
+  )
+
+  it.each(sentences.filter(([, s]) => s.englishAlt?.length))(
+    '%s alternatives actually reorder the content words',
+    (id, sentence) => {
+      const canonical = contentSequence(tokenize(sentence.english)).join(' ')
+      for (const alt of sentence.englishAlt ?? []) {
+        expect(contentSequence(tokenize(alt)).join(' '), `${id}: "${alt}"`).not.toBe(canonical)
+      }
+    },
+  )
+
+  it.each(sentences)('%s accepts its own translation', (id, sentence) => {
+    const canonical = tokenize(sentence.english)
+    const alternatives = (sentence.englishAlt ?? []).map(tokenize)
+    expect(validateOrdered(canonical, canonical, alternatives), id).toBe(true)
+    for (const alt of alternatives) {
+      expect(validateOrdered(alt, canonical, alternatives), `${id}: alternative`).toBe(true)
     }
   })
 })

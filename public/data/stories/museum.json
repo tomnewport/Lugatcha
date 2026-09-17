@@ -11,6 +11,7 @@
       {
         "uzbek": "Muzeyda men eski xaritani ko'rdim.",
         "english": "In the museum I saw an old map.",
+        "englishAlt": ["I saw an old map in the museum."],
         "russian": "В музее я увидел старую карту."
       },
       {
@@ -118,6 +119,7 @@
       {
         "uzbek": "Hovlida katta tut daraxti bor.",
         "english": "In the courtyard there is a big mulberry tree.",
+        "englishAlt": ["There is a big mulberry tree in the courtyard."],
         "russian": "Во дворе растёт большое тутовое дерево."
       },
       {

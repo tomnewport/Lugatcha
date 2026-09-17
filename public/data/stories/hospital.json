@@ -11,6 +11,7 @@
       {
         "uzbek": "Kecha men shamolladim.",
         "english": "Yesterday I caught a cold.",
+        "englishAlt": ["I caught a cold yesterday."],
         "russian": "Вчера я простудился."
       },
       {
@@ -36,6 +37,7 @@
       {
         "uzbek": "Bugun o'zimni yaxshi his qilyapman!",
         "english": "Today I feel good!",
+        "englishAlt": ["I feel good today!"],
         "russian": "Сегодня я чувствую себя хорошо!"
       }
     ],
