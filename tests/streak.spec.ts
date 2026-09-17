@@ -6,6 +6,7 @@ import {
   recordStreakDay,
   currentStreak,
   skipState,
+  forgiveRestoreGap,
   SKIP_CAP,
 } from '@/streak'
 
@@ -218,6 +219,56 @@ describe('recordStreakDay — the rest-day bank', () => {
     recordStreakDay(day('2026-06-01'))
     const update = recordStreakDay(day('2026-06-04'))
     expect(update).toEqual({ from: 0, to: 1, extended: true, skipsSpent: 0 })
+  })
+})
+
+describe('forgiveRestoreGap', () => {
+  const day = (iso: string) => new Date(`${iso}T12:00:00`)
+
+  it('does not bill rest days for the gap a restored backup rolled back over', () => {
+    // A backup taken on 06-01, restored on 06-10 (issue #203).
+    localStorage.setItem('lugatcha.streakCount', '20')
+    localStorage.setItem('lugatcha.streakLastDate', '2026-06-01')
+    localStorage.setItem('lugatcha.streakSkips', '3')
+    localStorage.setItem('lugatcha.streakSkipsPeak', '3')
+    localStorage.setItem('lugatcha.streakSkipsAt', '2026-06-01')
+
+    forgiveRestoreGap(day('2026-06-10'))
+
+    const update = recordStreakDay(day('2026-06-10'))
+    expect(update).toEqual({ from: 20, to: 21, extended: true, skipsSpent: 0 })
+    expect(skipState(day('2026-06-10')).available).toBe(3)
+  })
+
+  it('leaves a backup restored the same day or the next alone', () => {
+    localStorage.setItem('lugatcha.streakCount', '20')
+    localStorage.setItem('lugatcha.streakLastDate', '2026-06-09')
+    localStorage.setItem('lugatcha.streakSkips', '3')
+    localStorage.setItem('lugatcha.streakSkipsPeak', '3')
+
+    forgiveRestoreGap(day('2026-06-10'))
+
+    expect(localStorage.getItem('lugatcha.streakLastDate')).toBe('2026-06-09')
+  })
+
+  it('does nothing when there is no streak to restore', () => {
+    forgiveRestoreGap(day('2026-06-10'))
+    expect(localStorage.getItem('lugatcha.streakLastDate')).toBeNull()
+    expect(currentStreak(day('2026-06-10'))).toBe(0)
+  })
+
+  it('leaves the learner still owing today to extend the streak', () => {
+    localStorage.setItem('lugatcha.streakCount', '20')
+    localStorage.setItem('lugatcha.streakLastDate', '2026-06-01')
+    localStorage.setItem('lugatcha.streakSkips', '3')
+    localStorage.setItem('lugatcha.streakSkipsPeak', '3')
+
+    forgiveRestoreGap(day('2026-06-10'))
+
+    // Practice on 06-10 is still required: the streak lapses from 06-12 on.
+    expect(currentStreak(day('2026-06-10'))).toBe(20)
+    expect(currentStreak(day('2026-06-13'))).toBe(20) // bank covers 06-10..06-12
+    expect(currentStreak(day('2026-06-15'))).toBe(0)
   })
 })
 

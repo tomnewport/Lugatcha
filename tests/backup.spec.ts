@@ -9,6 +9,7 @@ import {
   BACKUP_FORMAT,
   BACKUP_VERSION,
 } from '@/db/backup'
+import { recordStreakDay, skipState } from '@/streak'
 import {
   markWordsSeen,
   recordMatchResult,
@@ -114,6 +115,22 @@ describe('applyBackup', () => {
     localStorage.clear()
     await applyBackup(db, backup)
     expect(localStorage.getItem('lugatcha.contentVersion')).toBeNull()
+  })
+
+  it('does not spend rest days for the days a restore rolled back over', async () => {
+    // A backup whose last practice day is well in the past: without the
+    // forgiveness in applyBackup the next session bills a rest day per day
+    // since, for days that were practised on the other device (issue #203).
+    await seedSomeProgress()
+    const backup = await collectBackup(db)
+    backup.localStorage['lugatcha.streakLastDate'] = '2026-06-01'
+    backup.localStorage['lugatcha.streakSkips'] = '3'
+    backup.localStorage['lugatcha.streakSkipsPeak'] = '3'
+
+    await applyBackup(db, backup)
+
+    expect(recordStreakDay()).toEqual({ from: 7, to: 8, extended: true, skipsSpent: 0 })
+    expect(skipState().available).toBe(3)
   })
 
   it('tolerates a backup missing a table', async () => {
