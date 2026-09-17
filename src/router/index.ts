@@ -3,9 +3,9 @@ import HomeView from '@/views/HomeView.vue'
 import LocationView from '@/views/LocationView.vue'
 import { db } from '@/db'
 import { isWelcomeCenterComplete, WELCOME_CENTER_ID } from '@/db/progress'
+import { localDate } from '@/streak'
 
 const LAST_PRACTICE_AT_KEY = 'lugatcha.lastPracticeAt'
-const PRACTICE_REQUIRED_MS = 60 * 60 * 1000 // 1 hour
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -72,8 +72,10 @@ router.beforeEach(async (to) => {
     return { name: 'home' }
   }
 
-  // Require daily practice before returning to the city if the user has been
-  // away for more than an hour and there are eligible (seen) words to practise.
+  // Require daily practice before returning to the city, once per calendar day,
+  // if there are eligible (seen) words to practise. It is the learner's own
+  // calendar day (localDate), and it matches the streak's notion of a day, so
+  // one finished session settles the requirement until tomorrow (issue #202).
   if (to.name === 'home') {
     try {
       // Only gate on daily practice once the city is actually open. Before the
@@ -84,8 +86,9 @@ router.beforeEach(async (to) => {
       if (!(await isWelcomeCenterComplete(db))) return true
 
       const stored = localStorage.getItem(LAST_PRACTICE_AT_KEY)
+      const lastPracticeAt = stored ? parseInt(stored, 10) : NaN
       const practiceOverdue =
-        !stored || Date.now() - parseInt(stored, 10) > PRACTICE_REQUIRED_MS
+        !Number.isFinite(lastPracticeAt) || localDate(new Date(lastPracticeAt)) !== localDate()
       if (practiceOverdue) {
         const allProgress = await db.wordProgress.toArray()
         const hasEligibleWords = allProgress.some((p) => Boolean(p.seenAt))
