@@ -437,13 +437,13 @@
           {
             "speaker": "npc",
             "uzbek": "Oynada navbat uzun. Avtomatdan to'ldiring.",
-            "english": "The window queue is long. Use the machine.",
+            "english": "The window queue is long. Top up at the machine.",
             "russian": "У окошка длинная очередь. Воспользуйтесь автоматом."
           },
           {
             "speaker": "user",
             "uzbek": "Avtomat qayerda?",
-            "english": "Where is the machine?",
+            "english": "Where is the ticket machine?",
             "russian": "Где автомат?",
             "tokens": [
               "Avtomat",
