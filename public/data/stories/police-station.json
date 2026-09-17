@@ -11,6 +11,7 @@
       {
         "uzbek": "Kecha telefonim yo'qoldi.",
         "english": "Yesterday my phone got lost.",
+        "englishAlt": ["My phone got lost yesterday."],
         "russian": "Вчера я потерял свой телефон."
       },
       {
@@ -104,6 +105,7 @@
       {
         "uzbek": "Bugun katta ko'cha yopiq edi.",
         "english": "Today the big street was closed.",
+        "englishAlt": ["The big street was closed today."],
         "russian": "Сегодня большая улица была закрыта."
       },
       {
@@ -124,6 +126,7 @@
       {
         "uzbek": "Yo'lda musiqa eshitdim.",
         "english": "On the way I heard music.",
+        "englishAlt": ["I heard music on the way."],
         "russian": "По дороге я услышал музыку."
       },
       {

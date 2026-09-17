@@ -26,11 +26,13 @@
       {
         "uzbek": "Cho'qqida shamol sovuq edi.",
         "english": "At the summit the wind was cold.",
+        "englishAlt": ["The wind was cold at the summit."],
         "russian": "На вершине ветер был холодным."
       },
       {
         "uzbek": "Pastda butun shahar ko'rinardi.",
         "english": "Below, the whole city was visible.",
+        "englishAlt": ["The whole city was visible below."],
         "russian": "Внизу был виден весь город."
       },
       {
@@ -106,6 +108,7 @@
       {
         "uzbek": "Tog'da kichik choyxona bor edi.",
         "english": "On the mountain there was a small teahouse.",
+        "englishAlt": ["There was a small teahouse on the mountain."],
         "russian": "В горах была маленькая чайхана."
       },
       {

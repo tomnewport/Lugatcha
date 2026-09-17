@@ -60,11 +60,11 @@
     "theme": "samarkand",
     "title": { "en": "Around Samarkand by Bus", "ru": "По Самарканду на автобусе", "uz": "Samarqand boʻylab avtobusda" },
     "sentences": [
-      { "uzbek": "Samarqandda avtobus va marshrutka yuradi.", "english": "In Samarkand buses and marshrutkas run.", "russian": "В Самарканде ходят автобусы и маршрутки." },
+      { "uzbek": "Samarqandda avtobus va marshrutka yuradi.", "english": "In Samarkand buses and marshrutkas run.", "englishAlt": ["Buses and marshrutkas run in Samarkand."], "russian": "В Самарканде ходят автобусы и маршрутки." },
       { "uzbek": "Marshrutka kichik, lekin tez.", "english": "The marshrutka is small, but fast.", "russian": "Маршрутка маленькая, но быстрая." },
       { "uzbek": "Men haydovchiga naqd pul beraman.", "english": "I give the driver cash.", "russian": "Я даю водителю наличные деньги." },
-      { "uzbek": "Registonga borish uchun avtobusga chiqaman.", "english": "To get to the Registan I get on the bus.", "russian": "Чтобы добраться до Регистана, я сажусь в автобус." },
-      { "uzbek": "Bekatda odamlar navbatda turadi.", "english": "At the stop people stand in a queue.", "russian": "На остановке люди стоят в очереди." },
+      { "uzbek": "Registonga borish uchun avtobusga chiqaman.", "english": "To get to the Registan I get on the bus.", "englishAlt": ["I get on the bus to get to the Registan."], "russian": "Чтобы добраться до Регистана, я сажусь в автобус." },
+      { "uzbek": "Bekatda odamlar navbatda turadi.", "english": "At the stop people stand in a queue.", "englishAlt": ["People stand in a queue at the stop."], "russian": "На остановке люди стоят в очереди." },
       { "uzbek": "Taksi qimmat, lekin qulay.", "english": "A taxi is expensive, but convenient.", "russian": "Такси дорогое, но удобное." }
     ],
     "glossary": {

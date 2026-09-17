@@ -162,6 +162,41 @@ export function validateLoose(
   return true
 }
 
+/**
+ * The content words of `tokens` in the order they were built, minus any marked
+ * optional — the sequence `validateOrdered` compares two sentences on.
+ */
+export function contentSequence(tokens: string[], optional: Set<string> = new Set()): string[] {
+  return contentWords(tokens).filter((word) => !optional.has(word))
+}
+
+/**
+ * Order-aware matching for English translations. `validateLoose` ignores word
+ * order entirely, which accepts sentences that say the opposite of the original
+ * — "In the grapevine garden there was a teahouse" passes for "In the teahouse
+ * garden there was a grapevine" (issue #199). This keeps loose matching's
+ * tolerance of function words (build "the" and "a" or leave them out) but
+ * requires the content words to run in the order of the canonical sentence, or
+ * of one of the `alternatives` the content author listed for it — an English
+ * sentence usually has a second natural order ("There was a grapevine in the
+ * teahouse garden"), and a learner who builds one deserves the tick.
+ *
+ * Each alternative is a rearrangement of the canonical tokens, so the "no
+ * foreign words" check runs against the canonical sentence alone.
+ */
+export function validateOrdered(
+  assembled: string[],
+  canonical: string[],
+  alternatives: string[][] = [],
+  optional: Set<string> = new Set(),
+): boolean {
+  if (!validateLoose(assembled, canonical, optional)) return false
+  const built = contentSequence(assembled, optional).join(' ')
+  return [canonical, ...alternatives].some(
+    (order) => contentSequence(order, optional).join(' ') === built,
+  )
+}
+
 export function shuffle<T>(items: T[]): T[] {
   const copy = [...items]
   for (let i = copy.length - 1; i > 0; i--) {

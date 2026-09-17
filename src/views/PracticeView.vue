@@ -89,9 +89,16 @@ function onProgressReset() {
   void loadQuestions()
 }
 
+/**
+ * Marks the day's practice as done: the timestamp the router's daily gate
+ * reads, and the local date the home screen shows as "practised today". Both
+ * are written together so the two can never disagree.
+ */
 function recordPracticeAt() {
   try {
     localStorage.setItem(LAST_PRACTICE_AT_KEY, String(Date.now()))
+    // Local date (not UTC) so "today" matches the learner's calendar day.
+    localStorage.setItem(DAILY_PRACTICE_DATE_KEY, new Date().toLocaleDateString('en-CA'))
   } catch {
     // private mode
   }
@@ -103,13 +110,6 @@ function home() {
 
 function onComplete() {
   playChime()
-  try {
-    // Local date (not UTC) so "today" matches the learner's calendar day.
-    const today = new Date().toLocaleDateString('en-CA')
-    localStorage.setItem(DAILY_PRACTICE_DATE_KEY, today)
-  } catch {
-    // private mode
-  }
   recordPracticeAt()
   const update = recordStreakDay()
   // Celebrate a growing streak first, then hand over to the game if it is on.

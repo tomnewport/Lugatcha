@@ -261,6 +261,28 @@ export function currentStreak(now: Date = new Date()): number {
   return costOf(gap) <= skips ? count : 0
 }
 
+/**
+ * Forgives the days a restore rolled the streak back over.
+ *
+ * `lugatcha.streakLastDate` travels inside a backup (src/db/backup.ts), so
+ * restoring a file made a few days ago tells the streak that *that* day was
+ * the last one practised — and the next session then spends a banked rest day
+ * for every day since, days the learner may well have practised on the device
+ * the backup came from (issue #203). Moving the stored date to yesterday keeps
+ * the streak alive without billing for the gap; the learner still has to
+ * practise today to extend it.
+ *
+ * Nothing in a backup says when it was made or what happened after, so this
+ * errs towards the learner: the worst case is a streak surviving a lapse that
+ * was real, which is the kinder way to be wrong.
+ */
+export function forgiveRestoreGap(now: Date = new Date()): void {
+  const today = localDate(now)
+  const state = load()
+  if (!state.lastDate || daysBetween(state.lastDate, today) <= 1) return
+  save({ ...state, lastDate: addDays(today, -1) })
+}
+
 export interface StreakUpdate {
   /** Streak length before today's practice. */
   from: number

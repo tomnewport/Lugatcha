@@ -11,6 +11,7 @@
       {
         "uzbek": "Har ertalab men kafega boraman.",
         "english": "Every morning I go to the cafe.",
+        "englishAlt": ["I go to the cafe every morning."],
         "russian": "Каждое утро я хожу в кафе."
       },
       {
@@ -31,6 +32,7 @@
       {
         "uzbek": "Ko'chada odamlar ishga ketadi.",
         "english": "On the street people go to work.",
+        "englishAlt": ["People go to work on the street."],
         "russian": "На улице люди идут на работу."
       },
       {
@@ -104,6 +106,7 @@
       {
         "uzbek": "Tashqarida yomg'ir yog'di.",
         "english": "Outside it rained.",
+        "englishAlt": ["It rained outside."],
         "russian": "На улице шёл дождь."
       },
       {

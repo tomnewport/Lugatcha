@@ -6,7 +6,7 @@
     "sentences": [
       { "uzbek": "Buxoro koʻhna shahar.", "english": "Bukhara is an old city.", "russian": "Бухара — древний город." },
       { "uzbek": "Kalon minorasi juda baland.", "english": "The Kalon minaret is very tall.", "russian": "Минарет Калян очень высокий." },
-      { "uzbek": "Qadimda karvonlar bu yerda toʻxtagan.", "english": "In the old days caravans stopped here.", "russian": "В старину здесь останавливались караваны." },
+      { "uzbek": "Qadimda karvonlar bu yerda toʻxtagan.", "english": "In the old days caravans stopped here.", "englishAlt": ["Caravans stopped here in the old days."], "russian": "В старину здесь останавливались караваны." },
       { "uzbek": "Savdogarlar gilam sotadi.", "english": "Merchants sell carpets.", "russian": "Торговцы продают ковры." },
       { "uzbek": "Men hovuz yonida choy ichaman.", "english": "I drink tea by the pool.", "russian": "Я пью чай у водоёма." }
     ],
@@ -60,8 +60,8 @@
     "theme": "bukhara",
     "title": { "en": "Through the Old City", "ru": "По старому городу", "uz": "Eski shahar boʻylab" },
     "sentences": [
-      { "uzbek": "Buxoroda avtobus va marshrutka bor.", "english": "In Bukhara there are buses and marshrutkas.", "russian": "В Бухаре есть автобусы и маршрутки." },
-      { "uzbek": "Eski shaharda koʻchalar tor.", "english": "In the old city the streets are narrow.", "russian": "В старом городе улицы узкие." },
+      { "uzbek": "Buxoroda avtobus va marshrutka bor.", "english": "In Bukhara there are buses and marshrutkas.", "englishAlt": ["There are buses and marshrutkas in Bukhara."], "russian": "В Бухаре есть автобусы и маршрутки." },
+      { "uzbek": "Eski shaharda koʻchalar tor.", "english": "In the old city the streets are narrow.", "englishAlt": ["The streets are narrow in the old city."], "russian": "В старом городе улицы узкие." },
       { "uzbek": "Men marshrutkaga chiqaman va pul beraman.", "english": "I get on the marshrutka and give money.", "russian": "Я сажусь в маршрутку и плачу деньги." },
       { "uzbek": "Haydovchi meni bekatda tushiradi.", "english": "The driver drops me at the stop.", "russian": "Водитель высаживает меня на остановке." },
       { "uzbek": "Labihovuzga piyoda boraman.", "english": "I walk to Lyabi-Hauz.", "russian": "Я иду к Ляби-Хаузу пешком." },

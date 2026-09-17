@@ -31,6 +31,7 @@
       {
         "uzbek": "Tashqarida quyosh charaqlab turardi.",
         "english": "Outside, the sun was shining brightly.",
+        "englishAlt": ["The sun was shining brightly outside."],
         "russian": "На улице ярко светило солнце."
       }
     ],
@@ -85,6 +86,7 @@
       {
         "uzbek": "Bugun men uyga uchaman.",
         "english": "Today I fly home.",
+        "englishAlt": ["I fly home today."],
         "russian": "Сегодня я лечу домой."
       },
       {

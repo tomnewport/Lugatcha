@@ -21,6 +21,7 @@
       {
         "uzbek": "Devorlarda rang-barang sopol bor.",
         "english": "On the walls there are colourful ceramics.",
+        "englishAlt": ["There are colourful ceramics on the walls."],
         "russian": "На стенах есть разноцветная керамика."
       },
       {
@@ -104,6 +105,7 @@
       {
         "uzbek": "Ertalab metro juda gavjum edi.",
         "english": "In the morning the metro was very crowded.",
+        "englishAlt": ["The metro was very crowded in the morning."],
         "russian": "Утром метро было очень переполнено."
       },
       {

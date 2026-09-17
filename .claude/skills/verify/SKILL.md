@@ -15,7 +15,7 @@ description: Build, launch, and drive Lugʻatcha in a headless browser to verify
 
 Gotchas:
 
-- The city is locked until the welcome-center gate passes; once it passes, the router redirects `#/` to `#/practice?required=1` unless `localStorage['lugatcha.lastPracticeAt']` is recent — set it before navigating home.
+- The city is locked until the welcome-center gate passes; once it passes, the router redirects `#/` to `#/practice?required=1` unless `localStorage['lugatcha.lastPracticeAt']` falls on today's local date — set it to `Date.now()` before navigating home.
 - Playwright uses a fresh browser profile per run, so reseed IndexedDB every run.
 - Navigating directly between two `#/location/:id` URLs reuses LocationView without re-running `onMounted` (stale location header); go via `#/` like a real user.
 - Choice-question options are `.option`; the typing question needs the "Tip" button clicked until "Show answer" appears.

@@ -1,4 +1,5 @@
 import type { LugatchaDB } from './LugatchaDB'
+import { forgiveRestoreGap } from '@/streak'
 
 /**
  * Local backup & restore (issue: "local backup and restore needed").
@@ -170,4 +171,8 @@ export async function applyBackup(db: LugatchaDB, backup: BackupFile): Promise<v
     },
   )
   restoreLocalStorage(backup.localStorage)
+  // The restored streak believes the backup's last practice day is the most
+  // recent one, so without this the next session would spend a rest day for
+  // every day between the backup and now (issue #203).
+  forgiveRestoreGap()
 }
